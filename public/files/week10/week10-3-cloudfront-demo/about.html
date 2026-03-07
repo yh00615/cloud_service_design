@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - CloudFront Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <img src="images/logo.png" alt="AWS Logo" class="logo">
+            <h1>CloudFront 실습 정보</h1>
+            <p class="subtitle"><a href="index.html">← 메인 페이지로 돌아가기</a></p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="about-content">
+            <h2>실습 목표</h2>
+            <ul>
+                <li>CloudFront 배포를 생성하고 S3 오리진을 연결할 수 있습니다</li>
+                <li>OAC(Origin Access Control)를 설정하여 S3 버킷을 보호할 수 있습니다</li>
+                <li>캐싱 동작과 TTL 설정을 이해할 수 있습니다</li>
+                <li>캐시 무효화(Invalidation)를 수행할 수 있습니다</li>
+                <li>CloudFront 메트릭을 모니터링할 수 있습니다</li>
+            </ul>
+        </section>
+
+        <section class="architecture">
+            <h2>아키텍처</h2>
+            <div class="info-box">
+                <pre>
+┌─────────┐
+│  사용자  │
+└────┬────┘
+     │
+     ▼
+┌─────────────────┐
+│   CloudFront    │ ← 엣지 로케이션 (전 세계)
+│   Distribution  │
+└────┬────────────┘
+     │
+     ▼
+┌─────────────────┐
+│   S3 Bucket     │ ← 오리진 (ap-northeast-2)
+│   (Private)     │
+└─────────────────┘
+                </pre>
+            </div>
+        </section>
+
+        <section class="file-types">
+            <h2>캐싱 테스트 파일 유형</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>HTML</h3>
+                    <p>index.html, about.html</p>
+                    <p><strong>TTL</strong>: 짧게 설정 (예: 300초)</p>
+                </div>
+                <div class="feature-card">
+                    <h3>CSS</h3>
+                    <p>style.css</p>
+                    <p><strong>TTL</strong>: 중간 (예: 3600초)</p>
+                </div>
+                <div class="feature-card">
+                    <h3>JavaScript</h3>
+                    <p>script.js</p>
+                    <p><strong>TTL</strong>: 중간 (예: 3600초)</p>
+                </div>
+                <div class="feature-card">
+                    <h3>이미지</h3>
+                    <p>logo.png, banner.jpg</p>
+                    <p><strong>TTL</strong>: 길게 설정 (예: 86400초)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="best-practices">
+            <h2>CloudFront 모범 사례</h2>
+            <ul>
+                <li><strong>파일 타입별 TTL 설정</strong>: 정적 파일은 길게, 동적 콘텐츠는 짧게</li>
+                <li><strong>압축 활성화</strong>: Gzip/Brotli 압축으로 전송 속도 향상</li>
+                <li><strong>HTTPS 사용</strong>: SSL/TLS 인증서로 보안 강화</li>
+                <li><strong>OAC 사용</strong>: S3 버킷을 비공개로 유지하고 CloudFront를 통해서만 접근</li>
+                <li><strong>캐시 키 최적화</strong>: 쿼리 문자열, 헤더, 쿠키 설정 최적화</li>
+                <li><strong>모니터링</strong>: CloudWatch 메트릭으로 성능 추적</li>
+            </ul>
+        </section>
+
+        <section class="troubleshooting">
+            <h2>문제 해결</h2>
+            <div class="info-box">
+                <h3>403 Forbidden 오류</h3>
+                <p><strong>원인</strong>: S3 버킷 정책이 CloudFront OAC를 허용하지 않음</p>
+                <p><strong>해결</strong>: CloudFormation이 제안하는 버킷 정책을 복사하여 S3 버킷에 적용</p>
+            </div>
+
+            <div class="info-box">
+                <h3>오래된 콘텐츠가 표시됨</h3>
+                <p><strong>원인</strong>: 캐시가 아직 만료되지 않음</p>
+                <p><strong>해결</strong>: CloudFront 콘솔에서 캐시 무효화(Invalidation) 생성</p>
+            </div>
+
+            <div class="info-box">
+                <h3>느린 첫 로딩</h3>
+                <p><strong>원인</strong>: 캐시 미스 (Miss from cloudfront)</p>
+                <p><strong>정상</strong>: 첫 요청은 오리진에서 가져오므로 느릴 수 있음. 이후 요청은 빠름</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AWS CloudFront Demo - Week 10-3 실습</p>
+            <p><a href="index.html">메인 페이지로 돌아가기</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

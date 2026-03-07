@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 2-1: IAM Policy Condition Element Lab - Pre-built Environment (lab-user + Access Key)'
+
+# AWS CloudFormation 템플릿: AWS Identity and Access Management 정책 Condition 실습을 위한 테스트 환경
+# 이 템플릿은 lab-user AWS Identity and Access Management 사용자와 Access Key를 자동으로 생성합니다.
+# 학생들은 Amazon Simple Storage Service 버킷 생성 및 AWS Identity and Access Management 정책 작성에 집중할 수 있습니다.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: 'week2-1-iam-policy'
+    Description: Environment name for resource naming
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '2-1'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # AWS Identity and Access Management 사용자: lab-user (정책 테스트용)
+  LabUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: lab-user
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Access Key: lab-user용 (AWS Command Line Interface/API 테스트용)
+  LabUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref LabUser
+
+  # AWS Identity and Access Management 정책: 기본 Amazon Simple Storage Service 읽기 권한 (정책 테스트 전 기본 권한)
+  LabUserBasePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: LabUserBaseS3ReadPolicy
+      Users:
+        - !Ref LabUser
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowS3ListBuckets
+            Effect: Allow
+            Action:
+              - s3:ListAllMyBuckets
+              - s3:GetBucketLocation
+            Resource: '*'
+
+Outputs:
+  LabUserName:
+    Description: IAM user name (used in Tasks 2-5 for policy attachment)
+    Value: !Ref LabUser
+    Export:
+      Name: !Sub '${EnvironmentName}-LabUserName'
+
+  LabUserAccessKeyId:
+    Description: Access Key ID (used for AWS CLI configuration)
+    Value: !Ref LabUserAccessKey
+    Export:
+      Name: !Sub '${EnvironmentName}-AccessKeyId'
+
+  LabUserSecretAccessKey:
+    Description: Secret Access Key (used for AWS CLI configuration)
+    Value: !GetAtt LabUserAccessKey.SecretAccessKey
+    Export:
+      Name: !Sub '${EnvironmentName}-SecretAccessKey'
+
+  LabUserArn:
+    Description: IAM user ARN
+    Value: !GetAtt LabUser.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-LabUserArn'

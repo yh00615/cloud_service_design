@@ -1,0 +1,3 @@
+order_id,customer_id,product_id,product_name,quantity,price,order_date,region
+1011,C007,P001,Laptop,1,1200000,2024-01-20,Seoul
+1012,C008,P002,Mouse,2,25000,2024-01-20,Busan

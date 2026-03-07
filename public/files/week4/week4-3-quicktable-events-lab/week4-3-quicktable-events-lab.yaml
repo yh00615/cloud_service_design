@@ -1,0 +1,564 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'QuickTable 레스토랑 예약 시스템 - EventBridge 기반 이벤트 처리 인프라'
+
+Parameters:
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '4-3'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+  EnvironmentName:
+    Type: String
+    Default: week4-3-quicktable-events-lab
+    Description: Resource name prefix
+
+Resources:
+  # DynamoDB 테이블: Reservations
+  ReservationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: QuickTableReservations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: reservationId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: reservationId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # DynamoDB 테이블: RestaurantAvailability
+  RestaurantAvailabilityTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: QuickTableRestaurantAvailability
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: restaurantId
+          AttributeType: S
+        - AttributeName: timeSlot
+          AttributeType: S
+      KeySchema:
+        - AttributeName: restaurantId
+          KeyType: HASH
+        - AttributeName: timeSlot
+          KeyType: RANGE
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # RestaurantAvailability 테이블 초기 데이터 삽입을 위한 Lambda 함수
+  InitializeAvailabilityFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-InitializeAvailability'
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      Environment:
+        Variables:
+          AVAILABILITY_TABLE: !Ref RestaurantAvailabilityTable
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          
+          dynamodb = boto3.resource('dynamodb')
+          
+          def lambda_handler(event, context):
+              try:
+                  if event['RequestType'] == 'Delete':
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+                      return
+                  
+                  table_name = event['ResourceProperties']['TableName']
+                  table = dynamodb.Table(table_name)
+                  
+                  # 초기 데이터 삽입
+                  initial_data = [
+                      {'restaurantId': 'restaurant-001', 'timeSlot': '2026-03-20#18:00', 'availableSlots': 5},
+                      {'restaurantId': 'restaurant-001', 'timeSlot': '2026-03-20#19:00', 'availableSlots': 5},
+                      {'restaurantId': 'restaurant-001', 'timeSlot': '2026-03-20#20:00', 'availableSlots': 5},
+                      {'restaurantId': 'restaurant-002', 'timeSlot': '2026-03-20#18:00', 'availableSlots': 8},
+                      {'restaurantId': 'restaurant-002', 'timeSlot': '2026-03-20#19:00', 'availableSlots': 8},
+                      {'restaurantId': 'restaurant-002', 'timeSlot': '2026-03-20#20:00', 'availableSlots': 8},
+                      {'restaurantId': 'restaurant-003', 'timeSlot': '2026-03-20#18:00', 'availableSlots': 3},
+                      {'restaurantId': 'restaurant-003', 'timeSlot': '2026-03-20#19:00', 'availableSlots': 3},
+                      {'restaurantId': 'restaurant-003', 'timeSlot': '2026-03-20#20:00', 'availableSlots': 3},
+                      {'restaurantId': 'restaurant-004', 'timeSlot': '2026-03-20#18:00', 'availableSlots': 10},
+                      {'restaurantId': 'restaurant-004', 'timeSlot': '2026-03-20#19:00', 'availableSlots': 10},
+                      {'restaurantId': 'restaurant-004', 'timeSlot': '2026-03-20#20:00', 'availableSlots': 10}
+                  ]
+                  
+                  for item in initial_data:
+                      table.put_item(Item=item)
+                  
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': 'Initial data inserted'})
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {'Message': str(e)})
+
+  # Custom Resource: 초기 데이터 삽입 트리거
+  InitializeAvailabilityData:
+    Type: Custom::InitializeData
+    DependsOn: RestaurantAvailabilityTable
+    Properties:
+      ServiceToken: !GetAtt InitializeAvailabilityFunction.Arn
+      TableName: !Ref RestaurantAvailabilityTable
+
+  # EventBridge Event Bus
+  ReservationEventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: !Sub '${EnvironmentName}-ReservationEventBus'
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # SNS Topic: 예약 알림
+  ReservationNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub '${EnvironmentName}-ReservationNotifications'
+      DisplayName: QuickTable Reservation Notifications
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # IAM 역할: Lambda 실행 역할
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-Lambda-ExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt ReservationsTable.Arn
+                  - !GetAtt RestaurantAvailabilityTable.Arn
+                  - !Sub '${ReservationsTable.Arn}/index/*'
+        - PolicyName: EventBridgeAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - events:PutEvents
+                Resource: !GetAtt ReservationEventBus.Arn
+        - PolicyName: SNSAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref ReservationNotificationTopic
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda 함수: ReservationProcessor
+  ReservationProcessorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-ReservationProcessor'
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          RESERVATIONS_TABLE: !Ref ReservationsTable
+          EVENT_BUS_NAME: !Ref ReservationEventBus
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          from datetime import datetime
+          
+          dynamodb = boto3.resource('dynamodb')
+          eventbridge = boto3.client('events')
+          
+          RESERVATIONS_TABLE = os.environ['RESERVATIONS_TABLE']
+          EVENT_BUS_NAME = os.environ['EVENT_BUS_NAME']
+          
+          reservations_table = dynamodb.Table(RESERVATIONS_TABLE)
+          
+          def lambda_handler(event, context):
+              print(f"Received event: {json.dumps(event)}")
+              
+              try:
+                  reservation_id = event['reservationId']
+                  user_id = event['userId']
+                  restaurant_id = event['restaurantId']
+                  date = event['date']
+                  time = event['time']
+                  party_size = event['partySize']
+                  phone_number = event['phoneNumber']
+                  
+                  time_slot = f"{date}#{time}"
+                  current_time = datetime.utcnow().isoformat()
+                  
+                  reservation_item = {
+                      'reservationId': reservation_id,
+                      'userId': user_id,
+                      'restaurantId': restaurant_id,
+                      'date': date,
+                      'time': time,
+                      'timeSlot': time_slot,
+                      'partySize': party_size,
+                      'phoneNumber': phone_number,
+                      'status': 'pending',
+                      'createdAt': current_time,
+                      'updatedAt': current_time
+                  }
+                  
+                  reservations_table.put_item(Item=reservation_item)
+                  print(f"Reservation saved to DynamoDB: {reservation_id}")
+                  
+                  event_detail = {
+                      'reservationId': reservation_id,
+                      'userId': user_id,
+                      'restaurantId': restaurant_id,
+                      'date': date,
+                      'time': time,
+                      'timeSlot': time_slot,
+                      'partySize': party_size,
+                      'phoneNumber': phone_number,
+                      'status': 'pending',
+                      'createdAt': current_time
+                  }
+                  
+                  response = eventbridge.put_events(
+                      Entries=[{
+                          'Source': 'reservation.service',
+                          'DetailType': 'ReservationCreated',
+                          'Detail': json.dumps(event_detail),
+                          'EventBusName': EVENT_BUS_NAME
+                      }]
+                  )
+                  
+                  if response['FailedEntryCount'] > 0:
+                      raise Exception("Failed to publish ReservationCreated event")
+                  
+                  print(f"ReservationCreated event published: {reservation_id}")
+                  
+                  return {
+                      'statusCode': 200,
+                      'body': json.dumps({
+                          'message': 'Reservation created successfully',
+                          'reservationId': reservation_id,
+                          'status': 'pending'
+                      })
+                  }
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  return {
+                      'statusCode': 500,
+                      'body': json.dumps({'error': str(e)})
+                  }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda 함수: TableAvailabilityChecker
+  TableAvailabilityCheckerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-TableAvailabilityChecker'
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          RESTAURANT_AVAILABILITY_TABLE: !Ref RestaurantAvailabilityTable
+          EVENT_BUS_NAME: !Ref ReservationEventBus
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          from datetime import datetime
+          
+          dynamodb = boto3.resource('dynamodb')
+          eventbridge = boto3.client('events')
+          
+          RESTAURANT_AVAILABILITY_TABLE = os.environ['RESTAURANT_AVAILABILITY_TABLE']
+          EVENT_BUS_NAME = os.environ['EVENT_BUS_NAME']
+          
+          availability_table = dynamodb.Table(RESTAURANT_AVAILABILITY_TABLE)
+          
+          def lambda_handler(event, context):
+              print(f"Received event: {json.dumps(event)}")
+              
+              try:
+                  reservation_detail = event['detail']
+                  reservation_id = reservation_detail['reservationId']
+                  restaurant_id = reservation_detail['restaurantId']
+                  time_slot = reservation_detail['timeSlot']
+                  party_size = reservation_detail['partySize']
+                  
+                  print(f"Checking availability: restaurant={restaurant_id}, timeSlot={time_slot}")
+                  
+                  response = availability_table.get_item(
+                      Key={'restaurantId': restaurant_id, 'timeSlot': time_slot}
+                  )
+                  
+                  if 'Item' not in response:
+                      print(f"No availability data found")
+                      publish_unavailable_event(restaurant_id, reservation_id, time_slot, party_size, 0)
+                      return {'statusCode': 200, 'body': json.dumps({'status': 'NO_DATA'})}
+                  
+                  available_slots = int(response['Item'].get('availableSlots', 0))
+                  print(f"Available slots: {available_slots}")
+                  
+                  if party_size > available_slots:
+                      print(f"Table unavailable: party size ({party_size}) exceeds available slots ({available_slots})")
+                      publish_unavailable_event(restaurant_id, reservation_id, time_slot, party_size, available_slots)
+                      return {'statusCode': 200, 'body': json.dumps({'status': 'UNAVAILABLE'})}
+                  
+                  print(f"Table available: party size ({party_size}) within available slots ({available_slots})")
+                  return {'statusCode': 200, 'body': json.dumps({'status': 'AVAILABLE'})}
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  return {'statusCode': 500, 'body': json.dumps({'error': str(e)})}
+          
+          def publish_unavailable_event(restaurant_id, reservation_id, time_slot, party_size, available_slots):
+              try:
+                  event_detail = {
+                      'restaurantId': restaurant_id,
+                      'reservationId': reservation_id,
+                      'timeSlot': time_slot,
+                      'partySize': party_size,
+                      'availableSlots': available_slots,
+                      'timestamp': datetime.utcnow().isoformat()
+                  }
+                  
+                  response = eventbridge.put_events(
+                      Entries=[{
+                          'Source': 'availability.service',
+                          'DetailType': 'TableUnavailable',
+                          'Detail': json.dumps(event_detail),
+                          'EventBusName': EVENT_BUS_NAME
+                      }]
+                  )
+                  
+                  if response['FailedEntryCount'] == 0:
+                      print(f"TableUnavailable event published for reservation: {reservation_id}")
+              except Exception as e:
+                  print(f"Error publishing event: {str(e)}")
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda 함수: NotificationSender
+  NotificationSenderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-NotificationSender'
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Ref ReservationNotificationTopic
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          from datetime import datetime
+          
+          sns = boto3.client('sns')
+          SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
+          
+          def lambda_handler(event, context):
+              print(f"Received event: {json.dumps(event)}")
+              
+              try:
+                  detail = event['detail']
+                  restaurant_id = detail['restaurantId']
+                  reservation_id = detail['reservationId']
+                  time_slot = detail['timeSlot']
+                  party_size = detail['partySize']
+                  available_slots = detail['availableSlots']
+                  
+                  print(f"Sending notification for reservation: {reservation_id}")
+                  
+                  date_part, time_part = time_slot.split('#')
+                  
+                  if available_slots == 0:
+                      status_message = "해당 시간대에 예약 가능한 테이블이 없습니다."
+                  else:
+                      status_message = f"요청하신 인원({party_size}명)에 비해 예약 가능한 테이블({available_slots}개)이 부족합니다."
+                  
+                  message = (
+                      f"QuickTable 예약 불가 알림\\n\\n"
+                      f"{status_message}\\n\\n"
+                      f"예약 정보:\\n"
+                      f"- 예약 ID: {reservation_id}\\n"
+                      f"- 레스토랑 ID: {restaurant_id}\\n"
+                      f"- 예약 날짜: {date_part}\\n"
+                      f"- 예약 시간: {time_part}\\n"
+                      f"- 요청 인원: {party_size}명\\n"
+                      f"- 예약 가능 테이블: {available_slots}개\\n\\n"
+                      f"발생 시간: {datetime.utcnow().isoformat()}"
+                  )
+                  
+                  response = sns.publish(
+                      TopicArn=SNS_TOPIC_ARN,
+                      Subject=f"[QuickTable] 예약 불가 알림 - 예약 {reservation_id}",
+                      Message=message
+                  )
+                  
+                  print(f"Notification sent: MessageId={response.get('MessageId')}")
+                  return {'statusCode': 200, 'body': json.dumps({'status': 'sent'})}
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  return {'statusCode': 500, 'body': json.dumps({'error': str(e)})}
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # CloudWatch Logs Groups
+  ReservationProcessorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ReservationProcessorFunction}'
+      RetentionInDays: 7
+
+  TableAvailabilityCheckerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${TableAvailabilityCheckerFunction}'
+      RetentionInDays: 7
+
+  NotificationSenderLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${NotificationSenderFunction}'
+      RetentionInDays: 7
+
+Outputs:
+  ReservationsTableName:
+    Description: Reservations DynamoDB table name
+    Value: !Ref ReservationsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ReservationsTable'
+
+  RestaurantAvailabilityTableName:
+    Description: RestaurantAvailability DynamoDB table name
+    Value: !Ref RestaurantAvailabilityTable
+    Export:
+      Name: !Sub '${AWS::StackName}-RestaurantAvailabilityTable'
+
+  ReservationEventBusName:
+    Description: EventBridge Event Bus name
+    Value: !Ref ReservationEventBus
+    Export:
+      Name: !Sub '${AWS::StackName}-EventBus'
+
+  LambdaExecutionRoleArn:
+    Description: Lambda execution role ARN
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaRole'
+
+  ReservationNotificationTopicArn:
+    Description: SNS Topic ARN
+    Value: !Ref ReservationNotificationTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-SNSTopic'
+
+  ReservationProcessorFunctionName:
+    Description: ReservationProcessor Lambda function name
+    Value: !Ref ReservationProcessorFunction
+
+  TableAvailabilityCheckerFunctionName:
+    Description: TableAvailabilityChecker Lambda function name
+    Value: !Ref TableAvailabilityCheckerFunction
+
+  NotificationSenderFunctionName:
+    Description: NotificationSender Lambda function name
+    Value: !Ref NotificationSenderFunction

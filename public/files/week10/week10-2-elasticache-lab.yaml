@@ -1,0 +1,499 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 10-2: Amazon ElastiCache API Response Caching Implementation Lab Environment'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: 'week10-2-elasticache-lab'
+    Description: Environment name (used for resource tagging)
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '10-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+  CacheNodeType:
+    Type: String
+    Default: 'cache.t3.micro'
+    Description: ElastiCache node type
+    AllowedValues:
+      - cache.t3.micro
+      - cache.t3.small
+      - cache.t3.medium
+
+Resources:
+  # VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-VPC'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-IGW'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Public-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnets for ElastiCache
+  PrivateSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.11.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Private-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  PrivateSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.12.0/24
+      AvailabilityZone: !Select [2, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Private-Subnet-C'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # NAT Gateway
+  NATGatewayEIP:
+    Type: AWS::EC2::EIP
+    DependsOn: AttachGateway
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-NAT-EIP'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NATGatewayEIP.AllocationId
+      SubnetId: !Ref PublicSubnetA
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-NAT-Gateway'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Route Tables
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Public-RT'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Private-RT'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+
+  PrivateSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetA
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetC
+      RouteTableId: !Ref PrivateRouteTable
+
+  # ElastiCache Subnet Group
+  ElastiCacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnet group for ElastiCache cluster
+      SubnetIds:
+        - !Ref PrivateSubnetA
+        - !Ref PrivateSubnetC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-ElastiCache-SubnetGroup'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # ElastiCache Security Group
+  ElastiCacheSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-ElastiCache-SG'
+      GroupDescription: Security group for ElastiCache cluster
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-ElastiCache-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Security Group
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-Lambda-SG'
+      GroupDescription: Security group for Lambda functions
+      VpcId: !Ref VPC
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: Allow HTTPS outbound
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Lambda-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # EC2 Security Group (for testing)
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-EC2-SG'
+      GroupDescription: Security group for EC2 test instance
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: Allow SSH access
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          DestinationSecurityGroupId: !Ref ElastiCacheSecurityGroup
+          Description: Allow Redis access to ElastiCache
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: Allow HTTPS outbound
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-EC2-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Security Group Ingress Rules (to avoid circular dependency)
+  ElastiCacheIngressFromLambda:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref ElastiCacheSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref LambdaSecurityGroup
+      Description: Allow Redis access from Lambda
+
+  ElastiCacheIngressFromEC2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref ElastiCacheSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref EC2SecurityGroup
+      Description: Allow Redis access from EC2
+
+  LambdaEgressToElastiCache:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref LambdaSecurityGroup
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      DestinationSecurityGroupId: !Ref ElastiCacheSecurityGroup
+      Description: Allow Redis access to ElastiCache
+
+  # Lambda Execution Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-LambdaExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: ElastiCacheAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticache:DescribeCacheClusters
+                  - elasticache:DescribeReplicationGroups
+                Resource: '*'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-LambdaExecutionRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # DynamoDB Table (for API data)
+  APIDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvironmentName}-APIData'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-APIData'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # CloudWatch Logs Group
+  APIFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${EnvironmentName}-APIFunction'
+      RetentionInDays: 7
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-APIFunction-LogGroup'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+Outputs:
+  VpcId:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub '${AWS::StackName}-VpcId'
+
+  PublicSubnetAId:
+    Description: Public Subnet A ID
+    Value: !Ref PublicSubnetA
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicSubnetA'
+
+  PrivateSubnetAId:
+    Description: Private Subnet A ID
+    Value: !Ref PrivateSubnetA
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnetA'
+
+  PrivateSubnetCId:
+    Description: Private Subnet C ID
+    Value: !Ref PrivateSubnetC
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnetC'
+
+  ElastiCacheSubnetGroupName:
+    Description: ElastiCache Subnet Group Name
+    Value: !Ref ElastiCacheSubnetGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-ElastiCacheSubnetGroup'
+
+  ElastiCacheSecurityGroupId:
+    Description: ElastiCache Security Group ID
+    Value: !Ref ElastiCacheSecurityGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-ElastiCacheSecurityGroupId'
+
+  LambdaSecurityGroupId:
+    Description: Lambda Security Group ID
+    Value: !Ref LambdaSecurityGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaSecurityGroupId'
+
+  EC2SecurityGroupId:
+    Description: EC2 Security Group ID
+    Value: !Ref EC2SecurityGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-EC2SecurityGroupId'
+
+  LambdaExecutionRoleArn:
+    Description: Lambda Execution Role ARN
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LambdaExecutionRoleArn'
+
+  APIDataTableName:
+    Description: DynamoDB Table Name for API Data
+    Value: !Ref APIDataTable
+    Export:
+      Name: !Sub '${AWS::StackName}-APIDataTableName'
+
+  SetupInstructions:
+    Description: Next steps guide
+    Value: !Sub |
+      ElastiCache 환경 구축이 완료되었습니다!
+
+      생성된 리소스:
+      - VPC: ${VPC}
+      - ElastiCache Subnet Group: ${ElastiCacheSubnetGroup}
+      - Lambda Execution Role: ${LambdaExecutionRole}
+      - DynamoDB Table: ${APIDataTable}
+
+      다음 단계:
+      1. ElastiCache Redis 클러스터 생성
+         - Subnet Group: ${ElastiCacheSubnetGroup}
+         - Security Group: ${ElastiCacheSecurityGroup}
+         - Node Type: ${CacheNodeType}
+
+      2. Lambda 함수 생성 (API with Cache)
+         - VPC: ${VPC}
+         - Subnets: ${PrivateSubnetA}, ${PrivateSubnetC}
+         - Security Group: ${LambdaSecurityGroup}
+         - Role: ${LambdaExecutionRole.Arn}
+
+      3. API Gateway 생성 및 Lambda 연동
+
+      4. 캐싱 성능 테스트

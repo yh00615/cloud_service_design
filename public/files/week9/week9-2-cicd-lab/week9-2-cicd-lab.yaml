@@ -1,0 +1,160 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 9-2: AWS CodeBuild 실습 환경 - ECR 리포지토리, CodeCommit 리포지토리, IAM 역할 자동 생성'
+
+Parameters:
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '9-2'
+    Description: Week tag value
+
+  ECRRepositoryName:
+    Type: String
+    Default: 'cicd-demo-app'
+    Description: 'Amazon ECR repository name'
+  
+  CodeCommitRepositoryName:
+    Type: String
+    Default: 'cicd-demo-repo'
+    Description: 'AWS CodeCommit repository name'
+
+Resources:
+  # Amazon ECR 리포지토리
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref ECRRepositoryName
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep last 10 images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 10
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: Student
+
+  # AWS CodeCommit 리포지토리
+  CodeCommitRepository:
+    Type: AWS::CodeCommit::Repository
+    Properties:
+      RepositoryName: !Ref CodeCommitRepositoryName
+      RepositoryDescription: 'CI/CD 데모 애플리케이션 소스 코드'
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: Student
+
+  # CodeBuild IAM 역할
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-CodeBuildRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSCodeCommitReadOnly'
+      Policies:
+        - PolicyName: CodeBuildPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # CloudWatch Logs 권한
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*'
+              
+              # ECR 권한
+              - Effect: Allow
+                Action:
+                  - 'ecr:GetAuthorizationToken'
+                Resource: '*'
+              
+              - Effect: Allow
+                Action:
+                  - 'ecr:BatchCheckLayerAvailability'
+                  - 'ecr:GetDownloadUrlForLayer'
+                  - 'ecr:BatchGetImage'
+                  - 'ecr:PutImage'
+                  - 'ecr:InitiateLayerUpload'
+                  - 'ecr:UploadLayerPart'
+                  - 'ecr:CompleteLayerUpload'
+                Resource: !GetAtt ECRRepository.Arn
+              
+              # CodeCommit 권한 (추가)
+              - Effect: Allow
+                Action:
+                  - 'codecommit:GitPull'
+                Resource: !GetAtt CodeCommitRepository.Arn
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: Student
+
+Outputs:
+  ECRRepositoryUri:
+    Description: 'Amazon ECR repository URI'
+    Value: !GetAtt ECRRepository.RepositoryUri
+    Export:
+      Name: !Sub '${AWS::StackName}-ECRRepositoryUri'
+  
+  ECRRepositoryName:
+    Description: 'Amazon ECR repository name'
+    Value: !Ref ECRRepositoryName
+    Export:
+      Name: !Sub '${AWS::StackName}-ECRRepositoryName'
+  
+  CodeCommitRepositoryName:
+    Description: 'AWS CodeCommit repository name'
+    Value: !GetAtt CodeCommitRepository.Name
+    Export:
+      Name: !Sub '${AWS::StackName}-CodeCommitRepositoryName'
+  
+  CodeCommitRepositoryCloneUrlHttp:
+    Description: 'AWS CodeCommit repository HTTPS Clone URL'
+    Value: !GetAtt CodeCommitRepository.CloneUrlHttp
+    Export:
+      Name: !Sub '${AWS::StackName}-CodeCommitCloneUrlHttp'
+  
+  CodeBuildRoleArn:
+    Description: 'CodeBuild IAM role ARN'
+    Value: !GetAtt CodeBuildServiceRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-CodeBuildRoleArn'

@@ -1,0 +1,5 @@
+{"customer_id": "C001", "name": "김철수", "email": "kim@example.com", "signup_date": "2023-06-15"}
+{"customer_id": "C002", "name": "이영희", "email": "lee@example.com", "signup_date": "2023-07-20"}
+{"customer_id": "C003", "name": "박민수", "email": "park@example.com", "signup_date": "2023-08-10"}
+{"customer_id": "C004", "name": "최지은", "email": "choi@example.com", "signup_date": "2023-09-05"}
+{"customer_id": "C005", "name": "정수진", "email": "jung@example.com", "signup_date": "2023-10-12"}

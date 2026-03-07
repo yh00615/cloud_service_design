@@ -1,0 +1,167 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 1-1 Tag Editor Lab - QuickTable Restaurant Reservation System Resources for Tag Management Practice'
+
+Parameters:
+  WeekTag:
+    Type: String
+    Default: '1-1'
+    Description: Week tag value for all resources (students will add Project and CreatedBy tags manually)
+
+Resources:
+  # S3 Bucket 1: QuickTable Reservations Bucket
+  ReservationsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'quicktable-reservations-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Week
+          Value: !Ref WeekTag
+
+  # S3 Bucket 2: QuickTable Logs Bucket
+  LogsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'quicktable-logs-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Week
+          Value: !Ref WeekTag
+
+  # DynamoDB Table: QuickTable Reservations
+  ReservationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: QuickTableReservations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: reservationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: reservationId
+          KeyType: RANGE
+      Tags:
+        - Key: Week
+          Value: !Ref WeekTag
+
+  # IAM Role for Lambda
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: QuickTableLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: QuickTableDynamoDBReadPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                Resource: !GetAtt ReservationsTable.Arn
+      Tags:
+        - Key: Week
+          Value: !Ref WeekTag
+
+  # Lambda Function: QuickTable Get Reservation
+  GetReservationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: QuickTableGetReservation
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          import json
+          import os
+
+          def lambda_handler(event, context):
+              """
+              QuickTable Reservation Query Lambda Function
+              
+              This function queries reservation information from the QuickTable restaurant reservation system.
+              Sample function for practicing Lambda function tag management in Tag Editor lab.
+              
+              Args:
+                  event (dict): Lambda event object
+                      - userId (str): User ID
+                      - reservationId (str): Reservation ID
+                  context (LambdaContext): Lambda execution context
+              
+              Returns:
+                  dict: HTTP response format
+                      - statusCode (int): 200 (success)
+                      - body (str): JSON formatted reservation information
+              """
+              table_name = os.environ.get('TABLE_NAME', 'QuickTableReservations')
+              
+              # Sample response (actual DynamoDB query implemented in Week 4-2)
+              response = {
+                  'message': 'QuickTable Reservation System',
+                  'tableName': table_name,
+                  'status': 'Ready for reservations'
+              }
+              
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps(response)
+              }
+      Tags:
+        - Key: Week
+          Value: !Ref WeekTag
+
+Outputs:
+  ReservationsBucketName:
+    Description: Name of the QuickTable reservations S3 bucket
+    Value: !Ref ReservationsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ReservationsBucket'
+
+  LogsBucketName:
+    Description: Name of the QuickTable logs S3 bucket
+    Value: !Ref LogsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-LogsBucket'
+
+  ReservationsTableName:
+    Description: Name of the QuickTable reservations DynamoDB table
+    Value: !Ref ReservationsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ReservationsTable'
+
+  GetReservationFunctionName:
+    Description: Name of the QuickTable get reservation Lambda function
+    Value: !Ref GetReservationFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-GetReservationFunction'
+
+  GetReservationFunctionArn:
+    Description: ARN of the QuickTable get reservation Lambda function
+    Value: !GetAtt GetReservationFunction.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-GetReservationFunctionArn'

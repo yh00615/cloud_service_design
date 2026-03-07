@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudFront Demo - Week 10-3</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <img src="images/logo.png" alt="AWS Logo" class="logo">
+            <h1>CloudFront CDN Demo</h1>
+            <p class="subtitle">Week 10-3 실습 - Amazon CloudFront 배포</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <img src="images/banner.jpg" alt="CloudFront Banner" class="banner">
+            <h2>Amazon CloudFront란?</h2>
+            <p>
+                Amazon CloudFront는 전 세계에 분산된 엣지 로케이션을 통해 콘텐츠를 빠르게 전달하는
+                CDN(Content Delivery Network) 서비스입니다.
+            </p>
+        </section>
+
+        <section class="features">
+            <h2>주요 기능</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🚀 빠른 콘텐츠 전달</h3>
+                    <p>전 세계 450개 이상의 엣지 로케이션을 통해 낮은 지연 시간으로 콘텐츠를 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔒 보안</h3>
+                    <p>AWS Shield Standard, SSL/TLS 암호화, OAC를 통한 S3 보안 접근을 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💰 비용 효율적</h3>
+                    <p>사용한 만큼만 지불하며, 오리진 서버의 부하를 줄여 비용을 절감합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 실시간 분석</h3>
+                    <p>CloudWatch를 통해 실시간 메트릭과 로그를 확인할 수 있습니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="caching-demo">
+            <h2>캐싱 테스트</h2>
+            <p>이 페이지는 CloudFront를 통해 전달되고 있습니다. 아래 정보를 확인하세요:</p>
+
+            <div class="info-box">
+                <h3>캐시 상태 확인</h3>
+                <p>브라우저 개발자 도구(F12)를 열고 Network 탭에서 다음을 확인하세요:</p>
+                <ul>
+                    <li><strong>X-Cache</strong>: Hit from cloudfront (캐시됨) 또는 Miss from cloudfront (캐시 미스)</li>
+                    <li><strong>X-Amz-Cf-Pop</strong>: 요청을 처리한 엣지 로케이션</li>
+                    <li><strong>X-Amz-Cf-Id</strong>: CloudFront 요청 ID</li>
+                </ul>
+            </div>
+
+            <div class="test-buttons">
+                <button onclick="loadImage()">이미지 로드 테스트</button>
+                <button onclick="loadCSS()">CSS 캐싱 테스트</button>
+                <button onclick="loadJS()">JavaScript 캐싱 테스트</button>
+                <button onclick="showCacheInfo()">캐시 정보 표시</button>
+            </div>
+
+            <div id="test-result" class="test-result"></div>
+        </section>
+
+        <section class="invalidation-info">
+            <h2>캐시 무효화 (Invalidation)</h2>
+            <p>
+                CloudFront 콘솔에서 캐시를 무효화하여 즉시 새 콘텐츠를 배포할 수 있습니다.
+            </p>
+            <div class="code-block">
+                <code>
+                    # AWS CLI로 캐시 무효화<br>
+                    aws cloudfront create-invalidation \<br>
+                    &nbsp;&nbsp;--distribution-id YOUR_DISTRIBUTION_ID \<br>
+                    &nbsp;&nbsp;--paths "/*"
+                </code>
+            </div>
+        </section>
+
+        <section class="timestamp">
+            <h2>페이지 로드 시간</h2>
+            <p>이 페이지는 <span id="timestamp"></span>에 로드되었습니다.</p>
+            <p>페이지를 새로고침하여 캐싱 효과를 확인하세요.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AWS CloudFront Demo - Week 10-3 실습</p>
+            <p>이 페이지는 교육 목적으로 제작되었습니다.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

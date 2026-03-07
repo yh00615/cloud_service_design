@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 2-2: IAM Role and AssumeRole Lab - Pre-built Environment (lab-user + S3 Bucket)'
+
+# AWS CloudFormation 템플릿: AWS Identity and Access Management 역할 및 AssumeRole 실습을 위한 테스트 환경
+# 이 템플릿은 lab-user AWS Identity and Access Management 사용자(콘솔 로그인 가능), 테스트용 Amazon S3 버킷을 자동으로 생성합니다.
+# 학생들은 AWS Identity and Access Management 역할 생성 및 AssumeRole API 호출에 집중할 수 있습니다.
+
+Parameters:
+  LabUserPassword:
+    Type: String
+    NoEcho: true
+    Default: 'ChangeMe123!'
+    Description: Initial password for lab-user (must be changed on first login)
+    MinLength: 8
+    AllowedPattern: ^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]+$
+    ConstraintDescription: Password must be at least 8 characters
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '2-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # AWS Identity and Access Management 사용자: lab-user (콘솔 로그인 + AssumeRole 테스트용)
+  LabUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: lab-user
+      LoginProfile:
+        Password: !Ref LabUserPassword
+        PasswordResetRequired: true
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/IAMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AWSCloudShellFullAccess
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Amazon S3 버킷: 역할 권한 테스트용
+  TestBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'iam-role-lab-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+Outputs:
+  LabUserName:
+    Description: IAM user name (used in Task 4 for AssumeRole permission)
+    Value: !Ref LabUser
+    Export:
+      Name: !Sub '${AWS::StackName}-LabUserName'
+
+  LabUserConsoleLoginUrl:
+    Description: Console login URL for lab-user
+    Value: !Sub 'https://${AWS::AccountId}.signin.aws.amazon.com/console'
+    Export:
+      Name: !Sub '${AWS::StackName}-ConsoleLoginUrl'
+
+  LabUserInitialPassword:
+    Description: Initial password (must be changed on first login)
+    Value: !Ref LabUserPassword
+
+  TestBucketName:
+    Description: Test S3 bucket name (used in Task 5-6 for permission testing)
+    Value: !Ref TestBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-TestBucketName'
+
+  TestBucketArn:
+    Description: Test S3 bucket ARN
+    Value: !GetAtt TestBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-TestBucketArn'

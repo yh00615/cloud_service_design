@@ -1,0 +1,11 @@
+order_id,customer_id,product_id,product_name,quantity,price,order_date,region
+1001,C001,P001,Laptop,1,1200000,2024-01-15,Seoul
+1002,C002,P002,Mouse,2,25000,2024-01-15,Busan
+1003,C001,P003,Keyboard,1,80000,2024-01-16,Seoul
+1004,C003,P001,Laptop,1,1200000,2024-01-16,Incheon
+1005,C004,P004,Monitor,2,300000,2024-01-17,Seoul
+1006,C002,P002,Mouse,3,25000,2024-01-17,Busan
+1007,C005,P003,Keyboard,1,80000,2024-01-18,Daegu
+1008,C003,P005,Headset,1,150000,2024-01-18,Incheon
+1009,C006,P001,Laptop,1,1200000,2024-01-19,Seoul
+1010,C004,P004,Monitor,1,300000,2024-01-19,Seoul

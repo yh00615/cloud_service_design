@@ -1,0 +1,39 @@
+version: 0.2
+
+# AWS CodeBuild buildspec for S3 static website deployment
+# Week 9-3: CodePipeline + CodeBuild + S3
+
+phases:
+  pre_build:
+    commands:
+      - echo "Pre-build phase started on `date`"
+      - echo "Checking AWS CLI version..."
+      - aws --version
+      - echo "Current directory:"
+      - pwd
+      - echo "Listing files:"
+      - ls -la
+      
+  build:
+    commands:
+      - echo "Build phase started on `date`"
+      - echo "No build steps required for static website"
+      - echo "Files ready for deployment"
+      
+  post_build:
+    commands:
+      - echo "Post-build phase started on `date`"
+      - echo "Deploying to S3 bucket: $BUCKET_NAME"
+      - |
+        aws s3 sync . s3://$BUCKET_NAME \
+          --delete \
+          --exclude "buildspec.yml" \
+          --exclude ".git/*" \
+          --exclude "README.md"
+      - echo "Deployment completed successfully"
+      - echo "Website URL: http://$BUCKET_NAME.s3-website.ap-northeast-2.amazonaws.com"
+
+artifacts:
+  files:
+    - '**/*'
+  name: website-build-$(date +%Y%m%d-%H%M%S)

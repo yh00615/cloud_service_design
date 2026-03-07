@@ -1,0 +1,659 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 11-3: AWS Glue Data Pipeline Construction Lab Environment'
+
+Parameters:
+  StudentId:
+    Type: String
+    Description: Student ID or unique identifier (lowercase, numbers, hyphens only, e.g., 20240001 or student01)
+    AllowedPattern: ^[a-z0-9-]+$
+    MinLength: 5
+    MaxLength: 20
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed (5-20 characters)
+
+  EnvironmentName:
+    Type: String
+    Default: week11-3-pipeline
+    Description: Environment name (used for resource naming)
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '11-3'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # S3 Buckets - 학번으로 고유성 보장
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-data-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Data'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  ScriptsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-scripts-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Scripts'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  TempBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-temp-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteTempFiles
+            Status: Enabled
+            ExpirationInDays: 1
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Temp'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Glue Database
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub 'week11_pipeline_${StudentId}'
+        Description: Data pipeline database for Week 11-3 lab
+        LocationUri: !Sub 's3://${DataBucket}/'
+
+  # Glue Service Role
+  GlueServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-GlueServiceRole-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub '${DataBucket.Arn}/*'
+                  - !Sub '${ScriptsBucket.Arn}/*'
+                  - !Sub '${TempBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt DataBucket.Arn
+                  - !GetAtt ScriptsBucket.Arn
+                  - !GetAtt TempBucket.Arn
+        - PolicyName: CloudWatchLogs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-glue/*'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-GlueServiceRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Glue Crawler
+  GlueCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Name: !Sub 'week11-pipeline-crawler-${StudentId}'
+      Role: !GetAtt GlueServiceRole.Arn
+      DatabaseName: !Ref GlueDatabase
+      Targets:
+        S3Targets:
+          - Path: !Sub 's3://${DataBucket}/raw/'
+      SchemaChangePolicy:
+        UpdateBehavior: UPDATE_IN_DATABASE
+        DeleteBehavior: LOG
+      Configuration: |
+        {
+          "Version": 1.0,
+          "CrawlerOutput": {
+            "Partitions": {
+              "AddOrUpdateBehavior": "InheritFromTable"
+            }
+          }
+        }
+      Tags:
+        Name: !Sub '${EnvironmentName}-Crawler'
+        Project: !Ref ProjectTag
+        Week: !Ref WeekTag
+        CreatedBy: !Ref CreatedByTag
+
+  # Glue Job (기본 설정 - 학생이 스크립트 작성)
+  GlueETLJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Name: !Sub 'week11-etl-job-${StudentId}'
+      Role: !GetAtt GlueServiceRole.Arn
+      Command:
+        Name: glueetl
+        ScriptLocation: !Sub 's3://${ScriptsBucket}/scripts/etl-script.py'
+        PythonVersion: '3'
+      DefaultArguments:
+        '--TempDir': !Sub 's3://${TempBucket}/temp/'
+        '--job-bookmark-option': 'job-bookmark-enable'
+        '--enable-metrics': 'true'
+        '--enable-spark-ui': 'true'
+        '--spark-event-logs-path': !Sub 's3://${TempBucket}/spark-logs/'
+        '--enable-job-insights': 'true'
+        '--enable-glue-datacatalog': 'true'
+        '--database_name': !Ref GlueDatabase
+        '--source_bucket': !Ref DataBucket
+        '--target_bucket': !Ref DataBucket
+      MaxRetries: 1
+      Timeout: 60
+      GlueVersion: '4.0'
+      MaxCapacity: 2
+      Tags:
+        Name: !Sub '${EnvironmentName}-ETLJob'
+        Project: !Ref ProjectTag
+        Week: !Ref WeekTag
+        CreatedBy: !Ref CreatedByTag
+
+  # Lambda Function for Pipeline Trigger
+  PipelineTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-PipelineTriggerRole-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: GlueAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:StartCrawler
+                  - glue:StartJobRun
+                  - glue:GetCrawler
+                  - glue:GetJob
+                Resource:
+                  - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:crawler/${GlueCrawler}'
+                  - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:job/${GlueETLJob}'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-PipelineTriggerRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  PipelineTriggerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-PipelineTrigger-${StudentId}'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt PipelineTriggerRole.Arn
+      Timeout: 60
+      Environment:
+        Variables:
+          CRAWLER_NAME: !Ref GlueCrawler
+          JOB_NAME: !Ref GlueETLJob
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          
+          glue = boto3.client('glue')
+          
+          def handler(event, context):
+              crawler_name = os.environ['CRAWLER_NAME']
+              job_name = os.environ['JOB_NAME']
+              
+              try:
+                  # S3 이벤트에서 파일 정보 추출
+                  for record in event['Records']:
+                      bucket = record['s3']['bucket']['name']
+                      key = record['s3']['object']['key']
+                      
+                      print(f'New file uploaded: s3://{bucket}/{key}')
+                      
+                      # Crawler 시작
+                      print(f'Starting crawler: {crawler_name}')
+                      glue.start_crawler(Name=crawler_name)
+                      
+                      # 참고: 실제 프로덕션에서는 Crawler 완료 후 Job 실행
+                      # 이 예제에서는 수동으로 Job을 실행하도록 안내
+                      
+                  return {
+                      'statusCode': 200,
+                      'body': json.dumps({
+                          'message': 'Pipeline triggered successfully',
+                          'crawler': crawler_name
+                      })
+                  }
+              except Exception as e:
+                  print(f'Error: {str(e)}')
+                  return {
+                      'statusCode': 500,
+                      'body': json.dumps({
+                          'error': str(e)
+                      })
+                  }
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-PipelineTrigger'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # EventBridge Rule for S3 Events
+  S3EventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub 'week11-s3-event-rule-${StudentId}'
+      Description: Trigger pipeline when new data arrives in S3
+      State: ENABLED
+      EventPattern:
+        source:
+          - aws.s3
+        detail-type:
+          - Object Created
+        detail:
+          bucket:
+            name:
+              - !Ref DataBucket
+          object:
+            key:
+              - prefix: raw/
+      Targets:
+        - Arn: !GetAtt PipelineTriggerFunction.Arn
+          Id: PipelineTriggerTarget
+
+  # Lambda Permission for EventBridge
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref PipelineTriggerFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt S3EventRule.Arn
+
+  # CloudWatch Logs Groups
+  GlueJobLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws-glue/jobs/${GlueETLJob}'
+      RetentionInDays: 7
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-GlueJobLogGroup'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${PipelineTriggerFunction}'
+      RetentionInDays: 7
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-LambdaLogGroup'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Sample Data Uploader
+  SampleDataUploaderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-SampleDataUploaderRole-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - !Sub '${DataBucket.Arn}/*'
+                  - !Sub '${ScriptsBucket.Arn}/*'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-SampleDataUploaderRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  SampleDataUploaderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-SampleDataUploader-${StudentId}'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt SampleDataUploaderRole.Arn
+      Timeout: 60
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import cfnresponse
+          
+          s3 = boto3.client('s3')
+          
+          # 샘플 거래 데이터
+          SAMPLE_TRANSACTIONS = """transaction_id,timestamp,customer_id,product_id,quantity,price,status
+          T001,2024-01-15 10:30:00,C001,P100,2,49.99,completed
+          T002,2024-01-15 11:45:00,C002,P101,1,99.99,pending
+          T003,2024-01-15 14:20:00,C003,P102,3,29.99,completed
+          T004,2024-01-16 09:15:00,C001,P103,1,149.99,completed
+          T005,2024-01-16 13:30:00,C004,P100,2,49.99,cancelled
+          T006,2024-01-17 10:00:00,C005,P104,1,199.99,completed
+          T007,2024-01-17 15:45:00,C002,P102,5,29.99,completed
+          T008,2024-01-18 11:20:00,C006,P101,1,99.99,pending
+          T009,2024-01-18 16:30:00,C003,P105,2,79.99,completed
+          T010,2024-01-19 09:45:00,C007,P100,3,49.99,completed"""
+          
+          # 샘플 Glue ETL 스크립트
+          SAMPLE_ETL_SCRIPT = """import sys
+          from awsglue.transforms import *
+          from awsglue.utils import getResolvedOptions
+          from pyspark.context import SparkContext
+          from awsglue.context import GlueContext
+          from awsglue.job import Job
+          from pyspark.sql.functions import col, to_date, year, month, day
+          
+          args = getResolvedOptions(sys.argv, ['JOB_NAME', 'database_name', 'source_bucket', 'target_bucket'])
+          
+          sc = SparkContext()
+          glueContext = GlueContext(sc)
+          spark = glueContext.spark_session
+          job = Job(glueContext)
+          job.init(args['JOB_NAME'], args)
+          
+          # 데이터 읽기
+          datasource = glueContext.create_dynamic_frame.from_catalog(
+              database=args['database_name'],
+              table_name='raw'
+          )
+          
+          # DataFrame으로 변환
+          df = datasource.toDF()
+          
+          # 데이터 변환
+          # TODO: 학생이 변환 로직 작성
+          # 예시: 날짜 파싱, 필터링, 집계 등
+          
+          # 날짜 파싱
+          df_transformed = df.withColumn('date', to_date(col('timestamp'))) \\
+                             .withColumn('year', year(col('timestamp'))) \\
+                             .withColumn('month', month(col('timestamp'))) \\
+                             .withColumn('day', day(col('timestamp')))
+          
+          # 완료된 거래만 필터링
+          df_filtered = df_transformed.filter(col('status') == 'completed')
+          
+          # DynamicFrame으로 변환
+          output_df = DynamicFrame.fromDF(df_filtered, glueContext, 'output_df')
+          
+          # 데이터 쓰기 (Parquet 형식)
+          glueContext.write_dynamic_frame.from_options(
+              frame=output_df,
+              connection_type='s3',
+              connection_options={
+                  'path': f"s3://{args['target_bucket']}/processed/",
+                  'partitionKeys': ['year', 'month', 'day']
+              },
+              format='parquet'
+          )
+          
+          job.commit()
+          """
+          
+          def handler(event, context):
+              try:
+                  if event['RequestType'] == 'Create':
+                      data_bucket = event['ResourceProperties']['DataBucket']
+                      scripts_bucket = event['ResourceProperties']['ScriptsBucket']
+                      
+                      # 샘플 거래 데이터 업로드
+                      s3.put_object(
+                          Bucket=data_bucket,
+                          Key='raw/transactions.csv',
+                          Body=SAMPLE_TRANSACTIONS.encode('utf-8'),
+                          ContentType='text/csv'
+                      )
+                      
+                      # ETL 스크립트 업로드
+                      s3.put_object(
+                          Bucket=scripts_bucket,
+                          Key='scripts/etl-script.py',
+                          Body=SAMPLE_ETL_SCRIPT.encode('utf-8'),
+                          ContentType='text/x-python'
+                      )
+                      
+                      print(f'Successfully uploaded sample data and scripts')
+                  
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {
+                      'Message': 'Sample data and scripts uploaded successfully'
+                  })
+              except Exception as e:
+                  print(f'Error: {str(e)}')
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {
+                      'Error': str(e)
+                  })
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-SampleDataUploader'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Custom Resource to Upload Sample Data
+  UploadSampleData:
+    Type: Custom::S3Upload
+    Properties:
+      ServiceToken: !GetAtt SampleDataUploaderFunction.Arn
+      DataBucket: !Ref DataBucket
+      ScriptsBucket: !Ref ScriptsBucket
+
+Outputs:
+  DataBucketName:
+    Description: Data Bucket Name (raw and processed data)
+    Value: !Ref DataBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-DataBucket'
+
+  ScriptsBucketName:
+    Description: Scripts Bucket Name (Glue ETL scripts)
+    Value: !Ref ScriptsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ScriptsBucket'
+
+  TempBucketName:
+    Description: Temp Bucket Name (temporary storage)
+    Value: !Ref TempBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-TempBucket'
+
+  GlueDatabaseName:
+    Description: Glue Database Name
+    Value: !Ref GlueDatabase
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueDatabase'
+
+  GlueCrawlerName:
+    Description: Glue Crawler Name
+    Value: !Ref GlueCrawler
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueCrawler'
+
+  GlueETLJobName:
+    Description: Glue ETL Job Name
+    Value: !Ref GlueETLJob
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueETLJob'
+
+  PipelineTriggerFunctionArn:
+    Description: Pipeline Trigger Lambda Function ARN
+    Value: !GetAtt PipelineTriggerFunction.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-PipelineTriggerFunction'
+
+  SampleDataLocation:
+    Description: Sample data and scripts location
+    Value: !Sub |
+      샘플 데이터와 스크립트가 자동으로 업로드되었습니다:
+      - 거래 데이터: s3://${DataBucket}/raw/transactions.csv
+      - ETL 스크립트: s3://${ScriptsBucket}/scripts/etl-script.py
+
+  SetupInstructions:
+    Description: Next steps guide
+    Value: !Sub |
+      데이터 파이프라인 환경 구축이 완료되었습니다!
+      
+      생성된 리소스:
+      - Data Bucket: ${DataBucket}
+      - Scripts Bucket: ${ScriptsBucket}
+      - Temp Bucket: ${TempBucket}
+      - Glue Database: ${GlueDatabase}
+      - Glue Crawler: ${GlueCrawler}
+      - Glue ETL Job: ${GlueETLJob}
+      - Pipeline Trigger Function: ${PipelineTriggerFunction}
+      
+      샘플 데이터:
+      - s3://${DataBucket}/raw/transactions.csv (거래 데이터)
+      - s3://${ScriptsBucket}/scripts/etl-script.py (ETL 스크립트)
+      
+      파이프라인 흐름:
+      1. 새 파일이 s3://${DataBucket}/raw/에 업로드됨
+      2. EventBridge가 S3 이벤트 감지
+      3. Lambda 함수가 Glue Crawler 시작
+      4. Crawler가 데이터 카탈로그 업데이트
+      5. Glue ETL Job 실행 (수동 또는 자동)
+      6. 처리된 데이터가 s3://${DataBucket}/processed/에 저장됨
+      
+      다음 단계:
+      1. Glue Crawler 실행
+      2. ETL 스크립트 수정 (선택사항)
+      3. Glue Job 실행
+      4. 처리된 데이터 확인
+      
+      중요: 실습 종료 후 스택을 삭제하여 모든 리소스를 정리하세요.

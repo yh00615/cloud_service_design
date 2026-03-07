@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Simple S3 bucket template for learning CloudFormation basics'
+
+Parameters:
+  BucketNamePrefix:
+    Description: Prefix for S3 bucket name (will be appended with account ID)
+    Type: String
+    Default: my-cfn-bucket
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '6-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${BucketNamePrefix}-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Name
+          Value: !Sub '${BucketNamePrefix}-${AWS::AccountId}'
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+Outputs:
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref MyS3Bucket
+    
+  BucketArn:
+    Description: ARN of the S3 bucket
+    Value: !GetAtt MyS3Bucket.Arn

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CI/CD Demo - Week 9-3</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 AWS CI/CD Pipeline Demo</h1>
+            <p class="subtitle">Week 9-3: CodePipeline + CodeBuild + S3</p>
+        </header>
+
+        <main>
+            <section class="info-card">
+                <h2>환영합니다!</h2>
+                <p>이 웹사이트는 AWS CodePipeline과 CodeBuild를 사용하여 자동으로 배포되었습니다.</p>
+                <p class="version">Version: 1.0</p>
+            </section>
+
+            <section class="features">
+                <h2>주요 기능</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <span class="icon">📦</span>
+                        <h3>CodeCommit</h3>
+                        <p>소스 코드 저장소</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🔨</span>
+                        <h3>CodeBuild</h3>
+                        <p>빌드 및 배포</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🔄</span>
+                        <h3>CodePipeline</h3>
+                        <p>CI/CD 자동화</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">☁️</span>
+                        <h3>Amazon S3</h3>
+                        <p>정적 웹사이트 호스팅</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-card">
+                <h2>배포 프로세스</h2>
+                <ol class="process-list">
+                    <li>개발자가 CodeCommit에 코드를 푸시합니다</li>
+                    <li>EventBridge가 변경 사항을 감지합니다</li>
+                    <li>CodePipeline이 자동으로 실행됩니다</li>
+                    <li>CodeBuild가 파일을 S3에 동기화합니다</li>
+                    <li>웹사이트가 자동으로 업데이트됩니다</li>
+                </ol>
+            </section>
+
+            <nav class="navigation">
+                <a href="about.html" class="btn">소개 페이지로 이동</a>
+            </nav>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 AWS Cloud Service Design Course - Week 9-3</p>
+            <p>Deployed via AWS CodePipeline</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

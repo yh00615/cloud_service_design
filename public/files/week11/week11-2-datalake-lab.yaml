@@ -1,0 +1,414 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 11-2: AWS Glue Crawler and Amazon Athena Query Lab Environment'
+
+Parameters:
+  StudentId:
+    Type: String
+    Description: Student ID or unique identifier (lowercase, numbers, hyphens only, e.g., 20240001 or student01)
+    AllowedPattern: ^[a-z0-9-]+$
+    MinLength: 5
+    MaxLength: 20
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed (5-20 characters)
+
+  EnvironmentName:
+    Type: String
+    Default: 'week11-2-datalake-lab'
+    Description: Environment name (used for resource tagging)
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '11-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # S3 Buckets - 학번으로 고유성 보장
+  RawDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-raw-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-RawData'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  ProcessedDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-processed-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-ProcessedData'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  QueryResultsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'week11-query-${StudentId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldQueryResults
+            Status: Enabled
+            ExpirationInDays: 7
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-QueryResults'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Glue Database - 학번으로 고유성 보장
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub 'week11_db_${StudentId}'
+        Description: Data lake database for Week 11-2 lab
+        LocationUri: !Sub 's3://${RawDataBucket}/'
+
+  # Glue Crawler IAM Role
+  GlueCrawlerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-GlueCrawlerRole-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub '${RawDataBucket.Arn}/*'
+                  - !Sub '${ProcessedDataBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt RawDataBucket.Arn
+                  - !GetAtt ProcessedDataBucket.Arn
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-GlueCrawlerRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Glue Crawler (기본 설정 - 학생이 수정)
+  GlueCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Name: !Sub 'week11-crawler-${StudentId}'
+      Role: !GetAtt GlueCrawlerRole.Arn
+      DatabaseName: !Ref GlueDatabase
+      Targets:
+        S3Targets:
+          - Path: !Sub 's3://${RawDataBucket}/customer-data/'
+      SchemaChangePolicy:
+        UpdateBehavior: UPDATE_IN_DATABASE
+        DeleteBehavior: LOG
+      Configuration: |
+        {
+          "Version": 1.0,
+          "CrawlerOutput": {
+            "Partitions": {
+              "AddOrUpdateBehavior": "InheritFromTable"
+            }
+          }
+        }
+      Tags:
+        Name: !Sub '${EnvironmentName}-Crawler'
+        Project: !Ref ProjectTag
+        Week: !Ref WeekTag
+        CreatedBy: !Ref CreatedByTag
+
+  # Athena Workgroup
+  AthenaWorkgroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Sub 'week11-workgroup-${StudentId}'
+      Description: Athena workgroup for Week 11-2 lab
+      State: ENABLED
+      WorkGroupConfiguration:
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${QueryResultsBucket}/athena-results/'
+          EncryptionConfiguration:
+            EncryptionOption: SSE_S3
+        EnforceWorkGroupConfiguration: true
+        PublishCloudWatchMetricsEnabled: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Workgroup'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Function for Sample Data Upload (Custom Resource)
+  SampleDataUploaderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-SampleDataUploaderRole-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                Resource:
+                  - !Sub '${RawDataBucket.Arn}/*'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-SampleDataUploaderRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  SampleDataUploaderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-SampleDataUploader-${StudentId}'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt SampleDataUploaderRole.Arn
+      Timeout: 60
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import cfnresponse
+          
+          s3 = boto3.client('s3')
+          
+          # 샘플 CSV 데이터
+          SAMPLE_CSV = """customer_id,age,gender,tenure,monthly_charges,total_charges,churn
+          C001,45,Male,24,79.99,1919.76,No
+          C002,32,Female,12,89.99,1079.88,Yes
+          C003,28,Male,6,54.99,329.94,No
+          C004,52,Female,36,99.99,3599.64,No
+          C005,41,Male,18,69.99,1259.82,Yes
+          C006,35,Female,24,84.99,2039.76,No
+          C007,29,Male,9,59.99,539.91,Yes
+          C008,48,Female,30,94.99,2849.70,No
+          C009,38,Male,15,74.99,1124.85,No
+          C010,44,Female,21,89.99,1889.79,Yes"""
+          
+          # 샘플 JSON Lines 데이터
+          SAMPLE_JSON = """{"order_id": "O001", "customer_id": "C001", "product": "Laptop", "amount": 1299.99, "date": "2024-01-15"}
+          {"order_id": "O002", "customer_id": "C002", "product": "Mouse", "amount": 29.99, "date": "2024-01-16"}
+          {"order_id": "O003", "customer_id": "C003", "product": "Keyboard", "amount": 79.99, "date": "2024-01-17"}
+          {"order_id": "O004", "customer_id": "C001", "product": "Monitor", "amount": 399.99, "date": "2024-01-18"}
+          {"order_id": "O005", "customer_id": "C004", "product": "Headset", "amount": 149.99, "date": "2024-01-19"}"""
+          
+          def handler(event, context):
+              try:
+                  if event['RequestType'] == 'Create':
+                      bucket = event['ResourceProperties']['BucketName']
+                      
+                      # CSV 파일 업로드
+                      s3.put_object(
+                          Bucket=bucket,
+                          Key='customer-data/customer-churn.csv',
+                          Body=SAMPLE_CSV.encode('utf-8'),
+                          ContentType='text/csv'
+                      )
+                      
+                      # JSON Lines 파일 업로드
+                      s3.put_object(
+                          Bucket=bucket,
+                          Key='sales-data/sales.json',
+                          Body=SAMPLE_JSON.encode('utf-8'),
+                          ContentType='application/json'
+                      )
+                      
+                      print(f'Successfully uploaded sample data to {bucket}')
+                  
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {
+                      'Message': 'Sample data uploaded successfully'
+                  })
+              except Exception as e:
+                  print(f'Error: {str(e)}')
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {
+                      'Error': str(e)
+                  })
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-SampleDataUploader'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Custom Resource to Upload Sample Data
+  UploadSampleData:
+    Type: Custom::S3Upload
+    Properties:
+      ServiceToken: !GetAtt SampleDataUploaderFunction.Arn
+      BucketName: !Ref RawDataBucket
+
+Outputs:
+  RawDataBucketName:
+    Description: Raw Data S3 Bucket Name
+    Value: !Ref RawDataBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-RawDataBucket'
+
+  ProcessedDataBucketName:
+    Description: Processed Data S3 Bucket Name
+    Value: !Ref ProcessedDataBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ProcessedDataBucket'
+
+  QueryResultsBucketName:
+    Description: Athena Query Results S3 Bucket Name
+    Value: !Ref QueryResultsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-QueryResultsBucket'
+
+  GlueDatabaseName:
+    Description: Glue Database Name
+    Value: !Ref GlueDatabase
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueDatabase'
+
+  GlueCrawlerName:
+    Description: Glue Crawler Name
+    Value: !Ref GlueCrawler
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueCrawler'
+
+  GlueCrawlerRoleArn:
+    Description: Glue Crawler IAM Role ARN
+    Value: !GetAtt GlueCrawlerRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-GlueCrawlerRoleArn'
+
+  AthenaWorkgroupName:
+    Description: Athena Workgroup Name
+    Value: !Ref AthenaWorkgroup
+    Export:
+      Name: !Sub '${AWS::StackName}-AthenaWorkgroup'
+
+  SampleDataLocation:
+    Description: Sample data location
+    Value: !Sub |
+      샘플 데이터가 자동으로 업로드되었습니다:
+      - CSV: s3://${RawDataBucket}/customer-data/customer-churn.csv
+      - JSON: s3://${RawDataBucket}/sales-data/sales.json
+
+  SetupInstructions:
+    Description: Next steps guide
+    Value: !Sub |
+      데이터 레이크 환경 구축이 완료되었습니다!
+      
+      생성된 리소스:
+      - Raw Data Bucket: ${RawDataBucket}
+      - Processed Data Bucket: ${ProcessedDataBucket}
+      - Query Results Bucket: ${QueryResultsBucket}
+      - Glue Database: ${GlueDatabase}
+      - Glue Crawler: ${GlueCrawler}
+      - Athena Workgroup: ${AthenaWorkgroup}
+      
+      샘플 데이터:
+      - s3://${RawDataBucket}/customer-data/customer-churn.csv (고객 이탈 데이터)
+      - s3://${RawDataBucket}/sales-data/sales.json (판매 데이터)
+      
+      다음 단계:
+      1. Glue Crawler 실행하여 데이터 카탈로그 생성
+      2. Athena에서 쿼리 실행
+         - Workgroup: ${AthenaWorkgroup}
+         - Database: ${GlueDatabase}
+      3. 쿼리 결과 확인
+         - s3://${QueryResultsBucket}/athena-results/
+      
+      중요: 실습 종료 후 스택을 삭제하여 모든 리소스를 정리하세요.

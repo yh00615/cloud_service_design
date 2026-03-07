@@ -1,0 +1,688 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 3-2: Amazon VPC 3-Tier Environment Setup - Public/Private Subnets, Security Groups Basic Structure'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: 'week3-2-security-group'
+    Description: Environment name (used for resource naming)
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '3-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+    Description: Latest Amazon Linux 2023 AMI ID
+
+Resources:
+  # VPC 생성
+  LabVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-VPC'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Internet Gateway 생성
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-IGW'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Internet Gateway를 VPC에 연결
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref LabVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet A (ap-northeast-2a) - ALB용
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: ap-northeast-2a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Public-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Public Subnet C (ap-northeast-2c) - ALB용
+  PublicSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: ap-northeast-2c
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Public-Subnet-C'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet A - Web Tier (ap-northeast-2a)
+  PrivateWebSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.11.0/24
+      AvailabilityZone: ap-northeast-2a
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Web-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet C - Web Tier (ap-northeast-2c)
+  PrivateWebSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.12.0/24
+      AvailabilityZone: ap-northeast-2c
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Web-Subnet-C'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet A - App Tier (ap-northeast-2a)
+  PrivateAppSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.21.0/24
+      AvailabilityZone: ap-northeast-2a
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-App-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet C - App Tier (ap-northeast-2c)
+  PrivateAppSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.22.0/24
+      AvailabilityZone: ap-northeast-2c
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-App-Subnet-C'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet A - DB Tier (ap-northeast-2a)
+  PrivateDBSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.31.0/24
+      AvailabilityZone: ap-northeast-2a
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-DB-Subnet-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Subnet C - DB Tier (ap-northeast-2c)
+  PrivateDBSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref LabVPC
+      CidrBlock: 10.0.32.0/24
+      AvailabilityZone: ap-northeast-2c
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-DB-Subnet-C'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Elastic IP for NAT Gateway A
+  NATGatewayEIPA:
+    Type: AWS::EC2::EIP
+    DependsOn: AttachGateway
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-NAT-A-EIP'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # NAT Gateway A (ap-northeast-2a)
+  NATGatewayA:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NATGatewayEIPA.AllocationId
+      SubnetId: !Ref PublicSubnetA
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-NAT-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Public-RT'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Public Route (0.0.0.0/0 -> Internet Gateway)
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  # Public Subnet A Association
+  PublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+
+  # Public Subnet C Association
+  PublicSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetC
+      RouteTableId: !Ref PublicRouteTable
+
+  # Private Route Table A (Web, App, DB Tier 공용)
+  PrivateRouteTableA:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Private-RT-A'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Private Route A (0.0.0.0/0 -> NAT Gateway A)
+  PrivateRouteA:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableA
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGatewayA
+
+  # Private Web Subnet A Association
+  PrivateWebSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWebSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private Web Subnet C Association
+  PrivateWebSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWebSubnetC
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private App Subnet A Association
+  PrivateAppSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateAppSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private App Subnet C Association
+  PrivateAppSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateAppSubnetC
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private DB Subnet A Association
+  PrivateDBSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateDBSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private DB Subnet C Association
+  PrivateDBSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateDBSubnetC
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # IAM Role for EC2 instances (Session Manager access)
+  EC2InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-EC2-SSM-Role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-EC2-SSM-Role'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub '${EnvironmentName}-EC2-SSM-Profile'
+      Roles:
+        - !Ref EC2InstanceRole
+
+  # Bastion Host Security Group (기본 규칙)
+  BastionSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-Bastion-SG'
+      GroupDescription: Security group for Bastion Host
+      VpcId: !Ref LabVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH from anywhere (for lab purposes - restrict to specific IP in production)
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Bastion-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # ALB Security Group (기본 규칙 - 학생이 추가 설정)
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-ALB-SG'
+      GroupDescription: Security group for Application Load Balancer (students need to add rules)
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-ALB-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Web Tier Security Group (기본 규칙 - 학생이 추가 설정)
+  WebTierSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-Web-SG'
+      GroupDescription: Security group for Web tier (students need to add rules)
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Web-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # App Tier Security Group (기본 규칙 - 학생이 추가 설정)
+  AppTierSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-App-SG'
+      GroupDescription: Security group for App tier (students need to add rules)
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-App-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # DB Tier Security Group (기본 규칙 - 학생이 추가 설정)
+  DBTierSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${EnvironmentName}-DB-SG'
+      GroupDescription: Security group for Database tier (students need to add rules)
+      VpcId: !Ref LabVPC
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-DB-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # EC2 인스턴스 3개 (Web, App, DB) - 보안 그룹 테스트용
+  WebInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: t3.micro
+      SubnetId: !Ref PrivateWebSubnetA
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref WebTierSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd nc
+          systemctl start httpd
+          systemctl enable httpd
+          echo "<h1>Web Tier - $(hostname -f)</h1>" > /var/www/html/index.html
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-Web-Instance'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  AppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: t3.micro
+      SubnetId: !Ref PrivateAppSubnetA
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref AppTierSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y nc python3
+          # Simple app server on port 8080
+          cat > /tmp/app_server.py << 'EOF'
+          #!/usr/bin/env python3
+          import socket
+          import subprocess
+          
+          server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+          server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+          server.bind(('0.0.0.0', 8080))
+          server.listen(5)
+          
+          hostname = subprocess.check_output(['hostname', '-f']).decode().strip()
+          
+          while True:
+              client, addr = server.accept()
+              response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nApp Tier - {hostname}\n"
+              client.send(response.encode())
+              client.close()
+          EOF
+          chmod +x /tmp/app_server.py
+          nohup python3 /tmp/app_server.py > /var/log/app_server.log 2>&1 &
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-App-Instance'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  DBInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: t3.micro
+      SubnetId: !Ref PrivateDBSubnetA
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SecurityGroupIds:
+        - !Ref DBTierSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y python3
+          # Simulate MySQL on port 3306
+          cat > /tmp/db_server.py << 'EOF'
+          #!/usr/bin/env python3
+          import socket
+          import subprocess
+          
+          server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+          server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+          server.bind(('0.0.0.0', 3306))
+          server.listen(5)
+          
+          hostname = subprocess.check_output(['hostname', '-f']).decode().strip()
+          
+          while True:
+              client, addr = server.accept()
+              response = f"MySQL simulation - {hostname}\n"
+              client.send(response.encode())
+              client.close()
+          EOF
+          chmod +x /tmp/db_server.py
+          nohup python3 /tmp/db_server.py > /var/log/db_server.log 2>&1 &
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-DB-Instance'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+Outputs:
+  VpcId:
+    Description: VPC ID
+    Value: !Ref LabVPC
+    Export:
+      Name: !Sub '${EnvironmentName}-VpcId'
+
+  PublicSubnetAId:
+    Description: Public Subnet A ID (ap-northeast-2a)
+    Value: !Ref PublicSubnetA
+    Export:
+      Name: !Sub '${EnvironmentName}-PublicSubnetA'
+
+  PublicSubnetCId:
+    Description: Public Subnet C ID (ap-northeast-2c)
+    Value: !Ref PublicSubnetC
+    Export:
+      Name: !Sub '${EnvironmentName}-PublicSubnetC'
+
+  PrivateWebSubnetAId:
+    Description: Private Web Subnet A ID (ap-northeast-2a)
+    Value: !Ref PrivateWebSubnetA
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateWebSubnetA'
+
+  PrivateWebSubnetCId:
+    Description: Private Web Subnet C ID (ap-northeast-2c)
+    Value: !Ref PrivateWebSubnetC
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateWebSubnetC'
+
+  PrivateAppSubnetAId:
+    Description: Private App Subnet A ID (ap-northeast-2a)
+    Value: !Ref PrivateAppSubnetA
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateAppSubnetA'
+
+  PrivateAppSubnetCId:
+    Description: Private App Subnet C ID (ap-northeast-2c)
+    Value: !Ref PrivateAppSubnetC
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateAppSubnetC'
+
+  PrivateDBSubnetAId:
+    Description: Private DB Subnet A ID (ap-northeast-2a)
+    Value: !Ref PrivateDBSubnetA
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateDBSubnetA'
+
+  PrivateDBSubnetCId:
+    Description: Private DB Subnet C ID (ap-northeast-2c)
+    Value: !Ref PrivateDBSubnetC
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateDBSubnetC'
+
+  BastionSGId:
+    Description: Bastion Host Security Group ID
+    Value: !Ref BastionSecurityGroup
+
+  ALBSGId:
+    Description: ALB Security Group ID (students need to add rules)
+    Value: !Ref ALBSecurityGroup
+
+  WebTierSGId:
+    Description: Web Tier Security Group ID (students need to add rules)
+    Value: !Ref WebTierSecurityGroup
+
+  AppTierSGId:
+    Description: App Tier Security Group ID (students need to add rules)
+    Value: !Ref AppTierSecurityGroup
+
+  DBTierSGId:
+    Description: DB Tier Security Group ID (students need to add rules)
+    Value: !Ref DBTierSecurityGroup
+
+  # EC2 인스턴스 Outputs
+  WebInstanceId:
+    Description: Web Tier EC2 Instance ID
+    Value: !Ref WebInstance
+    Export:
+      Name: !Sub '${EnvironmentName}-WebInstance'
+
+  AppInstanceId:
+    Description: App Tier EC2 Instance ID
+    Value: !Ref AppInstance
+    Export:
+      Name: !Sub '${EnvironmentName}-AppInstance'
+
+  DBInstanceId:
+    Description: DB Tier EC2 Instance ID
+    Value: !Ref DBInstance
+    Export:
+      Name: !Sub '${EnvironmentName}-DBInstance'
+
+  InternetGatewayId:
+    Description: Internet Gateway ID
+    Value: !Ref InternetGateway
+
+  NATGatewayAId:
+    Description: NAT Gateway A ID
+    Value: !Ref NATGatewayA
+
+  NATGatewayAEIP:
+    Description: NAT Gateway A Elastic IP
+    Value: !Ref NATGatewayEIPA

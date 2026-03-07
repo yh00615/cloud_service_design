@@ -1,0 +1,422 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 4-2: QuickTable API with AWS Lambda, Amazon API Gateway, and Amazon DynamoDB (Pre-built Infrastructure)'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: week4-2-quicktable-api
+    Description: Environment name for resource naming
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Must contain only lowercase letters, numbers, and hyphens
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '4-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # DynamoDB Table: QuickTableReservations
+  ReservationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: QuickTableReservations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: reservationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: reservationId
+          KeyType: RANGE
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # IAM Role: Lambda Execution Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-Lambda-ExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource: !GetAtt ReservationsTable.Arn
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Function: CreateReservation
+  CreateReservationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: Week4-2-CreateReservation
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          """
+          AWS Lambda 함수: QuickTable 예약 생성
+
+          이 Lambda 함수는 QuickTable 레스토랑 예약 시스템에서
+          새로운 예약을 생성하고 DynamoDB에 저장합니다.
+
+          주요 기능:
+              1. Cognito Authorizer에서 사용자 ID 추출.
+              2. 예약 정보 검증 및 UUID 생성.
+              3. DynamoDB에 예약 데이터 저장.
+              4. 생성된 예약 정보 반환.
+
+          환경 변수:
+              TABLE_NAME (str): DynamoDB 테이블 이름
+
+          트리거:
+              API Gateway POST /reservations
+          """
+
+          import json
+          import boto3
+          import os
+          import uuid
+          from datetime import datetime
+
+          # DynamoDB 클라이언트 초기화
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ['TABLE_NAME'])
+
+          def lambda_handler(event, context):
+              """
+              예약 생성 Lambda 함수
+              
+              Cognito Authorizer에서 전달된 사용자 정보를 사용하여
+              새로운 예약을 생성하고 DynamoDB에 저장합니다.
+              
+              Args:
+                  event (dict): API Gateway 이벤트 (Cognito Authorizer 정보 포함)
+                  context (LambdaContext): Lambda 실행 컨텍스트
+              
+              Returns:
+                  dict: HTTP 응답 형식
+                      - statusCode (int): 200 (성공) 또는 400/500 (오류)
+                      - body (str): JSON 형식의 예약 정보 또는 오류 메시지
+              """
+              try:
+                  # 1. Cognito Authorizer에서 사용자 ID 추출
+                  # API Gateway Authorizer가 검증한 사용자 정보는 event['requestContext']['authorizer']['claims']에 포함됨
+                  user_id = event['requestContext']['authorizer']['claims']['sub']
+                  
+                  # 2. 요청 본문 파싱
+                  body = json.loads(event['body'])
+                  
+                  # 3. 예약 ID 생성 (UUID 형식)
+                  reservation_id = str(uuid.uuid4())
+                  
+                  # 4. 현재 시간 (ISO 8601 형식)
+                  created_at = datetime.utcnow().isoformat() + 'Z'
+                  
+                  # 5. DynamoDB에 저장할 예약 항목 생성 (camelCase 사용)
+                  item = {
+                      'userId': user_id,
+                      'reservationId': reservation_id,
+                      'restaurantName': body['restaurantName'],
+                      'date': body['date'],
+                      'time': body['time'],
+                      'partySize': int(body['partySize']),
+                      'phoneNumber': body.get('phoneNumber', ''),
+                      'status': 'pending',
+                      'createdAt': created_at
+                  }
+                  
+                  # 6. DynamoDB에 예약 저장
+                  table.put_item(Item=item)
+                  
+                  # 7. 성공 응답 반환
+                  return {
+                      'statusCode': 200,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'
+                      },
+                      'body': json.dumps(item)
+                  }
+                  
+              except KeyError as e:
+                  # 필수 필드 누락 오류
+                  return {
+                      'statusCode': 400,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'
+                      },
+                      'body': json.dumps({'error': f'Missing required field: {str(e)}'})
+                  }
+              except Exception as e:
+                  # 기타 오류
+                  return {
+                      'statusCode': 500,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'
+                      },
+                      'body': json.dumps({'error': str(e)})
+                  }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Function: GetReservations
+  GetReservationsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: Week4-2-GetReservations
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          """
+          AWS Lambda 함수: QuickTable 예약 목록 조회
+
+          이 Lambda 함수는 QuickTable 레스토랑 예약 시스템에서
+          사용자의 예약 목록을 조회합니다.
+
+          주요 기능:
+              1. Cognito Authorizer에서 사용자 ID 추출.
+              2. DynamoDB에서 사용자의 모든 예약 조회.
+              3. 예약 목록 반환.
+
+          환경 변수:
+              TABLE_NAME (str): DynamoDB 테이블 이름
+
+          트리거:
+              API Gateway GET /reservations
+          """
+
+          import json
+          import boto3
+          import os
+          from decimal import Decimal
+
+          # DynamoDB 클라이언트 초기화
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ['TABLE_NAME'])
+
+          # Decimal을 JSON으로 변환하기 위한 헬퍼 클래스
+          class DecimalEncoder(json.JSONEncoder):
+              def default(self, obj):
+                  if isinstance(obj, Decimal):
+                      return int(obj)
+                  return super(DecimalEncoder, self).default(obj)
+
+          def lambda_handler(event, context):
+              """
+              예약 목록 조회 Lambda 함수
+              
+              Cognito Authorizer에서 전달된 사용자 정보를 사용하여
+              해당 사용자의 모든 예약을 조회합니다.
+              
+              Args:
+                  event (dict): API Gateway 이벤트 (Cognito Authorizer 정보 포함)
+                  context (LambdaContext): Lambda 실행 컨텍스트
+              
+              Returns:
+                  dict: HTTP 응답 형식
+                      - statusCode (int): 200 (성공) 또는 500 (오류)
+                      - body (str): JSON 형식의 예약 목록 또는 오류 메시지
+              """
+              try:
+                  # 1. Cognito Authorizer에서 사용자 ID 추출
+                  # API Gateway Authorizer가 검증한 사용자 정보는 event['requestContext']['authorizer']['claims']에 포함됨
+                  user_id = event['requestContext']['authorizer']['claims']['sub']
+                  
+                  # 2. DynamoDB에서 사용자의 모든 예약 조회 (userId를 파티션 키로 Query)
+                  response = table.query(
+                      KeyConditionExpression='userId = :userId',
+                      ExpressionAttributeValues={
+                          ':userId': user_id
+                      }
+                  )
+                  
+                  # 3. 조회된 예약 목록
+                  items = response.get('Items', [])
+                  
+                  # 4. 성공 응답 반환
+                  return {
+                      'statusCode': 200,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'
+                      },
+                      'body': json.dumps(items, cls=DecimalEncoder)
+                  }
+                  
+              except Exception as e:
+                  # 오류 발생 시
+                  return {
+                      'statusCode': 500,
+                      'headers': {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'
+                      },
+                      'body': json.dumps({'error': str(e)})
+                  }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # API Gateway: REST API
+  QuickTableAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: Week4-2-QuickTableAPI
+      Description: QuickTable Restaurant Reservation API
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # API Gateway Resource: /reservations
+  ReservationsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref QuickTableAPI
+      ParentId: !GetAtt QuickTableAPI.RootResourceId
+      PathPart: reservations
+
+  # API Gateway Method: POST /reservations
+  CreateReservationMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref QuickTableAPI
+      ResourceId: !Ref ReservationsResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateReservationFunction.Arn}/invocations'
+
+  # API Gateway Method: GET /reservations
+  GetReservationsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref QuickTableAPI
+      ResourceId: !Ref ReservationsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetReservationsFunction.Arn}/invocations'
+
+  # API Gateway Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - CreateReservationMethod
+      - GetReservationsMethod
+    Properties:
+      RestApiId: !Ref QuickTableAPI
+      StageName: prod
+
+  # Lambda Permission: API Gateway to invoke CreateReservation
+  CreateReservationInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CreateReservationFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${QuickTableAPI}/*/*/*'
+
+  # Lambda Permission: API Gateway to invoke GetReservations
+  GetReservationsInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref GetReservationsFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${QuickTableAPI}/*/*/*'
+
+Outputs:
+  ApiGatewayInvokeUrl:
+    Description: API Gateway Invoke URL
+    Value: !Sub 'https://${QuickTableAPI}.execute-api.${AWS::Region}.amazonaws.com/prod'
+    Export:
+      Name: !Sub '${EnvironmentName}-ApiGatewayInvokeUrl'
+
+  ApiGatewayId:
+    Description: API Gateway REST API ID
+    Value: !Ref QuickTableAPI
+    Export:
+      Name: !Sub '${EnvironmentName}-ApiGatewayId'
+
+  DynamoDBTableName:
+    Description: DynamoDB Table Name
+    Value: !Ref ReservationsTable
+    Export:
+      Name: !Sub '${EnvironmentName}-DynamoDBTableName'
+
+  LambdaExecutionRoleArn:
+    Description: Lambda Execution Role ARN
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-LambdaExecutionRoleArn'
