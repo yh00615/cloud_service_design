@@ -37,6 +37,7 @@ code {
         monospace;
     font-size: 0.95em;
     letter-spacing: 0;
+    font-weight: 700; /* 복사 가능한 코드 더 진하게 */
 }
 
 /* 실습 가이드 본문 텍스트 최적화 */

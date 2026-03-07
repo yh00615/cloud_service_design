@@ -23,8 +23,8 @@
     margin: 0 4px 0 0;
     border-radius: 4px;
     font-size: 0.9rem;
-    font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
-    font-weight: 500;
+    font-family: "D2Coding", "D2 coding", "Noto Sans Mono CJK KR", "Nanum Gothic Coding", source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-weight: 700; /* 진하게 */
     background-color: #ffffff;
     color: #d13212;
     border: 1px solid #e0e0e0;

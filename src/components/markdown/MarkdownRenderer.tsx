@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -37,6 +37,22 @@ interface MarkdownRendererProps {
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
 }) => {
+  // 이미지 줌 상태
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [zoomedAlt, setZoomedAlt] = useState<string>('');
+
+  // 이미지 클릭 핸들러
+  const handleImageClick = useCallback((src: string, alt: string) => {
+    setZoomedImage(src);
+    setZoomedAlt(alt);
+  }, []);
+
+  // 줌 모달 닫기
+  const handleCloseZoom = useCallback(() => {
+    setZoomedImage(null);
+    setZoomedAlt('');
+  }, []);
+
   // 텍스트에서 버튼 패턴을 찾아 React 컴포넌트로 변환하는 함수
   const processButtonPatterns = (text: string): React.ReactNode[] => {
     // [[버튼]], {{버튼}}, ((버튼)) 패턴을 모두 찾기
@@ -609,11 +625,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         );
       }
 
-      // [!NOTE], [!WARNING], [!TIP], [!OUTPUT], [!SUCCESS], [!ERROR], [!COST], [!IMPORTANT], [!TROUBLESHOOTING] 감지
+      // [!NOTE], [!WARNING], [!TIP], [!OUTPUT], [!SUCCESS], [!ERROR], [!COST], [!IMPORTANT], [!TROUBLESHOOTING], [!ARCHITECTURE] 감지
       let boxType = 'note';
       let iconName: string = 'status-info';
       let label = '참고';
       let isOutputBlock = false;
+      let isArchitectureBlock = false;
 
       if (content.includes('[!NOTE]')) {
         boxType = 'note';
@@ -656,6 +673,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         boxType = 'concept';
         iconName = 'status-info';
         label = '개념';
+      } else if (content.includes('[!ARCHITECTURE]')) {
+        boxType = 'architecture';
+        iconName = 'view-full';
+        label = '아키텍처 다이어그램';
+        isArchitectureBlock = true;
       } else if (content.includes('[!DOWNLOAD]')) {
         // DOWNLOAD 블록은 별도 처리
         return renderDownloadBlock(children);
@@ -764,15 +786,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         );
       }
 
-      // role 속성 결정 (접근성)
-      const roleAttr =
-        boxType === 'warning' || boxType === 'error' ? 'alert' : 'note';
-
-      // Alert 마커 제거 함수
+      // Alert 마커 제거 함수 (먼저 선언)
       const removeAlertMarker = (node: any): any => {
         if (typeof node === 'string') {
           return node.replace(
-            /\[!(NOTE|WARNING|TIP|ERROR|SUCCESS|COST|IMPORTANT|TROUBLESHOOTING|CONCEPT|DOWNLOAD|OUTPUT)\]\s*/g,
+            /\[!(NOTE|WARNING|TIP|ERROR|SUCCESS|COST|IMPORTANT|TROUBLESHOOTING|CONCEPT|DOWNLOAD|OUTPUT|ARCHITECTURE)\]\s*/g,
             '',
           );
         }
@@ -790,6 +808,74 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         }
         return node;
       };
+
+      // 이미지에 클릭 이벤트 추가 함수
+      const addImageClickHandler = (node: any): any => {
+        if (typeof node === 'string') {
+          return node;
+        }
+        if (Array.isArray(node)) {
+          return node.map(addImageClickHandler);
+        }
+        // img 태그인 경우 클릭 이벤트 추가
+        if (node?.type === 'img' || node?.props?.node?.tagName === 'img') {
+          const imgSrc = node.props?.src || node.props?.node?.properties?.src;
+          const imgAlt = node.props?.alt || node.props?.node?.properties?.alt || '';
+          
+          return {
+            ...node,
+            props: {
+              ...node.props,
+              onClick: () => handleImageClick(imgSrc, imgAlt),
+              style: { ...node.props?.style, cursor: 'zoom-in' },
+            },
+          };
+        }
+        if (node?.props?.children) {
+          return {
+            ...node,
+            props: {
+              ...node.props,
+              children: addImageClickHandler(node.props.children),
+            },
+          };
+        }
+        return node;
+      };
+
+      // ARCHITECTURE 블록은 특별 처리 - 이미지를 중앙 정렬하여 카드 형태로 표시
+      if (isArchitectureBlock) {
+        const cleanedContent = removeAlertMarker(children);
+        const contentWithClickHandler = addImageClickHandler(cleanedContent);
+        
+        return (
+          <div className="architecture-box">
+            <div className="architecture-box-header">
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 20 20" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ flexShrink: 0 }}
+              >
+                <path 
+                  d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z" 
+                  fill="#ff9900"
+                />
+              </svg>
+              <span>{label}</span>
+            </div>
+            <div className="architecture-box-content">
+              {contentWithClickHandler}
+            </div>
+          </div>
+        );
+      }
+
+      // role 속성 결정 (접근성)
+      const roleAttr =
+        boxType === 'warning' || boxType === 'error' ? 'alert' : 'note';
 
       const cleanedChildren = removeAlertMarker(children);
 
@@ -1173,14 +1259,39 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   };
 
   return (
-    <Box className="markdown-content">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={components}
-      >
-        {content}
-      </ReactMarkdown>
-    </Box>
+    <>
+      <Box className="markdown-content">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={components}
+        >
+          {content}
+        </ReactMarkdown>
+      </Box>
+
+      {/* 이미지 줌 모달 */}
+      {zoomedImage && (
+        <div className="image-zoom-overlay" onClick={handleCloseZoom}>
+          <div className="image-zoom-container" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="image-zoom-close" 
+              onClick={handleCloseZoom}
+              aria-label="닫기"
+            >
+              ✕
+            </button>
+            <img 
+              src={zoomedImage} 
+              alt={zoomedAlt} 
+              className="image-zoom-img" 
+            />
+            {zoomedAlt && (
+              <div className="image-zoom-title">{zoomedAlt}</div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };

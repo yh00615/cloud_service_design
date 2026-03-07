@@ -149,6 +149,12 @@
   margin: 12px 0;
 }
 
+/* Alert 내부 인라인 코드 스타일 */
+.info-box-content code {
+  font-weight: 700; /* 더 진하게 */
+  font-size: 14px !important;
+}
+
 /* Alert 내부 코드 블록 td 패딩 줄이기 */
 .info-box-content table td {
   padding: 2px 8px !important;
@@ -559,4 +565,202 @@
 
 [data-awsui-theme='dark'] .info-box-content a:active {
   color: #3d8fd9;
+}
+
+/* ============================================
+   ARCHITECTURE 블록 스타일
+   ============================================ */
+
+/* 아키텍처 다이어그램 박스 - 카드 형태 */
+.architecture-box {
+  margin: 24px 0;
+  border: 2px solid #232f3e;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #f7f8f9, #eceef1);
+  box-shadow: 0 4px 16px rgba(35, 47, 62, 0.10);
+  overflow: hidden;
+}
+
+/* 헤더 - AWS 다크 네이비 */
+.architecture-box-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #232f3e 0%, #1a2332 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+/* 내용 영역 - 중앙 정렬 */
+.architecture-box-content {
+  padding: 24px;
+  text-align: center;
+}
+
+/* 아키텍처 다이어그램 이미지 스타일 */
+.architecture-box-content img {
+  max-width: 800px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border-radius: 8px;
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.architecture-box-content img:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* 이미지 설명 텍스트 (em 태그) */
+.architecture-box-content em {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #687078;
+  font-style: italic;
+}
+
+/* 다크모드 지원 */
+[data-awsui-theme='dark'] .architecture-box {
+  background: linear-gradient(to bottom, #1a2332, #0f1b2a);
+  border-color: #414d5c;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-awsui-theme='dark'] .architecture-box-header {
+  background: linear-gradient(135deg, #232f3e 0%, #1a2332 100%);
+}
+
+[data-awsui-theme='dark'] .architecture-box-content em {
+  color: #8d9baa;
+}
+
+[data-awsui-theme='dark'] .architecture-box-content img:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .architecture-box-content {
+    padding: 16px;
+  }
+  
+  .architecture-box-content img {
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   이미지 줌 모달
+   ============================================ */
+
+/* 오버레이 */
+.image-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 모달 컨테이너 */
+.image-zoom-container {
+  position: relative;
+  max-width: 95vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+/* 확대된 이미지 */
+.image-zoom-img {
+  max-width: 95vw;
+  max-height: 85vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* 닫기 버튼 */
+.image-zoom-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 32px;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  z-index: 10001;
+}
+
+.image-zoom-close:hover {
+  transform: scale(1.2);
+}
+
+/* 이미지 제목 */
+.image-zoom-title {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 90vw;
+}
+
+/* 다크모드 지원 */
+[data-awsui-theme='dark'] .image-zoom-img {
+  background-color: #232f3e;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .image-zoom-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    padding: 12px;
+  }
+  
+  .image-zoom-close {
+    top: -35px;
+    font-size: 28px;
+  }
+  
+  .image-zoom-title {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
 }

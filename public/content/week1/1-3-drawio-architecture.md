@@ -19,9 +19,10 @@ prerequisites:
 
 **Multi-AZ 설계 원칙**을 적용하여 **Amazon EC2 인스턴스**, **Amazon RDS Multi-AZ**, **Amazon EC2 Auto Scaling**의 고가용성(HA, High Availability) 구성을 다이어그램에 표현하고, **보안 그룹** 설정을 통한 계층화된 보안을 구현합니다. 이를 통해 실제 프로덕션 환경에서 사용되는 **AWS Well-Architected Framework**의 **6가지 원칙**을 이해하게 됩니다.
 
-<img src="/images/week1/1-3-quicktable-3tier-architecture-with-sg.png" alt="QuickTable 3-Tier Architecture" class="guide-img-lg" />
-
-_QuickTable 레스토랑 예약 시스템의 3-Tier 고가용성 아키텍처_
+> [!ARCHITECTURE]
+> <img src="/images/week1/1-3-quicktable-3tier-architecture-with-sg.png" alt="QuickTable 3-Tier Architecture" class="guide-img-lg" />
+>
+> _QuickTable 레스토랑 예약 시스템의 3-Tier 고가용성 아키텍처_
 
 > [!DOWNLOAD]
 > [week1-3-architecture-lab.zip](/files/week1/week1-3-architecture-lab.zip)
@@ -100,9 +101,10 @@ _QuickTable 레스토랑 예약 시스템의 3-Tier 고가용성 아키텍처_
 
 이 태스크에서는 **AWS 리전**, **QuickTable Amazon VPC**, **2개의 가용 영역(Availability Zone)**을 다이어그램에 배치합니다. **Multi-AZ** 구조를 통해 **고가용성** 아키텍처의 기반을 마련합니다.
 
-<img src="/images/week1/1-3-quicktable-3tier-architecture-with-arrows.png" alt="QuickTable 3-Tier Architecture with Traffic Flow" class="guide-img-lg" />
-
-_트래픽 흐름이 표시된 QuickTable 아키텍처 (회색 화살표: 데이터 흐름, 점선: 복제/아웃바운드)_
+> [!ARCHITECTURE]
+> <img src="/images/week1/1-3-quicktable-3tier-architecture-with-arrows.png" alt="QuickTable 3-Tier Architecture with Traffic Flow" class="guide-img-lg" />
+>
+> _트래픽 흐름이 표시된 QuickTable 아키텍처 (회색 화살표: 데이터 흐름, 점선: 복제/아웃바운드)_
 
 > [!NOTE]
 > 왼쪽 패널에 AWS 아이콘 라이브러리가 자동으로 로드되어 있습니다.
