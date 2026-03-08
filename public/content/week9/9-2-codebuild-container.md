@@ -474,13 +474,13 @@ git push origin main
 71. **Project name**에 `week9-2-container-build`를 입력합니다.
 72. **Description**에 `Build Docker container image`를 입력합니다.
 73. **Source** 섹션에서 다음을 설정합니다:
-   - **Source provider**에서 `AWS CodeCommit`을 선택합니다.
-   - **Repository**에서 생성한 CodeCommit 리포지토리를 선택합니다.
-   - **Branch**에서 `main` 또는 `master`를 선택합니다.
+	- **Source provider**에서 `AWS CodeCommit`을 선택합니다.
+	- **Repository**에서 생성한 CodeCommit 리포지토리를 선택합니다.
+	- **Branch**에서 `main` 또는 `master`를 선택합니다.
 74. **Environment** 섹션에서 다음을 설정합니다:
-   - **Environment image**에서 `Managed image`를 선택합니다.
-   - **Operating system**에서 `Amazon Linux`를 선택합니다 (콘솔에 표시되는 최신 버전 사용).
-   - **Runtime(s)**에서 `Standard`를 선택합니다.
+	- **Environment image**에서 `Managed image`를 선택합니다.
+	- **Operating system**에서 `Amazon Linux`를 선택합니다 (콘솔에 표시되는 최신 버전 사용).
+	- **Runtime(s)**에서 `Standard`를 선택합니다.
    - **Image**에서 최신 버전을 선택합니다.
    - **Privileged**를 체크합니다.
 
@@ -667,8 +667,8 @@ git push origin main
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `9-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `9-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 

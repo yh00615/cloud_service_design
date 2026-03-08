@@ -110,13 +110,13 @@ StudentId는 Amazon S3 버킷명, Glue Database명, Crawler명 등 모든 리소
 
 21. AWS Management Console에 로그인한 후 상단 검색창에 `S3`을 입력하고 선택합니다.
 22. 버킷 목록에서 태스크 0에서 생성된 3개의 버킷을 확인합니다:
-   - `quicktable-raw-{StudentId}-ap-northeast-2` (Raw Data 버킷 - QuickTable 예약 원본)
-   - `quicktable-processed-{StudentId}-ap-northeast-2` (Processed Data 버킷 - 집계 데이터)
-   - `quicktable-query-{StudentId}-ap-northeast-2` (Query Results 버킷 - Amazon Athena 결과)
+	- `quicktable-raw-{StudentId}-ap-northeast-2` (Raw Data 버킷 - QuickTable 예약 원본)
+	- `quicktable-processed-{StudentId}-ap-northeast-2` (Processed Data 버킷 - 집계 데이터)
+	- `quicktable-query-{StudentId}-ap-northeast-2` (Query Results 버킷 - Amazon Athena 결과)
 23. Raw Data 버킷 (`quicktable-raw-{StudentId}-ap-northeast-2`)을 선택합니다.
 24. 다음 폴더 구조가 자동으로 생성되었는지 확인합니다:
-   - `reservation-data/` - QuickTable 예약 데이터 폴더
-   - `restaurant-data/` - QuickTable 레스토랑 정보 폴더
+	- `reservation-data/` - QuickTable 예약 데이터 폴더
+	- `restaurant-data/` - QuickTable 레스토랑 정보 폴더
 25. `reservation-data/` 폴더를 클릭합니다.
 26. `reservations.csv` 파일이 자동으로 업로드되었는지 확인합니다.
 27. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
@@ -221,9 +221,9 @@ StudentId는 Amazon S3 버킷명, Glue Database명, Crawler명 등 모든 리소
 32. 왼쪽 메뉴에서 **Databases**를 선택합니다.
 33. 태스크 0에서 생성된 데이터베이스 `quicktable_db_{StudentId}`를 확인합니다.
 34. 데이터베이스를 클릭하여 상세 정보를 확인합니다:
-   - **Name**: `quicktable_db_{StudentId}`
-   - **Location**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/`
-   - **Description**: Data lake database for Week 11-2 lab
+	- **Name**: `quicktable_db_{StudentId}`
+	- **Location**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/`
+	- **Description**: Data lake database for Week 11-2 lab
 
 > [!NOTE]
 > AWS Glue 데이터베이스는 테이블 메타데이터를 논리적으로 그룹화하는 컨테이너입니다.
@@ -234,9 +234,9 @@ StudentId는 Amazon S3 버킷명, Glue Database명, Crawler명 등 모든 리소
 35. 왼쪽 메뉴에서 **Crawlers**를 선택합니다.
 36. 태스크 0에서 생성된 Crawler `quicktable-crawler-{StudentId}`를 확인합니다.
 37. Crawler를 선택하여 설정을 확인합니다:
-   - **Crawler name**: `quicktable-crawler-{StudentId}`
-   - **Database**: `quicktable_db_{StudentId}`
-   - **Data source**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`
+	- **Crawler name**: `quicktable-crawler-{StudentId}`
+	- **Database**: `quicktable_db_{StudentId}`
+	- **Data source**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`
    - **AWS IAM role**: AWS CloudFormation이 자동 생성한 역할 (예: `week11-2-quicktable-datalake-stack-GlueCrawlerRole-XXXXXX`)
 
 > [!NOTE]
@@ -320,14 +320,14 @@ StudentId는 Amazon S3 버킷명, Glue Database명, Crawler명 등 모든 리소
 - createdat: string
 
 44. **Table properties**에서 다음을 확인합니다:
-   - **Location**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`
-   - **Input format**: org.apache.hadoop.mapred.TextInputFormat
-   - **Output format**: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-   - **SerDe**: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+	- **Location**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`
+	- **Input format**: org.apache.hadoop.mapred.TextInputFormat
+	- **Output format**: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+	- **SerDe**: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
 45. 필요시 스키마를 수정합니다:
-   - {{Edit schema}} 버튼을 클릭합니다.
-   - 데이터 타입을 변경합니다 (필요한 경우).
-   - [[Save]] 버튼을 클릭합니다.
+	- {{Edit schema}} 버튼을 클릭합니다.
+	- 데이터 타입을 변경합니다 (필요한 경우).
+	- [[Save]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS Glue 테이블은 Amazon S3 데이터의 메타데이터만 관리합니다. SerDe(Serializer/Deserializer)는 데이터 형식(CSV, JSON, Parquet)을 읽고 쓰는 방법을 정의합니다.
@@ -484,8 +484,8 @@ ORDER BY reservation_count DESC;
 
 63. [[Next]] 버튼을 클릭합니다.
 64. **Data source configuration**에서 다음을 입력합니다:
-   - **Data source**: `Amazon S3`를 선택합니다.
-   - **Amazon S3 path**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/restaurant-data/`를 입력합니다.
+	- **Data source**: `Amazon S3`를 선택합니다.
+	- **Amazon S3 path**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/restaurant-data/`를 입력합니다.
 65. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
 66. [[Next]] 버튼을 클릭합니다.
 67. **AWS IAM role**에서 `Choose an existing AWS IAM role`을 선택합니다.
@@ -534,9 +534,9 @@ ORDER BY reservation_count DESC;
 > ```
 
 79. **Schema** 탭에서 컬럼 정보를 확인합니다:
-   - restaurantid: string
-   - name: string
-   - cuisine: string
+	- restaurantid: string
+	- name: string
+	- cuisine: string
    - location: string
    - rating: double
 
@@ -692,8 +692,8 @@ ORDER BY reservation_count DESC;
 88. Processed Data 버킷 (`quicktable-processed-{StudentId}-ap-northeast-2`)을 선택합니다.
 89. `reservation-analysis-{StudentId}/` 폴더로 이동합니다.
 90. 파티션 구조를 확인합니다:
-   - `status=confirmed/` 폴더
-   - `status=cancelled/` 폴더
+	- `status=confirmed/` 폴더
+	- `status=cancelled/` 폴더
 91. 각 폴더 내의 Parquet 파일을 확인합니다.
 92. 원본 CSV 파일과 Parquet 파일의 크기를 비교합니다.
 
@@ -729,8 +729,8 @@ AWS CloudFormation이 자동으로 QuickTable 예약 샘플 데이터를 Amazon 
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `11-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `11-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 

@@ -109,10 +109,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
 21. 출력값들을 확인하고 메모장에 복사합니다:
-    - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
-    - `CreateReservationFunctionName`: 예약 생성 AWS Lambda 함수 이름
-    - `GetReservationsFunctionName`: 예약 조회 AWS Lambda 함수 이름
-    - `DynamoDBTableName`: Amazon DynamoDB 테이블 이름 (Reservations)
+	- `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
+	- `CreateReservationFunctionName`: 예약 생성 AWS Lambda 함수 이름
+	- `GetReservationsFunctionName`: 예약 조회 AWS Lambda 함수 이름
+	- `DynamoDBTableName`: Amazon DynamoDB 테이블 이름 (Reservations)
 
 다음 태스크에서 이 값들을 사용합니다.
 
@@ -301,10 +301,10 @@ curl -X GET ${API_URL}/reservations
 
 42. 왼쪽 메뉴에서 **Service map**을 선택합니다.
 43. 서비스 맵에서 다음 구성 요소를 확인합니다:
-   - **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
-   - **Amazon API Gateway**: QuickTableXRayAPI
-   - **AWS Lambda**: CreateReservation, GetReservations
-   - **Amazon DynamoDB**: Reservations
+	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
+	- **Amazon API Gateway**: QuickTableXRayAPI
+	- **AWS Lambda**: CreateReservation, GetReservations
+	- **Amazon DynamoDB**: Reservations
 
 > [!NOTE]
 > 서비스 맵이 표시되는 데 최대 5분이 소요될 수 있습니다. 페이지를 새로고침하여 확인합니다.
@@ -327,9 +327,9 @@ curl -X GET ${API_URL}/reservations
 46. 왼쪽 메뉴에서 **AWS X-Ray traces** > **Traces**를 선택합니다.
 47. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
 48. 트레이스 타임라인에서 다음 정보를 확인합니다:
-   - **전체 응답 시간**: 요청부터 응답까지 소요된 시간
-   - **세그먼트**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB 각각의 실행 시간
-   - **서브세그먼트**: create_reservation, dynamodb_put_item 등의 커스텀 서브세그먼트
+	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
+	- **세그먼트**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB 각각의 실행 시간
+	- **서브세그먼트**: create_reservation, dynamodb_put_item 등의 커스텀 서브세그먼트
 
 49. 세그먼트를 클릭하여 상세 정보를 확인합니다.
 50. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
@@ -355,9 +355,9 @@ curl -X GET ${API_URL}/reservations
 
 53. AWS X-Ray 콘솔에서 왼쪽 메뉴의 **Insights**를 선택합니다.
 54. Insights 대시보드에서 다음 정보를 확인합니다:
-   - **응답 시간 이상**: 평균 응답 시간이 증가한 경우
-   - **오류율 이상**: 오류율이 증가한 경우
-   - **스로틀링 이상**: 요청이 제한된 경우
+	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
+	- **오류율 이상**: 오류율이 증가한 경우
+	- **스로틀링 이상**: 요청이 제한된 경우
 
 > [!NOTE]
 > AWS X-Ray Insights는 **충분한 트레이스 데이터(수백~수천 건)**가 있어야 이상 탐지가 작동합니다.
@@ -411,8 +411,8 @@ curl -X GET ${API_URL}/reservations
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `13-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `13-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
@@ -436,9 +436,9 @@ curl -X GET ${API_URL}/reservations
 13. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
 14. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
 15. 다음 로그 그룹을 검색하여 삭제합니다:
-   - `/aws/lambda/CreateReservation-*`
-   - `/aws/lambda/GetReservations-*`
-   - `/aws/apigateway/QuickTableXRayAPI`
+	- `/aws/lambda/CreateReservation-*`
+	- `/aws/lambda/GetReservations-*`
+	- `/aws/apigateway/QuickTableXRayAPI`
 
 > [!NOTE]
 > AWS CloudFormation으로 생성된 AWS Lambda 함수 이름에는 스택 ID가 포함되어 있습니다.

@@ -311,8 +311,8 @@ Week 9-3에서 구축한 QuickTable 정적 웹사이트가 이제 CloudFront를 
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `10-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `10-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. Amazon S3 버킷이 표시됩니다.
 

@@ -118,11 +118,11 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 30. **Outputs** 탭을 선택합니다.
 31. 다음 5개의 출력값을 복사하여 메모장에 저장합니다:
-    - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0) - 태스크 1-2에서 사용
-    - `PrivateSubnetAId`: 프라이빗 서브넷 A ID (예: subnet-0123456789abcdef0) - 태스크 1에서 사용
-    - `PrivateRouteTableAId`: 프라이빗 라우팅 테이블 A ID (예: rtb-0123456789abcdef0) - 태스크 2에서 사용
-    - `NatGatewayId`: NAT Gateway ID (예: nat-0123456789abcdef0) - 태스크 5.3에서 사용
-    - `EC2InstanceId`: 테스트용 Amazon EC2 인스턴스 ID (예: i-0123456789abcdef0) - 태스크 5에서 사용
+	- `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0) - 태스크 1-2에서 사용
+	- `PrivateSubnetAId`: 프라이빗 서브넷 A ID (예: subnet-0123456789abcdef0) - 태스크 1에서 사용
+	- `PrivateRouteTableAId`: 프라이빗 라우팅 테이블 A ID (예: rtb-0123456789abcdef0) - 태스크 2에서 사용
+	- `NatGatewayId`: NAT Gateway ID (예: nat-0123456789abcdef0) - 태스크 5.3에서 사용
+	- `EC2InstanceId`: 테스트용 Amazon EC2 인스턴스 ID (예: i-0123456789abcdef0) - 태스크 5에서 사용
 
 > [!IMPORTANT]
 > 이 5개 값은 다음 태스크에서 반드시 필요합니다. 메모장에 저장합니다.
@@ -281,10 +281,10 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 71. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 72. Endpoint 목록에서 `week3-1-ssm-endpoint` (Interface Endpoint)를 클릭합니다.
 73. **Details** 탭에서 다음 정보를 확인합니다:
-   - **Type**: Interface
-   - **Subnets**: 선택한 서브넷 표시
-   - **Network interfaces**: ENI ID 표시 (eni-로 시작)
-   - **DNS names**: 프라이빗 DNS 이름 표시
+	- **Type**: Interface
+	- **Subnets**: 선택한 서브넷 표시
+	- **Network interfaces**: ENI ID 표시 (eni-로 시작)
+	- **DNS names**: 프라이빗 DNS 이름 표시
 
 > [!NOTE]
 > Interface Endpoint는 ENI(Elastic Network Interface)를 생성하여 프라이빗 IP 주소를 할당받습니다. 이 IP 주소를 통해 AWS 서비스에 접근합니다.
@@ -292,10 +292,10 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 74. 왼쪽 메뉴에서 **Endpoints**를 선택하여 목록으로 이동합니다.
 75. `week3-1-s3-endpoint` (Gateway Endpoint)를 클릭합니다.
 76. **Details** 탭에서 다음 정보를 확인합니다:
-   - **Type**: Gateway
-   - **Route tables**: 연결된 라우팅 테이블 표시
-   - **Network interfaces**: 표시 안 됨 (ENI 사용 안 함)
-   - **DNS names**: 표시 안 됨
+	- **Type**: Gateway
+	- **Route tables**: 연결된 라우팅 테이블 표시
+	- **Network interfaces**: 표시 안 됨 (ENI 사용 안 함)
+	- **DNS names**: 표시 안 됨
 
 > [!NOTE]
 > Gateway Endpoint는 ENI를 생성하지 않고 라우팅 테이블에 경로를 추가하는 방식으로 동작합니다. 따라서 Network interfaces와 DNS names 정보가 없습니다.
@@ -555,8 +555,8 @@ curl -I https://www.google.com
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `3-1`
+	- **Tag key**: `Week`
+	- **Tag value**: `3-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -565,8 +565,8 @@ curl -I https://www.google.com
 #### AWS CloudFormation으로 생성한 리소스 확인 (Name 태그)
 
 7. **Tags** 섹션을 초기화하고 다음을 입력합니다:
-   - **Tag key**: `Name`
-   - **Optional tag value**에 `week3-1`을 입력합니다.
+	- **Tag key**: `Name`
+	- **Optional tag value**에 `week3-1`을 입력합니다.
 8. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -593,10 +593,10 @@ curl -I https://www.google.com
 9. Amazon VPC 콘솔로 이동합니다.
 10. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 11. 다음 4개의 엔드포인트를 모두 선택합니다:
-   - `week3-1-ssm-endpoint`
-   - `week3-1-ssmmessages-endpoint`
-   - `week3-1-ec2messages-endpoint`
-   - `week3-1-s3-endpoint`
+	- `week3-1-ssm-endpoint`
+	- `week3-1-ssmmessages-endpoint`
+	- `week3-1-ec2messages-endpoint`
+	- `week3-1-s3-endpoint`
 
 > [!NOTE]
 > 4개의 엔드포인트를 모두 선택하려면 각 엔드포인트의 체크박스를 클릭합니다. 모두 선택되면 상단의 **Actions** 버튼이 활성화됩니다.
@@ -691,8 +691,8 @@ fi
 28. **Regions**에서 `ap-northeast-2`를 선택합니다.
 29. **Resource types**에서 `All supported resource types`를 선택합니다.
 30. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `3-1`
+	- **Tag key**: `Week`
+	- **Tag value**: `3-1`
 31. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]

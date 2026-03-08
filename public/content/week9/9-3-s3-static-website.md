@@ -126,9 +126,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 22. 태스크 0에서 압축 해제한 `week9-3-s3-website-lab` 폴더를 엽니다.
 23. 폴더 내에 다음 파일들이 있는지 확인합니다:
-   - `index.html`
-   - `reservation.html`
-   - `my-reservations.html`
+	- `index.html`
+	- `reservation.html`
+	- `my-reservations.html`
    - `style.css`
    - `app.js`
    - `buildspec.yml`
@@ -338,8 +338,8 @@ git push origin main
 > AWS CloudFormation 스택이 자동으로 생성한 CodePipeline입니다. 파이프라인 이름은 `week9-3-s3-website-Pipeline` 형식입니다.
 
 51. 파이프라인 구조를 확인합니다:
-   - **Source 단계**: CodeCommit에서 소스 코드 가져오기
-   - **Build 단계**: AWS CodeBuild로 빌드 및 Amazon S3 배포
+	- **Source 단계**: CodeCommit에서 소스 코드 가져오기
+	- **Build 단계**: AWS CodeBuild로 빌드 및 Amazon S3 배포
 
 > [!NOTE]
 > Amazon S3 배포는 AWS CodeBuild의 buildspec.yml에서 `aws s3 sync` 명령으로 수행하므로 별도의 Deploy 단계가 없습니다.
@@ -391,9 +391,9 @@ git push origin main
 63. Amazon S3 콘솔로 이동합니다.
 64. 태스크 0에서 복사한 `WebsiteBucketName` 값의 버킷을 선택합니다.
 65. **Objects** 탭에서 배포된 파일들을 확인합니다:
-   - `index.html`
-   - `reservation.html`
-   - `my-reservations.html`
+	- `index.html`
+	- `reservation.html`
+	- `my-reservations.html`
    - `style.css`
    - `app.js`
 
@@ -519,8 +519,8 @@ git push origin main
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `9-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `9-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 

@@ -205,8 +205,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 이 실습에서는 Hosted UI를 사용하지 않으므로 체크하지 않습니다.
 
 40. **Initial app client** 섹션에서 다음을 설정합니다:
-   - **App client name**에 `QuickTableAppClient`를 입력합니다.
-   - **Client secret**에서 `Don't generate a client secret`를 선택합니다.
+	- **App client name**에 `QuickTableAppClient`를 입력합니다.
+	- **Client secret**에서 `Don't generate a client secret`를 선택합니다.
 41. 아래로 스크롤하여 **Advanced app client settings** 섹션을 확장합니다.
 42. **Authentication flows** 섹션에서 `ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
 
@@ -619,8 +619,8 @@ curl -X GET $API_URL/reservations \
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `4-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `4-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -657,8 +657,8 @@ curl -X GET $API_URL/reservations \
 11. Amazon CloudWatch 콘솔로 이동합니다.
 12. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
 13. 다음 Log Group들을 선택합니다:
-   - `/aws/lambda/Week4-2-CreateReservation`
-   - `/aws/lambda/Week4-2-GetReservations`
+	- `/aws/lambda/Week4-2-CreateReservation`
+	- `/aws/lambda/Week4-2-GetReservations`
 14. **Actions** > `Delete log group(s)`를 선택합니다.
 15. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
@@ -767,8 +767,8 @@ fi
 30. **Regions**에서 `ap-northeast-2`를 선택합니다.
 31. **Resource types**에서 `All supported resource types`를 선택합니다.
 32. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `4-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `4-2`
 33. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]

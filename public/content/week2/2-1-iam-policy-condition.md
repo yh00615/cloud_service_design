@@ -690,9 +690,9 @@ aws configure --profile condition-test
 ```
 
 101. 프롬프트가 나타나면 다음 값을 입력합니다:
-   - **AWS Access Key ID**: 메모장에 저장한 Access Key 입력
-   - **AWS Secret Access Key**: 메모장에 저장한 Secret Access Key 입력
-   - **Default region name**: `ap-northeast-2` 입력
+    - **AWS Access Key ID**: 메모장에 저장한 Access Key 입력
+    - **AWS Secret Access Key**: 메모장에 저장한 Secret Access Key 입력
+    - **Default region name**: `ap-northeast-2` 입력
    - **Default output format**: `json` 입력
 
    <img src="/images/week2/2-1-task7-step3-configure-profile.png" alt="AWS CLI 프로파일 구성 프롬프트" class="guide-img-md" />
@@ -990,8 +990,8 @@ aws s3 ls --profile condition-test
 
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `2-1`
+    - **Tag key**: `Week`
+    - **Tag value**: `2-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 Amazon S3 버킷 1개, AWS IAM 사용자 1개, AWS IAM 정책 4개가 표시됩니다.
    <img src="/images/week2/2-1-cleanup-step7-tag-search.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
@@ -1115,9 +1115,9 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
    <img src="/images/week2/2-1-cleanup-step7-policy-deleted.png" alt="IAM 정책 삭제 성공 메시지" class="guide-img-sm" />
 
 41. 동일한 방법으로 다음 정책들을 각각 삭제합니다:
-   - `S3IPRestrictionPolicy`
-   - `S3TimeBasedPolicy`
-   - `S3ComplexConditionPolicy`
+    - `S3IPRestrictionPolicy`
+    - `S3TimeBasedPolicy`
+    - `S3ComplexConditionPolicy`
 
 > [!NOTE]
 > 각 정책 삭제 시마다 정책 이름을 정확히 입력해야 합니다. 4개의 정책을 모두 삭제하면 정책 목록에서 더 이상 표시되지 않습니다.
@@ -1160,8 +1160,8 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 52. **Regions**에서 `All regions`를 선택합니다.
 53. **Resource types**에서 `All supported resource types`를 선택합니다.
 54. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `2-1`
+    - **Tag key**: `Week`
+    - **Tag value**: `2-1`
 55. [[Search resources]] 버튼을 클릭합니다.
 56. 검색 결과에 리소스가 표시되지 않는지 확인합니다.
    <img src="/images/week2/2-1-cleanup-step7-no-resources.png" alt="Tag Editor 검색 결과 - 리소스 없음" class="guide-img-md" />

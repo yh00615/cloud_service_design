@@ -150,14 +150,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 31. [[Edit inbound rules]] 버튼을 클릭합니다.
 32. [[Add rule]] 버튼을 클릭합니다.
 33. 첫 번째 규칙을 설정합니다:
-   - **Type**에서 `HTTP`를 선택합니다.
-   - **Source**에서 `0.0.0.0/0`을 입력합니다.
-   - **Description**에 `Allow HTTP from internet`를 입력합니다.
+	- **Type**에서 `HTTP`를 선택합니다.
+	- **Source**에서 `0.0.0.0/0`을 입력합니다.
+	- **Description**에 `Allow HTTP from internet`를 입력합니다.
 34. [[Add rule]] 버튼을 다시 클릭합니다.
 35. 두 번째 규칙을 설정합니다:
-   - **Type**에서 `HTTPS`를 선택합니다.
-   - **Source**에서 `0.0.0.0/0`을 입력합니다.
-   - **Description**에 `Allow HTTPS from internet`를 입력합니다.
+	- **Type**에서 `HTTPS`를 선택합니다.
+	- **Source**에서 `0.0.0.0/0`을 입력합니다.
+	- **Description**에 `Allow HTTPS from internet`를 입력합니다.
 36. [[Save rules]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: ALB 보안 그룹 인바운드 규칙이 구성되었습니다.
@@ -171,19 +171,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 39. [[Edit inbound rules]] 버튼을 클릭합니다.
 40. [[Add rule]] 버튼을 클릭합니다.
 41. 첫 번째 규칙을 설정합니다:
-   - **Type**에서 `HTTP`를 선택합니다.
-   - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `ALB-SG`를 입력하여 `week3-2-security-group-ALB-SG`를 찾아 선택합니다.
-   - **Description**에 `Allow HTTP from ALB`를 입력합니다.
+	- **Type**에서 `HTTP`를 선택합니다.
+	- **Source**에서 `Custom`을 선택한 후, 검색 필드에 `ALB-SG`를 입력하여 `week3-2-security-group-ALB-SG`를 찾아 선택합니다.
+	- **Description**에 `Allow HTTP from ALB`를 입력합니다.
 42. [[Add rule]] 버튼을 다시 클릭합니다.
 43. 두 번째 규칙을 설정합니다:
-   - **Type**에서 `HTTPS`를 선택합니다.
-   - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `ALB-SG`를 입력하여 `week3-2-security-group-ALB-SG`를 찾아 선택합니다.
-   - **Description**에 `Allow HTTPS from ALB`를 입력합니다.
+	- **Type**에서 `HTTPS`를 선택합니다.
+	- **Source**에서 `Custom`을 선택한 후, 검색 필드에 `ALB-SG`를 입력하여 `week3-2-security-group-ALB-SG`를 찾아 선택합니다.
+	- **Description**에 `Allow HTTPS from ALB`를 입력합니다.
 44. [[Add rule]] 버튼을 다시 클릭합니다.
 45. 세 번째 규칙을 설정합니다:
-   - **Type**에서 `SSH`를 선택합니다.
-   - **Source**에서 `My IP`를 선택합니다.
-   - **Description**에 `Allow SSH from my IP`를 입력합니다.
+	- **Type**에서 `SSH`를 선택합니다.
+	- **Source**에서 `My IP`를 선택합니다.
+	- **Description**에 `Allow SSH from my IP`를 입력합니다.
 
 > [!NOTE]
 > **"My IP" 동작 방식**: "My IP"는 현재 콘솔에 접속한 IP 주소를 자동으로 감지합니다. 카페, 학교 등 네트워크 환경이 변경되면 IP가 달라지므로 SSH 접근이 차단될 수 있습니다. 이 경우 보안 그룹 규칙을 업데이트해야 합니다.
@@ -223,15 +223,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 49. [[Edit inbound rules]] 버튼을 클릭합니다.
 50. [[Add rule]] 버튼을 클릭합니다.
 51. 첫 번째 규칙을 설정합니다:
-   - **Type**에서 `Custom TCP`를 선택합니다.
-   - **Port range**에 `8080`을 입력합니다.
-   - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `Web-SG`를 입력하여 `week3-2-security-group-Web-SG`를 찾아 선택합니다.
-   - **Description**에 `Allow 8080 from Web tier`를 입력합니다.
+	- **Type**에서 `Custom TCP`를 선택합니다.
+	- **Port range**에 `8080`을 입력합니다.
+	- **Source**에서 `Custom`을 선택한 후, 검색 필드에 `Web-SG`를 입력하여 `week3-2-security-group-Web-SG`를 찾아 선택합니다.
+	- **Description**에 `Allow 8080 from Web tier`를 입력합니다.
 52. [[Add rule]] 버튼을 다시 클릭합니다.
 53. 두 번째 규칙을 설정합니다:
-   - **Type**에서 `SSH`를 선택합니다.
-   - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `Web-SG`를 입력하여 `week3-2-security-group-Web-SG`를 찾아 선택합니다.
-   - **Description**에 `Allow SSH from Web tier`를 입력합니다.
+	- **Type**에서 `SSH`를 선택합니다.
+	- **Source**에서 `Custom`을 선택한 후, 검색 필드에 `Web-SG`를 입력하여 `week3-2-security-group-Web-SG`를 찾아 선택합니다.
+	- **Description**에 `Allow SSH from Web tier`를 입력합니다.
 54. [[Save rules]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: App Tier 보안 그룹 인바운드 규칙이 구성되었습니다.
@@ -245,9 +245,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 57. [[Edit inbound rules]] 버튼을 클릭합니다.
 58. [[Add rule]] 버튼을 클릭합니다.
 59. 첫 번째 규칙을 설정합니다:
-   - **Type**에서 `MySQL/Aurora`를 선택합니다.
-   - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `App-SG`를 입력하여 `week3-2-security-group-App-SG`를 찾아 선택합니다.
-   - **Description**에 `Allow MySQL from App tier`를 입력합니다.
+	- **Type**에서 `MySQL/Aurora`를 선택합니다.
+	- **Source**에서 `Custom`을 선택한 후, 검색 필드에 `App-SG`를 입력하여 `week3-2-security-group-App-SG`를 찾아 선택합니다.
+	- **Description**에 `Allow MySQL from App tier`를 입력합니다.
 60. [[Save rules]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -505,17 +505,17 @@ echo "SELECT 1" | nc $DB_IP 3306
 99. [[Edit inbound rules]] 버튼을 클릭합니다.
 100. [[Add new rule]] 버튼을 클릭합니다.
 101. 첫 번째 규칙을 설정합니다 (Amazon VPC 내부 트래픽):
-    - **Rule number**에 `100`을 입력합니다.
-    - **Type**에서 `All traffic`을 선택합니다.
-    - **Source**에 `10.0.0.0/16`을 입력합니다.
-    - **Allow/Deny**에서 `Allow`를 선택합니다.
+	- **Rule number**에 `100`을 입력합니다.
+	- **Type**에서 `All traffic`을 선택합니다.
+	- **Source**에 `10.0.0.0/16`을 입력합니다.
+	- **Allow/Deny**에서 `Allow`를 선택합니다.
 102. [[Add new rule]] 버튼을 다시 클릭합니다.
 103. 두 번째 규칙을 설정합니다 (임시 포트):
-    - **Rule number**에 `110`을 입력합니다.
-    - **Type**에서 `Custom TCP`를 선택합니다.
-    - **Port range**에 `1024-65535`를 입력합니다.
-    - **Source**에 `0.0.0.0/0`을 입력합니다.
-    - **Allow/Deny**에서 `Allow`를 선택합니다.
+	- **Rule number**에 `110`을 입력합니다.
+	- **Type**에서 `Custom TCP`를 선택합니다.
+	- **Port range**에 `1024-65535`를 입력합니다.
+	- **Source**에 `0.0.0.0/0`을 입력합니다.
+	- **Allow/Deny**에서 `Allow`를 선택합니다.
 
 > [!NOTE]
 > **Private NACL 인바운드 규칙 110의 용도**: 이 규칙은 NAT Gateway를 통해 인터넷으로 나간 트래픽의 응답을 받기 위한 것입니다. Private 서브넷의 인스턴스가 NAT Gateway를 통해 외부 API나 패키지 저장소에 접근할 때, 응답 트래픽은 임시 포트(1024-65535)로 돌아옵니다. 규칙 100에서 Amazon VPC 내부 트래픽(10.0.0.0/16)을 허용하지만, NAT Gateway를 거친 인터넷 응답은 0.0.0.0/0에서 오므로 별도 규칙이 필요합니다.
@@ -601,11 +601,11 @@ curl http://$APP_IP:8080
 126. [[Edit inbound rules]] 버튼을 클릭합니다.
 127. [[Add new rule]] 버튼을 클릭합니다.
 128. 새 규칙을 설정합니다 (포트 8080 차단):
-   - **Rule number**에 `50`을 입력합니다.
-   - **Type**에서 `Custom TCP`를 선택합니다.
-   - **Port range**에 `8080`을 입력합니다.
-   - **Source**에 `10.0.11.0/24`를 입력합니다 (Web Subnet A).
-   - **Allow/Deny**에서 `Deny`를 선택합니다.
+	- **Rule number**에 `50`을 입력합니다.
+	- **Type**에서 `Custom TCP`를 선택합니다.
+	- **Port range**에 `8080`을 입력합니다.
+	- **Source**에 `10.0.11.0/24`를 입력합니다 (Web Subnet A).
+	- **Allow/Deny**에서 `Deny`를 선택합니다.
 129. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -632,7 +632,7 @@ curl http://$APP_IP:8080 --max-time 5
 
 132. VPC 콘솔에서 `Private-NACL`의 **Inbound rules**를 다시 편집합니다.
 133. 규칙 50을 삭제합니다:
-   - 규칙 50 옆의 [[Remove]] 버튼을 클릭합니다.
+	- 규칙 50 옆의 [[Remove]] 버튼을 클릭합니다.
 134. [[Save changes]] 버튼을 클릭합니다.
 135. Web 인스턴스 Session Manager로 이동합니다.
 136. App 서버로 다시 연결을 시도합니다:
@@ -697,8 +697,8 @@ curl http://$APP_IP:8080
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Name`
-   - **Optional tag value**에 `week3-2`를 입력합니다.
+	- **Tag key**: `Name`
+	- **Optional tag value**에 `week3-2`를 입력합니다.
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -860,8 +860,8 @@ done
 39. **Regions**에서 `ap-northeast-2`를 선택합니다.
 40. **Resource types**에서 `All supported resource types`를 선택합니다.
 41. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Name`
-   - **Optional tag value**에 `week3-2`를 입력합니다.
+	- **Tag key**: `Name`
+	- **Optional tag value**에 `week3-2`를 입력합니다.
 42. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]

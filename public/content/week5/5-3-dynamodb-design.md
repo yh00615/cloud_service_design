@@ -383,8 +383,8 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `5-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `5-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -452,8 +452,8 @@ echo "Amazon DynamoDB 테이블 삭제 완료"
 17. **Regions**에서 `ap-northeast-2`를 선택합니다.
 18. **Resource types**에서 `All supported resource types`를 선택합니다.
 19. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `5-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `5-3`
 20. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]

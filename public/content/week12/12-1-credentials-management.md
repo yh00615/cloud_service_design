@@ -144,7 +144,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 39. **Password**에 `TempPassword123!`을 입력합니다.
 40. **Encryption key**에서 `secrets-encryption-key`를 선택합니다.
 41. **Database**에서 AWS CloudFormation이 생성한 Amazon RDS 인스턴스를 선택합니다.
-   - 인스턴스 ID: `week12-1-mysql-db`
+	- 인스턴스 ID: `week12-1-mysql-db`
 42. [[Next]] 버튼을 클릭합니다.
 43. **Secret name**에 `prod/db/mysql/credentials`를 입력합니다.
 44. **Description**에 `Production MySQL database credentials`를 입력합니다.
@@ -248,9 +248,9 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 77. `access-secrets-demo` 함수를 선택합니다.
 78. **Code** 탭을 선택합니다.
 79. 코드를 확인합니다:
-   - Secrets Manager에서 자격증명 조회
-   - Parameter Store에서 파라미터 조회
-   - Amazon RDS MySQL 연결
+	- Secrets Manager에서 자격증명 조회
+	- Parameter Store에서 파라미터 조회
+	- Amazon RDS MySQL 연결
 
 > [!NOTE]
 > 이 AWS Lambda 함수는 AWS CloudFormation이 자동으로 생성했습니다. 코드는 다운로드한 `lambda_function.py` 파일과 동일합니다.
@@ -320,8 +320,8 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `12-1`
+	- **Tag key**: `Week`
+	- **Tag value**: `12-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
@@ -397,8 +397,8 @@ aws secretsmanager delete-secret \
 30. Amazon CloudWatch 콘솔로 이동합니다.
 31. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
 32. 다음 로그 그룹들을 선택합니다:
-   - `/aws/lambda/access-secrets-demo`
-   - `/aws/lambda/SecretsManagerRotation-mysql`
+	- `/aws/lambda/access-secrets-demo`
+	- `/aws/lambda/SecretsManagerRotation-mysql`
 33. **Actions** > `Delete log group(s)`를 선택합니다.
 34. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
@@ -463,9 +463,9 @@ aws secretsmanager delete-secret \
 35. **로테이션 일정**: 30일마다 자동 실행
 36. **AWS Lambda 함수**: AWS Secrets Manager가 자동 생성
 37. **로테이션 단계**:
-   - `createSecret`: 새 비밀번호 생성
-   - `setSecret`: Amazon RDS에 새 비밀번호 설정
-   - `testSecret`: 새 비밀번호로 연결 테스트
+	- `createSecret`: 새 비밀번호 생성
+	- `setSecret`: Amazon RDS에 새 비밀번호 설정
+	- `testSecret`: 새 비밀번호로 연결 테스트
    - `finishSecret`: 이전 버전을 AWSPREVIOUS로 표시
 38. **애플리케이션**: 항상 Secrets Manager에서 최신 비밀번호 조회
 39. **무중단**: 로테이션 중에도 애플리케이션 정상 동작

@@ -82,8 +82,8 @@ prerequisites:
 11. **AttributeDefinitions** 섹션을 확장합니다.
 12. [[Add item]] 버튼을 클릭합니다.
 13. 첫 번째 속성을 다음과 같이 설정합니다:
-   - **AttributeName**: `id`
-   - **AttributeType**: `S`
+	- **AttributeName**: `id`
+	- **AttributeType**: `S`
 14. **KeySchema** 섹션을 확장합니다.
 15. [[Add item]] 버튼을 클릭합니다.
 16. 키 스키마를 다음과 같이 설정합니다:
@@ -338,9 +338,9 @@ LambdaApiPermission:
 52. 오른쪽 패널에서 **Template** 탭을 선택합니다.
 53. 생성된 YAML 템플릿을 검토합니다.
 54. 모든 리소스가 올바르게 정의되었는지 확인합니다:
-   - `ItemsTable` (Amazon DynamoDB 테이블)
-   - `ItemsFunction` (AWS Lambda 함수)
-   - `ItemsFunctionRole` (AWS IAM 역할)
+	- `ItemsTable` (Amazon DynamoDB 테이블)
+	- `ItemsFunction` (AWS Lambda 함수)
+	- `ItemsFunctionRole` (AWS IAM 역할)
    - `ItemsApi` (Amazon API Gateway REST API)
    - `ItemsApiResource`, `ItemsApiMethod`, `ItemsApiDeployment` (Amazon API Gateway 설정)
    - `LambdaApiPermission` (AWS Lambda 권한)
@@ -495,8 +495,8 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `6-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `6-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스(AWS CloudFormation 스택, Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway 등)가 표시됩니다.
 

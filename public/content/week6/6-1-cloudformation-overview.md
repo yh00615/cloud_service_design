@@ -8,19 +8,18 @@ learningObjectives:
   - Infrastructure as Code의 개념과 AWS CloudFormation의 이점을 이해할 수 있습니다.
   - AWS CloudFormation 스택을 생성하고 Amazon S3 버킷을 배포할 수 있습니다.
   - 변경 세트를 사용하여 스택을 안전하게 업데이트할 수 있습니다.
-  - 드리프트 탐지로 수동 변경을 감지하고 스택을 삭제할 수 있습니다.
+  - 드리프트 감지로 수동 변경을 감지하고 스택을 삭제할 수 있습니다.
 prerequisites:
   - AWS 기본 서비스 이해 (Amazon VPC, Amazon EC2, Amazon S3 등)
   - YAML 또는 JSON 기본 문법 이해
 ---
 
-이 데모에서는 AWS CloudFormation 스택의 전체 생명주기를 시연합니다. 간단한 Amazon S3 버킷 스택을 생성(CREATE)하고, 변경 세트를 통해 안전하게 업데이트(UPDATE)하며, 드리프트 탐지로 수동 변경을 감지한 후 스택을 삭제(DELETE)하는 전체 프로세스를 경험합니다. 각 단계에서 스택 상태 변화를 관찰하고 AWS CloudFormation이 리소스를 어떻게 관리하는지 이해합니다.
+이 데모에서는 AWS CloudFormation 스택의 전체 생명주기를 시연합니다. 간단한 Amazon S3 버킷 스택을 생성(CREATE)하고, 변경 세트를 통해 안전하게 업데이트(UPDATE)하며, 드리프트 감지로 수동 변경을 감지한 후 스택을 삭제(DELETE)하는 전체 프로세스를 경험합니다. 각 단계에서 스택 상태 변화를 관찰하고 AWS CloudFormation이 리소스를 어떻게 관리하는지 이해합니다.
 
 **주요 태스크:**
 - 태스크 1: 스택 생성 (CREATE) - Amazon S3 버킷 스택
 - 태스크 2: 스택 업데이트 (UPDATE) - 변경 세트로 안전한 업데이트
-- 태스크 3: 드리프트 탐지 - 수동 변경 감지
-- 태스크 4: 스택 삭제 (DELETE) - 생명주기 완료
+- 태스크 3: 드리프트 감지 - 수동 변경 감지
 
 > [!DOWNLOAD]
 > [week6-1-cloudformation-lab.zip](/files/week6/week6-1-cloudformation-lab.zip)
@@ -31,7 +30,7 @@ prerequisites:
 > 
 > - 태스크 1: Amazon S3 스택 생성 (simple-s3-template.yaml 사용)
 > - 태스크 2: 변경 세트 생성 및 실행 (s3-with-tags.yaml로 업데이트)
-> - 태스크 3: 드리프트 탐지 (수동 변경 감지)
+> - 태스크 3: 드리프트 감지 (수동 변경 감지)
 
 > [!NOTE]
 > 이 데모는 비용이 거의 발생하지 않습니다. Amazon S3 버킷 자체는 무료이며, 데이터를 저장하지 않으므로 스토리지 비용도 발생하지 않습니다.
@@ -109,7 +108,7 @@ Outputs:
 | `Week` | `6-1` |
 | `CreatedBy` | `Student` |
 
-15. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+15. **Capabilities** 섹션에서 ☑️ `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 16. [[Next]] 버튼을 클릭합니다.
 17. **Review** 페이지에서 설정을 확인합니다.
 18. [[Submit]] 버튼을 클릭합니다.
@@ -259,11 +258,11 @@ Outputs:
 
 ✅ **태스크 완료**: 스택 업데이트(UPDATE) 생명주기를 시연했습니다.
 
-## 태스크 3: 드리프트 탐지 - 수동 변경 감지
+## 태스크 3: 드리프트 감지 - 수동 변경 감지
 
-이 태스크에서는 드리프트 탐지 기능을 사용하여 AWS CloudFormation 외부에서 수동으로 변경된 리소스를 찾아냅니다. Amazon S3 콘솔에서 수동으로 태그를 추가한 후 드리프트를 감지합니다.
+이 태스크에서는 드리프트 감지 기능을 사용하여 AWS CloudFormation 외부에서 수동으로 변경된 리소스를 찾아냅니다. Amazon S3 콘솔에서 수동으로 태그를 추가한 후 드리프트를 감지합니다.
 
-> [!CONCEPT] 드리프트 (Drift) 탐지
+> [!CONCEPT] 드리프트 (Drift) 감지
 > 드리프트는 AWS CloudFormation 템플릿과 실제 리소스 상태의 불일치를 의미합니다.
 > AWS 콘솔, CLI, API를 통한 수동 변경으로 발생하며, 인프라 일관성을 해칩니다.
 > 
@@ -275,7 +274,7 @@ Outputs:
 > - 다른 AWS CloudFormation 스택이 동일한 리소스를 수정합니다
 >
 > 
-> **드리프트 탐지 프로세스:**
+> **드리프트 감지 프로세스:**
 >
 > - **템플릿 비교**: AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다
 > - **차이점 식별**: 각 리소스의 속성을 하나씩 확인하여 차이점을 찾습니다
@@ -294,8 +293,8 @@ Outputs:
 51. [[Edit]] 버튼을 클릭합니다.
 52. [[Add tag]] 버튼을 클릭합니다.
 53. 다음 태그를 추가합니다:
-   - **Key**: `ManualTag`
-   - **Value**: `AddedManually`
+	- **Key**: `ManualTag`
+	- **Value**: `AddedManually`
 54. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -326,12 +325,12 @@ Outputs:
 67. **DemoBucket** 리소스를 선택합니다.
 68. [[View drift details]] 버튼을 클릭합니다.
 69. 드리프트 차이점을 확인합니다:
-   - **Expected**: 템플릿에 정의된 태그 (3개: Purpose, Environment, ManagedBy)
-   - **Actual**: 템플릿 정의 태그 3개 + 수동 추가 태그 1개 (ManualTag)
-   - **Difference Type**: `NOT_EQUAL` (값이 다름)
+	- **Expected**: 템플릿에 정의된 태그 (3개: Purpose, Environment, ManagedBy)
+	- **Actual**: 템플릿 정의 태그 3개 + 수동 추가 태그 1개 (ManualTag)
+	- **Difference Type**: `NOT_EQUAL` (값이 다름)
 
 > [!NOTE]
-> 드리프트 탐지는 AWS CloudFormation 템플릿에 명시적으로 정의된 속성만 비교하며, 스택 수준 태그(`Project`, `Week`, `CreatedBy`)는 비교 대상에 포함되지 않습니다.
+> 드리프트 감지는 AWS CloudFormation 템플릿에 명시적으로 정의된 속성만 비교하며, 스택 수준 태그(`Project`, `Week`, `CreatedBy`)는 비교 대상에 포함되지 않습니다.
 > 따라서 Expected는 템플릿의 3개 태그, Actual은 템플릿 3개 + 수동 추가 1개로 표시됩니다.
 
 > [!NOTE]
@@ -343,39 +342,16 @@ Outputs:
 > - **방법 1**: 템플릿에 `ManualTag`를 추가하여 실제 상태를 반영합니다 (권장)
 > - **방법 2**: Amazon S3 콘솔에서 `ManualTag`를 삭제하여 템플릿과 일치시킵니다
 
-✅ **태스크 완료**: 드리프트 탐지로 수동 변경을 감지했습니다.
+✅ **태스크 완료**: 드리프트 감지로 수동 변경을 감지했습니다.
 
-## 태스크 4: 스택 삭제 (DELETE) - 생명주기 완료
+## 리소스 정리
 
-이 태스크에서는 스택 삭제 생명주기를 시연합니다. AWS CloudFormation 스택을 삭제하면서 상태 변화(DELETE_IN_PROGRESS → DELETE_COMPLETE)를 관찰하고, 스택이 생성한 모든 리소스가 자동으로 삭제되는 과정을 확인합니다.
+> [!WARNING]
+> 이 데모는 비용이 거의 발생하지 않지만, 실습 종료 후 모든 리소스를 삭제하는 것이 좋습니다.
 
-> [!CONCEPT] 스택 삭제 프로세스
-> AWS CloudFormation 스택 삭제는 다음 단계로 진행됩니다:
->
-> - **삭제 순서 결정**: 리소스 간 의존성을 분석하여 역순으로 삭제합니다
-> - **리소스 삭제**: AWS API를 호출하여 각 리소스를 삭제합니다
-> - **상태 추적**: 각 리소스의 삭제 상태를 모니터링합니다
-> - **완료**: 모든 리소스가 성공적으로 삭제되면 스택이 목록에서 사라집니다
->
-> 
-> **상태 변화:**
->
-> - **DELETE_IN_PROGRESS** (주황색): 리소스 삭제 중
-> - **DELETE_COMPLETE** (초록색): 모든 리소스 삭제 완료, 스택이 목록에서 제거됨
-> - **DELETE_FAILED** (빨간색): 삭제 실패 (수동 개입 필요)
->
-> 
-> **자동 삭제의 장점:**
->
-> - 스택이 생성한 모든 리소스를 한 번에 삭제할 수 있습니다
-> - 리소스 간 의존성을 자동으로 처리합니다
-> - 수동 삭제 시 발생할 수 있는 누락을 방지합니다
-> - 인프라 정리가 간편하고 안전합니다
->
+---
 
-### 상세 단계
-
-#### 1단계: Amazon S3 버킷 비우기 (필요시)
+## 1단계: Amazon S3 버킷 비우기 (필요시)
 
 > [!NOTE]
 > 이 데모에서는 버킷에 파일을 업로드하지 않았으므로 이 단계는 건너뛸 수 있습니다.
@@ -383,41 +359,47 @@ Outputs:
 > Amazon S3 버킷에 파일이 있으면 AWS CloudFormation 스택 삭제가 실패합니다.
 > 버킷에 파일을 업로드한 경우에만 다음 단계를 수행합니다.
 
-70. Amazon S3 콘솔로 이동합니다.
-71. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-72. [[Empty]] 버튼을 클릭합니다.
-73. 확인 창에서 `permanently delete`를 입력합니다.
-74. [[Empty]] 버튼을 클릭합니다.
+1. Amazon S3 콘솔로 이동합니다.
+2. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+3. [[Empty]] 버튼을 클릭합니다.
+4. 확인 창에서 `permanently delete`를 입력합니다.
+5. [[Empty]] 버튼을 클릭합니다.
 
-#### 2단계: AWS CloudFormation 스택 삭제
+---
 
-75. AWS CloudFormation 콘솔로 이동합니다.
-76. `demo-s3-stack`을 선택합니다.
-77. [[Delete]] 버튼을 클릭합니다.
-78. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-79. 스택 삭제가 시작됩니다. 상태가 "DELETE_IN_PROGRESS"로 표시됩니다.
+## 2단계: AWS CloudFormation 스택 삭제
+
+6. AWS CloudFormation 콘솔로 이동합니다.
+7. `demo-s3-stack`을 선택합니다.
+8. [[Delete stack]] 버튼을 클릭합니다.
+9. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+10. [[Delete stack]] 버튼을 클릭합니다.
+11. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+12. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-80. 상태가 "DELETE_COMPLETE"로 변경될 때까지 기다립니다.
-81. 스택이 목록에서 사라지는 것을 확인합니다.
+13. 페이지를 새로고침합니다.
+14. 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
 > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
 
-#### 3단계: 리소스 삭제 확인
+---
 
-82. Amazon S3 콘솔로 이동합니다.
-83. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+## 3단계: 리소스 삭제 확인
 
-> [!SUCCESS]
+15. Amazon S3 콘솔로 이동합니다.
+16. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+
+> [!TIP]
 > AWS CloudFormation 스택을 삭제하면 스택이 생성한 모든 리소스(Amazon S3 버킷)가 자동으로 삭제됩니다.
 > 수동으로 각 리소스를 삭제할 필요가 없습니다.
 
-✅ **태스크 완료**: 스택 삭제(DELETE) 생명주기를 시연하고 전체 생명주기를 완료했습니다.
+✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 마무리
 
@@ -425,7 +407,7 @@ Outputs:
 
 - **스택 생성 (CREATE)**: 간단한 Amazon S3 버킷 스택을 생성하고 상태 변화를 관찰했습니다
 - **스택 업데이트 (UPDATE)**: Change set preview로 변경 사항을 미리 확인하고 안전하게 업데이트했습니다
-- **드리프트 탐지**: 수동으로 변경된 리소스를 감지하고 템플릿과의 차이점을 확인했습니다
+- **드리프트 감지**: 수동으로 변경된 리소스를 감지하고 템플릿과의 차이점을 확인했습니다
 - **스택 삭제 (DELETE)**: 스택과 모든 리소스를 자동으로 삭제하고 생명주기를 완료했습니다
 
 다음 세션에서는 실제로 AWS CloudFormation 템플릿을 작성하여 Amazon VPC 환경을 구축하는 실습을 진행합니다.

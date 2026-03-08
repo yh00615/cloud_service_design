@@ -392,10 +392,10 @@ kubectl get service sample-app-service --watch
 25. 상단의 드롭다운에서 `Amazon EKS Clusters`를 선택합니다.
 26. **container-insights-cluster** 클러스터를 선택합니다.
 27. 대시보드에서 다음 메트릭을 확인합니다:
-   - **CPU Utilization**: 클러스터 전체 CPU 사용률
-   - **Memory Utilization**: 클러스터 전체 메모리 사용률
-   - **Network**: 네트워크 송수신 바이트
-   - **Pod Count**: 실행 중인 Pod 수
+	- **CPU Utilization**: 클러스터 전체 CPU 사용률
+	- **Memory Utilization**: 클러스터 전체 메모리 사용률
+	- **Network**: 네트워크 송수신 바이트
+	- **Pod Count**: 실행 중인 Pod 수
 
 > [!NOTE]
 > 메트릭이 표시되기까지 5-10분이 소요될 수 있습니다. 페이지를 새로고침하여 최신 데이터를 확인합니다.
@@ -406,10 +406,10 @@ kubectl get service sample-app-service --watch
 31. 상단의 드롭다운을 `Amazon EKS Pods`로 변경합니다.
 32. **sample-app** Pod들을 찾습니다.
 33. Pod 이름을 클릭하여 상세 메트릭을 확인합니다:
-    - CPU 사용률
-    - 메모리 사용률
-    - 네트워크 트래픽
-    - 디스크 I/O
+	- CPU 사용률
+	- 메모리 사용률
+	- 네트워크 트래픽
+	- 디스크 I/O
 
 34. 상단의 드롭다운을 `Amazon EKS Namespaces`로 변경합니다.
 35. **default** 네임스페이스를 선택합니다.
@@ -437,9 +437,9 @@ kubectl get service sample-app-service --watch
 38. 왼쪽 메뉴에서 **Logs** > **Logs Insights**를 선택합니다.
 39. **Select log group(s)** 드롭다운을 클릭합니다.
 40. 다음 로그 그룹들을 선택합니다:
-   - `/aws/containerinsights/container-insights-cluster/application`
-   - `/aws/containerinsights/container-insights-cluster/dataplane`
-   - `/aws/containerinsights/container-insights-cluster/host`
+	- `/aws/containerinsights/container-insights-cluster/application`
+	- `/aws/containerinsights/container-insights-cluster/dataplane`
+	- `/aws/containerinsights/container-insights-cluster/host`
 
 41. 쿼리 에디터에 다음 쿼리를 입력합니다:
 
@@ -532,11 +532,11 @@ fields @timestamp, @message
 63. **Line** 위젯을 선택합니다.
 64. [[Next]] 버튼을 클릭합니다.
 65. **Metrics** 탭에서 다음을 선택합니다:
-   - **ContainerInsights** 네임스페이스를 선택합니다.
-   - **ClusterName** 차원을 선택합니다.
-   - `container-insights-cluster`를 선택합니다.
-   - `cluster_cpu_utilization` 메트릭을 체크합니다.
-   - `cluster_memory_utilization` 메트릭을 체크합니다.
+	- **ContainerInsights** 네임스페이스를 선택합니다.
+	- **ClusterName** 차원을 선택합니다.
+	- `container-insights-cluster`를 선택합니다.
+	- `cluster_cpu_utilization` 메트릭을 체크합니다.
+	- `cluster_memory_utilization` 메트릭을 체크합니다.
 
 66. **Graphed metrics** 탭을 선택합니다.
 67. **Statistic**을 `Average`로 설정합니다.
@@ -603,21 +603,21 @@ fields @timestamp, kubernetes.pod_name, @message
 97. `cluster_cpu_utilization` 메트릭을 찾아 체크합니다.
 98. [[Select metric]] 버튼을 클릭합니다.
 99. **Metric** 섹션에서 다음을 설정합니다:
-   - **Statistic**: `Average`
-   - **Period**: `5 minutes`
+	- **Statistic**: `Average`
+	- **Period**: `5 minutes`
 
 100. **Conditions** 섹션에서 다음을 설정합니다:
-    - **Threshold type**: `Static`
-    - **Whenever cluster_cpu_utilization is...**: `Greater`
-    - **than...**: `70`
+	- **Threshold type**: `Static`
+	- **Whenever cluster_cpu_utilization is...**: `Greater`
+	- **than...**: `70`
 
 101. [[Next]] 버튼을 클릭합니다.
 
 102. **Notification** 섹션에서 다음을 설정합니다:
-    - **Alarm state trigger**: `In alarm`
-    - **Select an Amazon SNS topic**: `Create new topic`
-    - **Create a new topic...**: `Amazon EKS-High-CPU-Alert`
-    - **Email endpoints that will receive the notification**: 본인의 이메일 주소 입력
+	- **Alarm state trigger**: `In alarm`
+	- **Select an Amazon SNS topic**: `Create new topic`
+	- **Create a new topic...**: `Amazon EKS-High-CPU-Alert`
+	- **Email endpoints that will receive the notification**: 본인의 이메일 주소 입력
 
 > [!NOTE]
 > Amazon SNS 토픽 이름에 공백을 사용하지 않는 것이 권장됩니다. ARN 참조 시 문제를 방지할 수 있습니다.
@@ -640,9 +640,9 @@ fields @timestamp, kubernetes.pod_name, @message
 113. `cluster_memory_utilization` 메트릭을 선택합니다.
 114. [[Select metric]] 버튼을 클릭합니다.
 115. **Conditions** 섹션에서 다음을 설정합니다:
-    - **Threshold type**: `Static`
-    - **Whenever cluster_memory_utilization is...**: `Greater`
-    - **than...**: `80`
+	- **Threshold type**: `Static`
+	- **Whenever cluster_memory_utilization is...**: `Greater`
+	- **than...**: `80`
 
 116. [[Next]] 버튼을 클릭합니다.
 117. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
@@ -658,9 +658,9 @@ fields @timestamp, kubernetes.pod_name, @message
 126. `cluster_failed_node_count` 메트릭을 선택합니다.
 127. [[Select metric]] 버튼을 클릭합니다.
 128. **Conditions** 섹션에서 다음을 설정합니다:
-    - **Threshold type**: `Static`
-    - **Whenever cluster_failed_node_count is...**: `Greater`
-    - **than...**: `0`
+	- **Threshold type**: `Static`
+	- **Whenever cluster_failed_node_count is...**: `Greater`
+	- **than...**: `0`
 
 129. [[Next]] 버튼을 클릭합니다.
 130. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
@@ -702,9 +702,9 @@ fields @timestamp, kubernetes.pod_name, @message
 140. CPU 사용률이 가장 높은 Pod를 찾습니다.
 141. Pod 이름을 클릭하여 상세 메트릭을 확인합니다.
 142. **Performance** 탭에서 다음을 분석합니다:
-   - CPU 사용 패턴
-   - 메모리 사용 패턴
-   - 네트워크 트래픽 패턴
+	- CPU 사용 패턴
+	- 메모리 사용 패턴
+	- 네트워크 트래픽 패턴
 
 143. CloudShell로 이동합니다.
 144. Pod의 리소스 사용량을 실시간으로 확인합니다:
@@ -822,8 +822,8 @@ kubectl get hpa
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `13-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `13-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
@@ -919,9 +919,9 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 35. Amazon CloudWatch 콘솔로 이동합니다.
 36. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
 37. 생성한 3개의 알람을 선택합니다:
-   - `Amazon EKS-Cluster-High-CPU`
-   - `Amazon EKS-Cluster-High-Memory`
-   - `Amazon EKS-Cluster-Failed-Nodes`
+	- `Amazon EKS-Cluster-High-CPU`
+	- `Amazon EKS-Cluster-High-Memory`
+	- `Amazon EKS-Cluster-Failed-Nodes`
 38. **Actions** > `Delete`를 선택합니다.
 39. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
@@ -940,9 +940,9 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 50. Amazon CloudWatch 콘솔로 이동합니다.
 51. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
 52. 다음 로그 그룹들을 선택합니다:
-    - `/aws/containerinsights/container-insights-cluster/application`
-    - `/aws/containerinsights/container-insights-cluster/dataplane`
-    - `/aws/containerinsights/container-insights-cluster/host`
+	- `/aws/containerinsights/container-insights-cluster/application`
+	- `/aws/containerinsights/container-insights-cluster/dataplane`
+	- `/aws/containerinsights/container-insights-cluster/host`
     - `/aws/containerinsights/container-insights-cluster/performance`
     - `/aws/eks/container-insights-cluster/cluster`
 

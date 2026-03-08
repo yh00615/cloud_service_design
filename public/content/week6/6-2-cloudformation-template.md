@@ -74,9 +74,9 @@ Outputs:
 1. 다운로드한 `week6-2-cloudformation-lab.zip` 파일의 압축을 해제합니다.
 2. `vpc-ec2-template.yaml` 파일을 텍스트 에디터로 엽니다.
 3. 템플릿 구조를 확인합니다:
-   - **Parameters**: EnvironmentName, VpcCIDR, PublicSubnetCIDR, InstanceType, LatestAmiId
-   - **Resources**: Amazon VPC, InternetGateway, Subnet, RouteTable, SecurityGroup, Amazon EC2 Instance
-   - **Outputs**: VPCId, PublicSubnetId, WebServerPublicIP, WebServerURL
+	- **Parameters**: EnvironmentName, VpcCIDR, PublicSubnetCIDR, InstanceType, LatestAmiId
+	- **Resources**: Amazon VPC, InternetGateway, Subnet, RouteTable, SecurityGroup, Amazon EC2 Instance
+	- **Outputs**: VPCId, PublicSubnetId, WebServerPublicIP, WebServerURL
 
 > [!NOTE]
 > 이 템플릿은 완전한 웹 서버 환경을 구축하는 모든 리소스를 포함하고 있습니다.
@@ -373,9 +373,9 @@ Outputs:
 19. [[Next]] 버튼을 클릭합니다.
 20. **Stack name**에 `lab-vpc-stack`을 입력합니다.
 21. **Parameters** 섹션에서 다음 값을 확인합니다:
-   - **EnvironmentName**: `Lab` (기본값 유지)
-   - **VpcCIDR**: `10.0.0.0/16` (기본값 유지)
-   - **PublicSubnetCIDR**: `10.0.1.0/24` (기본값 유지)
+	- **EnvironmentName**: `Lab` (기본값 유지)
+	- **VpcCIDR**: `10.0.0.0/16` (기본값 유지)
+	- **PublicSubnetCIDR**: `10.0.1.0/24` (기본값 유지)
    - **InstanceType**: `t2.micro` (기본값 유지)
    - **LatestAmiId**: 기본값 유지 (최신 Amazon Linux 2023 AMI 자동 조회)
 
@@ -514,8 +514,8 @@ Outputs:
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `6-2`
+	- **Tag key**: `Week`
+	- **Tag value**: `6-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 

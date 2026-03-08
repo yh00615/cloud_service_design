@@ -210,8 +210,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 33. **Regions**에서 `All regions`를 선택합니다.
 34. **Resource types**에서 `AWS::Amazon S3::Bucket`을 선택합니다.
 35. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `1-1`
+    - **Tag key**: `Week`
+    - **Tag value**: `1-1`
 36. [[Search resources]] 버튼을 클릭합니다.
 37. 검색 결과에서 2개의 버킷이 표시됩니다.
 38. **Tags** 열에서 `quicktable-reservations-{접미사}` 버킷의 태그 개수를 클릭합니다.
@@ -319,8 +319,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 52. **Regions**에서 `All regions`를 선택합니다.
 53. **Resource types**에서 `All supported resource types`를 선택합니다.
 54. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `1-1`
+    - **Tag key**: `Week`
+    - **Tag value**: `1-1`
 55. [[Search resources]] 버튼을 클릭합니다.
    <img src="/images/week1/1-1-task3-step5-search-results.png" alt="Tag Editor 검색 결과 - Week=1-1 태그를 가진 모든 리소스" class="guide-img-sm" />
 
@@ -364,9 +364,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
    <img src="/images/week1/1-1-task4-step2-create-group.png" alt="왼쪽 메뉴에서 Create Resource Group 선택" class="guide-img-sm" />
 60. **Group type**에서 `Tag based`를 선택합니다.
 61. **Grouping criteria** 섹션에서 다음을 입력합니다:
-   - **Resource types**: `All supported resource types` (기본값)
-   - **Tag key**: `Week`
-   - **Tag value**: `1-1`
+    - **Resource types**: `All supported resource types` (기본값)
+    - **Tag key**: `Week`
+    - **Tag value**: `1-1`
 62. 아래로 스크롤하여 [[Preview group resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -375,8 +375,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 💡 Week=1-1 태그를 가진 모든 리소스가 미리보기에 표시됩니다: Amazon S3 버킷 2개, AWS Lambda 함수 1개, Amazon DynamoDB 테이블 1개.
 
 63. **Group details** 섹션에서 다음을 입력합니다:
-   - **Group name**: `week1-1-lab-resources`
-   - **Group description**: `Week 1-1 Tag Editor Lab Resources`
+    - **Group name**: `week1-1-lab-resources`
+    - **Group description**: `Week 1-1 Tag Editor Lab Resources`
 64. [[Create group]] 버튼을 클릭합니다.
    <img src="/images/week1/1-1-task4-step7-create-group-button.png" alt="Create group 버튼" class="guide-img-sm" />
 
@@ -431,8 +431,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 71. **Regions**에서 `All regions`를 선택합니다.
 72. **Resource types**에서 `All supported resource types`를 선택합니다.
 73. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `1-1`
+    - **Tag key**: `Week`
+    - **Tag value**: `1-1`
 74. [[Search resources]] 버튼을 클릭합니다.
 75. 이 실습에서 생성한 모든 QuickTable 리소스가 표시됩니다.
 
@@ -492,8 +492,8 @@ Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 
 89. **Regions**에서 `All regions`를 선택합니다.
 90. **Resource types**에서 `All supported resource types`를 선택합니다.
 91. **Tags** 섹션에서 다음 태그를 입력합니다:
-   - **Tag key**: `Week`
-   - **Optional tag value**: `1-1`
+    - **Tag key**: `Week`
+    - **Optional tag value**: `1-1`
 92. [[Search resources]] 버튼을 클릭합니다.
 93. 검색 결과가 비어있는지 확인합니다.
    <img src="/images/week1/1-1-cleanup-step3-6-search-empty.png" alt="Tag Editor 검색 결과가 비어있는 화면" class="guide-img-md" />

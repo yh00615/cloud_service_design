@@ -468,8 +468,8 @@ spec:
 ```
 
 44. CloudShell에 파일을 업로드합니다:
-   - CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
-   - `nginx-deployment.yaml` 파일을 선택합니다.
+	- CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
+	- `nginx-deployment.yaml` 파일을 선택합니다.
 
 45. 업로드된 파일을 확인합니다:
 
@@ -767,8 +767,8 @@ spec:
 ```
 
 64. CloudShell에 파일을 업로드합니다:
-   - CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
-   - `nginx-service.yaml` 파일을 선택합니다.
+	- CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
+	- `nginx-service.yaml` 파일을 선택합니다.
 
 65. YAML 파일을 사용하여 Service를 생성합니다:
 
@@ -928,8 +928,8 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `7-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `7-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 

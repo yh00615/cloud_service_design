@@ -81,16 +81,16 @@ prerequisites:
 13. 생성된 테이블을 클릭합니다.
 14. **Actions** > `Create item`을 선택합니다.
 15. **Attributes** 섹션에서 다음 값을 입력합니다:
-    - **reservationId**: `RES001`
+	- **reservationId**: `RES001`
 16. [[Add new attribute]] 버튼을 클릭합니다.
 17. `String`을 선택합니다.
 18. **Attribute name**에 `customerName`을 입력합니다.
 19. **Value**에 `김철수`를 입력합니다.
 20. 같은 방식으로 다음 속성들을 추가합니다:
-    - `date` (String): `2026-02-15`
-    - `time` (String): `19:00`
-    - `partySize` (Number): `4`
-    - `status` (String): `confirmed`
+	- `date` (String): `2026-02-15`
+	- `time` (String): `19:00`
+	- `partySize` (Number): `4`
+	- `status` (String): `confirmed`
 21. [[Create item]] 버튼을 클릭합니다.
 22. 같은 방식으로 다음 샘플 예약 데이터를 추가합니다:
 
@@ -680,8 +680,8 @@ def cancel_reservation(params):
 
 68. **Action groups** 섹션에서 [[Add]] 버튼을 클릭합니다.
 69. **Action group details**에서 다음을 입력합니다:
-    - **Action group name**: `QuickTableReservationActions`
-    - **Action group description**: `QuickTable 예약 관리 기능`
+	- **Action group name**: `QuickTableReservationActions`
+	- **Action group description**: `QuickTable 예약 관리 기능`
 70. **Action group type**에서 `Define with function details`를 선택합니다.
 
 > [!NOTE]
@@ -873,11 +873,11 @@ def cancel_reservation(params):
 2월 15일 예약 목록을 보여주세요.
 ```
 
-99. Trace 패널에서 Agent의 사고 과정을 확인합니다:
-    - **Pre-processing**: 사용자 입력 분석
-    - **Orchestration**: 어떤 함수를 호출할지 결정
-    - **Action invocation**: AWS Lambda 함수 호출
-    - **Post-processing**: 응답 생성
+98. Trace 패널에서 Agent의 사고 과정을 확인합니다:
+	- **Pre-processing**: 사용자 입력 분석
+	- **Orchestration**: 어떤 함수를 호출할지 결정
+	- **Action invocation**: AWS Lambda 함수 호출
+	- **Post-processing**: 응답 생성
 
 > [!NOTE]
 > Trace를 통해 Agent가 어떻게 의사결정을 하는지 이해할 수 있습니다.
@@ -929,8 +929,8 @@ def cancel_reservation(params):
 107. Agent 상세 페이지 상단에서 **Aliases** 탭을 선택합니다.
 108. [[Create alias]] 버튼을 클릭합니다.
 109. **Alias details**에서 다음을 입력합니다:
-   - **Alias name**: `production`
-   - **Alias description**: `프로덕션 환경용 Agent`
+	- **Alias name**: `production`
+	- **Alias description**: `프로덕션 환경용 Agent`
 110. **Version** 섹션에서 `Create a new version`을 선택합니다.
 111. [[Create alias]] 버튼을 클릭합니다.
 112. 별칭 생성이 완료될 때까지 기다립니다.
@@ -1160,8 +1160,8 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-   - **Tag key**: `Week`
-   - **Tag value**: `14-3`
+	- **Tag key**: `Week`
+	- **Tag value**: `14-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
@@ -1221,8 +1221,8 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 35. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
 36. 검색창에 `/aws/lambda/BedrockAgent`를 입력합니다.
 37. 다음 로그 그룹들을 선택합니다:
-   - `/aws/lambda/BedrockAgentReservationHandler`
-   - `/aws/lambda/BedrockAgentInvoker`
+	- `/aws/lambda/BedrockAgentReservationHandler`
+	- `/aws/lambda/BedrockAgentInvoker`
 38. **Actions** > `Delete log group(s)`를 선택합니다.
 39. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
