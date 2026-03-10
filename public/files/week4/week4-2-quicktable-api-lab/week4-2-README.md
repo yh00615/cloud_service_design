@@ -37,12 +37,12 @@
 │  ┌──────────────────────────────────────────────┐          │
 │  │           AWS Lambda Functions               │          │
 │  │  ┌────────────────────────────────────────┐  │          │
-│  │  │  CreateReservation (Python 3.11)       │  │          │
+│  │  │  CreateReservation (Python 3.14)       │  │          │
 │  │  │  - Cognito userId 추출                 │  │          │
 │  │  │  - 예약 데이터 생성 및 저장            │  │          │
 │  │  └────────────────────────────────────────┘  │          │
 │  │  ┌────────────────────────────────────────┐  │          │
-│  │  │  GetReservations (Python 3.11)         │  │          │
+│  │  │  GetReservations (Python 3.14)         │  │          │
 │  │  │  - Cognito userId 추출                 │  │          │
 │  │  │  - 사용자별 예약 목록 조회             │  │          │
 │  │  └────────────────────────────────────────┘  │          │
@@ -88,7 +88,7 @@
 #### CreateReservation 함수
 
 **함수명**: `Week4-2-CreateReservation`
-**런타임**: Python 3.11
+**런타임**: Python 3.14
 **타임아웃**: 30초
 
 **주요 기능**:
@@ -104,7 +104,7 @@
 #### GetReservations 함수
 
 **함수명**: `Week4-2-GetReservations`
-**런타임**: Python 3.11
+**런타임**: Python 3.14
 **타임아웃**: 30초
 
 **주요 기능**:

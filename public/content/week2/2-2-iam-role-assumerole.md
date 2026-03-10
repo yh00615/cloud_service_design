@@ -63,13 +63,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 9. **Stack name**에 `week2-2-iam-role-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다.
 11. [[Next]] 버튼을 클릭합니다.
-12. **Configure stack options** 페이지에서 기본값을 유지합니다.
-13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-14. [[Next]] 버튼을 클릭합니다.
-15. **Review** 페이지에서 설정을 확인합니다.
-16. [[Submit]] 버튼을 클릭합니다.
-17. 스택 생성이 시작됩니다.
-18. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
+13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `2-2`            |
+| `CreatedBy` | `CloudFormation` |
+
+14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+15. [[Next]] 버튼을 클릭합니다.
+16. **Review** 페이지에서 설정을 확인합니다.
+17. [[Submit]] 버튼을 클릭합니다.
+18. 스택 생성이 시작됩니다.
+19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 생성에 1-2분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.

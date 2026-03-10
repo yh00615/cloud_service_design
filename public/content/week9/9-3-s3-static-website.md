@@ -87,7 +87,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `9-3` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
 > [!NOTE]
 > 이 태그들은 AWS CloudFormation 스택이 생성하는 모든 리소스(Amazon S3 버킷, CodeCommit 리포지토리, AWS CodeBuild 프로젝트, AWS CodePipeline, AWS IAM 역할)에 자동으로 전파됩니다.

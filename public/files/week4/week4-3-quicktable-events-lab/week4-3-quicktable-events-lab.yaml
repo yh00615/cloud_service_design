@@ -16,10 +16,16 @@ Parameters:
     Type: String
     Default: 'CloudFormation'
     Description: CreatedBy tag value
+    
   EnvironmentName:
     Type: String
     Default: week4-3-quicktable-events-lab
     Description: Resource name prefix
+
+  EventBusName:
+    Type: String
+    Description: EventBridge Event Bus name (created by student in Task 1)
+    Default: QuickTableReservationEventBus
 
 Resources:
   # DynamoDB 테이블: Reservations
@@ -80,7 +86,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-InitializeAvailability'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 60
@@ -142,19 +148,6 @@ Resources:
       ServiceToken: !GetAtt InitializeAvailabilityFunction.Arn
       TableName: !Ref RestaurantAvailabilityTable
 
-  # EventBridge Event Bus
-  ReservationEventBus:
-    Type: AWS::Events::EventBus
-    Properties:
-      Name: !Sub '${EnvironmentName}-ReservationEventBus'
-      Tags:
-        - Key: Project
-          Value: !Ref ProjectTag
-        - Key: Week
-          Value: !Ref WeekTag
-        - Key: CreatedBy
-          Value: !Ref CreatedByTag
-
   # SNS Topic: 예약 알림
   ReservationNotificationTopic:
     Type: AWS::SNS::Topic
@@ -206,7 +199,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - events:PutEvents
-                Resource: !GetAtt ReservationEventBus.Arn
+                Resource: !Sub 'arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/${EventBusName}'
         - PolicyName: SNSAccess
           PolicyDocument:
             Version: '2012-10-17'
@@ -228,14 +221,14 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-ReservationProcessor'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
       Environment:
         Variables:
           RESERVATIONS_TABLE: !Ref ReservationsTable
-          EVENT_BUS_NAME: !Ref ReservationEventBus
+          EVENT_BUS_NAME: !Ref EventBusName
       Code:
         ZipFile: |
           import json
@@ -337,14 +330,14 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-TableAvailabilityChecker'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
       Environment:
         Variables:
           RESTAURANT_AVAILABILITY_TABLE: !Ref RestaurantAvailabilityTable
-          EVENT_BUS_NAME: !Ref ReservationEventBus
+          EVENT_BUS_NAME: !Ref EventBusName
       Code:
         ZipFile: |
           import json
@@ -432,7 +425,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-NotificationSender'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -532,12 +525,6 @@ Outputs:
     Value: !Ref RestaurantAvailabilityTable
     Export:
       Name: !Sub '${AWS::StackName}-RestaurantAvailabilityTable'
-
-  ReservationEventBusName:
-    Description: EventBridge Event Bus name
-    Value: !Ref ReservationEventBus
-    Export:
-      Name: !Sub '${AWS::StackName}-EventBus'
 
   LambdaExecutionRoleArn:
     Description: Lambda execution role ARN

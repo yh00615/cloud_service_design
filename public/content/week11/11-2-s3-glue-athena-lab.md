@@ -71,11 +71,11 @@ StudentId는 Amazon S3 버킷명, Glue Database명, Crawler명 등 모든 리소
 11. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
 12. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `11-2`    |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `11-2`           |
+| `CreatedBy` | `CloudFormation` |
 
 13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources with custom names`를 체크합니다.
 14. [[Next]] 버튼을 클릭합니다.

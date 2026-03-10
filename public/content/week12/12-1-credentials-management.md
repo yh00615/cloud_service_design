@@ -78,11 +78,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 11. [[Next]] 버튼을 클릭합니다.
 12. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `12-1`    |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `12-1`           |
+| `CreatedBy` | `CloudFormation` |
 
 13. [[Next]] 버튼을 클릭합니다.
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create IAM resources`를 체크합니다.

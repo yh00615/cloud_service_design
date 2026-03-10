@@ -142,7 +142,7 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 33. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 34. [[Create endpoint]] 버튼을 클릭합니다.
 35. **Name tag**에 `week3-1-ssm-endpoint`를 입력합니다.
-36. **Service category**에서 `AWS services`를 선택합니다.
+36. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
 37. **Services** 검색창에 `ssm`을 입력합니다.
 38. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.ssm`이고 **Type**이 `Interface`인 항목을 선택합니다.
 
@@ -167,8 +167,8 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 47. **Policy** 섹션으로 스크롤합니다.
 48. **Full access**를 선택한 상태로 유지합니다.
-49. **Tags - optional** 섹션으로 스크롤합니다.
-50. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+49. **Tags** 섹션으로 스크롤합니다.
+50. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -232,7 +232,7 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 55. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 56. [[Create endpoint]] 버튼을 클릭합니다.
 57. **Name tag**에 `week3-1-s3-endpoint`를 입력합니다.
-58. **Service category**에서 `AWS services`를 선택합니다.
+58. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
 59. **Services** 검색창에 `s3`를 입력합니다.
 60. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.s3`이고 **Type**이 `Gateway`인 항목을 선택합니다.
 
@@ -256,8 +256,8 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 > [!NOTE]
 > Full access 정책은 모든 Amazon S3 작업을 허용합니다. 프로덕션 환경에서는 특정 버킷만 접근하도록 제한하는 것이 좋습니다.
 
-66. **Tags - optional** 섹션으로 스크롤합니다.
-67. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+66. **Tags** 섹션으로 스크롤합니다.
+67. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |

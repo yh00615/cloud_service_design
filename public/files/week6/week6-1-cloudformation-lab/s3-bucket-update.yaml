@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
+
+Parameters:
+  BucketPrefix:
+    Type: String
+    Default: cfn-demo-bucket
+    Description: Amazon S3 bucket name prefix
+
+Resources:
+  DemoBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
+      Tags:
+        - Key: Name
+          Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
+        - Key: Project
+          Value: AWS-Lab
+        - Key: Week
+          Value: '6-1'
+        - Key: CreatedBy
+          Value: CloudFormation
+
+Outputs:
+  BucketName:
+    Description: Name of the Amazon S3 bucket
+    Value: !Ref DemoBucket
+  BucketArn:
+    Description: ARN of the Amazon S3 bucket
+    Value: !GetAtt DemoBucket.Arn

@@ -96,7 +96,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `9-2` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 15. [[Next]] 버튼을 클릭합니다.

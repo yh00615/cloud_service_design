@@ -24,11 +24,7 @@ Parameters:
     AllowedValues:
       - t2.micro
       - t2.small
-      - t2.medium
-    
-  KeyName:
-    Description: EC2 Key Pair name
-    Type: AWS::EC2::KeyPair::KeyName
+      - t3.micro
   
   LatestAmiId:
     Description: Latest Amazon Linux 2023 AMI ID
@@ -75,6 +71,12 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-IGW'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -93,6 +95,12 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Public-Subnet'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
   # Route Table
   PublicRouteTable:
@@ -102,6 +110,12 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Public-RT'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
   DefaultPublicRoute:
     Type: AWS::EC2::Route
@@ -130,25 +144,55 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
           Description: Allow HTTP
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-          Description: Allow SSH
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Web-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # IAM Role for Session Manager
+  WebServerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-WebServer-Role'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  WebServerInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref WebServerRole
 
   # EC2 Instance
   WebServer:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      KeyName: !Ref KeyName
       ImageId: !Ref LatestAmiId
       SubnetId: !Ref PublicSubnet
       SecurityGroupIds:
         - !Ref WebServerSecurityGroup
+      IamInstanceProfile: !Ref WebServerInstanceProfile
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -156,11 +200,16 @@ Resources:
           yum install -y httpd
           systemctl start httpd
           systemctl enable httpd
-          echo "<h1>Hello from CloudFormation!</h1>" > /var/www/html/index.html
-          echo "<p>Instance ID: $(ec2-metadata --instance-id | cut -d ' ' -f 2)</p>" >> /var/www/html/index.html
+          echo "<h1>Hello from AWS CloudFormation!</h1>" > /var/www/html/index.html
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Web-Server'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
 Outputs:
   VPCId:

@@ -1,62 +1,46 @@
 # CloudFormation 템플릿 실습 파일
 
-이 패키지는 AWS CloudFormation을 사용하여 인프라를 코드로 정의하고 배포하는 실습을 위한 템플릿 파일들입니다.
+이 패키지는 AWS CloudFormation을 사용하여 인프라를 코드로 정의하고 배포하는 실습을 위한 템플릿 파일입니다.
 
 ## 📦 포함된 파일
 
-- `simple-s3-template.yaml` - 간단한 S3 버킷 템플릿 (입문용)
 - `vpc-ec2-template.yaml` - 완전한 VPC + EC2 인프라 템플릿
 - `README.md` - 이 파일
 
 ## 🚀 사용 방법
 
-### 1. Simple S3 Template (입문)
-
-가장 간단한 템플릿으로 CloudFormation 기본 개념을 학습합니다.
-
-**AWS Console에서 스택 생성**:
-1. CloudFormation 콘솔 접속
-2. "Create stack" > "With new resources" 선택
-3. "Upload a template file" 선택
-4. `simple-s3-template.yaml` 업로드
-5. 스택 이름 입력 (예: `my-first-stack`)
-6. 파라미터 확인 (기본값 사용 가능)
-7. "Create stack" 클릭
-
-**생성되는 리소스**:
-- S3 버킷 (버전 관리 활성화)
-
-**예상 소요 시간**: 1-2분
-
-### 2. VPC + EC2 Template (실전)
+### VPC + EC2 Template
 
 완전한 네트워크 인프라와 웹 서버를 배포합니다.
-
-**사전 준비**:
-- EC2 Key Pair 생성 필요 (EC2 콘솔 > Key Pairs)
 
 **AWS Console에서 스택 생성**:
 1. CloudFormation 콘솔 접속
 2. "Create stack" > "With new resources" 선택
 3. "Upload a template file" 선택
 4. `vpc-ec2-template.yaml` 업로드
-5. 스택 이름 입력 (예: `vpc-lab-stack`)
+5. 스택 이름 입력 (예: `lab-vpc-stack`)
 6. 파라미터 설정:
    - **EnvironmentName**: `Lab` (기본값)
    - **VpcCIDR**: `10.0.0.0/16` (기본값)
    - **PublicSubnetCIDR**: `10.0.1.0/24` (기본값)
    - **InstanceType**: `t2.micro` (기본값)
-   - **KeyName**: 생성한 Key Pair 선택 (필수)
+   - **LatestAmiId**: 기본값 유지 (최신 Amazon Linux 2023 AMI 자동 조회)
+   - **ProjectTag**: `AWS-Lab` (기본값)
+   - **WeekTag**: `6-2` (기본값)
+   - **CreatedByTag**: `CloudFormation` (기본값)
 7. "Next" 클릭
-8. 옵션 페이지에서 "Next" 클릭
-9. 검토 페이지에서 "Create stack" 클릭
+8. Tags 섹션에서 스택 태그 추가 (선택사항)
+9. Capabilities 섹션에서 IAM 리소스 생성 확인
+10. "Submit" 클릭
 
 **생성되는 리소스**:
 - VPC (10.0.0.0/16)
 - Internet Gateway
 - Public Subnet (10.0.1.0/24)
 - Route Table
-- Security Group (HTTP, SSH 허용)
+- Security Group (HTTP 허용)
+- IAM Role (Session Manager용)
+- IAM Instance Profile
 - EC2 Instance (Apache 웹 서버 자동 설치)
 
 **예상 소요 시간**: 3-5분
@@ -66,6 +50,8 @@
 2. "Outputs" 탭 선택
 3. `WebServerURL` 값 복사
 4. 브라우저에서 접속
+
+> **참고**: 이 템플릿은 Key Pair 없이 AWS Systems Manager Session Manager를 사용하여 인스턴스에 접속할 수 있도록 구성되어 있습니다.
 
 ## 📋 템플릿 구조 설명
 
@@ -138,12 +124,12 @@ AvailabilityZone: !Select [0, !GetAZs '']
 3. "Replace current template" 선택
 4. 수정된 템플릿 업로드
 5. 파라미터 확인
-6. "Update stack" 클릭
+6. "Submit" 클릭
 
-**Change Set 사용 (권장)**:
-- "Update" > "Create change set" 선택
+**Change Set Preview 확인 (권장)**:
+- Review 페이지에서 "Change set preview" 섹션 확인
 - 변경 사항 미리 검토
-- 승인 후 실행
+- Replacement 여부 확인 후 실행
 
 ## 🗑️ 스택 삭제
 
@@ -159,9 +145,9 @@ AvailabilityZone: !Select [0, !GetAZs '']
 
 ### 스택 생성 실패
 
-**오류**: `The following resource(s) failed to create: [WebServer]`
-- **원인**: Key Pair를 선택하지 않음
-- **해결**: 스택 삭제 후 Key Pair 선택하여 재생성
+**오류**: `CREATE_FAILED` - IAM Role
+- **원인**: IAM 리소스 생성 권한 확인 누락
+- **해결**: Capabilities 섹션에서 IAM 리소스 생성 확인
 
 **오류**: `CREATE_FAILED` - Security Group
 - **원인**: VPC 생성 실패
@@ -198,8 +184,8 @@ AvailabilityZone: !Select [0, !GetAZs '']
 
 ## 💡 실습 팁
 
-1. **작은 것부터 시작**: simple-s3-template부터 시작하여 개념 이해
-2. **Change Set 활용**: 업데이트 전 변경 사항 미리 확인
-3. **태그 활용**: 리소스에 태그를 추가하여 관리 용이
-4. **파라미터 활용**: 재사용 가능한 템플릿 작성
-5. **Outputs 활용**: 다른 스택에서 참조 가능한 값 출력
+1. **Change Set Preview 활용**: 업데이트 전 변경 사항 미리 확인
+2. **태그 활용**: 리소스에 태그를 추가하여 관리 용이
+3. **파라미터 활용**: 재사용 가능한 템플릿 작성
+4. **Outputs 활용**: 다른 스택에서 참조 가능한 값 출력
+5. **Session Manager 활용**: Key Pair 없이 안전하게 인스턴스 관리

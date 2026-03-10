@@ -103,7 +103,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
-21. 출력값들을 확인하고 메모장에 복사합니다:
+21. 출력값들을 확인하고 다음 5개 값을 메모장에 복사합니다:
     - `VpcId`: Amazon VPC ID
     - `PublicSubnetAId`: 퍼블릭 서브넷 A ID
     - `PublicSubnetCId`: 퍼블릭 서브넷 C ID
@@ -112,6 +112,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 > [!IMPORTANT]
 > 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
+>
+> **추가 출력값**: AWS CloudFormation 스택은 보안 그룹 ID, EC2 인스턴스 ID, NAT Gateway 정보 등 추가 출력값도 제공합니다. 이 실습에서는 위 5개 값만 사용하지만, 필요 시 다른 출력값도 참조할 수 있습니다.
 
 ✅ **태스크 완료**: 3-Tier VPC 환경이 구축되었습니다.
 
@@ -393,7 +395,7 @@ echo "SELECT 1" | nc $DB_IP 3306
 > [!TIP]
 > Amazon VPC ID는 메모장에 저장한 VpcId와 일치해야 합니다. Amazon VPC 이름에 "week3-2-security-group"이 포함되어 있는지 확인합니다.
 
-81. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+81. **Tags** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value          |
 | ----------- | -------------- |
@@ -490,7 +492,7 @@ echo "SELECT 1" | nc $DB_IP 3306
 > [!TIP]
 > Amazon VPC ID는 메모장에 저장한 VpcId와 일치해야 합니다.
 
-95. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+95. **Tags** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value          |
 | ----------- | -------------- |

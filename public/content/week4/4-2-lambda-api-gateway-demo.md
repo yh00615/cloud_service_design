@@ -86,28 +86,26 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week4-2-quicktable-api-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-5. **Choose a stack creation method**에서 `With new resources (standard)`를 선택합니다.
-6. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
-7. **Specify template**에서 `Upload a template file`을 선택합니다.
-8. [[Choose file]] 버튼을 클릭한 후 `week4-2-quicktable-api-lab.yaml` 파일을 선택합니다.
-9. [[Next]] 버튼을 클릭합니다.
-10. **Stack name**에 `week4-2-quicktable-api-lab-stack`을 입력합니다.
-11. **Parameters** 섹션에서 기본값을 유지합니다.
-12. [[Next]] 버튼을 클릭합니다.
-13. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-14. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
+6. **Specify template**에서 `Upload a template file`을 선택합니다.
+7. [[Choose file]] 버튼을 클릭한 후 `week4-2-quicktable-api-lab.yaml` 파일을 선택합니다.
+8. [[Next]] 버튼을 클릭합니다.
+9. **Stack name**에 `week4-2-quicktable-api-lab-stack`을 입력합니다.
+10. **Parameters** 섹션에서 기본값을 유지합니다.
+11. [[Next]] 버튼을 클릭합니다.
+12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
+13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `4-2`     |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `4-2`            |
+| `CreatedBy` | `CloudFormation` |
 
+14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 15. [[Next]] 버튼을 클릭합니다.
-16. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-17. [[Next]] 버튼을 클릭합니다.
-18. **Review** 페이지에서 설정을 확인합니다.
-19. [[Submit]] 버튼을 클릭합니다.
+16. **Review and create** 페이지에서 설정을 확인합니다.
+17. [[Submit]] 버튼을 클릭합니다.
 20. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
@@ -131,106 +129,81 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!CONCEPT] Amazon Cognito User Pool
 > Amazon Cognito User Pool은 사용자 등록, 로그인, 비밀번호 관리 등의 인증 기능을 제공하는 완전 관리형 서비스입니다. 이메일 기반 로그인, 비밀번호 정책, 사용자 자가 등록 등을 설정할 수 있으며, App Client를 통해 애플리케이션에서 User Pool에 접근할 수 있습니다.
 
-### 태스크 1.1: User Pool 생성 시작 및 로그인 설정
+### 태스크 1.1: User Pool 생성 시작
 
 24. AWS Management Console 상단 검색창에 `Cognito`을 입력하고 선택합니다.
 25. [[Create user pool]] 버튼을 클릭합니다.
-26. **Amazon Cognito user pool sign-in options**에서 `Email`을 체크합니다.
-27. [[Next]] 버튼을 클릭합니다.
 
-### 태스크 1.2: 보안 설정
+> [!NOTE]
+> **Amazon Cognito 콘솔 UI 업데이트 (2026년):**
+>
+> Amazon Cognito는 2026년부터 "Set up resources for your application" 방식을 제공합니다. 이 방식은 애플리케이션 타입에 맞춰 User Pool과 App Client를 한 번에 생성하는 간소화된 방식입니다.
+>
+> 이 가이드는 새로운 방식을 기준으로 작성되었습니다.
 
-> [!IMPORTANT]
-> **Amazon Cognito 콘솔 UI 변경 안내:**
->
-> 이 가이드는 **New experience (2024년 이후 기본)** 기준으로 작성되었습니다.
->
-> **New experience (2024년 이후 기본):**
->
-> - 단계별로 설정을 진행하며, 각 섹션이 명확히 구분되어 있습니다.
-> - 이 가이드의 단계를 그대로 따라하면 됩니다.
->
-> **Legacy experience를 사용하는 경우:**
->
-> - 모든 설정이 한 페이지에 표시됩니다.
-> - 각 섹션을 찾아 동일한 설정을 적용하면 됩니다.
+### 태스크 1.2: 애플리케이션 정의
 
-28. **Password policy**에서 `Amazon Cognito defaults`를 선택합니다.
-29. **Multi-factor authentication**에서 `No MFA`를 선택합니다.
-30. **User account recovery**는 기본값을 유지합니다.
-31. [[Next]] 버튼을 클릭합니다.
+26. **Application type**에서 `Machine-to-machine application`을 선택합니다.
 
-💡 **참고**: 실습 환경에서는 MFA를 비활성화하지만, 프로덕션 환경에서는 보안을 위해 활성화하는 것이 권장됩니다.
+> [!NOTE]
+> 이 실습에서는 AWS CLI로 API를 테스트하므로 Machine-to-machine application을 선택합니다. 실제 웹/모바일 앱을 개발하는 경우 해당 타입을 선택하면 됩니다.
 
-### 태스크 1.3: 사용자 등록 설정
+27. **Name your application**에 `QuickTableApp`을 입력합니다.
 
-> [!IMPORTANT]
-> **Amazon Cognito 콘솔 UI 변경 안내:**
->
-> 이 가이드는 **New experience (2024년 이후 기본)** 기준으로 작성되었습니다.
->
-> **New experience (2024년 이후 기본):**
->
-> - **Self-service sign-up** 섹션에서 `Enable self-registration`을 체크합니다.
->
-> **Legacy experience를 사용하는 경우:**
->
-> - **Sign-up experience** 섹션에서 `Allow users to sign themselves up`을 체크합니다.
+### 태스크 1.3: 로그인 옵션 설정
 
-32. **Self-service sign-up**에서 `Enable self-registration`을 체크합니다.
-33. **Attribute verification and user account confirmation**은 기본값을 유지합니다.
-34. **Required attributes**에서 `name`을 체크합니다.
-35. [[Next]] 버튼을 클릭합니다.
+28. **Options for sign-in identifiers**에서 `Email`을 체크합니다.
 
-### 태스크 1.4: 이메일 및 User Pool 생성
+> [!NOTE]
+> Username, Phone number는 체크하지 않습니다. 이메일 주소만으로 로그인하도록 설정합니다.
 
-36. **Email**에서 `Send email with Amazon Cognito`를 선택합니다.
-37. [[Next]] 버튼을 클릭합니다.
-38. **User pool name**에 `QuickTableUserPool`을 입력합니다.
-39. **Hosted authentication pages**는 체크하지 않습니다.
+### 태스크 1.4: 사용자 등록 설정
+
+29. **Self-registration**에서 `Enable self-registration`을 체크합니다.
+
+> [!NOTE]
+> 이 옵션을 활성화하면 사용자가 직접 계정을 생성할 수 있습니다. 실습에서는 AWS CLI로 사용자를 생성하지만, 실제 애플리케이션에서는 이 기능이 필요합니다.
+
+30. **Required attributes for sign-up**에서 `Select attributes`를 클릭합니다.
+31. 속성 목록에서 `name`을 체크합니다.
+32. 선택 완료 후 창을 닫습니다.
+
+### 태스크 1.5: User Pool 생성
+
+33. **Add a return URL - optional**은 비워둡니다.
+
+> [!NOTE]
+> Return URL은 Hosted UI를 사용할 때 필요합니다. 이 실습에서는 AWS CLI로 직접 인증하므로 설정하지 않습니다.
+
+34. [[Create user directory]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> Amazon Cognito가 User Pool과 App Client를 자동으로 생성합니다. Password policy는 기본값(최소 8자, 대소문자·숫자·특수문자 포함)이 적용되며, MFA는 비활성화됩니다.
+
+35. User Pool 생성이 완료될 때까지 기다립니다.
 
 > [!IMPORTANT]
-> **Hosted authentication pages 옵션 위치:**
+> **ALLOW_USER_PASSWORD_AUTH 설정 필요:**
 >
-> **New experience (2024년 이후 기본):**
->
-> - **Hosted authentication pages** 체크박스가 User Pool 이름 입력 섹션 아래에 있습니다.
-> - 이 옵션을 체크하지 않으면 Amazon Cognito Hosted UI가 생성되지 않습니다.
->
-> **Legacy experience를 사용하는 경우:**
->
-> - **App integration** 섹션에서 `Use the Amazon Cognito Hosted UI` 옵션을 찾습니다.
-> - 이 옵션을 체크하지 않습니다.
->
-> 이 실습에서는 Hosted UI를 사용하지 않으므로 체크하지 않습니다.
+> 새로운 방식으로 생성된 App Client는 기본적으로 `ALLOW_USER_PASSWORD_AUTH` 인증 흐름이 비활성화되어 있습니다. 태스크 1.6에서 이 설정을 활성화해야 태스크 4의 AWS CLI 인증이 정상 동작합니다.
 
-40. **Initial app client** 섹션에서 다음을 설정합니다:
-	- **App client name**에 `QuickTableAppClient`를 입력합니다.
-	- **Client secret**에서 `Don't generate a client secret`를 선택합니다.
-41. 아래로 스크롤하여 **Advanced app client settings** 섹션을 확장합니다.
-42. **Authentication flows** 섹션에서 `ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
+### 태스크 1.6: App Client 인증 흐름 설정
+
+36. User Pool 생성 완료 후 **App integration** 탭을 선택합니다.
+37. **App clients and analytics** 섹션에서 생성된 App Client(`QuickTableApp`)를 클릭합니다.
+38. [[Edit]] 버튼을 클릭합니다.
+39. **Authentication flows** 섹션에서 `ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
 
 > [!IMPORTANT]
-> **ALLOW_USER_PASSWORD_AUTH 설정 위치:**
->
-> 이 가이드는 **New experience (2024년 이후 기본)** 기준으로 작성되었습니다.
->
-> **New experience (2024년 이후 기본):**
->
-> 1. User Pool 생성 마지막 단계에서 **Advanced app client settings** 섹션을 확장합니다.
-> 2. **Authentication flows** 섹션에서 `ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
->
-> **Legacy experience를 사용하는 경우:**
->
-> 1. User Pool 생성 후 **App integration** 탭을 선택합니다.
-> 2. **App clients and analytics** 섹션에서 App Client를 선택합니다.
-> 3. [[Edit]] 버튼을 클릭합니다.
-> 4. **Authentication flows** 섹션에서 `ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
->
 > 이 설정을 활성화하지 않으면 태스크 4에서 `initiate-auth` 명령어가 "USER_PASSWORD_AUTH flow not enabled" 오류로 실패합니다.
 
-43. 아래로 스크롤하여 **Tags - optional** 섹션을 확장합니다.
-44. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+40. [[Save changes]] 버튼을 클릭합니다.
+
+### 태스크 1.7: 태그 추가
+
+41. User Pool 상세 페이지에서 **Tags** 탭을 선택합니다.
+42. [[Manage tags]] 버튼을 클릭합니다.
+43. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -238,8 +211,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `4-2`     |
 | `CreatedBy` | `Student` |
 
-45. [[Next]] 버튼을 클릭합니다.
-46. 설정을 검토한 후 [[Create user pool]] 버튼을 클릭합니다.
+44. [[Save changes]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: Amazon Cognito User Pool이 생성되었습니다.
 
@@ -247,11 +219,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 생성된 Amazon Cognito User Pool의 ID와 App Client ID를 확인하여 Amazon API Gateway Authorizer 설정에 사용할 수 있도록 준비합니다.
 
-47. Amazon Cognito 콘솔의 User Pool 목록에서 `QuickTableUserPool`을 클릭합니다.
-48. **User pool overview**에서 **User pool ID**를 복사하여 메모장에 저장합니다.
-49. **App integration** 탭을 선택합니다.
-50. **App clients and analytics** 섹션에서 `QuickTableAppClient`를 선택합니다.
-51. **Client ID**를 복사하여 메모장에 저장합니다.
+45. User Pool 생성이 완료되면 자동으로 User Pool 상세 페이지로 이동합니다.
+46. **User pool overview**에서 **User pool ID**를 복사하여 메모장에 저장합니다.
+47. **App integration** 탭을 선택합니다.
+48. **App clients and analytics** 섹션에서 `QuickTableApp`을 클릭합니다.
+49. **Client ID**를 복사하여 메모장에 저장합니다.
 
 > [!TIP]
 > 이 두 값을 메모장에 저장합니다. 이후 실습에서 동일한 값을 계속 사용합니다.
@@ -267,52 +239,56 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.1: Authorizer 생성
 
-52. 상단 검색창에 `API Gateway`을 입력하고 선택합니다.
-53. API 목록에서 `Week4-2-QuickTableAPI`를 선택합니다.
-54. 왼쪽 메뉴에서 **Authorizers**를 선택합니다.
-55. [[Create authorizer]] 버튼을 클릭합니다.
-56. **Authorizer name**에 `CognitoAuthorizer`를 입력합니다.
-57. **Type**에서 `Amazon Cognito`를 선택합니다.
-58. **Amazon Cognito user pool**에서 `QuickTableUserPool`을 선택합니다.
-59. **Token source**에 `Authorization`을 입력합니다.
-60. [[Create authorizer]] 버튼을 클릭합니다.
+50. 상단 검색창에 `API Gateway`을 입력하고 선택합니다.
+51. API 목록에서 `Week4-2-QuickTableAPI`를 선택합니다.
+52. 왼쪽 메뉴에서 **Authorizers**를 선택합니다.
+53. [[Create authorizer]] 버튼을 클릭합니다.
+54. **Authorizer name**에 `CognitoAuthorizer`를 입력합니다.
+55. **Type**에서 `Amazon Cognito`를 선택합니다.
+56. **Amazon Cognito user pool**에서 생성한 User Pool을 선택합니다.
+
+> [!NOTE]
+> User Pool 이름이 표시되지 않고 User Pool ID만 표시될 수 있습니다. 태스크 2에서 복사한 User Pool ID와 일치하는지 확인합니다.
+
+57. **Token source**에 `Authorization`을 입력합니다.
+58. [[Create authorizer]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Token source는 API 요청에서 JWT 토큰을 추출할 HTTP 헤더 이름입니다. "Authorization" 헤더에서 토큰을 가져옵니다.
 
 ### 태스크 3.2: POST 메서드에 Authorizer 연결
 
-61. 왼쪽 메뉴에서 **Resources**를 선택합니다.
-62. `/reservations` 리소스를 확장합니다.
-63. `POST` 메서드를 선택합니다.
-64. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+59. 왼쪽 메뉴에서 **Resources**를 선택합니다.
+60. `/reservations` 리소스를 확장합니다.
+61. `POST` 메서드를 선택합니다.
+62. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
 
 > [!TIP]
 > **Method Request Edit 버튼 위치**: POST 메서드를 선택하면 오른쪽에 메서드 실행 흐름이 표시됩니다. **Method Request** 박스 오른쪽 상단에 [[Edit]] 버튼이 있습니다. 만약 보이지 않으면 페이지를 아래로 스크롤하거나 브라우저 창을 확대합니다.
 
-65. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
-66. [[Save]] 버튼을 클릭합니다.
+63. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
+64. [[Save]] 버튼을 클릭합니다.
 
 ### 태스크 3.3: GET 메서드에 Authorizer 연결
 
-67. `/reservations` 리소스에서 `GET` 메서드를 선택합니다.
-68. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+65. `/reservations` 리소스에서 `GET` 메서드를 선택합니다.
+66. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
 
 > [!TIP]
 > **Method Request Edit 버튼 위치**: GET 메서드를 선택하면 오른쪽에 메서드 실행 흐름이 표시됩니다. **Method Request** 박스 오른쪽 상단에 [[Edit]] 버튼이 있습니다. 만약 보이지 않으면 페이지를 아래로 스크롤하거나 브라우저 창을 확대합니다.
 
-69. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
-70. [[Save]] 버튼을 클릭합니다.
+67. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
+68. [[Save]] 버튼을 클릭합니다.
 
 ### 태스크 3.4: API 재배포
 
-71. [[Deploy API]] 버튼을 클릭합니다.
+69. [[Deploy API]] 버튼을 클릭합니다.
 
 > [!TIP]
 > **Deploy API 버튼 위치**: 화면 오른쪽 상단에 주황색 [[Deploy API]] 버튼이 있습니다. Resources 페이지에서 메서드를 선택한 상태에서 보입니다. 만약 보이지 않으면 페이지를 위로 스크롤하거나 브라우저 창을 확대합니다.
 
-72. **Stage**에서 `prod`를 선택합니다.
-73. [[Deploy]] 버튼을 클릭합니다.
+70. **Stage**에서 `prod`를 선택합니다.
+71. [[Deploy]] 버튼을 클릭합니다.
 
 > [!IMPORTANT]
 > Amazon API Gateway는 변경 사항을 스테이지에 배포해야 적용됩니다. Authorizer를 연결한 후 반드시 재배포해야 인증이 작동합니다.
@@ -334,9 +310,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 4.1: AWS CloudShell 환경 변수 설정
 
-74. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-75. CloudShell이 시작될 때까지 기다립니다.
-76. 다음 명령어로 환경 변수를 설정합니다:
+72. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
+73. CloudShell이 시작될 때까지 기다립니다.
+74. 다음 명령어로 환경 변수를 설정합니다:
 
 ```bash
 # Client ID 설정 (태스크 2에서 복사한 값으로 변경)
@@ -362,7 +338,7 @@ export TEST_EMAIL="test@example.com"
 > **CloudShell 세션 타임아웃 안내**: CloudShell 세션이 약 20분 동안 비활성 상태이면 자동으로 종료됩니다.
 > 세션이 재시작된 경우, 이 태스크의 환경 변수 설정과 태스크 4.3의 토큰 획득을 다시 수행해야 합니다.
 
-77. 환경 변수가 올바르게 설정되었는지 확인합니다:
+75. 환경 변수가 올바르게 설정되었는지 확인합니다:
 
 ```bash
 echo "Client ID: $CLIENT_ID"
@@ -373,7 +349,7 @@ echo "Test Email: $TEST_EMAIL"
 
 ### 태스크 4.2: 사용자 생성 및 확인
 
-78. 다음 명령어로 사용자를 생성합니다:
+76. 다음 명령어로 사용자를 생성합니다:
 
 ```bash
 aws cognito-idp sign-up \
@@ -408,7 +384,7 @@ aws cognito-idp sign-up \
 >
 > 환경 변수를 변경한 후 이 태스크의 명령어를 다시 실행하면 고유한 이메일로 사용자가 생성됩니다.
 
-79. 사용자를 확인합니다:
+77. 사용자를 확인합니다:
 
 ```bash
 aws cognito-idp admin-confirm-sign-up \
@@ -425,7 +401,7 @@ aws cognito-idp admin-confirm-sign-up \
 
 ### 태스크 4.3: 인증 토큰 획득
 
-80. 다음 명령어로 로그인하여 인증 토큰을 획득하고 환경 변수에 저장합니다:
+78. 다음 명령어로 로그인하여 인증 토큰을 획득하고 환경 변수에 저장합니다:
 
 ```bash
 export ID_TOKEN=$(aws cognito-idp initiate-auth \
@@ -437,7 +413,7 @@ export ID_TOKEN=$(aws cognito-idp initiate-auth \
   --output text)
 ```
 
-81. IdToken이 올바르게 저장되었는지 확인합니다:
+79. IdToken이 올바르게 저장되었는지 확인합니다:
 
 ```bash
 echo "ID Token (first 50 characters): ${ID_TOKEN:0:50}..."
@@ -464,7 +440,7 @@ echo "ID Token (first 50 characters): ${ID_TOKEN:0:50}..."
 
 ### 태스크 5.1: 예약 생성 테스트
 
-82. CloudShell에서 다음 명령어를 실행하여 예약을 생성합니다:
+80. CloudShell에서 다음 명령어를 실행하여 예약을 생성합니다:
 
 ```bash
 curl -X POST $API_URL/reservations \
@@ -521,7 +497,7 @@ curl -X POST $API_URL/reservations \
 
 ### 태스크 5.2: 예약 목록 조회 테스트
 
-83. 다음 명령어로 예약 목록을 조회합니다:
+81. 다음 명령어로 예약 목록을 조회합니다:
 
 ```bash
 curl -X GET $API_URL/reservations \
@@ -558,7 +534,7 @@ curl -X GET $API_URL/reservations \
 
 ### 태스크 5.3: 인증 없이 API 호출 테스트
 
-84. Authorization 헤더 없이 API를 호출합니다:
+82. Authorization 헤더 없이 API를 호출합니다:
 
 ```bash
 curl -X GET $API_URL/reservations
@@ -575,7 +551,7 @@ curl -X GET $API_URL/reservations
 
 ### 태스크 5.4: 잘못된 토큰으로 API 호출 테스트
 
-85. 잘못된 토큰으로 API를 호출합니다:
+83. 잘못된 토큰으로 API를 호출합니다:
 
 ```bash
 curl -X GET $API_URL/reservations \

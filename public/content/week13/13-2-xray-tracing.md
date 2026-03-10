@@ -87,11 +87,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
 13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `13-2`    |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `13-2`           |
+| `CreatedBy` | `CloudFormation` |
 
 > [!NOTE]
 > 이 태그들은 AWS CloudFormation 스택이 생성하는 모든 리소스(Amazon DynamoDB 테이블, AWS Lambda 함수 2개, Amazon API Gateway, AWS IAM 역할)에 자동으로 전파됩니다.

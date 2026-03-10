@@ -90,7 +90,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: Week4-2-CreateReservation
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -217,7 +217,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: Week4-2-GetReservations
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30

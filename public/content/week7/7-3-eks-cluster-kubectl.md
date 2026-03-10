@@ -128,7 +128,7 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `7-3` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources with custom names`를 체크합니다.
 15. [[Next]] 버튼을 클릭합니다.
