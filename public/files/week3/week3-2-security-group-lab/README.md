@@ -88,11 +88,11 @@
 1. [[Create stack]] > **With new resources (standard)**를 선택합니다
 2. **Prepare template**에서 `Template is ready`를 선택합니다
 3. **Template source**에서 `Upload a template file`을 선택합니다
-4. [[Choose file]] 버튼을 클릭하고 `vpc-3tier-environment.yaml` 파일을 선택합니다
+4. [[Choose file]] 버튼을 클릭하고 `week3-2-security-group-lab.yaml` 파일을 선택합니다
 5. [[Next]] 버튼을 클릭합니다
 
 ### 3. 스택 세부 정보 지정
-1. **Stack name**에 `week3-2-vpc-environment`를 입력합니다
+1. **Stack name**에 `week3-2-security-group-stack`를 입력합니다
 2. **Parameters** 섹션:
    - **EnvironmentName**: `Lab` (기본값 유지)
    - 다른 파라미터는 기본값 유지
@@ -243,9 +243,9 @@ Private Route Table:
 
 ## 🗑️ 리소스 정리
 
-### CloudFormation 스택 삭제
+### 1. CloudFormation 스택 삭제
 1. CloudFormation 콘솔로 이동합니다
-2. `week3-2-vpc-environment` 스택을 선택합니다
+2. `week3-2-security-group-stack` 스택을 선택합니다
 3. [[Delete]] 버튼을 클릭합니다
 4. 확인 창에서 [[Delete]] 버튼을 클릭합니다
 5. 스택 삭제가 완료될 때까지 기다립니다 (약 3-5분)

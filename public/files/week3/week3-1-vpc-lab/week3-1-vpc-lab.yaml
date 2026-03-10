@@ -348,15 +348,31 @@ Resources:
 
 Outputs:
   VpcId:
-    Description: VPC ID (used in Task 1)
+    Description: VPC ID (used in Task 1-2)
     Value: !Ref LabVPC
     Export:
       Name: !Sub '${EnvironmentName}-VpcId'
 
+  PrivateSubnetAId:
+    Description: Private Subnet A ID (used in Task 1)
+    Value: !Ref PrivateSubnetA
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateSubnetA'
+
   PrivateRouteTableAId:
-    Description: Private Route Table A ID (used in Task 1)
+    Description: Private Route Table A ID (used in Task 2)
     Value: !Ref PrivateRouteTableA
+    Export:
+      Name: !Sub '${EnvironmentName}-PrivateRouteTableA'
+
+  NatGatewayId:
+    Description: NAT Gateway ID (used in Task 5.3)
+    Value: !Ref NATGatewayA
+    Export:
+      Name: !Sub '${EnvironmentName}-NATGatewayA'
 
   EC2InstanceId:
-    Description: Test EC2 Instance ID (used in Task 3)
+    Description: Test EC2 Instance ID (used in Task 5)
     Value: !Ref TestEC2Instance
+    Export:
+      Name: !Sub '${EnvironmentName}-TestEC2Instance'

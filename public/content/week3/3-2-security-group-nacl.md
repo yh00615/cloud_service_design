@@ -89,7 +89,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 15. [[Next]] 버튼을 클릭합니다.
-16. **Review** 페이지에서 설정을 확인합니다.
+16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -107,8 +107,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `VpcId`: Amazon VPC ID
     - `PublicSubnetAId`: 퍼블릭 서브넷 A ID
     - `PublicSubnetCId`: 퍼블릭 서브넷 C ID
-    - `PrivateSubnetAId`: 프라이빗 서브넷 A ID
-    - `PrivateSubnetCId`: 프라이빗 서브넷 C ID
+    - `PrivateWebSubnetAId`: 프라이빗 Web 서브넷 A ID
+    - `PrivateWebSubnetCId`: 프라이빗 Web 서브넷 C ID
 
 > [!IMPORTANT]
 > 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
@@ -551,7 +551,7 @@ echo "SELECT 1" | nc $DB_IP 3306
 118. 프라이빗 서브넷들을 체크합니다.
 
 > [!TIP]
-> **서브넷 식별 방법**: 서브넷 이름에 "Private"가 포함된 서브넷들을 선택합니다. 메모장에 저장한 PrivateSubnetAId와 PrivateSubnetCId를 참고하여 올바른 서브넷을 선택합니다.
+> **서브넷 식별 방법**: 서브넷 이름에 "Private"가 포함된 서브넷들을 선택합니다. 메모장에 저장한 PrivateWebSubnetAId와 PrivateWebSubnetCId를 참고하여 올바른 서브넷을 선택합니다.
 >
 > **서브넷 구분 팁**:
 >
