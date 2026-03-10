@@ -37,7 +37,7 @@ prerequisites:
 > 이 가이드는 2025년 2월 기준으로 작성되었으며, 실제 화면과 다를 수 있습니다.
 > 
 > **UI가 변경된 경우**:
-> - 기본 개념(리소스 팔레트, 캔버스, 속성 패널)은 동일하게 유지됩니다.
+> - 기본 개념(리소스 팔레트, 캔버스, Resource properties panel)은 동일하게 유지됩니다.
 > - 버튼 이름이나 위치가 다를 수 있지만 유사한 기능을 찾아 진행합니다.
 > - 예: "Create project" → "New project", "Template format" → "Format" 등
 > - 리소스 팔레트의 카테고리 구조가 변경될 수 있지만 리소스 이름은 동일합니다.
@@ -77,7 +77,7 @@ prerequisites:
 
 > [!TIP]
 > 리소스 팔레트의 카테고리 이름이 변경된 경우 검색 기능을 사용하여 "Amazon DynamoDB"를 직접 검색합니다.
-9. 오른쪽 속성 패널에서 **Logical ID**를 `ItemsTable`로 변경합니다.
+9. 오른쪽 **Resource properties panel**에서 **Logical ID**를 `ItemsTable`로 변경합니다.
 10. **Properties** 섹션을 확장합니다.
 11. **AttributeDefinitions** 섹션을 확장합니다.
 12. [[Add item]] 버튼을 클릭합니다.
@@ -110,7 +110,7 @@ prerequisites:
 18. 왼쪽 리소스 팔레트에서 **Compute** 카테고리를 확장합니다.
 19. **AWS Lambda Function**을 찾아서 캔버스로 드래그합니다.
 20. AWS Lambda Function 리소스를 클릭합니다.
-21. 오른쪽 속성 패널에서 **Logical ID**를 `ItemsFunction`로 변경합니다.
+21. 오른쪽 **Resource properties panel**에서 **Logical ID**를 `ItemsFunction`로 변경합니다.
 22. **Properties** 섹션을 확장합니다.
 23. **Runtime**에서 `python3.12`를 선택합니다.
 
@@ -199,14 +199,14 @@ Environment:
 31. 왼쪽 리소스 팔레트에서 **Security, Identity, & Compliance** 카테고리를 확장합니다.
 32. **AWS IAM Role**을 찾아서 캔버스로 드래그합니다.
 33. AWS IAM Role 리소스를 클릭합니다.
-34. 오른쪽 속성 패널에서 **Logical ID**를 `ItemsFunctionRole`로 변경합니다.
+34. 오른쪽 **Resource properties panel**에서 **Logical ID**를 `ItemsFunctionRole`로 변경합니다.
 35. 오른쪽 패널에서 **Template** 탭을 선택합니다.
 36. `ItemsFunctionRole` 리소스를 찾습니다.
 37. 기존 자동 생성된 `ItemsFunctionRole` 블록 전체를 다음으로 교체합니다:
 
 ```yaml
 ItemsFunctionRole:
-  Type: AWS::AWS IAM::Role
+  Type: AWS::IAM::Role
   Properties:
     AssumeRolePolicyDocument:
       Version: '2012-10-17'
@@ -266,7 +266,7 @@ Role: !GetAtt ItemsFunctionRole.Arn
 42. 왼쪽 리소스 팔레트에서 **Networking & Content Delivery** 카테고리를 확장합니다.
 43. **Amazon API Gateway REST API**를 찾아서 캔버스로 드래그합니다.
 44. REST API 리소스를 클릭합니다.
-45. 오른쪽 속성 패널에서 **Logical ID**를 `ItemsApi`로 변경합니다.
+45. 오른쪽 **Resource properties panel**에서 **Logical ID**를 `ItemsApi`로 변경합니다.
 46. **Properties** 섹션을 확장합니다.
 47. **Name**에 `Items API`를 입력합니다.
 48. 오른쪽 패널에서 **Template** 탭을 선택합니다.
@@ -300,7 +300,7 @@ ItemsApiDeployment:
     StageName: prod
 
 LambdaApiPermission:
-  Type: AWS::AWS Lambda::Permission
+  Type: AWS::Lambda::Permission
   Properties:
     FunctionName: !Ref ItemsFunction
     Action: lambda:InvokeFunction
@@ -366,10 +366,10 @@ Outputs:
 > ```yaml
 > Resources:
 >   ItemsTable:
->     Type: AWS::Amazon DynamoDB::Table
+>     Type: AWS::DynamoDB::Table
 >     ...
 >   ItemsFunction:
->     Type: AWS::AWS Lambda::Function
+>     Type: AWS::Lambda::Function
 >     ...
 > 
 > Outputs:  # Resources와 동일한 들여쓰기 레벨
@@ -395,11 +395,11 @@ Outputs:
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `6-3` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
 69. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 70. [[Next]] 버튼을 클릭합니다.
-71. **Review** 페이지에서 설정을 확인합니다.
+71. **Review and create** 페이지에서 설정을 확인합니다.
 72. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]

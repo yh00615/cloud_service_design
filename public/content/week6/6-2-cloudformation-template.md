@@ -109,12 +109,28 @@ Parameters:
     AllowedValues:
       - t2.micro
       - t2.small
+      - t3.micro
     Description: Amazon EC2 instance type
   
   LatestAmiId:
-    Type: AWS::SSM::Parameter::Value<AWS::Amazon EC2::Image::Id>
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
     Description: Latest Amazon Linux 2023 AMI ID from SSM Parameter Store
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '6-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
 ```
 
 > [!NOTE] Parameters 주요 속성
@@ -126,61 +142,79 @@ Parameters:
 
 ### Resources 섹션 - Amazon VPC 및 네트워크
 
-5. Amazon VPC 정의를 확인합니다:
+5. VPC 정의를 확인합니다:
 
 ```yaml
-  Amazon VPC:
-    Type: AWS::Amazon EC2::Amazon VPC
+  VPC:
+    Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCIDR
       EnableDnsHostnames: true
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: !Sub '${EnvironmentName}-Amazon VPC'
+          Value: !Sub '${EnvironmentName}-VPC'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 ```
 
 6. InternetGateway 및 연결을 확인합니다:
 
 ```yaml
   InternetGateway:
-    Type: AWS::Amazon EC2::InternetGateway
+    Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-IGW'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
   
   AttachGateway:
-    Type: AWS::Amazon EC2::VPCGatewayAttachment
+    Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref Amazon VPC
+      VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 ```
 
-> [!NOTE] Amazon VPC 및 InternetGateway
+> [!NOTE] VPC 및 InternetGateway
 > 
 > - **!Ref VpcCIDR**: Parameters에서 정의한 VpcCIDR 값 참조
 > - **!Sub**: 문자열 치환 - `${EnvironmentName}`을 실제 값으로 대체
-> - **VPCGatewayAttachment**: Amazon VPC와 InternetGateway를 연결
+> - **VPCGatewayAttachment**: VPC와 InternetGateway를 연결
 
 7. 서브넷 정의를 확인합니다:
 
 ```yaml
   PublicSubnet:
-    Type: AWS::Amazon EC2::Subnet
+    Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref Amazon VPC
+      VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnetCIDR
       AvailabilityZone: !Select [0, !GetAZs '']
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Public-Subnet'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 ```
 
 > [!NOTE] 서브넷 및 내장 함수
 > 
-> - **!Ref Amazon VPC**: Amazon VPC 리소스의 ID 참조
+> - **!Ref VPC**: VPC 리소스의 ID 참조
 > - **!GetAZs ''**: 현재 리전의 모든 가용 영역 목록을 가져옴
 > - **!Select [0, !GetAZs '']**: 첫 번째 가용 영역을 선택
 > - **MapPublicIpOnLaunch**: Public 서브넷에서 인스턴스 생성 시 자동으로 퍼블릭 IP 할당
@@ -189,15 +223,21 @@ Parameters:
 
 ```yaml
   PublicRouteTable:
-    Type: AWS::Amazon EC2::RouteTable
+    Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref Amazon VPC
+      VpcId: !Ref VPC
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Public-RT'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
   DefaultPublicRoute:
-    Type: AWS::Amazon EC2::Route
+    Type: AWS::EC2::Route
     DependsOn: AttachGateway
     Properties:
       RouteTableId: !Ref PublicRouteTable
@@ -215,7 +255,7 @@ Parameters:
 
 ```yaml
   SubnetRouteTableAssociation:
-    Type: AWS::Amazon EC2::SubnetRouteTableAssociation
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnet
       RouteTableId: !Ref PublicRouteTable
@@ -233,11 +273,11 @@ Parameters:
 
 ```yaml
   WebServerSecurityGroup:
-    Type: AWS::Amazon EC2::SecurityGroup
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub '${EnvironmentName}-Web-SG'
       GroupDescription: Security group for web server
-      VpcId: !Ref Amazon VPC
+      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -247,6 +287,12 @@ Parameters:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Web-SG'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 ```
 
 > [!NOTE] 보안 그룹 인바운드 규칙
@@ -264,7 +310,7 @@ Parameters:
 
 ```yaml
   WebServer:
-    Type: AWS::Amazon EC2::Instance
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !Ref LatestAmiId
@@ -283,6 +329,12 @@ Parameters:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Web-Server'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 ```
 
 > [!NOTE] Amazon EC2 인스턴스 주요 속성
@@ -299,7 +351,7 @@ Parameters:
 
 ```yaml
   WebServerRole:
-    Type: AWS::AWS IAM::Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -313,9 +365,15 @@ Parameters:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-WebServer-Role'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
   
   WebServerInstanceProfile:
-    Type: AWS::AWS IAM::InstanceProfile
+    Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
         - !Ref WebServerRole
@@ -334,14 +392,16 @@ Parameters:
 ```yaml
 Outputs:
   VPCId:
-    Description: Amazon VPC ID
-    Value: !Ref Amazon VPC
+    Description: VPC ID
+    Value: !Ref VPC
     Export:
-      Name: !Sub '${AWS::StackName}-Amazon VPC-ID'
+      Name: !Sub '${EnvironmentName}-VPC-ID'
   
   PublicSubnetId:
     Description: Public Subnet ID
     Value: !Ref PublicSubnet
+    Export:
+      Name: !Sub '${EnvironmentName}-Public-Subnet-ID'
   
   WebServerPublicIP:
     Description: Web Server Public IP
@@ -378,6 +438,9 @@ Outputs:
 	- **PublicSubnetCIDR**: `10.0.1.0/24` (기본값 유지)
    - **InstanceType**: `t2.micro` (기본값 유지)
    - **LatestAmiId**: 기본값 유지 (최신 Amazon Linux 2023 AMI 자동 조회)
+   - **ProjectTag**: `AWS-Lab` (기본값 유지)
+   - **WeekTag**: `6-2` (기본값 유지)
+   - **CreatedByTag**: `CloudFormation` (기본값 유지)
 
 > [!NOTE]
 > 이 템플릿은 Key Pair 없이 AWS Systems Manager Session Manager를 사용하여 인스턴스에 접속할 수 있도록 구성되어 있습니다.
@@ -391,19 +454,25 @@ Outputs:
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `6-2` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
-25. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-26. [[Next]] 버튼을 클릭합니다.
-27. **Review** 페이지에서 설정을 확인합니다.
-28. [[Submit]] 버튼을 클릭합니다.
-29. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+25. **Capabilities** 섹션으로 스크롤합니다.
+26. ☑️ `I acknowledge that AWS CloudFormation might create IAM resources`를 체크합니다.
+
+> [!NOTE]
+> 이 템플릿은 Session Manager 접속을 위한 IAM 역할(`WebServerRole`)과 인스턴스 프로파일(`WebServerInstanceProfile`)을 생성합니다.
+> IAM 리소스를 생성하려면 반드시 Capabilities를 확인해야 합니다.
+
+27. [[Next]] 버튼을 클릭합니다.
+28. **Review and create** 페이지에서 설정을 확인합니다.
+29. [[Submit]] 버튼을 클릭합니다.
+30. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
 > 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-30. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+31. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: AWS CloudFormation 스택이 생성되었습니다.
 
@@ -413,40 +482,40 @@ Outputs:
 
 ### Resources 탭 확인
 
-31. `lab-vpc-stack`을 선택합니다.
-32. 하단의 **Resources** 탭을 선택합니다.
-33. 생성된 리소스 목록을 확인합니다:
+32. `lab-vpc-stack`을 선택합니다.
+33. 하단의 **Resources** 탭을 선택합니다.
+34. 생성된 리소스 목록을 확인합니다:
 
 | Logical ID | Type | Physical ID |
 |-----------|------|-------------|
-| Amazon VPC | AWS::Amazon EC2::Amazon VPC | vpc-xxxxx |
-| InternetGateway | AWS::Amazon EC2::InternetGateway | igw-xxxxx |
-| AttachGateway | AWS::Amazon EC2::VPCGatewayAttachment | - |
-| PublicSubnet | AWS::Amazon EC2::Subnet | subnet-xxxxx |
-| PublicRouteTable | AWS::Amazon EC2::RouteTable | rtb-xxxxx |
-| DefaultPublicRoute | AWS::Amazon EC2::Route | - |
-| SubnetRouteTableAssociation | AWS::Amazon EC2::SubnetRouteTableAssociation | - |
-| WebServerSecurityGroup | AWS::Amazon EC2::SecurityGroup | sg-xxxxx |
-| WebServerRole | AWS::AWS IAM::Role | lab-vpc-stack-WebServerRole-xxxxx |
-| WebServerInstanceProfile | AWS::AWS IAM::InstanceProfile | lab-vpc-stack-WebServerInstanceProfile-xxxxx |
-| WebServer | AWS::Amazon EC2::Instance | i-xxxxx |
+| VPC | AWS::EC2::VPC | vpc-xxxxx |
+| InternetGateway | AWS::EC2::InternetGateway | igw-xxxxx |
+| AttachGateway | AWS::EC2::VPCGatewayAttachment | - |
+| PublicSubnet | AWS::EC2::Subnet | subnet-xxxxx |
+| PublicRouteTable | AWS::EC2::RouteTable | rtb-xxxxx |
+| DefaultPublicRoute | AWS::EC2::Route | - |
+| SubnetRouteTableAssociation | AWS::EC2::SubnetRouteTableAssociation | - |
+| WebServerSecurityGroup | AWS::EC2::SecurityGroup | sg-xxxxx |
+| WebServerRole | AWS::IAM::Role | lab-vpc-stack-WebServerRole-xxxxx |
+| WebServerInstanceProfile | AWS::IAM::InstanceProfile | lab-vpc-stack-WebServerInstanceProfile-xxxxx |
+| WebServer | AWS::EC2::Instance | i-xxxxx |
 
 > [!NOTE] Logical ID vs Physical ID
 > 
-> - **Logical ID**: 템플릿에서 정의한 리소스 이름 (예: Amazon VPC, WebServer)
+> - **Logical ID**: 템플릿에서 정의한 리소스 이름 (예: VPC, WebServer)
 > - **Physical ID**: AWS가 실제로 생성한 리소스의 고유 ID (예: vpc-xxxxx, i-xxxxx)
 > - 일부 리소스(AttachGateway, Route, Association)는 Physical ID가 없습니다 (연결 리소스)
 
-34. **Amazon VPC** 리소스의 Physical ID (vpc-xxxxx)를 클릭합니다.
-35. Amazon VPC 콘솔로 이동하여 Amazon VPC 상세 정보를 확인합니다.
-36. 브라우저 뒤로가기 버튼을 클릭하여 AWS CloudFormation 콘솔로 이동합니다.
-37. **WebServer** 리소스의 Physical ID (i-xxxxx)를 클릭합니다.
-38. Amazon EC2 콘솔로 이동하여 인스턴스 상세 정보를 확인합니다.
+35. **VPC** 리소스의 Physical ID (vpc-xxxxx)를 클릭합니다.
+36. VPC 콘솔로 이동하여 VPC 상세 정보를 확인합니다.
+37. 브라우저 뒤로가기 버튼을 클릭하여 AWS CloudFormation 콘솔로 이동합니다.
+38. **WebServer** 리소스의 Physical ID (i-xxxxx)를 클릭합니다.
+39. EC2 콘솔로 이동하여 인스턴스 상세 정보를 확인합니다.
 
 > [!NOTE] 리소스 생성 순서
 > 
 > AWS CloudFormation은 리소스 간 의존성을 자동으로 파악하여 올바른 순서로 생성합니다:
-> 1. Amazon VPC → InternetGateway → AttachGateway
+> 1. VPC → InternetGateway → AttachGateway
 > 2. PublicSubnet → PublicRouteTable → DefaultPublicRoute
 > 3. SubnetRouteTableAssociation
 > 4. WebServerSecurityGroup
@@ -455,24 +524,24 @@ Outputs:
 
 ### Outputs 탭 확인
 
-39. AWS CloudFormation 콘솔로 이동합니다.
-40. 하단의 **Outputs** 탭을 선택합니다.
-41. 출력값을 확인합니다:
+40. AWS CloudFormation 콘솔로 이동합니다.
+41. 하단의 **Outputs** 탭을 선택합니다.
+42. 출력값을 확인합니다:
 
 | Key | Value | Export Name |
 |-----|-------|-------------|
-| VPCId | vpc-xxxxx | lab-vpc-stack-Amazon VPC-ID |
-| PublicSubnetId | subnet-xxxxx | - |
+| VPCId | vpc-xxxxx | Lab-VPC-ID |
+| PublicSubnetId | subnet-xxxxx | Lab-Public-Subnet-ID |
 | WebServerPublicIP | x.x.x.x | - |
 | WebServerURL | http://x.x.x.x | - |
 
 > [!NOTE] Outputs 활용
 > 
 > - **Export Name**: 다른 스택에서 `!ImportValue` 함수로 참조 가능
-> - VPCId는 Export되어 있어 다른 스택에서 이 Amazon VPC를 참조할 수 있습니다
+> - VPCId는 Export되어 있어 다른 스택에서 이 VPC를 참조할 수 있습니다
 > - WebServerURL은 바로 복사하여 브라우저에서 테스트 가능
 
-42. **WebServerURL** 값을 복사하여 메모장에 저장합니다.
+43. **WebServerURL** 값을 복사하여 메모장에 저장합니다.
 
 > [!NOTE]
 > 이 URL은 다음 태스크에서 웹 서버 테스트에 사용됩니다.
@@ -481,11 +550,11 @@ Outputs:
 
 ## 태스크 6: 웹 서버 테스트
 
-이 태스크에서는 AWS CloudFormation으로 생성된 Amazon EC2 인스턴스의 웹 서버가 정상적으로 작동하는지 확인합니다. UserData 스크립트로 자동 설치된 Apache 웹 서버에 접속하여 테스트 페이지를 확인합니다.
+이 태스크에서는 AWS CloudFormation으로 생성된 EC2 인스턴스의 웹 서버가 정상적으로 작동하는지 확인합니다. UserData 스크립트로 자동 설치된 Apache 웹 서버에 접속하여 테스트 페이지를 확인합니다.
 
-43. **Outputs** 탭에서 **WebServerURL** 값을 복사합니다.
-44. 새 브라우저 탭을 열고 복사한 URL을 붙여넣습니다.
-45. "Hello from AWS CloudFormation!" 메시지가 표시되는지 확인합니다.
+44. **Outputs** 탭에서 **WebServerURL** 값을 복사합니다.
+45. 새 브라우저 탭을 열고 복사한 URL을 붙여넣습니다.
+46. "Hello from AWS CloudFormation!" 메시지가 표시되는지 확인합니다.
 
 > [!NOTE]
 > 인스턴스가 완전히 시작되고 웹 서버가 실행되기까지 2-3분이 소요될 수 있습니다.

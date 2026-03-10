@@ -16,20 +16,15 @@ prerequisites:
 
 이 데모에서는 AWS CloudFormation 스택의 전체 생명주기를 시연합니다. 간단한 Amazon S3 버킷 스택을 생성(CREATE)하고, 변경 세트를 통해 안전하게 업데이트(UPDATE)하며, 드리프트 감지로 수동 변경을 감지한 후 스택을 삭제(DELETE)하는 전체 프로세스를 경험합니다. 각 단계에서 스택 상태 변화를 관찰하고 AWS CloudFormation이 리소스를 어떻게 관리하는지 이해합니다.
 
-**주요 태스크:**
-- 태스크 1: 스택 생성 (CREATE) - Amazon S3 버킷 스택
-- 태스크 2: 스택 업데이트 (UPDATE) - 변경 세트로 안전한 업데이트
-- 태스크 3: 드리프트 감지 - 수동 변경 감지
-
 > [!DOWNLOAD]
 > [week6-1-cloudformation-lab.zip](/files/week6/week6-1-cloudformation-lab.zip)
-> - `simple-s3-template.yaml` - 기본 Amazon S3 버킷 템플릿 (태스크 1에서 스택 생성)
-> - `s3-with-tags.yaml` - 태그가 추가된 Amazon S3 버킷 템플릿 (태스크 2에서 변경 세트 생성)
+> - `s3-bucket-create.yaml` - 기본 S3 버킷 템플릿 (태스크 1에서 스택 생성)
+> - `s3-bucket-update.yaml` - 태그가 추가된 S3 버킷 템플릿 (태스크 2에서 변경 세트 생성)
 > 
 > **관련 태스크:**
 > 
-> - 태스크 1: Amazon S3 스택 생성 (simple-s3-template.yaml 사용)
-> - 태스크 2: 변경 세트 생성 및 실행 (s3-with-tags.yaml로 업데이트)
+> - 태스크 1: S3 스택 생성 (s3-bucket-create.yaml 사용)
+> - 태스크 2: 변경 세트 생성 및 실행 (s3-bucket-update.yaml로 업데이트)
 > - 태스크 3: 드리프트 감지 (수동 변경 감지)
 
 > [!NOTE]
@@ -62,12 +57,12 @@ prerequisites:
 ### 상세 단계
 
 1. 다운로드한 `week6-1-cloudformation-lab.zip` 파일의 압축을 해제합니다.
-2. `simple-s3-template.yaml` 파일을 텍스트 에디터로 엽니다.
+2. `s3-bucket-create.yaml` 파일을 텍스트 에디터로 엽니다.
 3. 템플릿 구조를 확인합니다:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Simple Amazon S3 bucket for AWS CloudFormation demo'
+Description: 'Simple Amazon S3 bucket for AWS CloudFormation demo - CREATE lifecycle'
 
 Parameters:
   BucketPrefix:
@@ -77,24 +72,24 @@ Parameters:
 
 Resources:
   DemoBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
-      Tags:
-        - Key: Purpose
-          Value: AWS CloudFormation Demo
 
 Outputs:
   BucketName:
     Description: Name of the Amazon S3 bucket
     Value: !Ref DemoBucket
+  BucketArn:
+    Description: ARN of the Amazon S3 bucket
+    Value: !GetAtt DemoBucket.Arn
 ```
 
 4. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 5. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 6. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 7. **Specify template**에서 `Upload a template file`을 선택합니다.
-8. [[Choose file]] 버튼을 클릭한 후 `simple-s3-template.yaml` 파일을 선택합니다.
+8. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-create.yaml` 파일을 선택합니다.
 9. [[Next]] 버튼을 클릭합니다.
 10. **Stack name**에 `demo-s3-stack`을 입력합니다.
 11. **Parameters** 섹션에서 **BucketPrefix** 값을 확인합니다 (기본값 `cfn-demo-bucket` 사용).
@@ -106,13 +101,12 @@ Outputs:
 |-----|-------|
 | `Project` | `AWS-Lab` |
 | `Week` | `6-1` |
-| `CreatedBy` | `Student` |
+| `CreatedBy` | `CloudFormation` |
 
-15. **Capabilities** 섹션에서 ☑️ `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-16. [[Next]] 버튼을 클릭합니다.
-17. **Review** 페이지에서 설정을 확인합니다.
-18. [[Submit]] 버튼을 클릭합니다.
-19. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+15. [[Next]] 버튼을 클릭합니다.
+16. **Review and create** 페이지에서 설정을 확인합니다.
+17. [[Submit]] 버튼을 클릭합니다.
+18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
 > 스택 생성에 1-2분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
@@ -120,12 +114,12 @@ Outputs:
 > 
 > **스택 태그 자동 전파**: 스택에 추가한 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스(Amazon S3 버킷)에 자동으로 전파됩니다.
 
-20. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-21. **Outputs** 탭을 선택합니다.
-22. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
-23. **Resources** 탭을 선택합니다.
-24. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
-25. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
+19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+20. **Outputs** 탭을 선택합니다.
+21. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
+22. **Resources** 탭을 선택합니다.
+23. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
+24. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
 
 ✅ **태스크 완료**: 스택 생성(CREATE) 생명주기를 시연했습니다.
 
@@ -158,12 +152,12 @@ Outputs:
 
 ### 상세 단계
 
-26. `s3-with-tags.yaml` 파일을 텍스트 에디터로 엽니다.
+26. `s3-bucket-update.yaml` 파일을 텍스트 에디터로 엽니다.
 27. 템플릿 내용을 확인합니다:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Amazon S3 bucket with additional tags'
+Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
 
 Parameters:
   BucketPrefix:
@@ -173,25 +167,30 @@ Parameters:
 
 Resources:
   DemoBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
       Tags:
-        - Key: Purpose
-          Value: AWS CloudFormation Demo
-        - Key: Environment
-          Value: Development
-        - Key: ManagedBy
-          Value: AWS CloudFormation
+        - Key: Name
+          Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
+        - Key: Project
+          Value: AWS-Lab
+        - Key: Week
+          Value: '6-1'
+        - Key: CreatedBy
+          Value: CloudFormation
 
 Outputs:
   BucketName:
     Description: Name of the Amazon S3 bucket
     Value: !Ref DemoBucket
+  BucketArn:
+    Description: ARN of the Amazon S3 bucket
+    Value: !GetAtt DemoBucket.Arn
 ```
 
 > [!NOTE]
-> 이 템플릿은 기존 템플릿에 2개의 태그(Environment, ManagedBy)를 추가한 버전입니다.
+> 이 템플릿은 기존 템플릿에 4개의 표준 태그(Name, Project, Week, CreatedBy)를 추가한 버전입니다.
 > 버킷 이름은 동일하므로 기존 버킷이 수정됩니다.
 
 28. AWS CloudFormation 콘솔로 이동합니다.
@@ -199,7 +198,7 @@ Outputs:
 30. [[Update]] 버튼을 클릭합니다.
 31. **Prerequisite - Prepare template**에서 `Replace current template`을 선택합니다.
 32. **Specify template**에서 `Upload a template file`을 선택합니다.
-33. [[Choose file]] 버튼을 클릭한 후 `s3-with-tags.yaml` 파일을 선택합니다.
+33. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
 34. [[Next]] 버튼을 클릭합니다.
 35. **Parameters** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
 36. **Configure stack options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
@@ -213,7 +212,7 @@ Outputs:
     - **Action**: `Modify` (기존 리소스 수정)
     - **Logical ID**: `DemoBucket`
     - **Physical ID**: 실제 버킷 이름
-    - **Resource type**: `AWS::Amazon S3::Bucket`
+    - **Resource type**: `AWS::S3::Bucket`
     - **Replacement**: `False` (리소스 교체 없음, 데이터 안전)
     - **Scope**: `Tags` (태그만 변경)
 
@@ -239,18 +238,19 @@ Outputs:
 43. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
 44. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
 45. 하단의 **Tags** 섹션으로 스크롤합니다.
-46. 템플릿에 정의된 3개의 태그가 있는지 확인합니다:
-    - `Purpose: AWS CloudFormation Demo`
-    - `Environment: Development`
-    - `ManagedBy: AWS CloudFormation`
+46. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
+    - `Name: cfn-demo-bucket-123456789012`
+    - `Project: AWS-Lab`
+    - `Week: 6-1`
+    - `CreatedBy: CloudFormation`
 
 > [!NOTE]
 > 태스크 1에서 스택 생성 시 추가한 3개의 스택 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스에 자동으로 전파됩니다.
-> 따라서 Amazon S3 버킷에는 총 6개의 태그가 표시됩니다:
-> - **템플릿 정의 태그** (3개): Purpose, Environment, ManagedBy
+> 따라서 Amazon S3 버킷에는 총 7개의 태그가 표시됩니다:
+> - **템플릿 정의 태그** (4개): Name, Project, Week, CreatedBy
 > - **스택 태그** (3개): Project, Week, CreatedBy
 > 
-> 태스크 1에서는 템플릿 정의 태그 1개(Purpose)와 스택 태그 3개가 있었습니다. 태스크 2 업데이트 후 템플릿 정의 태그가 3개(Purpose, Environment, ManagedBy)로 늘어나 총 6개가 되었습니다.
+> 태스크 1에서는 템플릿 정의 태그가 없었고 스택 태그 3개만 있었습니다. 태스크 2 업데이트 후 템플릿 정의 태그 4개가 추가되어 총 7개가 되었습니다.
 
 > [!IMPORTANT]
 > Replacement가 True인 경우 반드시 데이터 백업을 먼저 수행해야 합니다.
@@ -307,31 +307,31 @@ Outputs:
 56. `demo-s3-stack`을 선택합니다.
 57. **Stack actions** 드롭다운을 클릭합니다.
 58. `Detect drift`를 선택합니다.
-59. 확인 창에서 [[Detect drift]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 드리프트 감지에 1-2분이 소요됩니다. AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
+> 드리프트 감지가 즉시 시작되며 1-2분이 소요됩니다. AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
+> 화면 상단에 "Drift detection has been initiated" 메시지가 표시됩니다.
 
-60. 페이지를 새로고침합니다.
-61. **Stack info** 탭에서 **Drift status**를 확인합니다.
-62. 상태가 "DRIFTED"로 표시되는지 확인합니다.
+59. 페이지를 새로고침합니다.
+60. **Stack info** 탭에서 **Drift status**를 확인합니다.
+61. 상태가 "DRIFTED"로 표시되는지 확인합니다.
 
 #### 3단계: 드리프트 상세 정보 확인
 
-63. **Stack actions** 드롭다운을 클릭합니다.
-64. `View drift results`를 선택합니다.
-65. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
-66. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
-67. **DemoBucket** 리소스를 선택합니다.
-68. [[View drift details]] 버튼을 클릭합니다.
-69. 드리프트 차이점을 확인합니다:
-	- **Expected**: 템플릿에 정의된 태그 (3개: Purpose, Environment, ManagedBy)
-	- **Actual**: 템플릿 정의 태그 3개 + 수동 추가 태그 1개 (ManualTag)
+62. **Stack actions** 드롭다운을 클릭합니다.
+63. `View drift results`를 선택합니다.
+64. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
+65. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
+66. **DemoBucket** 리소스를 선택합니다.
+67. [[View drift details]] 버튼을 클릭합니다.
+68. 드리프트 차이점을 확인합니다:
+	- **Expected**: 템플릿에 정의된 태그 (4개: Name, Project, Week, CreatedBy)
+	- **Actual**: 템플릿 정의 태그 4개 + 수동 추가 태그 1개 (ManualTag)
 	- **Difference Type**: `NOT_EQUAL` (값이 다름)
 
 > [!NOTE]
 > 드리프트 감지는 AWS CloudFormation 템플릿에 명시적으로 정의된 속성만 비교하며, 스택 수준 태그(`Project`, `Week`, `CreatedBy`)는 비교 대상에 포함되지 않습니다.
-> 따라서 Expected는 템플릿의 3개 태그, Actual은 템플릿 3개 + 수동 추가 1개로 표시됩니다.
+> 따라서 Expected는 템플릿의 4개 태그, Actual은 템플릿 4개 + 수동 추가 1개로 표시됩니다.
 
 > [!NOTE]
 > 이 데모에서는 드리프트를 수정하지 않고 그대로 둡니다.
@@ -349,9 +349,7 @@ Outputs:
 > [!WARNING]
 > 이 데모는 비용이 거의 발생하지 않지만, 실습 종료 후 모든 리소스를 삭제하는 것이 좋습니다.
 
----
-
-## 1단계: Amazon S3 버킷 비우기 (필요시)
+### 1단계: Amazon S3 버킷 비우기 (필요시)
 
 > [!NOTE]
 > 이 데모에서는 버킷에 파일을 업로드하지 않았으므로 이 단계는 건너뛸 수 있습니다.
@@ -359,41 +357,37 @@ Outputs:
 > Amazon S3 버킷에 파일이 있으면 AWS CloudFormation 스택 삭제가 실패합니다.
 > 버킷에 파일을 업로드한 경우에만 다음 단계를 수행합니다.
 
-1. Amazon S3 콘솔로 이동합니다.
-2. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-3. [[Empty]] 버튼을 클릭합니다.
-4. 확인 창에서 `permanently delete`를 입력합니다.
-5. [[Empty]] 버튼을 클릭합니다.
+70. Amazon S3 콘솔로 이동합니다.
+71. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+72. [[Empty]] 버튼을 클릭합니다.
+73. 확인 창에서 `permanently delete`를 입력합니다.
+74. [[Empty]] 버튼을 클릭합니다.
 
----
+### 2단계: AWS CloudFormation 스택 삭제
 
-## 2단계: AWS CloudFormation 스택 삭제
-
-6. AWS CloudFormation 콘솔로 이동합니다.
-7. `demo-s3-stack`을 선택합니다.
-8. [[Delete stack]] 버튼을 클릭합니다.
-9. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
-10. [[Delete stack]] 버튼을 클릭합니다.
-11. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-12. 스택 삭제가 완료될 때까지 기다립니다.
+75. AWS CloudFormation 콘솔로 이동합니다.
+76. `demo-s3-stack`을 선택합니다.
+77. [[Delete stack]] 버튼을 클릭합니다.
+78. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+79. [[Delete stack]] 버튼을 클릭합니다.
+80. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+81. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-13. 페이지를 새로고침합니다.
-14. 스택이 목록에서 사라졌는지 확인합니다.
+82. 페이지를 새로고침합니다.
+83. 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
 > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
 
----
+### 3단계: 리소스 삭제 확인
 
-## 3단계: 리소스 삭제 확인
-
-15. Amazon S3 콘솔로 이동합니다.
-16. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+84. Amazon S3 콘솔로 이동합니다.
+85. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
 
 > [!TIP]
 > AWS CloudFormation 스택을 삭제하면 스택이 생성한 모든 리소스(Amazon S3 버킷)가 자동으로 삭제됩니다.
@@ -466,7 +460,7 @@ Parameters:
 Resources:
   # 생성할 AWS 리소스 정의
   MyBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
 
@@ -504,7 +498,7 @@ Outputs:
 ```yaml
 Resources:
   MyBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: my-demo-bucket
 
@@ -523,7 +517,7 @@ Parameters:
 
 Resources:
   MyBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub 'app-${Environment}-${AWS::AccountId}'
       # 결과: app-dev-123456789012
@@ -534,7 +528,7 @@ Resources:
 ```yaml
 Resources:
   MyBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
 
 Outputs:
   BucketArn:
@@ -589,7 +583,7 @@ Outputs:
       "Resource": "*",
       "Condition": {
         "StringEquals": {
-          "ResourceType": ["AWS::Amazon RDS::DBInstance"]
+          "ResourceType": ["AWS::RDS::DBInstance"]
         }
       }
     },
@@ -622,13 +616,13 @@ Outputs:
 ```yaml
 Resources:
   MyDatabase:
-    Type: AWS::Amazon RDS::DBInstance
+    Type: AWS::RDS::DBInstance
     DeletionPolicy: Snapshot
     Properties:
       # ...
 
   MyBucket:
-    Type: AWS::Amazon S3::Bucket
+    Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
       # ...
@@ -654,7 +648,7 @@ Outputs:
 ```yaml
 Resources:
   MySubnet:
-    Type: AWS::Amazon EC2::Subnet
+    Type: AWS::EC2::Subnet
     Properties:
       VpcId: !ImportValue MyVPC-ID
 ```
@@ -674,7 +668,7 @@ Resources:
 ```yaml
 Resources:
   NetworkStack:
-    Type: AWS::AWS CloudFormation::Stack
+    Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://s3.amazonaws.com/bucket/network-template.yaml
       Parameters:

@@ -61,11 +61,11 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 13. 페이지를 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
 14. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `3-1`     |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `Week`      | `3-1`            |
+| `CreatedBy` | `CloudFormation` |
 
 15. 페이지 하단의 [[Next]] 버튼을 클릭합니다.
 
