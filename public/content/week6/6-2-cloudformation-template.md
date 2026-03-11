@@ -31,10 +31,10 @@ prerequisites:
 > 
 > | 리소스 | 타입 | 시간당 비용 | Free Tier |
 > |--------|------|------------|-----------|
-> | Amazon EC2 인스턴스 | t2.micro | 약 $0.0116 | 월 750시간 무료 (12개월) |
+> | Amazon EC2 인스턴스 | t3.micro | 약 $0.0116 | 월 750시간 무료 (12개월) |
 > | AWS CloudFormation | - | 무료 | - |
 > 
-> **참고**: AWS Free Tier 계정(가입 후 12개월 이내)에서는 t2.micro 인스턴스를 월 750시간까지 무료로 사용할 수 있습니다.
+> **참고**: AWS Free Tier 계정(가입 후 12개월 이내)에서는 t3.micro 인스턴스를 월 750시간까지 무료로 사용할 수 있습니다.
 
 ## 태스크 1: AWS CloudFormation 템플릿 기본 구조 이해
 
@@ -105,7 +105,7 @@ Parameters:
   
   InstanceType:
     Type: String
-    Default: t2.micro
+    Default: t3.micro
     AllowedValues:
       - t2.micro
       - t2.small
@@ -436,7 +436,7 @@ Outputs:
 	- **EnvironmentName**: `Lab` (기본값 유지)
 	- **VpcCIDR**: `10.0.0.0/16` (기본값 유지)
 	- **PublicSubnetCIDR**: `10.0.1.0/24` (기본값 유지)
-   - **InstanceType**: `t2.micro` (기본값 유지)
+   - **InstanceType**: `t3.micro` (기본값 유지)
    - **LatestAmiId**: 기본값 유지 (최신 Amazon Linux 2023 AMI 자동 조회)
    - **ProjectTag**: `AWS-Lab` (기본값 유지)
    - **WeekTag**: `6-2` (기본값 유지)

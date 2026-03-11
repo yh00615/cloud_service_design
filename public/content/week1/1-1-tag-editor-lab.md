@@ -116,10 +116,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
 13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `CreatedBy` | `Student` |
+| Key         | Value            |
+| ----------- | ---------------- |
+| `Project`   | `AWS-Lab`        |
+| `CreatedBy` | `CloudFormation` |
 
 > [!NOTE]
 > **AWS CloudFormation 템플릿 태그**: AWS CloudFormation 템플릿은 모든 리소스에 필수 태그 3개(`Project`, `Week`, `CreatedBy`)와 추가 태그(`Component`)를 자동으로 추가했습니다. 이 태스크에서는 이미 추가된 태그를 확인하고, 실습 목적으로 추가 태그를 수동으로 추가하는 방법을 학습합니다.

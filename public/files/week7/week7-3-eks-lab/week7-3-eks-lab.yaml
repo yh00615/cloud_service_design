@@ -226,7 +226,7 @@ Resources:
       Tags:
         Project: !Ref ProjectTag
         Week: !Ref WeekTag
-        CreatedBy: Student
+        CreatedBy: CloudFormation
 
 Outputs:
   ClusterName:
