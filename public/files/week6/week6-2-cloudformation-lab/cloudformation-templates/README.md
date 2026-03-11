@@ -23,7 +23,7 @@
    - **EnvironmentName**: `Lab` (기본값)
    - **VpcCIDR**: `10.0.0.0/16` (기본값)
    - **PublicSubnetCIDR**: `10.0.1.0/24` (기본값)
-   - **InstanceType**: `t2.micro` (기본값)
+   - **InstanceType**: `t3.micro` (기본값)
    - **LatestAmiId**: 기본값 유지 (최신 Amazon Linux 2023 AMI 자동 조회)
    - **ProjectTag**: `AWS-Lab` (기본값)
    - **WeekTag**: `6-2` (기본값)
