@@ -37,18 +37,18 @@ prerequisites:
 > [!CONCEPT] 스택 생성 프로세스
 > AWS CloudFormation 스택 생성은 다음 단계로 진행됩니다:
 > 
-> - **템플릿 검증**: AWS CloudFormation이 템플릿 문법을 확인합니다
-> - **리소스 생성**: AWS API를 호출하여 Amazon S3 버킷을 생성합니다
-> - **상태 추적**: 각 리소스의 생성 상태를 모니터링합니다
-> - **출력값 생성**: Outputs 섹션에 정의된 값을 표시합니다
-> - **완료**: 모든 리소스가 성공적으로 생성되면 스택 상태가 CREATE_COMPLETE로 변경됩니다
+> - **템플릿 검증**: AWS CloudFormation이 템플릿 문법을 확인합니다.
+> - **리소스 생성**: AWS API를 호출하여 Amazon S3 버킷을 생성합니다.
+> - **상태 추적**: 각 리소스의 생성 상태를 모니터링합니다.
+> - **출력값 생성**: Outputs 섹션에 정의된 값을 표시합니다.
+> - **완료**: 모든 리소스가 성공적으로 생성되면 스택 상태가 CREATE_COMPLETE로 변경됩니다.
 
 스택 생성 과정에서 다양한 상태 변화를 확인할 수 있습니다.
 
 > [!NOTE]
 > **상태 변화:**
 > 
-> - **CREATE_IN_PROGRESS** (주황색): 리소스 생성 중
+> - **CREATE_IN_PROGRESS** (파란색): 리소스 생성 중
 > - **CREATE_COMPLETE** (초록색): 모든 리소스 생성 완료
 > - **CREATE_FAILED** (빨간색): 생성 실패 (자동 롤백)
 > - **ROLLBACK_IN_PROGRESS**: 실패한 리소스 삭제 중
@@ -85,17 +85,18 @@ Outputs:
     Value: !GetAtt DemoBucket.Arn
 ```
 
-4. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
-5. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-6. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
-7. **Specify template**에서 `Upload a template file`을 선택합니다.
-8. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-create.yaml` 파일을 선택합니다.
-9. [[Next]] 버튼을 클릭합니다.
-10. **Stack name**에 `demo-s3-stack`을 입력합니다.
-11. **Parameters** 섹션에서 **BucketPrefix** 값을 확인합니다 (기본값 `cfn-demo-bucket` 사용).
-12. [[Next]] 버튼을 클릭합니다.
-13. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
-14. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+4. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
+5. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+6. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+7. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
+8. **Specify template**에서 `Upload a template file`을 선택합니다.
+9. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-create.yaml` 파일을 선택합니다.
+10. [[Next]] 버튼을 클릭합니다.
+11. **Stack name**에 `demo-s3-stack`을 입력합니다.
+12. **Parameters** 섹션에서 **BucketPrefix** 값을 확인합니다 (기본값 `cfn-demo-bucket` 사용).
+13. [[Next]] 버튼을 클릭합니다.
+14. **Configure stack options** 페이지에서 **Tags** 섹션을 찾습니다.
+15. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key | Value |
 |-----|-------|
@@ -103,10 +104,10 @@ Outputs:
 | `Week` | `6-1` |
 | `CreatedBy` | `CloudFormation` |
 
-15. [[Next]] 버튼을 클릭합니다.
-16. **Review and create** 페이지에서 설정을 확인합니다.
-17. [[Submit]] 버튼을 클릭합니다.
-18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+16. [[Next]] 버튼을 클릭합니다.
+17. **Review and create** 페이지에서 설정을 확인합니다.
+18. [[Submit]] 버튼을 클릭합니다.
+19. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
 > 스택 생성에 1-2분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
@@ -114,12 +115,12 @@ Outputs:
 > 
 > **스택 태그 자동 전파**: 스택에 추가한 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스(Amazon S3 버킷)에 자동으로 전파됩니다.
 
-19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-20. **Outputs** 탭을 선택합니다.
-21. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
-22. **Resources** 탭을 선택합니다.
-23. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
-24. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
+20. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+21. **Outputs** 탭을 선택합니다.
+22. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
+23. **Resources** 탭을 선택합니다.
+24. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
+25. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
 
 ✅ **태스크 완료**: 스택 생성(CREATE) 생명주기를 시연했습니다.
 
@@ -190,19 +191,30 @@ Outputs:
 ```
 
 > [!NOTE]
-> 이 템플릿은 기존 템플릿에 4개의 표준 태그(Name, Project, Week, CreatedBy)를 추가한 버전입니다.
+> 이 템플릿은 태스크 1에서 콘솔로 수동 추가한 태그들을 템플릿 코드에 반영한 버전입니다.
+> 수동으로 관리하던 태그를 Infrastructure as Code 방식으로 전환하여 버전 관리와 재사용이 가능하도록 개선합니다.
+> 
 > 버킷 이름은 동일하므로 기존 버킷이 수정됩니다.
 
 28. AWS CloudFormation 콘솔로 이동합니다.
 29. `demo-s3-stack`을 선택합니다.
-30. [[Update]] 버튼을 클릭합니다.
-31. **Prerequisite - Prepare template**에서 `Replace current template`을 선택합니다.
-32. **Specify template**에서 `Upload a template file`을 선택합니다.
-33. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
-34. [[Next]] 버튼을 클릭합니다.
-35. **Parameters** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
-36. **Configure stack options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
-37. **Review and create** 페이지 하단의 **Change set preview** 섹션으로 스크롤합니다.
+30. [[Update stack]] 버튼을 클릭합니다.
+31. 드롭다운 메뉴에서 **Make a direct update**를 선택합니다.
+
+> [!NOTE]
+> **Update stack 옵션:**
+> - **Make a direct update**: Review 페이지에서 Change set preview를 확인하고 즉시 업데이트합니다
+> - **Create a change set**: 변경 세트를 별도로 생성하여 검토 후 실행합니다
+> 
+> 이 실습에서는 Direct Update 방식을 사용하며, Review 페이지에서 Change set preview로 변경 사항을 미리 확인합니다.
+
+32. **Prerequisite - Prepare template**에서 `Replace current template`을 선택합니다.
+33. **Specify template**에서 `Upload a template file`을 선택합니다.
+34. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
+35. [[Next]] 버튼을 클릭합니다.
+36. **Parameters** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+37. **Configure stack options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+38. **Review and create** 페이지 하단의 **Change set preview** 섹션으로 스크롤합니다.
 
 > [!NOTE]
 > **Change set preview**는 Direct Update 방식에서 변경 사항을 미리 보여주는 섹션입니다.
