@@ -62,13 +62,15 @@ prerequisites:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Simple Amazon S3 bucket for AWS CloudFormation demo - CREATE lifecycle'
+Description: 'Week 6-1: Simple S3 Bucket Stack - CloudFormation CREATE Lifecycle'
 
 Parameters:
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
-    Description: Amazon S3 bucket name prefix
+    Description: S3 bucket name prefix
+    AllowedPattern: ^[a-z0-9-]*$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
 
 Resources:
   DemoBucket:
@@ -158,13 +160,30 @@ Outputs:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
+Description: 'Week 6-1: S3 Bucket with Tags - CloudFormation UPDATE Lifecycle'
 
 Parameters:
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
-    Description: Amazon S3 bucket name prefix
+    Description: S3 bucket name prefix
+    AllowedPattern: ^[a-z0-9-]*$
+    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '6-1'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
 
 Resources:
   DemoBucket:
@@ -175,19 +194,16 @@ Resources:
         - Key: Name
           Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
         - Key: Project
-          Value: AWS-Lab
+          Value: !Ref ProjectTag
         - Key: Week
-          Value: '6-1'
+          Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
 Outputs:
   BucketName:
-    Description: Name of the Amazon S3 bucket
+    Description: Name of the S3 bucket
     Value: !Ref DemoBucket
-  BucketArn:
-    Description: ARN of the Amazon S3 bucket
-    Value: !GetAtt DemoBucket.Arn
 ```
 
 > [!NOTE]
