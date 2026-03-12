@@ -80,11 +80,8 @@ Resources:
 
 Outputs:
   BucketName:
-    Description: Name of the Amazon S3 bucket
+    Description: Name of the S3 bucket
     Value: !Ref DemoBucket
-  BucketArn:
-    Description: ARN of the Amazon S3 bucket
-    Value: !GetAtt DemoBucket.Arn
 ```
 
 4. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
@@ -141,7 +138,7 @@ Outputs:
 > 
 > **상태 변화:**
 > 
-> - **UPDATE_IN_PROGRESS** (주황색): 리소스 업데이트 중
+> - **UPDATE_IN_PROGRESS** (파란색): 리소스 업데이트 중
 > - **UPDATE_COMPLETE** (초록색): 모든 리소스 업데이트 완료
 > - **UPDATE_ROLLBACK_IN_PROGRESS**: 업데이트 실패, 이전 상태로 롤백 중
 > - **UPDATE_ROLLBACK_COMPLETE**: 롤백 완료, 이전 상태로 복원됨
@@ -214,116 +211,158 @@ Outputs:
 
 28. AWS CloudFormation 콘솔로 이동합니다.
 29. `demo-s3-stack`을 선택합니다.
-30. [[Update stack]] 버튼을 클릭합니다.
-31. 드롭다운 메뉴에서 **Make a direct update**를 선택합니다.
+30. [[Update stack]] 드롭다운을 클릭합니다.
+31. **Create a change set**을 선택합니다.
 
 > [!NOTE]
-> **Update stack 옵션:**
-> - **Make a direct update**: Review 페이지에서 Change set preview를 확인하고 즉시 업데이트합니다
-> - **Create a change set**: 변경 세트를 별도로 생성하여 검토 후 실행합니다
-> 
-> 이 실습에서는 Direct Update 방식을 사용하며, Review 페이지에서 Change set preview로 변경 사항을 미리 확인합니다.
+> **변경 세트(Change Set) 방식:**
+> - 변경 세트를 먼저 생성하여 어떤 리소스가 어떻게 변경되는지 검토합니다
+> - 검토 후 문제가 없으면 변경 세트를 실행하여 실제 업데이트를 수행합니다
+> - 프로덕션 환경에서 안전한 업데이트를 위해 권장되는 방식입니다
 
-32. **Prerequisite - Prepare template**에서 `Replace current template`을 선택합니다.
-33. **Specify template**에서 `Upload a template file`을 선택합니다.
-34. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
-35. [[Next]] 버튼을 클릭합니다.
-36. **Parameters** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
-37. **Configure stack options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
-38. **Review and create** 페이지 하단의 **Change set preview** 섹션으로 스크롤합니다.
+32. **Change set type**에서 `Standard change set`을 선택합니다.
+33. **Prerequisite - Prepare template**에서 `Replace existing template`을 선택합니다.
+34. **Specify template**에서 `Upload a template file`을 선택합니다.
+35. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
+36. [[Next]] 버튼을 클릭합니다.
+37. **Changeset name**에 `update-tags-changeset`을 입력합니다 (또는 자동 생성된 이름 사용).
+38. **Parameters** 섹션에서 기본값을 확인합니다:
+    - **BucketPrefix**: `cfn-demo-bucket`
+    - **ProjectTag**: `AWS-Lab`
+    - **WeekTag**: `6-1`
+    - **CreatedByTag**: `CloudFormation`
+39. [[Next]] 버튼을 클릭합니다.
+40. **Configure change set options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+41. **Review change set** 페이지에서 설정을 확인합니다.
+42. [[Create change set]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> **Change set preview**는 Direct Update 방식에서 변경 사항을 미리 보여주는 섹션입니다.
-> 별도의 변경 세트를 생성하지 않고, 업데이트 전에 어떤 리소스가 어떻게 변경되는지 확인할 수 있습니다.
+> 변경 세트 생성에 10-20초가 소요됩니다. 상태가 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
 
-38. 변경 세트 정보를 확인합니다:
-    - **Action**: `Modify` (기존 리소스 수정)
+43. 변경 세트가 생성되면 **Overview** 탭에서 다음 정보를 확인합니다:
+    - **Change set status**: CREATE_COMPLETE (초록색)
+    - **Execution status**: AVAILABLE
+44. **Resource changes** 탭을 클릭합니다.
+45. 변경될 리소스 목록을 확인합니다:
     - **Logical ID**: `DemoBucket`
-    - **Physical ID**: 실제 버킷 이름
-    - **Resource type**: `AWS::S3::Bucket`
-    - **Replacement**: `False` (리소스 교체 없음, 데이터 안전)
-    - **Scope**: `Tags` (태그만 변경)
+    - **Action**: `Modify`
+    - **Replacement**: `False`
+
+> [!NOTE]
+> Resource changes 탭에서는 변경될 리소스의 기본 정보만 표시됩니다.
+> 구체적으로 어떤 속성이 어떻게 변경되는지 보려면 JSON changes 탭을 확인해야 합니다.
+
+46. **JSON changes** 탭을 클릭합니다.
+47. JSON 형식으로 표시된 상세 변경 내용을 확인합니다:
+    - **action**: `Modify`
+    - **logicalResourceId**: `DemoBucket`
+    - **physicalResourceId**: 실제 버킷 이름 (예: cfn-demo-bucket-123456789012)
+    - **resourceType**: `AWS::S3::Bucket`
+    - **replacement**: `False`
+    - **scope**: `["Tags"]` (태그만 변경됨)
+    - **details**: 변경 전후 태그 값 비교
+      - **beforeContext**: 기존 태그 (없음)
+      - **afterContext**: 새로운 태그 (Name, Project, Week, CreatedBy)
 
 > [!CONCEPT] 변경 세트 정보 해석
-> - **Action**: `Modify` - 기존 리소스를 수정합니다 (추가/삭제 아님)
-> - **Replacement**: `False` - 리소스가 교체되지 않습니다 (데이터 유지)
-> - **Scope**: `Tags` - 태그만 변경됩니다 (버킷 이름이나 설정은 변경 없음)
+> - **Action**: `Modify` - 기존 리소스를 수정합니다. (추가/삭제 아님)
+> - **Replacement**: `False` - 리소스가 교체되지 않습니다. (데이터 유지)
+> - **Scope**: `["Tags"]` - 태그 속성만 변경됩니다.
+> - **Details**: beforeContext와 afterContext로 변경 전후를 비교할 수 있습니다.
 > 
 > 이 변경은 안전합니다. 기존 버킷에 태그만 추가되고 데이터는 그대로 유지됩니다.
-> 
-> **Direct Update vs Change Set**:
-> - **Direct Update** (현재 방식): Review 페이지에서 변경 사항을 미리 확인하고 즉시 적용
-> - **Change Set** (별도 생성): Stack actions → Create change set for current stack으로 변경 세트를 별도로 생성하여 검토 후 실행
+>> 
+> **변경 세트 탭 설명:**
+> - **Overview**: 변경 세트 상태 및 실행 가능 여부 확인.
+> - **Resource changes**: 변경될 리소스 목록 (Logical ID, Action, Replacement만 표시).
+> - **JSON changes**: 변경 사항의 상세 내용 (physicalResourceId, scope, beforeContext, afterContext 등 모든 정보).
+> - **Template**: 새로운 템플릿 전체 내용.
+> - **Input**: 입력한 파라미터 값.
 
-39. [[Submit]] 버튼을 클릭합니다.
-40. 스택 업데이트가 시작됩니다. 상태가 "UPDATE_IN_PROGRESS"로 표시됩니다.
+> [!IMPORTANT]
+> Replacement가 True인 경우 반드시 데이터 백업을 먼저 수행해야 합니다.
+> 특히 데이터베이스, 스토리지 리소스는 신중하게 검토합니다.
+
+48. 변경 내용을 확인한 후 우측 상단의 [[Execute changeset]] 버튼을 클릭합니다.
+49. 확인 대화상자가 나타나면 롤백 정책을 확인합니다:
+    - **Behaviour on provisioning failure**: `Roll back all stack resources` (기본값, 선택됨)
+    - **Delete newly created resources during a rollback**: `Use deletion policy` (기본값, 선택됨)
+
+> [!CONCEPT] 변경 세트 실행 시 롤백 정책
+> 
+> **Behaviour on provisioning failure** (프로비저닝 실패 시 동작):
+> - **Roll back all stack resources**: 실패 시 스택을 마지막으로 알려진 안정 상태로 롤백합니다 (권장).
+> - **Preserve successfully provisioned resources**: 성공한 리소스는 유지하고 실패한 리소스만 롤백합니다.
+> 
+> **Delete newly created resources during a rollback** (롤백 중 새로 생성된 리소스 삭제):
+> - **Use deletion policy**: 리소스의 DeletionPolicy 속성에 따라 유지 또는 삭제합니다 (권장).
+> - **Delete all newly created resources**: 롤백 시 생성된 모든 리소스를 삭제합니다.
+> 
+> 이 실습에서는 기본 설정을 사용하며, 실패 시 안전하게 이전 상태로 롤백됩니다.
+
+50. 기본 설정을 유지하고 [[Execute changeset]] 버튼을 클릭합니다.
+51. 스택 페이지로 돌아가며 상태가 "UPDATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
 > 스택 업데이트에 1-2분이 소요됩니다. **Events** 탭에서 업데이트 과정을 확인할 수 있습니다.
 
-41. 상태가 "UPDATE_COMPLETE"로 변경될 때까지 기다립니다.
-42. **Resources** 탭을 선택합니다.
-43. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
-44. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
-45. 하단의 **Tags** 섹션으로 스크롤합니다.
-46. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
+52. 상태가 "UPDATE_COMPLETE"로 변경될 때까지 기다립니다.
+53. **Resources** 탭을 선택합니다.
+54. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
+55. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
+56. 하단의 **Tags** 섹션으로 스크롤합니다.
+57. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
     - `Name: cfn-demo-bucket-123456789012`
     - `Project: AWS-Lab`
     - `Week: 6-1`
     - `CreatedBy: CloudFormation`
 
 > [!NOTE]
-> 태스크 1에서 스택 생성 시 추가한 3개의 스택 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스에 자동으로 전파됩니다.
-> 따라서 Amazon S3 버킷에는 총 7개의 태그가 표시됩니다:
-> - **템플릿 정의 태그** (4개): Name, Project, Week, CreatedBy
-> - **스택 태그** (3개): Project, Week, CreatedBy
+> 태스크 1에서는 콘솔에서 수동으로 스택 태그 3개(Project, Week, CreatedBy)를 추가했습니다.
+> 태스크 2에서는 이 태그들을 YAML 파일 코드에 작성하여 Infrastructure as Code 방식으로 전환했습니다.
 > 
-> 태스크 1에서는 템플릿 정의 태그가 없었고 스택 태그 3개만 있었습니다. 태스크 2 업데이트 후 템플릿 정의 태그 4개가 추가되어 총 7개가 되었습니다.
+> 이제 태그가 YAML 파일에 코드로 작성되어 있으므로 버전 관리가 가능하고, 동일한 파일로 여러 환경에 재사용할 수 있습니다.
 
-> [!IMPORTANT]
-> Replacement가 True인 경우 반드시 데이터 백업을 먼저 수행해야 합니다.
-> 특히 데이터베이스, 스토리지 리소스는 신중하게 검토합니다.
-
-✅ **태스크 완료**: 스택 업데이트(UPDATE) 생명주기를 시연했습니다.
+✅ **태스크 완료**: 변경 세트를 사용한 스택 업데이트(UPDATE) 생명주기를 시연했습니다.
 
 ## 태스크 3: 드리프트 감지 - 수동 변경 감지
 
 이 태스크에서는 드리프트 감지 기능을 사용하여 AWS CloudFormation 외부에서 수동으로 변경된 리소스를 찾아냅니다. Amazon S3 콘솔에서 수동으로 태그를 추가한 후 드리프트를 감지합니다.
 
 > [!CONCEPT] 드리프트 (Drift) 감지
+> 
 > 드리프트는 AWS CloudFormation 템플릿과 실제 리소스 상태의 불일치를 의미합니다.
 > AWS 콘솔, CLI, API를 통한 수동 변경으로 발생하며, 인프라 일관성을 해칩니다.
 > 
 > **드리프트 발생 원인:**
 >
-> - 개발자가 AWS 콘솔에서 직접 태그를 추가합니다
-> - 운영팀이 보안 그룹 규칙을 수동으로 수정합니다
-> - 자동화 스크립트가 리소스 속성을 변경합니다
-> - 다른 AWS CloudFormation 스택이 동일한 리소스를 수정합니다
+> - 개발자가 AWS 콘솔에서 직접 태그를 추가합니다.
+> - 운영팀이 보안 그룹 규칙을 수동으로 수정합니다.
+> - 자동화 스크립트가 리소스 속성을 변경합니다.
+> - 다른 AWS CloudFormation 스택이 동일한 리소스를 수정합니다.
 >
 > 
 > **드리프트 감지 프로세스:**
 >
-> - **템플릿 비교**: AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다
-> - **차이점 식별**: 각 리소스의 속성을 하나씩 확인하여 차이점을 찾습니다
-> - **상태 업데이트**: 드리프트가 발견되면 스택 상태를 DRIFTED로 변경합니다
-> - **상세 정보 제공**: Expected vs Actual 값을 비교하여 정확한 차이점을 표시합니다
+> - **템플릿 비교**: AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
+> - **차이점 식별**: 각 리소스의 속성을 하나씩 확인하여 차이점을 찾습니다.
+> - **상태 업데이트**: 드리프트가 발견되면 스택 상태를 DRIFTED로 변경합니다.
+> - **상세 정보 제공**: Expected vs Actual 값을 비교하여 정확한 차이점을 표시합니다.
 >
 
 ### 상세 단계
 
 #### 1단계: 수동으로 태그 추가 (드리프트 발생)
 
-47. Amazon S3 콘솔로 이동합니다.
-48. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-49. **Properties** 탭을 선택합니다.
-50. 하단의 **Tags** 섹션으로 스크롤합니다.
-51. [[Edit]] 버튼을 클릭합니다.
-52. [[Add tag]] 버튼을 클릭합니다.
-53. 다음 태그를 추가합니다:
+58. Amazon S3 콘솔로 이동합니다.
+59. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+60. **Properties** 탭을 선택합니다.
+61. 하단의 **Tags** 섹션으로 스크롤합니다.
+62. [[Add new tag]] 버튼을 클릭합니다.
+63. 다음 태그를 추가합니다:
 	- **Key**: `ManualTag`
 	- **Value**: `AddedManually`
-54. [[Save changes]] 버튼을 클릭합니다.
+64. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 이 태그는 AWS CloudFormation 템플릿에 정의되지 않았으므로 드리프트가 발생합니다.
@@ -331,35 +370,36 @@ Outputs:
 
 #### 2단계: 드리프트 감지 실행
 
-55. AWS CloudFormation 콘솔로 이동합니다.
-56. `demo-s3-stack`을 선택합니다.
-57. **Stack actions** 드롭다운을 클릭합니다.
-58. `Detect drift`를 선택합니다.
+65. AWS CloudFormation 콘솔로 이동합니다.
+66. `demo-s3-stack`을 선택합니다.
+67. **Stack actions** 드롭다운을 클릭합니다.
+68. `Detect drift`를 선택합니다.
 
 > [!NOTE]
 > 드리프트 감지가 즉시 시작되며 1-2분이 소요됩니다. AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
 > 화면 상단에 "Drift detection has been initiated" 메시지가 표시됩니다.
 
-59. 페이지를 새로고침합니다.
-60. **Stack info** 탭에서 **Drift status**를 확인합니다.
-61. 상태가 "DRIFTED"로 표시되는지 확인합니다.
+69. 페이지를 새로고침합니다.
+70. **Stack info** 탭에서 **Drift status**를 확인합니다.
+71. 상태가 "DRIFTED"로 표시되는지 확인합니다.
 
 #### 3단계: 드리프트 상세 정보 확인
 
-62. **Stack actions** 드롭다운을 클릭합니다.
-63. `View drift results`를 선택합니다.
-64. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
-65. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
-66. **DemoBucket** 리소스를 선택합니다.
-67. [[View drift details]] 버튼을 클릭합니다.
-68. 드리프트 차이점을 확인합니다:
-	- **Expected**: 템플릿에 정의된 태그 (4개: Name, Project, Week, CreatedBy)
-	- **Actual**: 템플릿 정의 태그 4개 + 수동 추가 태그 1개 (ManualTag)
-	- **Difference Type**: `NOT_EQUAL` (값이 다름)
+72. **Stack actions** 드롭다운을 클릭합니다.
+73. `View drift results`를 선택합니다.
+74. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
+75. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
+76. **DemoBucket** 리소스를 선택합니다.
+77. [[View drift details]] 버튼을 클릭합니다.
+78. 드리프트 차이점을 확인합니다:
+	- **Property**: `Tags.1`
+	- **Change**: `ADD` (태그 추가됨)
+	- **Expected value**: `-` (템플릿에 정의되지 않음)
+	- **Current value**: `{"Key":"ManualTag","Value":"AddedManually"}`
 
 > [!NOTE]
-> 드리프트 감지는 AWS CloudFormation 템플릿에 명시적으로 정의된 속성만 비교하며, 스택 수준 태그(`Project`, `Week`, `CreatedBy`)는 비교 대상에 포함되지 않습니다.
-> 따라서 Expected는 템플릿의 4개 태그, Actual은 템플릿 4개 + 수동 추가 1개로 표시됩니다.
+> **Details** 섹션에서는 Expected와 Actual의 전체 태그 배열을 JSON 형식으로 비교할 수 있습니다.
+> Expected에는 템플릿에 정의된 4개 태그(Name, Project, Week, CreatedBy)가 표시되고, Actual에는 5개 태그(템플릿 4개 + ManualTag 1개)가 표시됩니다.
 
 > [!NOTE]
 > 이 데모에서는 드리프트를 수정하지 않고 그대로 둡니다.
@@ -367,8 +407,8 @@ Outputs:
 > 
 > **드리프트 수정 방법:**
 > 
-> - **방법 1**: 템플릿에 `ManualTag`를 추가하여 실제 상태를 반영합니다 (권장)
-> - **방법 2**: Amazon S3 콘솔에서 `ManualTag`를 삭제하여 템플릿과 일치시킵니다
+> - **방법 1**: 템플릿에 `ManualTag`를 추가하여 실제 상태를 반영합니다 (권장).
+> - **방법 2**: Amazon S3 콘솔에서 `ManualTag`를 삭제하여 템플릿과 일치시킵니다.
 
 ✅ **태스크 완료**: 드리프트 감지로 수동 변경을 감지했습니다.
 
@@ -393,20 +433,20 @@ Outputs:
 
 ### 2단계: AWS CloudFormation 스택 삭제
 
-75. AWS CloudFormation 콘솔로 이동합니다.
-76. `demo-s3-stack`을 선택합니다.
-77. [[Delete stack]] 버튼을 클릭합니다.
-78. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
-79. [[Delete stack]] 버튼을 클릭합니다.
-80. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-81. 스택 삭제가 완료될 때까지 기다립니다.
+79. AWS CloudFormation 콘솔로 이동합니다.
+80. `demo-s3-stack`을 선택합니다.
+81. [[Delete stack]] 버튼을 클릭합니다.
+82. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+83. [[Delete stack]] 버튼을 클릭합니다.
+84. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+85. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-82. 페이지를 새로고침합니다.
-83. 스택이 목록에서 사라졌는지 확인합니다.
+86. 페이지를 새로고침합니다.
+87. 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
@@ -414,8 +454,8 @@ Outputs:
 
 ### 3단계: 리소스 삭제 확인
 
-84. Amazon S3 콘솔로 이동합니다.
-85. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+88. Amazon S3 콘솔로 이동합니다.
+89. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
 
 > [!TIP]
 > AWS CloudFormation 스택을 삭제하면 스택이 생성한 모든 리소스(Amazon S3 버킷)가 자동으로 삭제됩니다.
