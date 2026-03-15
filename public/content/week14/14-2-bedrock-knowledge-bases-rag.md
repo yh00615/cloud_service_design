@@ -77,7 +77,7 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 >
 > **모델 가용성 확인 방법:**
 >
-> 1. Amazon Bedrock 콘솔 → 왼쪽 메뉴 **Foundation models** → **Model catalog**
+> 1. Amazon Bedrock 콘솔 → 왼쪽 메뉴 **Discover** → **Model catalog**
 > 2. 사용하려는 모델(Claude 3.5 Sonnet, Titan Embeddings 등)이 현재 리전에서 사용 가능한지 확인
 > 3. **Anthropic 모델(Claude)**: 첫 사용 시 Use case 양식 제출 필요 (즉시 승인)
 
@@ -144,12 +144,18 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > AWS Marketplace 권한만 있으면 바로 모델을 사용할 수 있으며, Cohere 및 Anthropic 모델의 경우 첫 사용 시 사용 사례 양식만 제출하면 됩니다.
 
 22. Amazon Bedrock 콘솔로 이동합니다.
-23. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
-24. [[Create knowledge base]] 버튼을 클릭합니다.
-25. **Knowledge base name**에 `quicktable-restaurant-kb`를 입력합니다.
-26. **Description**에 `QuickTable restaurant menu and information knowledge base`를 입력합니다.
-27. **AWS IAM permissions**에서 `Create and use a new service role`을 선택합니다.
-28. [[Next]] 버튼을 클릭합니다.
+23. 왼쪽 메뉴에서 **Build** > **Knowledge Bases**를 선택합니다.
+24. [[Create]] 버튼을 클릭합니다.
+25. **Knowledge Base with vector store**의 [[Create]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> Knowledge Base 유형으로 Vector store, Structured data store, Kendra GenAI Index를 선택할 수 있습니다. 이 실습에서는 Vector store를 사용합니다.
+
+26. **Knowledge Base name**에 `quicktable-restaurant-kb`를 입력합니다.
+27. **Knowledge Base description**에 `QuickTable restaurant menu and information knowledge base`를 입력합니다.
+28. **IAM permissions**에서 `Create and use a new service role`을 선택합니다.
+29. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
+30. [[Next]] 버튼을 클릭합니다.
 
 > [!CONCEPT] Knowledge Base 아키텍처
 > Knowledge Base는 다음 구성 요소로 이루어집니다:
@@ -159,22 +165,26 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 3. **Vector database**: 벡터를 저장하고 검색하는 데이터베이스 (OpenSearch Serverless)
 > 4. **Foundation model**: 검색된 문서를 기반으로 답변을 생성하는 LLM
 
-29. **Data source name**에 `s3-documents`를 입력합니다.
-30. **Amazon S3 URI**에서 [[Browse Amazon S3]]를 클릭합니다.
-31. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-32. `documents` 폴더를 선택합니다.
-33. [[Choose]] 버튼을 클릭합니다.
+29. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
+30. [[Next]] 버튼을 클릭합니다.
+31. **Data source name**에 `s3-documents`를 입력합니다.
+32. **S3 URI**에서 [[Browse S3]]를 클릭합니다.
+33. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
+34. `documents` 폴더를 선택합니다.
+35. [[Choose]] 버튼을 클릭합니다.
 
 > [!TIP]
 > Amazon S3 URI를 직접 입력할 수도 있습니다: `s3://quicktable-kb-documents-YOUR-INITIALS/documents/`
 
-34. [[Next]] 버튼을 클릭합니다.
+36. **Parsing strategy**에서 `Amazon Bedrock default parser`가 선택되어 있는지 확인합니다.
+37. **Chunking strategy**에서 `Default chunking`이 선택되어 있는지 확인합니다.
+38. [[Next]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base는 Amazon S3 버킷의 모든 파일을 자동으로 읽어 처리합니다.
 > 지원 형식: TXT, PDF, MD, HTML, DOC, DOCX, CSV 등
 
-35. **Embeddings model**에서 `Cohere Embed Multilingual v3`를 선택합니다.
+39. **Embeddings model**에서 `Cohere Embed Multilingual v3`를 선택합니다.
 
 임베딩 모델을 선택합니다.
 
@@ -187,22 +197,22 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 >
 > 한국어 문서의 경우 Cohere Embed Multilingual v3가 가장 적합합니다.
 
-36. **Vector database**에서 `Quick create a new vector store`를 선택합니다.
+40. **Vector database**에서 `Quick create a new vector store`를 선택합니다.
 
 > [!NOTE]
 > Quick create는 OpenSearch Serverless 컬렉션을 자동으로 생성합니다.
 > 최소 2 OCU(OpenSearch Compute Unit)를 사용하며 시간당 약 $0.48 비용이 발생합니다.
 > 수동으로 생성하려면 "Use an existing vector store"를 선택할 수 있습니다.
 
-37. [[Next]] 버튼을 클릭합니다.
-38. 설정을 검토합니다.
-39. [[Create knowledge base]] 버튼을 클릭합니다.
+41. [[Next]] 버튼을 클릭합니다.
+42. 설정을 검토합니다.
+43. [[Create knowledge base]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base 생성에 2-3분이 소요됩니다.
 > OpenSearch Serverless 컬렉션이 자동으로 생성되고 AWS IAM 역할이 구성됩니다.
 
-40. 상태가 "Creating"에서 "Active"로 변경될 때까지 기다립니다.
+44. 상태가 "Creating"에서 "Active"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: Knowledge Base가 생성되었습니다.
 
@@ -211,9 +221,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 이 태스크에서는 Amazon S3 버킷의 문서를 Knowledge Base로 동기화합니다.
 동기화 과정에서 문서가 청크(chunk)로 분할되고, 각 청크가 벡터로 변환되어 OpenSearch Serverless에 저장됩니다.
 
-41. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
-42. `s3-documents` 데이터 소스를 선택합니다.
-43. [[Sync]] 버튼을 클릭합니다.
+45. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
+46. `s3-documents` 데이터 소스를 선택합니다.
+47. [[Sync]] 버튼을 클릭합니다.
 
 > [!CONCEPT] 문서 청킹 (Chunking)
 > 긴 문서를 작은 조각(chunk)으로 나누는 과정입니다.
@@ -222,7 +232,10 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 기본 청크 크기: 300 토큰 (약 200-250 단어)
 
 44. 동기화 상태가 "In progress"로 표시됩니다.
-45. 상태가 "Completed"로 변경될 때까지 기다립니다 (1-2분 소요).
+45. 상태가 "Completed"로 변경될 때까지 기다립니다.
+
+> [!NOTE]
+> 동기화에 1-2분이 소요됩니다.
 
 > [!NOTE]
 > 동기화가 완료되면 **Sync history**에서 처리된 문서 수와 청크 수를 확인할 수 있습니다.
@@ -367,7 +380,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 #### Amazon Bedrock Knowledge Base 삭제
 
 8. Amazon Bedrock 콘솔로 이동합니다.
-9. 왼쪽 메뉴에서 **Orchestration** > **Knowledge bases**를 선택합니다.
+9. 왼쪽 메뉴에서 **Build** > **Knowledge Bases**를 선택합니다.
 10. `quicktable-restaurant-kb`를 선택합니다.
 11. [[Delete]] 버튼을 클릭합니다.
 12. `delete`를 입력하여 삭제를 확인합니다.
@@ -406,7 +419,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 #### Amazon CloudWatch Log Group 삭제
 
 30. 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-31. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+31. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 32. 검색창에 `bedrock`을 입력합니다.
 
 > [!NOTE]

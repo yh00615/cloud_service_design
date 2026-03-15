@@ -1,15 +1,13 @@
 ---
-title: 'AWS WAF와 AWS Shield를 활용한 웹 애플리케이션 보안'
+title: '웹 애플리케이션 보안 및 위협 탐지'
 week: 12
 session: 3
 awsServices:
   - AWS WAF
   - AWS Shield
-  - Amazon API Gateway
 learningObjectives:
-  - AWS WAF의 동작 원리와 Web ACL, 규칙, 규칙 그룹의 관계를 설명할 수 있습니다.
-  - AWS WAF 관리형 규칙과 AWS WAF Rate-based 규칙을 활용하여 SQL Injection, XSS, DDoS 공격을 방어할 수 있습니다.
-  - AWS Shield Standard와 AWS Shield Advanced의 차이를 이해하고, AWS WAF와 AWS Shield를 결합한 다층 방어 아키텍처를 설명할 수 있습니다.
+  - AWS WAF의 구성 요소와 동작 방식을 이해하고 Web ACL과 규칙을 설계할 수 있습니다.
+  - AWS Shield Standard와 Advanced의 차이를 이해하고 DDoS 방어 아키텍처를 설명할 수 있습니다.
 
 prerequisites:
   - Week 4-2 Amazon API Gateway 인증 구성 이해.
@@ -210,6 +208,9 @@ curl -s -X POST $API_URL/reservations \
 > [!NOTE]
 > AWS WAF와 AWS Shield는 동일한 콘솔에서 관리됩니다.
 
+> [!WARNING]
+> 2025년 이후 AWS WAF 콘솔이 새 버전(Protection packs)으로 변경되었습니다. 이 데모는 기존 콘솔 기준으로 진행합니다. 새 콘솔("Protection packs (web ACLs)")이 표시되면 왼쪽 메뉴에서 **Switch to the old WAF console**을 클릭하여 기존 콘솔로 전환합니다.
+
 28. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
 29. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
 
@@ -220,7 +221,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 2.1: Web ACL 기본 설정
 
-31. **Resource type**에서 `Regional resources (Application Load Balancer, API Gateway, AWS AppSync, Amazon Cognito user pool, AWS App Runner service, and AWS Verified Access instance)`를 선택합니다.
+31. **Resource type**에서 `Regional resources (Application Load Balancers, Amazon API Gateway REST APIs, Amazon App Runner services, AWS AppSync APIs, Amazon Cognito user pools and AWS Verified Access Instances)`를 선택합니다.
 32. **Region**에서 `Asia Pacific (Seoul)`을 확인합니다.
 33. **Name**에 `QuickTable-WAF-WebACL`을 입력합니다.
 
@@ -239,12 +240,7 @@ curl -s -X POST $API_URL/reservations \
 > 태스크 0에서 생성한 API Gateway가 표시됩니다. 표시되지 않으면 리전이 `Asia Pacific (Seoul)`인지 확인합니다.
 
 38. [[Add]] 버튼을 클릭합니다.
-39. **Default web ACL action for requests that don't match any rules**에서 `Allow`를 확인합니다.
-
-> [!NOTE]
-> 기본 동작을 Allow로 설정하면, 규칙에 매칭되지 않는 정상 요청은 모두 허용됩니다. 규칙에 매칭되는 악성 요청만 차단(Block)합니다.
-
-40. [[Next]] 버튼을 클릭합니다.
+39. [[Next]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: Web ACL 기본 설정이 완료되었습니다. 다음 태스크에서 규칙을 추가합니다.
 
@@ -272,32 +268,32 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 3.1: SQL Injection 방어 규칙 추가
 
-41. **Add rules and rule groups** 페이지에서 [[Add rules]] 드롭다운을 클릭합니다.
-42. **Add managed rule groups**를 선택합니다.
-43. **AWS managed rule groups** 섹션을 확장합니다.
-44. **Free rule groups** 목록에서 `SQL database`를 찾습니다.
-45. `SQL database` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+40. **Add rules and rule groups** 페이지(Step 2)에서 [[Add rules]] 드롭다운을 클릭합니다.
+41. **Add managed rule groups**를 선택합니다.
+42. **AWS managed rule groups** 섹션을 확장합니다.
+43. **Free rule groups** 목록에서 `SQL database`를 찾습니다.
+44. `SQL database` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **SQL database** 규칙 그룹은 SQL Injection 공격 패턴을 탐지합니다. 요청 본문, 쿼리 문자열, URI, 헤더에서 SQL 구문을 검사합니다.
 
 ### 태스크 3.2: Core Rule Set (CRS) 추가
 
-46. **Free rule groups** 목록에서 `Core rule set`을 찾습니다.
-47. `Core rule set` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+45. **Free rule groups** 목록에서 `Core rule set`을 찾습니다.
+46. `Core rule set` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **Core rule set (CRS)**는 OWASP Top 10에 포함된 일반적인 웹 취약점을 방어합니다. XSS, 파일 포함(File Inclusion), 경로 탐색(Path Traversal) 등의 공격 패턴을 탐지합니다.
 
 ### 태스크 3.3: Known Bad Inputs 추가
 
-48. **Free rule groups** 목록에서 `Known bad inputs`를 찾습니다.
-49. `Known bad inputs` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+47. **Free rule groups** 목록에서 `Known bad inputs`를 찾습니다.
+48. `Known bad inputs` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **Known bad inputs**는 Log4j/Log4Shell 취약점 등 알려진 악성 입력 패턴을 차단합니다.
 
-50. [[Add rules]] 버튼을 클릭합니다.
+49. [[Add rules]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 3개의 관리형 규칙 그룹이 추가되었습니다. 각 규칙 그룹의 WCU(Web ACL Capacity Unit)가 표시됩니다:
@@ -310,6 +306,11 @@ curl -s -X POST $API_URL/reservations \
 > | **합계** | **1,100** |
 >
 > Web ACL의 최대 WCU는 5,000입니다. 현재 1,100 WCU를 사용하므로 여유가 충분합니다.
+
+50. 페이지 하단의 **Default web ACL action for requests that don't match any rules**에서 `Allow`가 선택되어 있는지 확인합니다.
+
+> [!NOTE]
+> 기본 동작을 Allow로 설정하면, 규칙에 매칭되지 않는 정상 요청은 모두 허용됩니다. 규칙에 매칭되는 악성 요청만 차단(Block)합니다.
 
 ✅ **태스크 완료**: AWS 관리형 규칙 그룹이 추가되었습니다.
 
@@ -360,7 +361,7 @@ curl -s -X POST $API_URL/reservations \
 >
 > Rate-based 규칙을 가장 먼저 평가하면 대량 요청을 조기에 차단하여 후속 규칙의 처리 부하를 줄일 수 있습니다.
 
-60. 필요시 규칙을 드래그하여 우선순위를 조정합니다.
+60. 필요시 [[Move up]] / [[Move down]] 버튼을 사용하여 우선순위를 조정합니다.
 61. [[Next]] 버튼을 클릭합니다.
 
 ### 태스크 4.3: 메트릭 설정 및 Web ACL 생성
@@ -617,7 +618,7 @@ Week 4-2에서 구축한 QuickTable API를 AWS WAF로 보호하여, 인증(Week 
 ### Amazon CloudWatch Log Groups 삭제
 
 17. Amazon CloudWatch 콘솔로 이동합니다.
-18. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+18. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 19. 다음 Log Group들을 선택합니다:
     - `/aws/lambda/Week12-3-CreateReservation`
     - `/aws/lambda/Week12-3-GetReservations`

@@ -20,19 +20,6 @@ prerequisites:
 
 이 실습에서는 AWS CodeBuild를 사용하여 Docker 컨테이너 이미지를 자동으로 빌드하고 Amazon ECR에 푸시하는 CI/CD 파이프라인을 구축합니다. buildspec.yml 파일을 분석하고 활용하여 빌드 프로세스를 이해하며, 환경 변수와 빌드 로그를 통해 문제를 해결하는 방법을 학습합니다.
 
-### 실습 파일 구조
-
-압축 해제 후 다음과 같은 파일 구조를 확인할 수 있습니다:
-
-```
-week9-2-cicd-lab/
-├── week9-2-cicd-lab.yaml
-├── app.js
-├── package.json
-├── Dockerfile
-└── buildspec.yml
-```
-
 > [!DOWNLOAD]
 > [week9-2-cicd-lab.zip](/files/week9/week9-2-cicd-lab.zip)
 > - `week9-2-cicd-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon ECR 리포지토리 및 CodeCommit 리포지토리 자동 생성)
@@ -146,7 +133,8 @@ cd ~/codebuild-lab
 pip install --user git-remote-codecommit
 ```
 
-💡 git-remote-codecommit은 AWS IAM 자격 증명을 사용하여 CodeCommit에 인증하는 Git 헬퍼입니다. CloudShell에는 AWS CLI가 사전 설치되어 있어 별도 설정이 필요 없으며, `--user` 플래그는 사용자 레벨에 패키지를 설치하여 권한 문제를 방지합니다.
+> [!TIP]
+> git-remote-codecommit은 AWS IAM 자격 증명을 사용하여 CodeCommit에 인증하는 Git 헬퍼입니다. CloudShell에는 AWS CLI가 사전 설치되어 있어 별도 설정이 필요 없으며, `--user` 플래그는 사용자 레벨에 패키지를 설치하여 권한 문제를 방지합니다.
 
 28. 다음 명령어를 실행하여 CodeCommit 리포지토리를 복제합니다:
 
@@ -164,7 +152,8 @@ git clone codecommit::ap-northeast-2://<repository-name>
 cd <repository-name>
 ```
 
-💡 `<repository-name>`은 리포지토리 이름으로 대체합니다. 예: `cd week9-2-codebuild-repo`
+> [!TIP]
+> `<repository-name>`은 리포지토리 이름으로 대체합니다. 예: `cd week9-2-codebuild-repo`
 
 30. Git 사용자 정보를 설정합니다:
 
@@ -464,58 +453,67 @@ git push origin main
 69. AWS Management Console 상단 검색창에 `CodeBuild`을 입력하고 선택합니다.
 70. [[Create project]] 버튼을 클릭합니다.
 71. **Project name**에 `week9-2-container-build`를 입력합니다.
-72. **Description**에 `Build Docker container image`를 입력합니다.
-73. **Source** 섹션에서 다음을 설정합니다:
+
+> [!NOTE]
+> **Description**은 **Additional configuration**을 펼쳐야 입력할 수 있습니다. 선택사항이므로 건너뛰어도 됩니다.
+
+72. **Source** 섹션에서 다음을 설정합니다:
 	- **Source provider**에서 `AWS CodeCommit`을 선택합니다.
 	- **Repository**에서 생성한 CodeCommit 리포지토리를 선택합니다.
 	- **Branch**에서 `main` 또는 `master`를 선택합니다.
-74. **Environment** 섹션에서 다음을 설정합니다:
+73. **Environment** 섹션에서 다음을 설정합니다:
 	- **Environment image**에서 `Managed image`를 선택합니다.
-	- **Operating system**에서 `Amazon Linux`를 선택합니다 (콘솔에 표시되는 최신 버전 사용).
+	- **Running mode**에서 `Container`를 선택합니다 (Docker 빌드에 필요).
+	- **Operating system**에서 `Amazon Linux`를 선택합니다.
 	- **Runtime(s)**에서 `Standard`를 선택합니다.
-   - **Image**에서 최신 버전을 선택합니다.
-   - **Privileged**를 체크합니다.
+   - **Image**에서 최신 버전을 선택합니다 (예: `aws/codebuild/amazonlinux2-x86_64-standard:5.0`).
+74. **Environment** 섹션 하단의 **Additional configuration**을 펼칩니다.
+75. **Privileged**를 체크합니다.
 
 > [!IMPORTANT]
 > Docker 이미지를 빌드하려면 **Privileged** 옵션을 반드시 활성화해야 합니다.
+> 이 옵션은 **Additional configuration**을 펼쳐야 표시됩니다.
 
-75. **Service role**에서 `Existing service role`을 선택합니다.
-76. **Role ARN**에 태스크 0에서 복사한 `CodeBuildRoleArn` 값을 입력합니다.
+76. **Service role**에서 `Existing service role`을 선택합니다.
+77. **Role name**에 태스크 0에서 생성된 CodeBuild IAM 역할 이름을 선택합니다.
 
 > [!TIP]
 > **Allow AWS CodeBuild to modify this service role** 체크박스가 표시되면 체크 해제합니다.
 > AWS CloudFormation이 생성한 역할의 정책이 변경되지 않도록 하는 모범 사례입니다.
 
-77. **Buildspec** 섹션에서 `Use a buildspec file`을 선택합니다.
-78. **Buildspec name**에 `buildspec.yml`을 입력합니다.
-79. **Environment variables** 섹션으로 스크롤합니다.
-80. AWS 계정 ID를 확인합니다:
+78. 같은 **Additional configuration** 섹션에서 **Environment variables**로 스크롤합니다.
+79. AWS 계정 ID를 확인합니다:
     - AWS Management Console 우측 상단의 계정 이름을 클릭합니다.
     - 드롭다운 메뉴에서 12자리 계정 ID를 확인합니다.
     - 계정 ID를 메모장에 복사합니다.
-81. Amazon ECR 리포지토리 이름을 추출합니다:
+80. Amazon ECR 리포지토리 이름을 추출합니다:
     - 태스크 0의 Outputs에서 복사한 `ECRRepositoryUri`를 확인합니다.
     - URI에서 `/` 뒤의 리포지토리 이름 부분만 추출합니다.
     - 예: `123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/week9-2-codebuild-repo` → `week9-2-codebuild-repo`
-82. [[Add environment variable]] 버튼을 클릭하여 첫 번째 환경 변수를 추가합니다:
+81. [[Add environment variable]] 버튼을 클릭하여 첫 번째 환경 변수를 추가합니다:
     - **Name**: `AWS_ACCOUNT_ID`
-    - **Value**: 12단계에서 확인한 계정 ID 입력
+    - **Value**: 79단계에서 확인한 계정 ID 입력
     - **Type**: `Plaintext`
-83. [[Add environment variable]] 버튼을 클릭하여 두 번째 환경 변수를 추가합니다:
+82. [[Add environment variable]] 버튼을 클릭하여 두 번째 환경 변수를 추가합니다:
     - **Name**: `IMAGE_REPO_NAME`
-    - **Value**: 13단계에서 추출한 리포지토리 이름 입력
+    - **Value**: 80단계에서 추출한 리포지토리 이름 입력
     - **Type**: `Plaintext`
-84. [[Add environment variable]] 버튼을 클릭하여 세 번째 환경 변수를 추가합니다:
+83. [[Add environment variable]] 버튼을 클릭하여 세 번째 환경 변수를 추가합니다:
     - **Name**: `CONTAINER_NAME`
     - **Value**: `app`
     - **Type**: `Plaintext`
-85. 3개의 환경 변수가 모두 올바르게 입력되었는지 확인합니다.
+84. 3개의 환경 변수가 모두 올바르게 입력되었는지 확인합니다.
 
 > [!IMPORTANT]
 > 환경 변수는 buildspec.yml에서 `$AWS_ACCOUNT_ID`, `$IMAGE_REPO_NAME`, `$CONTAINER_NAME`으로 참조됩니다.
 > 값이 정확하지 않으면 빌드가 실패하므로 반드시 확인합니다.
 
-86. **Logs** 섹션에서 `Amazon CloudWatch logs`를 체크합니다.
+85. **Buildspec** 섹션에서 `Use a buildspec file`을 선택합니다.
+
+> [!NOTE]
+> **Buildspec name**은 기본값 `buildspec.yml`이 사용되므로 별도 입력이 필요 없습니다.
+
+86. **Logs** 섹션에서 **CloudWatch logs**를 체크합니다.
 87. [[Create build project]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: AWS CodeBuild 프로젝트가 생성되었습니다.
@@ -550,7 +548,10 @@ git push origin main
 > Login Succeeded
 > ```
 
-94. Amazon ECR 로그인이 성공했는지 확인합니다 ("Login Succeeded" 메시지).
+94. Amazon ECR 로그인이 성공했는지 확인합니다.
+
+> [!TIP]
+> 로그에서 "Login Succeeded" 메시지가 표시되면 정상입니다.
 95. **BUILD** 단계의 로그를 확인합니다:
 
 > [!OUTPUT]
@@ -571,7 +572,10 @@ git push origin main
 > Successfully tagged 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/week9-2-codebuild-repo:latest
 > ```
 
-96. Docker 이미지 빌드가 성공했는지 확인합니다 ("Successfully built" 및 "Successfully tagged" 메시지).
+96. Docker 이미지 빌드가 성공했는지 확인합니다.
+
+> [!TIP]
+> 로그에서 "Successfully built" 및 "Successfully tagged" 메시지가 표시되면 정상입니다.
 97. **POST_BUILD** 단계의 로그를 확인합니다:
 
 > [!OUTPUT]
@@ -595,7 +599,10 @@ git push origin main
 > a1b2c3d: digest: sha256:abc123... size: 1234
 > ```
 
-98. Amazon ECR에 이미지가 성공적으로 푸시되었는지 확인합니다 ("digest: sha256:..." 메시지).
+98. Amazon ECR에 이미지가 성공적으로 푸시되었는지 확인합니다.
+
+> [!TIP]
+> 로그에서 "digest: sha256:..." 메시지가 표시되면 정상입니다.
 99. 로그 하단에서 최종 빌드 상태를 확인합니다:
 
 > [!OUTPUT]
@@ -694,10 +701,10 @@ git push origin main
 18. `week9-2-codebuild-stack` 스택을 선택합니다.
 19. [[Delete]] 버튼을 클릭합니다.
 20. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-21. 스택 삭제가 완료될 때까지 기다립니다 (2-3분 소요).
+21. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
-> AWS CloudFormation 스택을 삭제하면 Amazon ECR 리포지토리, CodeCommit 리포지토리, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
+> 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon ECR 리포지토리, CodeCommit 리포지토리, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

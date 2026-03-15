@@ -68,6 +68,8 @@ const getServiceBadgeClass = (service: string): string => {
     'AWS Secrets Manager': 'secrets-manager',
     'AWS KMS': 'kms',
     'AWS Certificate Manager': 'certificate-manager',
+    'AWS WAF': 'waf',
+    'AWS Shield': 'shield',
 
     // Management & Governance (추가 서비스)
     'AWS Systems Manager': 'systems-manager',

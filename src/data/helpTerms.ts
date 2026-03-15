@@ -15,7 +15,7 @@ export const labTerms: Term[] = [
         definition: 'S3에 저장된 데이터를 SQL로 직접 분석할 수 있는 서버리스 쿼리 서비스입니다. 별도의 데이터베이스 구축 없이 표준 SQL을 사용하여 데이터를 분석할 수 있습니다.',
         category: 'AWS 서비스',
         awsCategory: 'Analytics',
-        weeks: ['Week 11-2']
+        weeks: ['Week 11-2', 'Week 11-3']
     },
     {
         term: 'Amazon Aurora',
@@ -30,6 +30,13 @@ export const labTerms: Term[] = [
         category: 'AWS 서비스',
         awsCategory: 'Networking',
         weeks: ['Week 10-3', 'Week 14-2']
+    },
+    {
+        term: 'CloudFront Functions',
+        definition: 'CloudFront 엣지 로케이션에서 경량 JavaScript 코드를 실행하는 서버리스 엣지 컴퓨팅 기능입니다. 뷰어 요청/응답 시점에 서브밀리초 단위로 실행되며, URL 리다이렉트, 헤더 조작, 캐시 키 정규화, 요청 인증 등에 사용됩니다. Lambda@Edge보다 가볍고 빠르며, 초당 수백만 요청을 처리할 수 있습니다.',
+        category: 'AWS 서비스',
+        awsCategory: 'Networking',
+        weeks: ['Week 10-3']
     },
     {
         term: 'Amazon CloudWatch',
@@ -75,10 +82,17 @@ export const labTerms: Term[] = [
     },
     {
         term: 'Amazon ElastiCache',
-        definition: 'Redis 또는 Memcached 기반의 인메모리 캐시 서비스입니다. 데이터베이스 부하를 줄이고 애플리케이션 응답 속도를 향상시킵니다.',
+        definition: 'Valkey, Redis OSS, Memcached 기반의 완전 관리형 인메모리 캐시 서비스입니다. 데이터베이스 부하를 줄이고 애플리케이션 응답 속도를 향상시킵니다. AWS는 Valkey를 권장 엔진으로 제공하며, Redis OSS 대비 최대 33% 저렴합니다.',
         category: 'AWS 서비스',
         awsCategory: 'Database',
         weeks: ['Week 10-1']
+    },
+    {
+        term: 'Valkey',
+        definition: 'Redis OSS와 완전 호환되는 오픈소스 인메모리 데이터 저장소입니다. 2024년 Linux Foundation에서 시작된 프로젝트로, Amazon ElastiCache의 권장 엔진입니다. Redis OSS v7.0과 동일한 명령어, 데이터 구조, 클라이언트 라이브러리를 지원하며, 최대 33% 저렴합니다.',
+        category: 'AWS 서비스',
+        awsCategory: 'Database',
+        weeks: ['Week 10-2']
     },
     {
         term: 'Amazon RDS',
@@ -105,8 +119,7 @@ export const labTerms: Term[] = [
         term: 'Amazon SageMaker AI',
         definition: '머신러닝 모델을 구축, 학습, 배포할 수 있는 완전 관리형 서비스입니다. Jupyter 노트북, 자동 모델 튜닝, 파이프라인 등 ML 워크플로우 전체를 지원합니다.',
         category: 'AWS 서비스',
-        awsCategory: 'AI/ML',
-        weeks: ['Week 11-3']
+        awsCategory: 'AI/ML'
     },
     {
         term: 'Amazon VPC',
@@ -222,7 +235,7 @@ export const labTerms: Term[] = [
         definition: '서버 관리 없이 코드를 실행할 수 있는 서버리스 컴퓨팅 서비스입니다. 이벤트에 응답하여 자동으로 실행되며, 사용한 컴퓨팅 시간만큼만 비용을 지불합니다.\n\n주요 개념:\n• Lambda Layer - 공통 라이브러리 패키징\n• Function URL - 직접 HTTPS 엔드포인트\n• Execution Role - IAM 권한 관리\n• Environment Variables - 설정값 전달\n• Concurrency - 동시 실행 수 제어\n• Proxy Integration - API Gateway 통합\n• Trigger - 이벤트 소스 (S3, DynamoDB, EventBridge 등)\n• Timeout - 최대 실행 시간 (최대 15분)\n• Memory - 메모리 할당 (128MB~10GB)\n• Destination - 실행 결과 자동 전달\n• Dead Letter Queue - 실패 이벤트 저장',
         category: 'AWS 서비스',
         awsCategory: 'Compute',
-        weeks: ['Week 4-1', 'Week 4-2', 'Week 4-3']
+        weeks: ['Week 4-1', 'Week 4-2', 'Week 4-3', 'Week 11-3']
     },
     {
         term: 'AWS Management Console',
@@ -330,7 +343,8 @@ export const labTerms: Term[] = [
         term: 'EventBridge',
         definition: '서버리스 이벤트 버스 서비스입니다. AWS 서비스, SaaS 애플리케이션, 사용자 정의 애플리케이션 간 이벤트를 라우팅합니다.',
         category: 'AWS 서비스',
-        awsCategory: 'Networking'
+        awsCategory: 'Networking',
+        weeks: ['Week 11-3']
     },
     {
         term: 'AWS Backup',
@@ -355,13 +369,22 @@ export const labTerms: Term[] = [
         term: 'AWS Shield',
         definition: 'DDoS(분산 서비스 거부) 공격으로부터 AWS 애플리케이션을 보호하는 관리형 서비스입니다. Standard와 Advanced 두 가지 티어를 제공합니다.',
         category: 'AWS 서비스',
-        awsCategory: 'Security'
+        awsCategory: 'Security',
+        weeks: ['Week 12-3']
     },
     {
         term: 'AWS WAF',
         definition: 'Web Application Firewall로, 웹 애플리케이션을 일반적인 웹 공격으로부터 보호합니다. SQL 인젝션, XSS 등의 공격을 차단하는 규칙을 설정할 수 있습니다.',
         category: 'AWS 서비스',
-        awsCategory: 'Security'
+        awsCategory: 'Security',
+        weeks: ['Week 12-3']
+    },
+    {
+        term: 'AWS Security Hub',
+        definition: '여러 AWS 보안 서비스의 탐지 결과를 통합하여 전체 보안 현황을 관리하는 서비스입니다. GuardDuty, Inspector, Config 등의 결과를 중앙에서 확인하고 보안 표준 준수 여부를 평가합니다.',
+        category: 'AWS 서비스',
+        awsCategory: 'Security',
+        weeks: ['Week 12-3']
     },
 
     // 네트워킹 개념
@@ -681,7 +704,7 @@ export const labTerms: Term[] = [
     },
 
     // 머신러닝 개념
-    { term: 'Pipeline', definition: '데이터 처리부터 모델 학습, 평가, 배포까지의 ML 워크플로우를 자동화하는 시스템입니다. SageMaker Pipelines로 재현 가능한 ML 워크플로우를 구축할 수 있습니다.', category: '머신러닝', weeks: ['Week 11-3'] },
+    { term: 'Pipeline', definition: '데이터 처리부터 모델 학습, 평가, 배포까지의 ML 워크플로우를 자동화하는 시스템입니다. SageMaker Pipelines로 재현 가능한 ML 워크플로우를 구축할 수 있습니다.', category: '머신러닝' },
     { term: 'Model Registry', definition: '머신러닝 모델의 버전을 관리하고 추적하는 저장소입니다. 모델 메타데이터, 성능 지표, 승인 상태 등을 기록하여 모델 거버넌스를 지원합니다.', category: '머신러닝' },
     { term: 'Endpoint', definition: '학습된 모델을 배포하여 실시간 추론을 제공하는 인터페이스입니다. HTTPS 요청을 통해 예측 결과를 반환하며, 자동 확장을 지원합니다.', category: '머신러닝' },
     {

@@ -799,7 +799,7 @@ Amazon CloudWatch Log Groups는 AWS CloudFormation 스택 삭제 시 자동으�
 ### 옵션 1: AWS 콘솔에서 수동 삭제
 
 22. Amazon CloudWatch 콘솔로 이동합니다.
-23. 왼쪽 메뉴에서 **Log groups**를 선택합니다.
+23. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 24. 다음 Log Group들을 찾아 삭제합니다:
 	- `/aws/lambda/week4-3-quicktable-events-lab-ReservationProcessor`
 	- `/aws/lambda/week4-3-quicktable-events-lab-TableAvailabilityChecker`

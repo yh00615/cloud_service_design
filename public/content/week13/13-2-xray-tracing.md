@@ -6,7 +6,7 @@ awsServices:
   - AWS X-Ray
 learningObjectives:
   - 분산 추적의 개념과 AWS X-Ray의 트레이스 구조를 이해할 수 있습니다.
-  - AWS Lambda 함수에 AWS X-Ray SDK를 통합하고 추적을 활성화할 수 있습니다.
+  - AWS Lambda 함수에 통합된 AWS X-Ray SDK 코드 패턴을 이해하고 Active tracing 설정을 확인할 수 있습니다.
   - AWS X-Ray 서비스 맵으로 애플리케이션 구조를 시각화할 수 있습니다.
   - 트레이스를 분석하여 병목 지점과 오류를 파악할 수 있습니다.
 
@@ -273,13 +273,13 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 콘솔에서 QuickTable API의 서비스 맵을 확인합니다.
 
-41. AWS Management Console에 로그인한 후 상단 검색창에 `X-Ray`을 입력하고 선택합니다.
+41. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
 
 > [!NOTE]
-> AWS X-Ray를 검색하면 Amazon CloudWatch 콘솔의 AWS X-Ray 섹션으로 이동합니다.
-> 또는 Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **AWS X-Ray traces** > **Service map**을 선택할 수도 있습니다.
+> AWS X-Ray는 Amazon CloudWatch 콘솔에 통합되어 있습니다.
+> 왼쪽 메뉴의 **Application Signals (APM)** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
 
-42. 왼쪽 메뉴에서 **Service map**을 선택합니다.
+42. 왼쪽 메뉴에서 **Application Signals (APM)** > **Trace Map**을 선택합니다.
 43. 서비스 맵에서 다음 구성 요소를 확인합니다:
 	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
 	- **Amazon API Gateway**: QuickTableXRayAPI
@@ -304,7 +304,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인합니다.
 
-46. 왼쪽 메뉴에서 **AWS X-Ray traces** > **Traces**를 선택합니다.
+46. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
 47. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
 48. 트레이스 타임라인에서 다음 정보를 확인합니다:
 	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
@@ -333,7 +333,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray Insights와 Analytics를 사용하여 자동 이상 탐지 및 트레이스 분석 기능을 확인합니다.
 
-53. AWS X-Ray 콘솔에서 왼쪽 메뉴의 **Insights**를 선택합니다.
+53. Amazon CloudWatch 콘솔 왼쪽 메뉴 하단의 **Insights**를 선택합니다.
 54. Insights 대시보드에서 다음 정보를 확인합니다:
 	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
 	- **오류율 이상**: 오류율이 증가한 경우
@@ -350,21 +350,19 @@ curl -X GET ${API_URL}/reservations
 > - 자동으로 이상을 탐지하고 알림을 받고 싶은 경우
 > - 특정 시간대에 성능 저하가 발생했는지 확인하고 싶은 경우
 
-55. 왼쪽 메뉴에서 **Analytics**를 선택합니다.
+55. **Application Signals (APM)** > **Traces** 페이지로 이동합니다.
 
 > [!NOTE]
-> Analytics에서 어노테이션으로 그룹화하려면 AWS Lambda 코드에서 실제로 어노테이션을 추가하는 코드가 있어야 합니다.
-> 태스크 1에서 확인한 AWS Lambda 함수 코드에 `subsegment.put_annotation()` 호출이 있는지 확인합니다.
-> 어노테이션이 없을 경우 드롭다운에 표시되지 않습니다.
+> 이전에는 별도의 Analytics 메뉴가 있었으나, 현재는 Traces 페이지에서 필터링 및 그룹화 기능을 사용하여 동일한 분석을 수행할 수 있습니다.
 
-56. **Group traces by**에서 `Annotation`을 선택합니다.
-57. 어노테이션 키를 선택하여 트레이스를 그룹화합니다.
-58. 그래프에서 응답 시간 분포를 확인합니다.
-59. **Filter traces**에서 조건을 추가하여 특정 트레이스를 필터링합니다.
+56. **Filter traces**에서 어노테이션 기반 조건을 추가하여 특정 트레이스를 필터링합니다.
 
 > [!NOTE]
-> Analytics를 사용하면 어노테이션 기반으로 트레이스를 그룹화하고 분석할 수 있습니다.
+> Traces 페이지에서 어노테이션 기반으로 트레이스를 필터링할 수 있습니다.
 > 예: `annotation.restaurantName = "강남 맛집"` 조건으로 특정 레스토랑 예약만 필터링
+>
+> 어노테이션 필터가 표시되려면 AWS Lambda 코드에서 `subsegment.put_annotation()` 호출이 있어야 합니다.
+> 태스크 1에서 확인한 코드를 참고합니다.
 
 ✅ **태스크 완료**: AWS X-Ray Insights 및 Analytics를 활용하여 이상 탐지 및 분석 기능을 확인했습니다.
 
@@ -414,7 +412,7 @@ curl -X GET ${API_URL}/reservations
 ### Amazon CloudWatch Log Group 삭제
 
 13. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-14. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+14. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 15. 다음 로그 그룹을 검색하여 삭제합니다:
 	- `/aws/lambda/CreateReservation-*`
 	- `/aws/lambda/GetReservations-*`

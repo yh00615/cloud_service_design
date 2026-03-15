@@ -1205,7 +1205,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 #### 5. Amazon CloudWatch Log Group 삭제
 
 34. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-35. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+35. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 36. 검색창에 `/aws/lambda/BedrockAgent`를 입력합니다.
 37. 다음 로그 그룹들을 선택합니다:
 	- `/aws/lambda/BedrockAgentReservationHandler`

@@ -132,7 +132,9 @@
 .aws-service-badge.guardduty,
 .aws-service-badge.security-hub,
 .aws-service-badge.secrets-manager,
-.aws-service-badge.kms {
+.aws-service-badge.kms,
+.aws-service-badge.waf,
+.aws-service-badge.shield {
   background-color: #dd344c;
 }
 

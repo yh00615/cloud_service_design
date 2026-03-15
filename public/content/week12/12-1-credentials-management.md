@@ -219,7 +219,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > [!NOTE]
 > 이 연결 문자열은 예시입니다. 실제 환경에서는 비밀번호를 하드코딩하지 말고 AWS Secrets Manager에서 가져와야 합니다.
 
-74. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+74. **Tags — optional** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -378,7 +378,10 @@ aws secretsmanager delete-secret \
 26. `week12-1-secrets-lab-stack` 스택을 선택합니다.
 27. [[Delete]] 버튼을 클릭합니다.
 28. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-29. 스택 삭제가 완료될 때까지 기다립니다 (10-15분 소요).
+29. 스택 삭제가 완료될 때까지 기다립니다.
+
+> [!NOTE]
+> 스택 삭제에 10-15분이 소요됩니다.
 
 > [!NOTE]
 > AWS CloudFormation 스택을 삭제하면 Amazon RDS, Amazon VPC, AWS Lambda 함수, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -386,7 +389,7 @@ aws secretsmanager delete-secret \
 #### 6단계: Amazon CloudWatch Log Group 삭제
 
 30. Amazon CloudWatch 콘솔로 이동합니다.
-31. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+31. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 32. 다음 로그 그룹들을 선택합니다:
 	- `/aws/lambda/access-secrets-demo`
 	- `/aws/lambda/SecretsManagerRotation-mysql`
@@ -451,12 +454,12 @@ aws secretsmanager delete-secret \
 
 ### 자동 로테이션 원리
 
-35. **로테이션 일정**: 30일마다 자동 실행
-36. **AWS Lambda 함수**: AWS Secrets Manager가 자동 생성
-37. **로테이션 단계**:
-	- `createSecret`: 새 비밀번호 생성
-	- `setSecret`: Amazon RDS에 새 비밀번호 설정
-	- `testSecret`: 새 비밀번호로 연결 테스트
-   - `finishSecret`: 이전 버전을 AWSPREVIOUS로 표시
-38. **애플리케이션**: 항상 Secrets Manager에서 최신 비밀번호 조회
-39. **무중단**: 로테이션 중에도 애플리케이션 정상 동작
+- **로테이션 일정**: 30일마다 자동 실행
+- **AWS Lambda 함수**: AWS Secrets Manager가 자동 생성
+- **로테이션 단계**:
+  - `createSecret`: 새 비밀번호 생성
+  - `setSecret`: Amazon RDS에 새 비밀번호 설정
+  - `testSecret`: 새 비밀번호로 연결 테스트
+  - `finishSecret`: 이전 버전을 AWSPREVIOUS로 표시
+- **애플리케이션**: 항상 Secrets Manager에서 최신 비밀번호 조회
+- **무중단**: 로테이션 중에도 애플리케이션 정상 동작

@@ -664,7 +664,7 @@ export const labEnvironments: LabEnvironment[] = [
         usedInTask: '태스크 1: 환경 설정',
       },
     ],
-    notes: 'ElastiCache 클러스터는 콘솔에서 직접 생성',
+    notes: 'ElastiCache Valkey 캐시는 콘솔에서 직접 생성',
   },
   {
     week: 10,
@@ -713,7 +713,7 @@ export const labEnvironments: LabEnvironment[] = [
       },
     ],
     cloudFormationResources: [],
-    notes: 'S3 버킷 및 CloudFront 배포는 콘솔에서 직접 생성',
+    notes: 'S3 버킷, CloudFront 배포, CloudFront Functions는 콘솔에서 직접 생성',
   },
 
   // ========================================
@@ -731,29 +731,34 @@ export const labEnvironments: LabEnvironment[] = [
     session: 2,
     sessionType: 'lab',
     hasPrerequisites: true,
-    zipFileName: 'week11-2-datalake-demo.zip',
+    zipFileName: 'week11-2-datalake-lab.zip',
     files: [
       {
-        name: 'customers.json',
-        type: 'data',
-        description: '고객 데이터 JSON 파일',
-        usedInTask: '태스크 1: 샘플 데이터 업로드',
+        name: 'week11-2-datalake-lab.yaml',
+        type: 'cloudformation',
+        description: 'Amazon S3 버킷 3개, IAM 역할, 샘플 데이터 자동 업로드 템플릿',
+        usedInTask: '태스크 0: Amazon S3 데이터 레이크 환경 구축',
       },
       {
         name: 'sales.csv',
         type: 'data',
-        description: '판매 데이터 CSV 파일',
-        usedInTask: '태스크 1: 샘플 데이터 업로드',
+        description: '매출 샘플 데이터 CSV 파일 (참고용)',
+        usedInTask: '참고 자료',
       },
       {
-        name: 'README-11-2.txt',
-        type: 'document',
-        description: '데이터 레이크 실습 가이드',
+        name: 'customers.json',
+        type: 'data',
+        description: '고객 샘플 데이터 JSON 파일 (참고용)',
         usedInTask: '참고 자료',
       },
     ],
-    cloudFormationResources: [],
-    notes: 'S3 버킷, Glue, Athena는 콘솔에서 직접 생성',
+    cloudFormationResources: [
+      'S3 Bucket 3개 (Raw, Processed, Query Results)',
+      'IAM Role (GlueCrawlerRole)',
+      'Lambda Function (샘플 데이터 업로드)',
+    ],
+    notes:
+      'CloudFormation으로 S3 버킷 + IAM 역할 + 샘플 데이터만 생성. Glue Database, Crawler, Athena Workgroup은 학생이 콘솔에서 직접 생성',
   },
   {
     week: 11,
@@ -763,32 +768,33 @@ export const labEnvironments: LabEnvironment[] = [
     zipFileName: 'week11-3-data-pipeline-lab.zip',
     files: [
       {
-        name: 'lambda_function.py',
-        type: 'lambda',
-        description: 'Lambda 함수 코드 (데이터 전처리)',
-        usedInTask: '태스크 1: Lambda 함수 생성',
+        name: 'week11-3-data-pipeline-lab.yaml',
+        type: 'cloudformation',
+        description: 'CloudFormation 템플릿 (S3 버킷, IAM 역할, Lambda, EventBridge, 샘플 데이터)',
+        usedInTask: '태스크 0: 실습 환경 구축',
       },
       {
         name: 'sales-data.csv',
         type: 'data',
-        description: '판매 데이터 CSV 파일 1',
-        usedInTask: '태스크 2: 샘플 데이터 업로드',
+        description: '추가 테스트 데이터 (파이프라인 테스트용)',
+        usedInTask: '태스크 5: 파이프라인 테스트',
       },
       {
         name: 'sales-data-2.csv',
         type: 'data',
-        description: '판매 데이터 CSV 파일 2',
-        usedInTask: '태스크 2: 샘플 데이터 업로드',
-      },
-      {
-        name: 'README.txt',
-        type: 'document',
-        description: '데이터 파이프라인 실습 가이드',
-        usedInTask: '참고 자료',
+        description: '추가 테스트 데이터 (파이프라인 테스트용)',
+        usedInTask: '태스크 5: 파이프라인 테스트',
       },
     ],
-    cloudFormationResources: [],
-    notes: 'S3, Lambda, Glue는 콘솔에서 직접 생성',
+    cloudFormationResources: [
+      'S3 Bucket 3개 (Data, Scripts, Temp)',
+      'IAM Role 2개 (Glue 서비스 역할, Lambda 실행 역할)',
+      'Lambda Function (Crawler 자동 트리거)',
+      'EventBridge Rule (S3 이벤트 감지)',
+      '샘플 데이터 (transactions.csv 자동 업로드)',
+    ],
+    notes:
+      'CloudFormation으로 S3 버킷 + IAM 역할 + Lambda + EventBridge + 샘플 데이터만 생성. Glue Database, Crawler, Visual ETL Job은 학생이 콘솔에서 직접 생성',
   },
 
   // ========================================

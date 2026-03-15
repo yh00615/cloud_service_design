@@ -7,7 +7,7 @@ awsServices:
 learningObjectives:
   - AWS IAM 정책의 구조(Effect, Action, Resource, Condition)를 이해할 수 있습니다.
   - MFA 강제, IP 주소 제한, 시간 기반 Condition 정책을 생성할 수 있습니다.
-  - 신뢰 정책과 권한 정책을 각각 생성하고 차이점을 비교할 수 있습니다.
+  - 복합 조건(AND 연산)을 사용하여 여러 Condition 키를 조합한 고급 정책을 작성할 수 있습니다.
   - Condition 정책의 동작을 테스트하고 검증할 수 있습니다.
 prerequisites:
   - Week 1 완료

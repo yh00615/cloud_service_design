@@ -631,7 +631,7 @@ curl -X GET $API_URL/reservations \
 **Amazon CloudWatch Log Groups 삭제**
 
 11. Amazon CloudWatch 콘솔로 이동합니다.
-12. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+12. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 13. 다음 Log Group들을 선택합니다:
 	- `/aws/lambda/Week4-2-CreateReservation`
 	- `/aws/lambda/Week4-2-GetReservations`

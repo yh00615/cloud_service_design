@@ -376,7 +376,7 @@ kubectl get service sample-app-service --watch
 > 이러한 계층적 구조를 통해 성능 문제를 빠르게 식별하고 원인을 추적할 수 있습니다.
 
 22. AWS Management Console에서 상단 검색창에 `CloudWatch`를 입력한 후 선택합니다.
-23. 왼쪽 메뉴에서 **Insights** > **Container Insights**를 선택합니다.
+23. 왼쪽 메뉴에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
 24. **Performance monitoring** 섹션이 표시됩니다.
 25. 상단의 드롭다운에서 `Amazon EKS Clusters`를 선택합니다.
 26. **container-insights-cluster** 클러스터를 선택합니다.
@@ -685,7 +685,7 @@ fields @timestamp, kubernetes.pod_name, @message
 >
 > HPA는 트래픽 변화에 빠르게 대응하고, VPA는 리소스 낭비를 최소화하며, 두 가지를 함께 사용하면 최적의 성능과 비용 효율을 달성할 수 있습니다.
 
-137. Amazon CloudWatch 콘솔에서 **Insights** > **Container Insights**를 선택합니다.
+137. Amazon CloudWatch 콘솔에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
 138. 드롭다운에서 `Amazon EKS Pods`를 선택합니다.
 139. **sample-app** Pod들을 확인합니다.
 140. CPU 사용률이 가장 높은 Pod를 찾습니다.
@@ -885,7 +885,10 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 18. `container-insights-cluster` 클러스터를 선택합니다.
 19. [[Delete cluster]] 버튼을 클릭합니다.
 20. 확인 창에서 클러스터 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
-21. 클러스터 삭제가 완료될 때까지 기다립니다 (10-15분 소요).
+21. 클러스터 삭제가 완료될 때까지 기다립니다.
+
+> [!NOTE]
+> 클러스터 삭제에 10-15분이 소요됩니다.
 
 22. Amazon VPC 콘솔로 이동합니다.
 23. 왼쪽 메뉴에서 **NAT Gateways**를 선택합니다.
@@ -927,7 +930,7 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 49. [[Delete]] 버튼을 클릭합니다.
 
 50. Amazon CloudWatch 콘솔로 이동합니다.
-51. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+51. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 52. 다음 로그 그룹들을 선택합니다:
 	- `/aws/containerinsights/container-insights-cluster/application`
 	- `/aws/containerinsights/container-insights-cluster/dataplane`

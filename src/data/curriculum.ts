@@ -622,7 +622,7 @@ export const curriculum: WeekCurriculum[] = [
     week: 12,
     title: '보안 아키텍처 설계',
     description:
-      '자격증명 관리, AWS Config, Amazon GuardDuty를 통한 보안 자동화 및 규정 준수를 학습합니다',
+      '자격증명 관리, AWS Config, AWS WAF를 통한 보안 자동화 및 규정 준수를 학습합니다',
     sessions: [
       {
         session: 1,

@@ -5,6 +5,9 @@ session: 3
 awsServices:
   - AWS CodePipeline
   - AWS CodeBuild
+  - AWS CodeCommit
+  - Amazon S3
+  - AWS CloudFormation
 learningObjectives:
   - AWS CodePipeline의 파이프라인 단계(Source, Build, Deploy)를 이해할 수 있습니다.
   - 프론트엔드 코드를 AWS CodeCommit에 푸시하고 파이프라인을 트리거할 수 있습니다.
@@ -552,10 +555,10 @@ git push origin main
 17. `week9-3-s3-website-stack` 스택을 선택합니다.
 18. [[Delete]] 버튼을 클릭합니다.
 19. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-20. 스택 삭제가 완료될 때까지 기다립니다 (2-3분 소요).
+20. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
-> AWS CloudFormation 스택을 삭제하면 CodeCommit 리포지토리, AWS CodeBuild 프로젝트, AWS CodePipeline, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
+> 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 CodeCommit 리포지토리, AWS CodeBuild 프로젝트, AWS CodePipeline, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
@@ -671,12 +674,15 @@ aws s3 sync . s3://$BUCKET_NAME --delete --exclude "buildspec.yml"
 - 사용자 UI: 예약 생성/조회 인터페이스
 
 **데이터 흐름:**
-21. 사용자가 QuickTable 웹사이트 접속 (Amazon S3).
-22. Amazon Cognito로 로그인하여 ID 토큰 획득.
-23. 예약 생성 버튼 클릭.
-24. Amazon API Gateway로 POST 요청 (Authorization 헤더에 ID 토큰 포함).
-25. AWS Lambda 함수가 Amazon DynamoDB에 예약 데이터 저장.
-26. 응답을 프론트엔드에 반환하여 화면 업데이트.
+1. 사용자가 QuickTable 웹사이트 접속 (Amazon S3).
+2. Amazon Cognito로 로그인하여 ID 토큰 획득.
+3. 예약 생성 버튼 클릭.
+4. Amazon API Gateway로 POST 요청 전송.
+
+> [!NOTE]
+> Authorization 헤더에 ID 토큰을 포함하여 인증된 요청을 보냅니다.
+5. AWS Lambda 함수가 Amazon DynamoDB에 예약 데이터 저장.
+6. 응답을 프론트엔드에 반환하여 화면 업데이트.
 
 ### 모범 사례
 

@@ -35,7 +35,7 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 ### 태스크 1.1: Playground 접속 및 모델 선택
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
-2. 왼쪽 메뉴에서 **Test** > **Playground**를 선택합니다.
+2. 왼쪽 메뉴에서 **Test** > **Chat / Text playground**를 선택합니다.
 3. **Text** 탭이 선택되어 있는지 확인합니다.
 4. [[Select model]] 버튼을 클릭합니다.
 5. 왼쪽 **Categories**에서 `Anthropic`을 선택합니다.
@@ -369,7 +369,7 @@ Top P 값의 의미를 이해합니다.
 >
 > 모델 액세스를 비활성화하려면 다음 단계를 수행합니다:
 >
-> 1. 왼쪽 메뉴에서 **Model access**를 선택합니다.
+> 1. 왼쪽 메뉴에서 **Configure and learn** > **Model access**를 선택합니다.
 > 2. [[Manage model access]] 버튼을 클릭합니다.
 > 3. 활성화한 모델의 체크를 해제합니다.
 > 4. [[Save changes]] 버튼을 클릭합니다.
