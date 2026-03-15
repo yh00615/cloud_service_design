@@ -21,17 +21,6 @@ prerequisites:
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
->
-> **예상 비용** (ap-northeast-2 리전 기준):
->
-> | 리소스                 | 타입          | 시간당 비용       |
-> | ---------------------- | ------------- | ----------------- |
-> | Amazon EKS 클러스터    | 컨트롤 플레인 | 약 $0.10          |
-> | Amazon EC2 인스턴스    | t3.medium × 2 | 약 $0.104         |
-> | NAT Gateway            | -             | 약 $0.045         |
-> | Elastic Load Balancing | Classic LB    | 약 $0.025         |
-> | Amazon CloudWatch Logs | 스토리지      | GB당 월 $0.50     |
-> | **총 예상**            | -             | **약 $0.27/시간** |
 
 실습 소요 시간을 확인합니다.
 
@@ -808,7 +797,7 @@ kubectl get hpa
 - Amazon CloudWatch 알람을 설정하여 이상 상황을 자동으로 감지했습니다
 - 리소스 제한을 조정하고 Horizontal Pod Autoscaler를 설정하여 자동 스케일링을 구현했습니다
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 반드시 수행하여 불필요한 비용을 방지합니다.

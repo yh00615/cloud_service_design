@@ -483,7 +483,7 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 - 비주얼 디자이너와 Template 탭 코드 편집을 결합하여 서버리스 REST API를 구축하고 배포했습니다
 - 📚 참고 섹션에서 Week 6-2의 코드 방식과 Week 6-3의 하이브리드 방식을 비교할 수 있습니다
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.

@@ -974,7 +974,7 @@ aws s3 ls --profile condition-test
 > - **시간 기반 정책 (S3TimeBasedPolicy)**: 태스크 4에서 생성한 정책의 JSON을 다시 열어보고, `DateGreaterThan`과 `DateLessThan` 조건이 어떻게 조합되어 특정 기간만 허용하는지 분석합니다. 현재 시간이 정책에서 지정한 기간 내에 있다면 condition-test-user에 연결하여 동작을 테스트할 수 있습니다.
 > - **복합 조건 정책 (S3ComplexConditionPolicy)**: 태스크 5에서 생성한 정책의 JSON을 다시 열어보고, 암호화 필수(`s3:x-amz-server-side-encryption`), IP 제한(`aws:SourceIp`), MFA 인증(`aws:MultiFactorAuthPresent`)이 어떻게 AND 조건으로 결합되어 있는지 분석합니다. 세 조건을 모두 만족해야만 Amazon S3 객체 업로드가 가능합니다.
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 리소스를 정리합니다.

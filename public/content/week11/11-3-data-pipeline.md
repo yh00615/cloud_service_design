@@ -37,18 +37,6 @@ prerequisites:
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
->
-> **예상 비용** (ap-northeast-2 리전 기준):
->
-> | 리소스           | 타입     | 시간당 비용            |
-> | ---------------- | -------- | ---------------------- |
-> | AWS Glue Crawler | -        | 약 $0.44/DPU-Hour      |
-> | AWS Glue ETL Job | -        | 약 $0.44/DPU-Hour      |
-> | Amazon S3        | Standard | 약 $0.025/GB           |
-> | Amazon Athena    | -        | 약 $5/TB (스캔 데이터) |
-> | **총 예상**      | -        | **약 $0.50-1.00**      |
->
-> AWS Glue Crawler와 ETL Job은 실행 시간에 따라 과금되며, 이 실습에서는 각각 1-2분 정도 실행됩니다.
 
 > [!DOWNLOAD]
 > [week11-3-data-pipeline-lab.zip](/files/week11/week11-3-data-pipeline-lab.zip)
@@ -579,7 +567,7 @@ SELECT COUNT(*) as total_records FROM raw;
 - EventBridge와 AWS Lambda로 Crawler 실행을 자동화했습니다
 - 전체 파이프라인에서 Crawler가 이벤트 기반으로 자동 실행됨을 확인했습니다
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 반드시 수행하여 불필요한 비용을 방지합니다.

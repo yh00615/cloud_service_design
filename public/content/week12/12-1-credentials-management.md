@@ -26,15 +26,6 @@ prerequisites:
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 **반드시 삭제**해야 합니다.
->
-> **예상 비용** (2시간 실습 기준):
->
-> | 리소스              | 비용                          |
-> | ------------------- | ----------------------------- |
-> | Amazon RDS          | $0.017/시간 × 2시간 = $0.034  |
-> | AWS Secrets Manager | $0.40/월 ÷ 30일 = $0.013      |
-> | AWS KMS             | $1/월 ÷ 30일 = $0.033         |
-> | **총 예상**         | **$0.08**                     |
 
 > [!DOWNLOAD]
 > [week12-1-secrets-manager-lab.zip](/files/week12/week12-1-secrets-manager-lab.zip)
@@ -308,7 +299,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 ✅ **태스크 완료**: AWS Lambda 함수가 테스트되었습니다.
 
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.

@@ -657,16 +657,16 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'demo',
-        title: 'Amazon GuardDuty와 AWS Lambda 자동 대응',
+        title: 'AWS WAF와 AWS Shield를 활용한 웹 애플리케이션 보안',
         hasContent: true,
-        markdownPath: '/content/week12/12-3-guardduty-lambda-demo.md',
+        markdownPath: '/content/week12/12-3-waf-api-protection.md',
         description:
-          'Amazon GuardDuty 개요, 보안 자동 대응 아키텍처, AWS Security Hub 개요',
-        awsServices: ['Amazon GuardDuty', 'AWS Lambda', 'Amazon EventBridge'],
+          'AWS WAF 개요 및 동작 원리, WAF 규칙 유형과 관리형 규칙, AWS Shield 및 DDoS 방어 아키텍처',
+        awsServices: ['AWS WAF', 'AWS Shield', 'Amazon API Gateway'],
         learningObjectives: [
-          'Amazon GuardDuty의 데이터 소스와 위협 탐지 동작 방식을 설명할 수 있습니다.',
-          'Amazon GuardDuty, Amazon EventBridge, AWS Lambda를 연계한 보안 자동 대응 아키텍처를 설명할 수 있습니다.',
-          'AWS Security Hub를 활용한 통합 보안 관리 방식을 이해할 수 있습니다.',
+          'AWS WAF의 동작 원리와 Web ACL, 규칙, 규칙 그룹의 관계를 설명할 수 있습니다.',
+          'AWS WAF 관리형 규칙과 AWS WAF Rate-based 규칙을 활용하여 SQL Injection, XSS, DDoS 공격을 방어할 수 있습니다.',
+          'AWS Shield Standard와 AWS Shield Advanced의 차이를 이해하고, AWS WAF와 AWS Shield를 결합한 다층 방어 아키텍처를 설명할 수 있습니다.',
         ],
       },
     ],

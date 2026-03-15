@@ -716,7 +716,7 @@ ORDER BY reservation_count DESC;
 
 AWS CloudFormation이 자동으로 QuickTable 예약 샘플 데이터를 Amazon S3에 업로드하고, Glue와 Athena를 사용하여 비즈니스 인사이트를 도출하는 방법을 학습했습니다.
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.

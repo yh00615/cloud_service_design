@@ -360,7 +360,7 @@ DB instance restarted
 - 자동 백업과 수동 스냅샷을 구성했습니다.
 - Multi-AZ와 Read Replica의 차이를 이해했습니다.
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 반드시 수행하여 불필요한 비용을 방지합니다.

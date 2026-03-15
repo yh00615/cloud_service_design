@@ -415,8 +415,6 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 🗑️ Tag Editor로 Week 태그 검색 → 리소스 확인 → AWS CloudFormation 스택 삭제 → Resource Groups 삭제  
 > 이 패턴을 숙지하면 리소스 삭제 누락을 방지할 수 있습니다.
 
----
-
 # 🗑️ 리소스 정리
 
 > [!WARNING]

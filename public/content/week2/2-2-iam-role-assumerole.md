@@ -632,7 +632,7 @@ aws sts get-caller-identity
 - 임시 자격증명으로 AWS 서비스에 접근했습니다.
 - 역할의 권한 범위를 테스트하고 확인했습니다.
 
-## 리소스 정리
+# 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 보안 위험을 방지합니다.
@@ -657,81 +657,53 @@ aws sts get-caller-identity
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
-## 리소스 정리
-
-> [!WARNING]
-> 다음 단계를 **반드시 수행**하여 불필요한 보안 위험을 방지합니다.
-
-### 🗑️ 리소스 정리 프로세스
-
-Tag Editor로 Week 태그 검색 → 리소스 확인 → AWS IAM 리소스 삭제 → AWS CloudFormation 스택 삭제
-
-### 단계 1: Tag Editor로 리소스 확인
-
-8. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
-9. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-10. **Regions**에서 `All regions`를 선택합니다.
-
-> [!NOTE]
-> AWS IAM은 글로벌 서비스이므로 특정 리전이 아닌 All regions를 선택해야 AWS IAM 역할이 검색됩니다.
-
-11. **Resource types**에서 `All supported resource types`를 선택합니다.
-12. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `2-2`
-13. [[Search resources]] 버튼을 클릭합니다.
-14. 이 실습에서 생성한 AWS IAM 역할이 표시됩니다.
-
-> [!NOTE]
-> Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
-
 ### 단계 2: AWS IAM 리소스 삭제
 
 #### AWS IAM 역할 삭제
 
-15. AWS IAM 콘솔로 이동합니다.
-16. 왼쪽 메뉴에서 **Roles**를 선택합니다.
-17. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
-18. `S3ReadOnlyRole` 역할 왼쪽의 라디오 버튼을 선택합니다.
+8. AWS IAM 콘솔로 이동합니다.
+9. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+10. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
+11. `S3ReadOnlyRole` 역할 왼쪽의 라디오 버튼을 선택합니다.
 
 > [!NOTE]
 > 역할이 선택되면 라디오 버튼에 점이 표시되고, 상단의 [[Delete]] 버튼이 활성화됩니다.
 
-19. [[Delete]] 버튼을 클릭합니다.
-20. 확인 창이 나타나면 입력 필드에 `S3ReadOnlyRole`을 입력합니다.
+12. [[Delete]] 버튼을 클릭합니다.
+13. 확인 창이 나타나면 입력 필드에 `S3ReadOnlyRole`을 입력합니다.
 
 > [!NOTE]
 > 역할 이름을 정확히 입력해야 [[Delete]] 버튼이 활성화됩니다.
 
-21. [[Delete]] 버튼을 클릭합니다.
-22. 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole deleted successfully"라는 성공 메시지가 표시됩니다.
-23. 역할 목록에서 `S3ReadOnlyRole`이 더 이상 표시되지 않는지 확인합니다.
+14. [[Delete]] 버튼을 클릭합니다.
+15. 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole deleted successfully"라는 성공 메시지가 표시됩니다.
+16. 역할 목록에서 `S3ReadOnlyRole`이 더 이상 표시되지 않는지 확인합니다.
 
 #### AWS IAM 사용자 인라인 정책 삭제
 
-24. 왼쪽 메뉴에서 **Users**를 선택합니다.
-25. 사용자 목록에서 이전에 정책을 추가한 사용자를 검색합니다.
-26. 해당 사용자를 클릭합니다.
-27. **Permissions** 탭을 선택합니다.
-28. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`를 찾습니다.
-29. `AssumeS3ReadOnlyRolePolicy` 왼쪽의 체크박스를 선택합니다.
+17. 왼쪽 메뉴에서 **Users**를 선택합니다.
+18. 사용자 목록에서 이전에 정책을 추가한 사용자를 검색합니다.
+19. 해당 사용자를 클릭합니다.
+20. **Permissions** 탭을 선택합니다.
+21. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`를 찾습니다.
+22. `AssumeS3ReadOnlyRolePolicy` 왼쪽의 체크박스를 선택합니다.
 
 > [!NOTE]
 > 체크박스를 선택하면 체크 표시가 나타나고, 상단의 [[Remove]] 버튼이 활성화됩니다.
 
-30. [[Remove]] 버튼을 클릭합니다.
-31. 확인 창이 나타나면 [[Remove]] 버튼을 다시 클릭합니다.
-32. 화면 상단에 녹색 배너로 "Policy removed successfully"라는 성공 메시지가 표시됩니다.
-33. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 더 이상 표시되지 않는지 확인합니다.
+23. [[Remove]] 버튼을 클릭합니다.
+24. 확인 창이 나타나면 [[Remove]] 버튼을 다시 클릭합니다.
+25. 화면 상단에 녹색 배너로 "Policy removed successfully"라는 성공 메시지가 표시됩니다.
+26. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 더 이상 표시되지 않는지 확인합니다.
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-34. AWS CloudFormation 콘솔로 이동합니다.
-35. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
-36. `week2-2-iam-role-stack` 스택을 선택합니다.
-37. [[Delete]] 버튼을 클릭합니다.
-38. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-39. 스택 삭제가 완료될 때까지 기다립니다.
+27. AWS CloudFormation 콘솔로 이동합니다.
+28. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
+29. `week2-2-iam-role-stack` 스택을 선택합니다.
+30. [[Delete]] 버튼을 클릭합니다.
+31. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+32. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > AWS CloudFormation 스택을 삭제하면 태스크 0에서 생성한 AWS IAM 사용자(lab-user), Access Key, Amazon S3 버킷이 자동으로 삭제됩니다.
@@ -740,14 +712,14 @@ Tag Editor로 Week 태그 검색 → 리소스 확인 → AWS IAM 리소스 삭�
 
 모든 리소스가 삭제되었는지 확인합니다.
 
-40. Tag Editor로 이동합니다.
-41. **Regions**에서 `All regions`를 선택합니다.
-42. **Resource types**에서 `All supported resource types`를 선택합니다.
-43. **Tags** 섹션에서 다음 태그를 입력합니다:
+33. Tag Editor로 이동합니다.
+34. **Regions**에서 `All regions`를 선택합니다.
+35. **Resource types**에서 `All supported resource types`를 선택합니다.
+36. **Tags** 섹션에서 다음 태그를 입력합니다:
    - **Tag key**: `Week`
    - **Optional tag value**: `2-2`
-44. [[Search resources]] 버튼을 클릭합니다.
-45. 검색 결과가 비어있는지 확인합니다.
+37. [[Search resources]] 버튼을 클릭합니다.
+38. 검색 결과가 비어있는지 확인합니다.
 
 > [!NOTE]
 > 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다. AWS IAM 역할은 Tag Editor에서 검색되지 않을 수 있으므로, AWS CloudFormation 스택으로 생성하지 않은 AWS IAM 역할이 있다면 AWS IAM 콘솔에서 직접 삭제하는 것을 권장합니다.
