@@ -425,28 +425,28 @@ Outputs:
 > Amazon S3 버킷에 파일이 있으면 AWS CloudFormation 스택 삭제가 실패합니다.
 > 버킷에 파일을 업로드한 경우에만 다음 단계를 수행합니다.
 
-70. Amazon S3 콘솔로 이동합니다.
-71. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-72. [[Empty]] 버튼을 클릭합니다.
-73. 확인 창에서 `permanently delete`를 입력합니다.
-74. [[Empty]] 버튼을 클릭합니다.
+79. Amazon S3 콘솔로 이동합니다.
+80. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+81. [[Empty]] 버튼을 클릭합니다.
+82. 확인 창에서 `permanently delete`를 입력합니다.
+83. [[Empty]] 버튼을 클릭합니다.
 
 ### 2단계: AWS CloudFormation 스택 삭제
 
-79. AWS CloudFormation 콘솔로 이동합니다.
-80. `demo-s3-stack`을 선택합니다.
-81. [[Delete stack]] 버튼을 클릭합니다.
-82. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
-83. [[Delete stack]] 버튼을 클릭합니다.
-84. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-85. 스택 삭제가 완료될 때까지 기다립니다.
+84. AWS CloudFormation 콘솔로 이동합니다.
+85. `demo-s3-stack`을 선택합니다.
+86. [[Delete stack]] 버튼을 클릭합니다.
+87. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+88. [[Delete stack]] 버튼을 클릭합니다.
+89. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+90. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-86. 페이지를 새로고침합니다.
-87. 스택이 목록에서 사라졌는지 확인합니다.
+91. 페이지를 새로고침합니다.
+92. 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
