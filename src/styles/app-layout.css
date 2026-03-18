@@ -22,6 +22,35 @@
   margin: 0;
   position: relative;
   z-index: 1001;
+  min-height: 48px;
+}
+
+/* 데스크톱 사이드바 토글 버튼 */
+.desktop-nav-toggle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1002;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.desktop-nav-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 데스크톱 토글 버튼이 있을 때 타이틀 여백 확보 */
+@media (min-width: 689px) {
+  .app-layout-top-nav [class*='awsui_identity'] {
+    margin-left: 16px !important;
+  }
 }
 
 [data-awsui-theme='dark'] .app-layout-top-nav {

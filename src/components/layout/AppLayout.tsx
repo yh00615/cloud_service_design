@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import {
   AppLayout as CloudScapeAppLayout,
   SideNavigation,
@@ -42,22 +42,45 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     return window.innerWidth >= MOBILE_BREAKPOINT;
   });
 
+  // 데스크톱에서의 네비게이션 상태를 기억
+  const desktopNavOpenRef = useRef(window.innerWidth >= MOBILE_BREAKPOINT);
+  const prevMobileRef = useRef(window.innerWidth < MOBILE_BREAKPOINT);
+  const isResizingRef = useRef(false);
+
+  const handleNavigationChange = ({ detail }: { detail: { open: boolean } }) => {
+    setNavigationOpen(detail.open);
+    // 리사이즈 중이 아니고 데스크톱일 때만 기억
+    if (!isResizingRef.current && window.innerWidth >= MOBILE_BREAKPOINT) {
+      desktopNavOpenRef.current = detail.open;
+    }
+  };
+
   // 창 크기 변경 감지
   useEffect(() => {
     const handleResize = () => {
-      const shouldBeOpen = window.innerWidth >= MOBILE_BREAKPOINT;
       const mobile = window.innerWidth < MOBILE_BREAKPOINT;
       const verySmall = window.innerWidth < VERY_SMALL_BREAKPOINT;
-      setNavigationOpen(shouldBeOpen);
+      const wasMobile = prevMobileRef.current;
+
+      isResizingRef.current = true;
+
+      // 모바일 → 데스크톱 전환: 이전 데스크톱 상태 복원
+      if (wasMobile && !mobile) {
+        setNavigationOpen(desktopNavOpenRef.current);
+      }
+
+      prevMobileRef.current = mobile;
       setIsMobile(mobile);
       setIsVerySmall(verySmall);
+
+      // CloudScape의 비동기 onNavigationChange 호출을 무시하기 위해 지연 해제
+      setTimeout(() => {
+        isResizingRef.current = false;
+      }, 100);
     };
 
     // 리사이즈 이벤트 리스너 등록
     window.addEventListener('resize', handleResize);
-
-    // 초기 실행
-    handleResize();
 
     // 클린업
     return () => {
@@ -202,6 +225,20 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         ) : (
           /* TopNavigation (401px 이상) */
           <div className="app-layout-top-nav">
+            {/* 데스크톱 사이드바 토글 버튼 */}
+            {!isMobile && (
+              <button
+                className="desktop-nav-toggle"
+                onClick={() => {
+                  const newState = !navigationOpen;
+                  setNavigationOpen(newState);
+                  desktopNavOpenRef.current = newState;
+                }}
+                aria-label={navigationOpen ? '사이드바 닫기' : '사이드바 열기'}
+              >
+                {navigationOpen ? '✕' : '☰'}
+              </button>
+            )}
             <TopNavigation
               identity={{
                 href: import.meta.env.BASE_URL || '/',
@@ -303,7 +340,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           />
         }
         navigationOpen={navigationOpen}
-        onNavigationChange={({ detail }) => setNavigationOpen(detail.open)}
+        onNavigationChange={handleNavigationChange}
         tools={helpPanel}
         toolsOpen={toolsOpen}
         onToolsChange={({ detail }) => setToolsOpen(detail.open)}
