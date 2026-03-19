@@ -819,9 +819,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         }
         // img 태그인 경우 클릭 이벤트 추가
         if (node?.type === 'img' || node?.props?.node?.tagName === 'img') {
-          const imgSrc = node.props?.src || node.props?.node?.properties?.src;
-          const imgAlt = node.props?.alt || node.props?.node?.properties?.alt || '';
-          
+          const rawSrc = node.props?.src || node.props?.node?.properties?.src;
+          const imgAlt =
+            node.props?.alt || node.props?.node?.properties?.alt || '';
+          const base = import.meta.env.BASE_URL || '/';
+          const imgSrc = rawSrc?.startsWith(base)
+            ? rawSrc
+            : `${base}${rawSrc?.replace(/^\//, '')}`;
+
           return {
             ...node,
             props: {
@@ -847,20 +852,20 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       if (isArchitectureBlock) {
         const cleanedContent = removeAlertMarker(children);
         const contentWithClickHandler = addImageClickHandler(cleanedContent);
-        
+
         return (
           <div className="architecture-box">
             <div className="architecture-box-header">
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 20 20" 
-                fill="none" 
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{ flexShrink: 0 }}
               >
-                <path 
-                  d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z" 
+                <path
+                  d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"
                   fill="#ff9900"
                 />
               </svg>
@@ -1229,7 +1234,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       );
     },
 
-    // 이미지 - base path 자동 처리
+    // 이미지 - base path 자동 처리 + 클릭 확대
     img: ({ src, alt, ...props }: any) => {
       // base path 가져오기 (vite.config.ts에서 설정한 값)
       const base = import.meta.env.BASE_URL || '/';
@@ -1244,6 +1249,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           src={imageSrc}
           alt={alt || ''}
           className="markdown-image"
+          style={{ cursor: 'zoom-in' }}
+          onClick={() => handleImageClick(imageSrc, alt || '')}
           {...props}
         />
       );
@@ -1273,22 +1280,16 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       {/* 이미지 줌 모달 */}
       {zoomedImage && (
         <div className="image-zoom-overlay" onClick={handleCloseZoom}>
-          <div className="image-zoom-container" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="image-zoom-close" 
+          <div className="image-zoom-container" onClick={handleCloseZoom}>
+            <button
+              className="image-zoom-close"
               onClick={handleCloseZoom}
               aria-label="닫기"
             >
               ✕
             </button>
-            <img 
-              src={zoomedImage} 
-              alt={zoomedAlt} 
-              className="image-zoom-img" 
-            />
-            {zoomedAlt && (
-              <div className="image-zoom-title">{zoomedAlt}</div>
-            )}
+            <img src={zoomedImage} alt={zoomedAlt} className="image-zoom-img" />
+            {zoomedAlt && <div className="image-zoom-title">{zoomedAlt}</div>}
           </div>
         </div>
       )}
