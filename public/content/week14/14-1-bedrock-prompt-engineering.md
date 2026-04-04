@@ -35,7 +35,16 @@ prerequisites:
 > [!NOTE]
 > Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
 > 단, Anthropic Claude 모델을 처음 사용하는 경우 일회성 **Use case details** 양식을 제출해야 합니다.
-> Playground에서 Claude 모델을 선택하면 양식이 표시되며, 간단한 사용 목적(예: `Learning and testing prompt engineering`)을 입력하고 제출합니다.
+> Playground에서 Claude 모델을 선택하면 양식이 표시되며, 모든 항목이 필수이므로 다음과 같이 입력합니다:
+>
+> - **Company name**: `Student` (또는 본인 이름)
+> - **Company website URL**: `https://example.com`
+> - **Industry**: `Education`
+> - **Intended users**: `Internal users` 체크
+> - **Use cases**: `Learning and testing prompt engineering`
+>
+> [[Submit use case details]] 버튼을 클릭하면 즉시 승인됩니다.
+> 이 양식은 계정당 한 번만 제출하면 되며, 이후 14-2, 14-3 실습에서는 나타나지 않습니다.
 
 ## 태스크 1: Playground에서 기본 프롬프트 테스트
 
@@ -334,9 +343,7 @@ Temperature 값의 의미를 이해합니다.
 40. **Temperature** 슬라이더를 `0.9`로 설정합니다.
 41. 동일한 질문을 입력합니다: `AWS Lambda의 장점 3가지를 알려주세요.`.
 42. [[Run]] 버튼을 클릭합니다.
-
-> [!OUTPUT]
-> 응답을 이전 응답과 비교합니다:
+43. 응답을 확인하고 이전 응답과 비교합니다.
 
 두 응답을 비교하여 다음을 확인합니다:
 
@@ -354,8 +361,8 @@ Temperature 값의 의미를 이해합니다.
 
 Top P는 응답 생성 시 고려할 토큰의 범위를 제어하는 파라미터입니다.
 
-43. [[New chat]] 버튼을 클릭합니다.
-44. **Inference configurations** 섹션에서 **Top P** 슬라이더를 `0.5`로 설정합니다.
+44. [[New chat]] 버튼을 클릭합니다.
+45. **Inference configurations** 섹션에서 **Top P** 슬라이더를 `0.5`로 설정합니다.
 
 > [!NOTE]
 > "Inference configurations" 대신 "Inference parameters"로 표시될 수 있습니다.
@@ -370,9 +377,9 @@ Top P 값의 의미를 이해합니다.
 >
 > Temperature와 Top P는 함께 사용하여 응답의 품질을 조정합니다.
 
-45. 채팅 입력창에 다음을 입력합니다: `서버리스 아키텍처의 단점을 설명해주세요.`.
-46. [[Run]] 버튼을 클릭합니다.
-47. 응답을 확인합니다.
+46. 채팅 입력창에 다음을 입력합니다: `서버리스 아키텍처의 단점을 설명해주세요.`.
+47. [[Run]] 버튼을 클릭합니다.
+48. 응답을 확인합니다.
 
 ✅ **태스크 완료**: 시스템 프롬프트와 파라미터 조정이 완료되었습니다.
 
@@ -392,9 +399,10 @@ Top P 값의 의미를 이해합니다.
 3. **Regions**에서 `All regions`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `14-1`
+   - **Tag key**: `Week`
+   - **Tag value**: `14-1`
 6. [[Search resources]] 버튼을 클릭합니다.
+7. 검색 결과가 비어있는지 확인합니다.
 
 > [!SUCCESS]
 > 검색 결과가 비어있으면 정상입니다. 이 실습에서는 영구적인 AWS 리소스를 생성하지 않았습니다.
