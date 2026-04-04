@@ -1,5 +1,5 @@
 ---
-title: "AWS CodeBuild를 활용한 CI/CD 파이프라인 구축"
+title: 'AWS CodeBuild를 활용한 CI/CD 파이프라인 구축'
 week: 9
 session: 2
 awsServices:
@@ -332,10 +332,12 @@ cat buildspec.yml
 >   pre_build:
 >     commands:
 >       - echo Logging in to Amazon ECR...
->       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
->       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
+>       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+>       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+>       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
 >       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 >       - IMAGE_TAG=${COMMIT_HASH:=latest}
+>       - echo "Building image with tag $IMAGE_TAG"
 >   build:
 >     commands:
 >       - echo Build started on `date`
@@ -350,6 +352,7 @@ cat buildspec.yml
 >       - docker push $REPOSITORY_URI:$IMAGE_TAG
 >       - echo Writing image definitions file...
 >       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+>       - cat imagedefinitions.json
 > 
 > artifacts:
 >   files:
@@ -372,7 +375,8 @@ cat buildspec.yml
 > 
 > **환경 변수 사용:**
 > 
-> - `$AWS_ACCOUNT_ID`, `$AWS_REGION`: 태스크 3에서 설정할 환경 변수
+> - `$AWS_ACCOUNT_ID`: buildspec 내에서 `aws sts get-caller-identity`로 자동 조회
+> - `$AWS_DEFAULT_REGION`: AWS CodeBuild가 자동으로 제공하는 리전 환경 변수
 > - `$IMAGE_REPO_NAME`, `$CONTAINER_NAME`: 태스크 3에서 설정할 환경 변수
 > - `$CODEBUILD_RESOLVED_SOURCE_VERSION`: AWS CodeBuild가 자동으로 제공하는 Git 커밋 해시
 > 
@@ -482,39 +486,31 @@ git push origin main
 > AWS CloudFormation이 생성한 역할의 정책이 변경되지 않도록 하는 모범 사례입니다.
 
 78. 같은 **Additional configuration** 섹션에서 **Environment variables**로 스크롤합니다.
-79. AWS 계정 ID를 확인합니다:
-    - AWS Management Console 우측 상단의 계정 이름을 클릭합니다.
-    - 드롭다운 메뉴에서 12자리 계정 ID를 확인합니다.
-    - 계정 ID를 메모장에 복사합니다.
-80. Amazon ECR 리포지토리 이름을 추출합니다:
-    - 태스크 0의 Outputs에서 복사한 `ECRRepositoryUri`를 확인합니다.
-    - URI에서 `/` 뒤의 리포지토리 이름 부분만 추출합니다.
-    - 예: `123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/week9-2-codebuild-repo` → `week9-2-codebuild-repo`
-81. [[Add environment variable]] 버튼을 클릭하여 첫 번째 환경 변수를 추가합니다:
-    - **Name**: `AWS_ACCOUNT_ID`
-    - **Value**: 79단계에서 확인한 계정 ID 입력
-    - **Type**: `Plaintext`
-82. [[Add environment variable]] 버튼을 클릭하여 두 번째 환경 변수를 추가합니다:
+79. [[Add environment variable]] 버튼을 클릭하여 첫 번째 환경 변수를 추가합니다:
     - **Name**: `IMAGE_REPO_NAME`
-    - **Value**: 80단계에서 추출한 리포지토리 이름 입력
+    - **Value**: 태스크 0의 Outputs에서 확인한 `ECRRepositoryName` 값 입력 (예: `cicd-demo-app`)
     - **Type**: `Plaintext`
-83. [[Add environment variable]] 버튼을 클릭하여 세 번째 환경 변수를 추가합니다:
+80. [[Add environment variable]] 버튼을 클릭하여 두 번째 환경 변수를 추가합니다:
     - **Name**: `CONTAINER_NAME`
     - **Value**: `app`
     - **Type**: `Plaintext`
-84. 3개의 환경 변수가 모두 올바르게 입력되었는지 확인합니다.
+81. 2개의 환경 변수가 모두 올바르게 입력되었는지 확인합니다.
+
+> [!NOTE]
+> `AWS_ACCOUNT_ID`는 buildspec.yml 내에서 `aws sts get-caller-identity` 명령으로 자동 조회하므로 별도 환경 변수 설정이 필요 없습니다.
+> `AWS_DEFAULT_REGION`은 AWS CodeBuild가 자동으로 제공하는 환경 변수입니다.
 
 > [!IMPORTANT]
-> 환경 변수는 buildspec.yml에서 `$AWS_ACCOUNT_ID`, `$IMAGE_REPO_NAME`, `$CONTAINER_NAME`으로 참조됩니다.
+> 환경 변수는 buildspec.yml에서 `$IMAGE_REPO_NAME`, `$CONTAINER_NAME`으로 참조됩니다.
 > 값이 정확하지 않으면 빌드가 실패하므로 반드시 확인합니다.
 
-85. **Buildspec** 섹션에서 `Use a buildspec file`을 선택합니다.
+82. **Buildspec** 섹션에서 `Use a buildspec file`을 선택합니다.
 
 > [!NOTE]
 > **Buildspec name**은 기본값 `buildspec.yml`이 사용되므로 별도 입력이 필요 없습니다.
 
-86. **Logs** 섹션에서 **CloudWatch logs**를 체크합니다.
-87. [[Create build project]] 버튼을 클릭합니다.
+83. **Logs** 섹션에서 **CloudWatch logs**를 체크합니다.
+84. [[Create build project]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: AWS CodeBuild 프로젝트가 생성되었습니다.
 
@@ -524,16 +520,16 @@ git push origin main
 
 ### 상세 단계
 
-88. AWS CodeBuild 콘솔에서 생성한 프로젝트를 선택합니다.
-89. [[Start build]] 버튼을 클릭합니다.
-90. **Start build** 페이지에서 기본값을 유지하고 [[Start build]] 버튼을 클릭합니다.
+85. AWS CodeBuild 콘솔에서 생성한 프로젝트를 선택합니다.
+86. [[Start build]] 버튼을 클릭합니다.
+87. **Start build** 페이지에서 기본값을 유지하고 [[Start build]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 빌드에 3-5분이 소요됩니다. 대기하는 동안 다음 단계에서 빌드 로그를 확인하여 각 단계가 정상적으로 실행되는지 모니터링합니다.
 
-91. **Build logs** 탭을 선택합니다.
-92. 빌드 로그가 실시간으로 표시되는지 확인합니다.
-93. **PRE_BUILD** 단계의 로그를 확인합니다:
+88. **Build logs** 탭을 선택합니다.
+89. 빌드 로그가 실시간으로 표시되는지 확인합니다.
+90. **PRE_BUILD** 단계의 로그를 확인합니다:
 
 > [!OUTPUT]
 > ```
@@ -548,11 +544,11 @@ git push origin main
 > Login Succeeded
 > ```
 
-94. Amazon ECR 로그인이 성공했는지 확인합니다.
+91. Amazon ECR 로그인이 성공했는지 확인합니다.
 
 > [!TIP]
 > 로그에서 "Login Succeeded" 메시지가 표시되면 정상입니다.
-95. **BUILD** 단계의 로그를 확인합니다:
+92. **BUILD** 단계의 로그를 확인합니다:
 
 > [!OUTPUT]
 > ```
@@ -572,11 +568,11 @@ git push origin main
 > Successfully tagged 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/week9-2-codebuild-repo:latest
 > ```
 
-96. Docker 이미지 빌드가 성공했는지 확인합니다.
+93. Docker 이미지 빌드가 성공했는지 확인합니다.
 
 > [!TIP]
 > 로그에서 "Successfully built" 및 "Successfully tagged" 메시지가 표시되면 정상입니다.
-97. **POST_BUILD** 단계의 로그를 확인합니다:
+94. **POST_BUILD** 단계의 로그를 확인합니다:
 
 > [!OUTPUT]
 > ```
@@ -599,11 +595,11 @@ git push origin main
 > a1b2c3d: digest: sha256:abc123... size: 1234
 > ```
 
-98. Amazon ECR에 이미지가 성공적으로 푸시되었는지 확인합니다.
+95. Amazon ECR에 이미지가 성공적으로 푸시되었는지 확인합니다.
 
 > [!TIP]
 > 로그에서 "digest: sha256:..." 메시지가 표시되면 정상입니다.
-99. 로그 하단에서 최종 빌드 상태를 확인합니다:
+96. 로그 하단에서 최종 빌드 상태를 확인합니다:
 
 > [!OUTPUT]
 > ```
@@ -615,7 +611,7 @@ git push origin main
 > [Container] 2024/02/07 10:00:50 Phase complete: COMPLETED State: SUCCEEDED
 > ```
 
-100. 모든 단계가 "SUCCEEDED" 상태인지 확인합니다.
+97. 모든 단계가 "SUCCEEDED" 상태인지 확인합니다.
 
 > [!TROUBLESHOOTING]
 > **문제**: 빌드가 실패하고 "FAILED" 상태로 표시됩니다
@@ -632,11 +628,11 @@ git push origin main
 > 3. 해당 단계의 명령어와 환경 변수를 확인합니다.
 > 4. 문제를 수정한 후 [[Retry build]] 버튼을 클릭하여 다시 빌드합니다.
 
-101. 빌드 상태가 "Succeeded"로 변경될 때까지 기다립니다.
-102. Amazon ECR 콘솔로 이동합니다.
-103. 생성한 Amazon ECR 리포지토리를 선택합니다.
-104. 빌드된 Docker 이미지가 푸시되었는지 확인합니다.
-105. 이미지 태그를 확인합니다:
+98. 빌드 상태가 "Succeeded"로 변경될 때까지 기다립니다.
+99. Amazon ECR 콘솔로 이동합니다.
+100. 생성한 Amazon ECR 리포지토리를 선택합니다.
+101. 빌드된 Docker 이미지가 푸시되었는지 확인합니다.
+102. 이미지 태그를 확인합니다:
     - `latest` 태그
     - Git 커밋 해시 태그 (예: `a1b2c3d`)
 
@@ -773,7 +769,7 @@ docker push <repository-uri>:<commit-hash>
 ### 환경 변수
 
 **사용자 정의 변수:**
-- `AWS_ACCOUNT_ID`: AWS 계정 ID (태스크 3에서 환경 변수로 추가)
+- `AWS_ACCOUNT_ID`: buildspec.yml 내에서 `aws sts get-caller-identity`로 자동 조회
 - `IMAGE_REPO_NAME`: Amazon ECR 리포지토리 이름 (태스크 3에서 환경 변수로 추가)
 - `CONTAINER_NAME`: 컨테이너 이름 (태스크 3에서 환경 변수로 추가)
 
@@ -782,7 +778,7 @@ docker push <repository-uri>:<commit-hash>
 > CodePipeline이 Amazon ECS에 배포할 때 어떤 컨테이너를 업데이트할지 식별하는 데 사용됩니다.
 
 **AWS CodeBuild 제공 변수:**
-- `AWS_REGION`: 빌드가 실행되는 리전 (AWS CodeBuild가 자동으로 설정)
+- `AWS_DEFAULT_REGION`: 빌드가 실행되는 리전 (AWS CodeBuild가 자동으로 설정)
 - `CODEBUILD_RESOLVED_SOURCE_VERSION`: Git 커밋 해시
 - `CODEBUILD_BUILD_ID`: 빌드 ID
 - `CODEBUILD_BUILD_NUMBER`: 빌드 번호

@@ -526,9 +526,9 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 실습에서 생성한 워크로드를 확인합니다.
 
-75. AWS Management Console에 로그인한 후 상단 검색창에 `Well-Architected Tool`을 입력하고 선택합니다.
-76. 왼쪽 메뉴에서 **Workloads**를 선택합니다.
-77. 이 실습에서 생성한 `quicktable-web-application` 워크로드를 확인합니다.
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Well-Architected Tool`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Workloads**를 선택합니다.
+3. 이 실습에서 생성한 `quicktable-web-application` 워크로드를 확인합니다.
 
 > [!NOTE]
 > 워크로드 목록에서 이름, 설명, 생성 날짜, 마지막 수정 날짜를 확인할 수 있습니다.
@@ -537,11 +537,11 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 생성한 워크로드를 삭제합니다.
 
-78. 워크로드 목록에서 `quicktable-web-application`을 선택합니다.
+4. 워크로드 목록에서 `quicktable-web-application`을 선택합니다.
    <img src="/images/week1/1-2-cleanup-step2-delete-workload.png" alt="워크로드 목록에서 quicktable-web-application 선택 후 Delete workload 버튼" class="guide-img-md" />
 
-79. [[Delete workload]] 버튼을 클릭합니다.
-80. 확인 창에서 삭제할 내용을 확인합니다.
+5. [[Delete workload]] 버튼을 클릭합니다.
+6. 확인 창에서 삭제할 내용을 확인합니다.
 
 > [!NOTE]
 > 확인 창에는 다음 내용이 표시됩니다:
@@ -551,7 +551,7 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 >
 > 워크로드를 삭제하면 평가 결과, 개선 계획, 마일스톤 등 모든 데이터가 영구적으로 삭제됩니다. 필요한 경우 삭제 전에 보고서를 다운로드하여 보관합니다.
 
-81. [[Delete]] 버튼을 클릭하여 삭제를 확정합니다.
+7. [[Delete]] 버튼을 클릭하여 삭제를 확정합니다.
 
 <img src="/images/week1/1-2-cleanup-step2-confirm-delete.png" alt="워크로드 삭제 확인 창" class="guide-img-sm" />
 
@@ -559,8 +559,8 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 워크로드가 삭제되었는지 확인합니다.
 
-82. 워크로드 목록을 새로고침합니다.
-83. `quicktable-web-application` 워크로드가 목록에서 사라졌는지 확인합니다.
+8. 워크로드 목록을 새로고침합니다.
+9. `quicktable-web-application` 워크로드가 목록에서 사라졌는지 확인합니다.
 
 > [!SUCCESS]
 > 워크로드가 목록에 없으면 정상적으로 삭제되었습니다.

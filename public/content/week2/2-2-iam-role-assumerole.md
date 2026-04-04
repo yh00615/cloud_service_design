@@ -83,8 +83,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 스택 생성에 1-2분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-19. **Outputs** 탭을 선택합니다.
-20. 출력값들을 확인하고 메모장에 복사합니다:
+20. **Outputs** 탭을 선택합니다.
+21. 출력값들을 확인하고 메모장에 복사합니다:
     - `LabUserName`: lab-user
     - `LabUserConsoleLoginUrl`: 콘솔 로그인 URL
     - `LabUserInitialPassword`: 초기 비밀번호 (ChangeMe123!)
@@ -105,10 +105,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 **AWS IAM 역할**을 생성하고 **신뢰 정책**(Trust Policy)을 구성합니다. **신뢰 정책**(Trust Policy)은 "누가 이 역할을 맡을 수 있는가"를 정의하며, **AWS 계정**을 신뢰 주체로 지정하면 같은 계정 내의 **AWS IAM 사용자**나 **서비스**가 이 역할을 맡을 수 있습니다.
 
-21. AWS Management Console에 로그인한 후 상단 검색창에 `IAM`을 입력하고 선택합니다.
-22. 왼쪽 메뉴에서 **Roles**를 선택합니다.
-23. [[Create role]] 버튼을 클릭합니다.
-24. **Trusted entity type**에서 `AWS account`를 선택합니다.
+22. AWS Management Console에 로그인한 후 상단 검색창에 `IAM`을 입력하고 선택합니다.
+23. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+24. [[Create role]] 버튼을 클릭합니다.
+25. **Trusted entity type**에서 `AWS account`를 선택합니다.
 
 > [!NOTE]
 > **Trusted entity type** 옵션은 다음과 같습니다:
@@ -119,19 +119,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > - SAML 2.0 federation (네 번째)
 > - Custom trust policy (다섯 번째)
 
-25. **An AWS account**에서 `This account`를 선택합니다.
+26. **An AWS account**에서 `This account`를 선택합니다.
 
 > [!NOTE]
 > 콘솔 버전에 따라 "This account (계정ID)" 또는 "This account"로 표시될 수 있습니다.  
 > 현재 계정을 선택하는 옵션을 선택합니다.
 
-26. **Account ID**에 현재 계정 ID가 표시되는지 확인합니다.
+27. **Account ID**에 현재 계정 ID가 표시되는지 확인합니다.
 
 > [!NOTE]
 > **Account ID** 필드에 12자리 숫자가 자동으로 표시됩니다. 이는 현재 로그인한 AWS 계정의 ID입니다.
 
-27. [[Next]] 버튼을 클릭합니다.
-28. **Add permissions** 페이지로 이동합니다.
+28. [[Next]] 버튼을 클릭합니다.
+29. **Add permissions** 페이지로 이동합니다.
 
 > [!NOTE]
 > "This account"를 선택하면 같은 계정 내의 AWS IAM 사용자가 이 역할을 맡을 수 있습니다. 다음 단계에서 이 역할에 권한을 부여합니다.
@@ -142,18 +142,18 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 **권한 정책**(Permission Policy)을 역할에 연결합니다. **권한 정책**(Permission Policy)은 "이 역할이 무엇을 할 수 있는가"를 정의하며, **AWS 관리형 정책**인 **AmazonS3ReadOnlyAccess**를 사용하면 **Amazon S3 버킷**과 객체를 조회할 수 있지만 생성, 수정, 삭제는 할 수 없습니다.
 
-29. **Permissions policies** 검색창에 `S3`를 입력합니다.
-30. 검색 결과에서 `AmazonS3ReadOnlyAccess` 정책을 찾습니다.
-31. `AmazonS3ReadOnlyAccess` 정책 왼쪽의 체크박스를 선택합니다.
+30. **Permissions policies** 검색창에 `S3`를 입력합니다.
+31. 검색 결과에서 `AmazonS3ReadOnlyAccess` 정책을 찾습니다.
+32. `AmazonS3ReadOnlyAccess` 정책 왼쪽의 체크박스를 선택합니다.
 
 > [!NOTE]
 > 체크박스를 선택하면 체크 표시가 나타나고, 화면 하단에 "1 policy selected"라고 표시됩니다.
 
-32. [[Next]] 버튼을 클릭합니다.
-33. **Name, review, and create** 페이지로 이동합니다.
-34. **Role name**에 `S3ReadOnlyRole`을 입력합니다.
-35. **Description**에 `Role for read-only access to Amazon S3 buckets`를 입력합니다.
-36. 아래로 스크롤하여 **Step 1: Select trusted entities** 섹션을 확인합니다.
+33. [[Next]] 버튼을 클릭합니다.
+34. **Name, review, and create** 페이지로 이동합니다.
+35. **Role name**에 `S3ReadOnlyRole`을 입력합니다.
+36. **Description**에 `Role for read-only access to Amazon S3 buckets`를 입력합니다.
+37. 아래로 스크롤하여 **Step 1: Select trusted entities** 섹션을 확인합니다.
 
 > [!NOTE]
 > **Trusted entities** 섹션에 "Trust policy"가 표시되고, 신뢰 정책 요약이 보입니다.  
@@ -178,13 +178,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 }
 ```
 
-37. **Step 2: Add permissions** 섹션에서 `AmazonS3ReadOnlyAccess` 정책이 연결되어 있는지 확인합니다.
+38. **Step 2: Add permissions** 섹션에서 `AmazonS3ReadOnlyAccess` 정책이 연결되어 있는지 확인합니다.
 
 > [!NOTE]
 > 신뢰 정책은 누가 이 역할을 맡을 수 있는지 정의하고, 권한 정책은 역할이 무엇을 할 수 있는지 정의합니다.
 
-38. 아래로 스크롤하여 **Tags - optional** 섹션을 찾습니다.
-39. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+39. 아래로 스크롤하여 **Tags - optional** 섹션을 찾습니다.
+40. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -192,10 +192,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `2-2`     |
 | `CreatedBy` | `Student` |
 
-40. [[Create role]] 버튼을 클릭합니다.
-41. 역할 생성이 완료되면 **Roles** 페이지로 자동 이동합니다.
-42. 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole created"라는 성공 메시지가 표시됩니다.
-43. 역할 목록에서 `S3ReadOnlyRole`을 검색하여 생성된 역할을 확인합니다.
+41. [[Create role]] 버튼을 클릭합니다.
+42. 역할 생성이 완료되면 **Roles** 페이지로 자동 이동합니다.
+43. 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole created"라는 성공 메시지가 표시됩니다.
+44. 역할 목록에서 `S3ReadOnlyRole`을 검색하여 생성된 역할을 확인합니다.
 
 > [!NOTE]
 > 역할 목록에서 **Role name** 열에 `S3ReadOnlyRole`이 표시됩니다. 이 역할을 클릭하면 상세 정보를 확인할 수 있습니다.
@@ -206,19 +206,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 생성된 역할의 **ARN**(Amazon Resource Name)을 확인합니다. **ARN**(Amazon Resource Name)은 AWS 리소스를 고유하게 식별하는 값으로, **AssumeRole API**를 호출할 때 필수 파라미터로 사용됩니다. 형식은 `arn:aws:iam::계정ID:role/역할이름`이며, 이 값을 복사하여 저장해두면 **CLI**나 **SDK**에서 역할을 맡을 때 사용할 수 있습니다.
 
-44. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
-45. 검색 결과에서 `S3ReadOnlyRole`을 클릭합니다.
-46. 역할 상세 페이지가 열립니다.
-47. 페이지 상단의 **Summary** 섹션을 확인합니다.
-48. **ARN** 필드를 찾습니다.
+45. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
+46. 검색 결과에서 `S3ReadOnlyRole`을 클릭합니다.
+47. 역할 상세 페이지가 열립니다.
+48. 페이지 상단의 **Summary** 섹션을 확인합니다.
+49. **ARN** 필드를 찾습니다.
 
 > [!NOTE]
 > **ARN** 필드는 **Summary** 섹션의 상단에 위치하며, `arn:aws:iam::123456789012:role/S3ReadOnlyRole` 형식으로 표시됩니다.  
 > ARN 오른쪽에 복사 아이콘이 있습니다.
 
-49. ARN 오른쪽의 복사 아이콘을 클릭하여 ARN 값을 복사합니다.
-50. 메모장을 열고 복사한 ARN을 붙여넣습니다.
-51. 메모장에 "S3ReadOnlyRole ARN:"이라는 레이블을 추가하여 저장합니다.
+50. ARN 오른쪽의 복사 아이콘을 클릭하여 ARN 값을 복사합니다.
+51. 메모장을 열고 복사한 ARN을 붙여넣습니다.
+52. 메모장에 "S3ReadOnlyRole ARN:"이라는 레이블을 추가하여 저장합니다.
 
 > [!NOTE]
 > ARN은 AWS 리소스를 고유하게 식별하는 값으로, AssumeRole 시 필요합니다. 다음 태스크에서 이 ARN을 사용합니다. AWS IAM은 글로벌 서비스이므로 리전 필드가 비어있어 콜론이 연속으로 두 개(`::`)가 나타나는 것이 정상입니다.
@@ -235,21 +235,21 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 이 태스크는 **lab-user로 로그인한 시크릿 창**에서 진행하거나, 관리자 권한이 있는 원래 창에서 진행할 수 있습니다.
 > lab-user는 IAMReadOnlyAccess 권한만 있어 자신에게 정책을 추가할 수 없으므로, **관리자 권한이 있는 원래 창**에서 진행하는 것을 권장합니다.
 
-52. AWS IAM 콘솔로 이동합니다.
-53. 왼쪽 메뉴에서 **Users**를 선택합니다.
-54. 사용자 목록에서 `lab-user`를 검색합니다.
-55. `lab-user`를 클릭합니다.
+53. AWS IAM 콘솔로 이동합니다.
+54. 왼쪽 메뉴에서 **Users**를 선택합니다.
+55. 사용자 목록에서 `lab-user`를 검색합니다.
+56. `lab-user`를 클릭합니다.
 
-56. 사용자 상세 페이지에서 **Permissions** 탭을 선택합니다.
-57. **Permissions policies** 섹션에서 [[Add permissions]] 버튼을 클릭합니다.
-58. 드롭다운 메뉴가 나타나면 [[Create inline policy]]를 선택합니다.
-59. **Specify permissions** 페이지가 열립니다.
-60. **JSON** 탭 또는 토글을 선택합니다.
+57. 사용자 상세 페이지에서 **Permissions** 탭을 선택합니다.
+58. **Permissions policies** 섹션에서 [[Add permissions]] 버튼을 클릭합니다.
+59. 드롭다운 메뉴가 나타나면 [[Create inline policy]]를 선택합니다.
+60. **Specify permissions** 페이지가 열립니다.
+61. **JSON** 탭 또는 토글을 선택합니다.
 
 > [!NOTE]
 > 콘솔 버전에 따라 "JSON" 탭, "JSON" 토글, 또는 "Switch to JSON editor" 버튼으로 표시될 수 있습니다. JSON 편집기로 전환하는 옵션을 선택합니다.
 
-61. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다:
+62. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다:
 
 ```json
 {
@@ -290,8 +290,8 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 3. 올바른 형식: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 4. JSON 문법 검증: 중괄호, 대괄호, 쉼표, 따옴표가 올바른지 확인합니다
 
-62. JSON 편집기에서 `YOUR_ACCOUNT_ID` 부분을 찾아 실제 계정 ID로 교체합니다.
-63. 정책이 올바르게 작성되었는지 확인합니다.
+63. JSON 편집기에서 `YOUR_ACCOUNT_ID` 부분을 찾아 실제 계정 ID로 교체합니다.
+64. 정책이 올바르게 작성되었는지 확인합니다.
 
 > [!TIP]
 > 정책 예시 (계정 ID가 123456789012인 경우):
@@ -309,13 +309,13 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > }
 > ```
 
-64. [[Next]] 버튼을 클릭합니다.
-65. **Review and create** 페이지로 이동합니다.
-66. **Policy name**에 `AssumeS3ReadOnlyRolePolicy`를 입력합니다.
-67. [[Create policy]] 버튼을 클릭합니다.
-68. 정책 생성이 완료되면 사용자의 **Permissions** 탭으로 자동 이동합니다.
-69. 화면 상단에 녹색 배너로 "Policy AssumeS3ReadOnlyRolePolicy created"라는 성공 메시지가 표시됩니다.
-70. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 추가되었는지 확인합니다.
+65. [[Next]] 버튼을 클릭합니다.
+66. **Review and create** 페이지로 이동합니다.
+67. **Policy name**에 `AssumeS3ReadOnlyRolePolicy`를 입력합니다.
+68. [[Create policy]] 버튼을 클릭합니다.
+69. 정책 생성이 완료되면 사용자의 **Permissions** 탭으로 자동 이동합니다.
+70. 화면 상단에 녹색 배너로 "Policy AssumeS3ReadOnlyRolePolicy created"라는 성공 메시지가 표시됩니다.
+71. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 추가되었는지 확인합니다.
 
 > [!NOTE]
 > **Permissions policies** 섹션에 `AssumeS3ReadOnlyRolePolicy`가 표시되고, **Policy Type** 열에 "Customer inline"으로 표시됩니다. 이는 사용자에게 직접 연결된 인라인 정책임을 의미합니다.
@@ -338,13 +338,13 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 이 실습에서 생성한 역할은 Maximum session duration을 변경하지 않았으므로 최대 세션 시간은 1시간입니다.  
 > 역할 설정에서 Maximum session duration을 늘리면 최대 12시간까지 연장할 수 있습니다.
 
-71. **lab-user로 로그인한 시크릿 창**에서 AWS Management Console 상단 오른쪽의 AWS CloudShell 아이콘을 클릭합니다.
+72. **lab-user로 로그인한 시크릿 창**에서 AWS Management Console 상단 오른쪽의 AWS CloudShell 아이콘을 클릭합니다.
 
 > [!NOTE]
 > CloudShell은 AWS CLI가 사전 설치되어 있고 현재 로그인한 AWS IAM 사용자 자격증명이 자동으로 구성된 브라우저 기반 셸 환경입니다.  
 > 첫 실행 시 환경 초기화에 1-2분이 소요될 수 있습니다. 환경이 준비될 때까지 기다립니다.
 
-72. 현재 자격증명을 확인합니다:
+73. 현재 자격증명을 확인합니다:
 
 ```bash
 aws sts get-caller-identity
@@ -360,7 +360,7 @@ aws sts get-caller-identity
 > }
 > ```
 
-73. 현재 사용자로 Amazon S3 버킷 목록 조회를 시도합니다:
+74. 현재 사용자로 Amazon S3 버킷 목록 조회를 시도합니다:
 
 ```bash
 aws s3 ls
@@ -376,8 +376,8 @@ aws s3 ls
 > **AccessDenied** 오류가 나타나는 것이 정상입니다. 현재 사용자는 `sts:AssumeRole` 권한만 가지고 있고, Amazon S3 접근 권한은 없습니다.  
 > 다음 단계에서 AssumeRole을 통해 S3ReadOnlyRole 역할을 맡으면 Amazon S3 읽기 권한을 얻을 수 있습니다.
 
-74. 메모장에 저장한 역할 ARN을 확인합니다.
-75. 다음 명령어를 입력하되, 역할 ARN 부분을 태스크 3에서 복사한 실제 ARN으로 교체합니다:
+75. 메모장에 저장한 역할 ARN을 확인합니다.
+76. 다음 명령어를 입력하되, 역할 ARN 부분을 태스크 3에서 복사한 실제 ARN으로 교체합니다:
 
 ```bash
 aws sts assume-role \
@@ -405,7 +405,6 @@ aws sts assume-role \
 >   --role-session-name s3-readonly-session
 > ```
 
-76. Enter 키를 눌러 명령어를 실행합니다.
 77. Enter 키를 눌러 명령어를 실행합니다.
 78. 출력된 JSON 결과를 확인합니다.
 

@@ -472,7 +472,7 @@ prerequisites:
 - [AWS 아키텍처 센터](https://aws.amazon.com/ko/architecture/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/ko/architecture/well-architected/)
 - [웹 호스팅을 위한 AWS 클라우드 아키텍처](https://docs.aws.amazon.com/ko_kr/whitepapers/latest/web-application-hosting-best-practices/an-aws-cloud-architecture-for-web-hosting.html)
-- [AWS 아키텍처 다이어그램 및 모범 사례](https://builder.aws.com/)
+- [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)
 - [Amazon RDS Multi-AZ 배포](https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html)
 - [Amazon EC2 Auto Scaling 모범 사례](https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/as-best-practices.html)
 

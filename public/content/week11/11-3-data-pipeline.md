@@ -45,6 +45,7 @@ prerequisites:
 > [week11-3-data-pipeline-lab.zip](/files/week11/week11-3-data-pipeline-lab.zip)
 >
 > - `week11-3-data-pipeline-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon S3 버킷, AWS IAM 역할, AWS Lambda 함수, EventBridge 규칙, 샘플 데이터 자동 생성)
+> - `lambda_function.py` - AWS Lambda 함수 소스 코드 (참고용, CloudFormation이 자동 배포)
 > - `sales-data.csv` - 추가 테스트 데이터 (태스크 5에서 파이프라인 테스트용으로 업로드)
 > - `sales-data-2.csv` - 추가 테스트 데이터 (태스크 5에서 파이프라인 테스트용으로 업로드)
 >
@@ -254,12 +255,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 ### 태스크 3.1: Visual ETL Job 생성
 
 59. 왼쪽 메뉴에서 **ETL jobs**를 선택합니다.
-60. **Create job** 섹션에서 **Visual ETL**을 선택합니다.
-61. 빈 캔버스가 표시됩니다.
+60. **Create job** 섹션에서 **Visual ETL** 카드를 클릭합니다.
+61. "Untitled job" 빈 캔버스가 표시됩니다.
+
+> [!NOTE]
+> **Create job** 섹션에는 3가지 옵션이 카드 형태로 표시됩니다:
+>
+> - **Visual ETL**: 시각적 인터페이스로 데이터 흐름 구성 (이 실습에서 사용)
+> - **Notebook**: 대화형 코드 노트북
+> - **Script editor**: 스크립트 편집기
+>
+> 또는 왼쪽 메뉴에서 **Visual ETL**을 직접 선택해도 동일합니다.
 
 ### 태스크 3.2: Source 노드 추가
 
-62. 캔버스 왼쪽 상단의 [[+]] 버튼을 클릭합니다.
+62. 캔버스의 [[+ Add nodes]] 버튼을 클릭합니다.
 63. **+ Add nodes** 패널이 표시됩니다.
 64. **Sources** 탭에서 **AWS Glue Data Catalog**를 선택합니다.
 65. 오른쪽 **Data source properties - Data Catalog** 패널에서 다음을 설정합니다:
@@ -271,7 +281,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.3: Transform 노드 추가
 
-66. 캔버스 왼쪽 상단의 [[+]] 버튼을 다시 클릭합니다.
+66. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
 67. **Transforms** 탭에서 **Change Schema**를 선택합니다.
 68. 오른쪽 **Transform** 패널에서 다음을 확인합니다:
     - **Node parents**: `AWS Glue Data Catalog`가 자동으로 연결되어 있는지 확인합니다.
@@ -291,7 +301,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.4: Target 노드 추가
 
-70. 캔버스 왼쪽 상단의 [[+]] 버튼을 다시 클릭합니다.
+70. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
 71. **Targets** 탭에서 **Amazon S3**를 선택합니다.
 72. 오른쪽 **Data target properties - S3** 패널에서 다음을 설정합니다:
     - **Format**: `Parquet` 선택
@@ -313,13 +323,18 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 75. 다음을 설정합니다:
     - **Name**: `week11-etl-csv-to-parquet-{StudentId}` 입력
     - **IAM Role**: 태스크 0에서 생성된 Glue 서비스 역할 선택 (Outputs의 `GlueServiceRoleName`)
-    - **Glue version**: `Glue 5.0` 유지 (기본값)
+    - **Glue version**: `Glue 5.0` 또는 `Glue 5.1` (콘솔 기본값 사용)
+
+> [!NOTE]
+> AWS Glue 5.1이 2026년 2월부터 서울 리전에서 사용 가능합니다. 콘솔 기본값이 `Glue 5.0` 또는 `Glue 5.1`로 표시될 수 있으며, 어느 버전이든 이 실습에서는 동일하게 동작합니다.
     - **Language**: `Python 3` 유지 (기본값)
     - **Worker type**: `G 1X` 유지 (기본값)
+    - **Automatically scale the number of workers**: 체크 해제
     - **Requested number of workers**: `2` 입력
 
 > [!NOTE]
-> Worker 수를 2로 설정하면 비용을 절감할 수 있습니다. 이 실습의 데이터 크기에는 2개의 Worker로 충분합니다.
+> **Automatically scale the number of workers**가 활성화되어 있으면 Worker 수를 직접 지정할 수 없습니다.
+> 이 실습에서는 비용 절감을 위해 자동 스케일링을 해제하고 Worker 수를 2로 고정합니다.
 
 76. 아래로 스크롤하여 **Advanced properties**를 펼칩니다.
 77. **Temporary path**에 `s3://week11-temp-{StudentId}-ap-northeast-2/temp/` 를 입력합니다.
@@ -387,19 +402,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 ### 태스크 4.1: Athena 쿼리 결과 위치 설정
 
 88. 상단 검색창에 `Athena`를 입력하고 선택합니다.
-89. Amazon Athena 시작 페이지가 표시되면 **Query your data in Athena console**을 선택합니다.
-90. [[Launch query editor]] 버튼을 클릭합니다.
+89. Amazon Athena 시작 페이지가 표시되면 **Query your data in Athena console** 섹션을 찾아 해당 영역을 클릭합니다.
+90. Query editor가 표시됩니다.
 
 > [!NOTE]
-> 이미 Query editor가 표시되는 경우 이 단계를 건너뜁니다.
+> 이미 Query editor가 표시되는 경우 89단계를 건너뜁니다.
 
-91. 왼쪽 메뉴에서 **Query editor tabs**를 선택합니다.
+91. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
 92. 상단의 **Workgroup** 드롭다운에서 `primary`가 선택되어 있는지 확인합니다.
 
 > [!NOTE]
 > 이 실습에서는 **primary 워크그룹**을 사용합니다. Week 11-2에서는 전용 워크그룹을 생성했지만, 이번 실습에서는 기본 워크그룹의 설정만 변경하여 사용합니다.
 
-93. 상단 메뉴에서 **Query settings**를 선택합니다.
+93. 상단 탭에서 **Query settings**를 선택합니다.
 94. **Query result location**이 설정되어 있지 않으면 [[Manage]] 버튼을 클릭합니다.
 95. **Query result location**에 `s3://week11-temp-{StudentId}-ap-northeast-2/athena-results/`를 입력합니다.
 

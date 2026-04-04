@@ -1,25 +1,28 @@
 ---
-title: '웹 애플리케이션 보안 및 위협 탐지'
+title: 'AWS WAF와 AWS Shield를 활용한 웹 애플리케이션 보안'
 week: 12
 session: 3
 awsServices:
   - AWS WAF
   - AWS Shield
+  - Amazon GuardDuty
+  - AWS Security Hub
 learningObjectives:
-  - AWS WAF의 구성 요소와 동작 방식을 이해하고 Web ACL과 규칙을 설계할 수 있습니다.
+  - AWS WAF의 구성 요소와 동작 방식을 이해하고 Web ACL과 규칙을 구성할 수 있습니다.
   - AWS Shield Standard와 Advanced의 차이를 이해하고 DDoS 방어 아키텍처를 설명할 수 있습니다.
+  - Amazon GuardDuty의 위협 탐지 방식과 AWS Security Hub를 활용한 통합 보안 관리 방법을 설명할 수 있습니다.
 
 prerequisites:
   - Week 4-2 Amazon API Gateway 인증 구성 이해.
   - REST API 기본 개념 이해.
 ---
 
-이 데모에서는 Week 4-2에서 구축한 QuickTable 레스토랑 예약 API를 AWS WAF로 보호합니다. QuickTable 예약 API는 전 세계 사용자가 접근하는 퍼블릭 서비스이므로, SQL Injection, XSS(Cross-Site Scripting), 봇 공격, 과도한 요청 등 다양한 웹 공격에 노출될 수 있습니다. 이 데모에서는 AWS WAF를 사용하여 Amazon API Gateway 앞단에서 악성 요청을 필터링하고, AWS Shield Standard의 자동 DDoS 방어와 함께 다층 방어 아키텍처를 구현합니다.
+이 실습에서는 Week 4-2에서 구축한 QuickTable 레스토랑 예약 API를 AWS WAF로 보호합니다. QuickTable 예약 API는 전 세계 사용자가 접근하는 퍼블릭 서비스이므로, SQL Injection, XSS(Cross-Site Scripting), 봇 공격, 과도한 요청 등 다양한 웹 공격에 노출될 수 있습니다. 이 실습에서는 AWS WAF를 사용하여 Amazon API Gateway 앞단에서 악성 요청을 필터링하고, AWS Shield Standard의 자동 DDoS 방어와 함께 다층 방어 아키텍처를 구현합니다.
 
 > [!NOTE]
-> 이 데모에서는 Amazon API Gateway, AWS Lambda, Amazon DynamoDB 등 사전 인프라가 AWS CloudFormation 템플릿으로 제공됩니다. 학생이 직접 수행하는 것은 AWS WAF Web ACL 생성, 규칙 구성, 공격 시뮬레이션 테스트입니다.
+> 이 실습에서는 Amazon API Gateway, AWS Lambda, Amazon DynamoDB 등 사전 인프라가 AWS CloudFormation 템플릿으로 제공됩니다. 학생이 직접 수행하는 것은 AWS WAF Web ACL 생성, 규칙 구성, 공격 시뮬레이션 테스트입니다.
 >
-> **리전**: 이 데모는 `ap-northeast-2` (서울) 리전에서 진행됩니다.
+> **리전**: 이 실습은 `ap-northeast-2` (서울) 리전에서 진행됩니다.
 
 > [!DOWNLOAD]
 > [week12-3-waf-api-protection.zip](/files/week12/week12-3-waf-api-protection.zip)
@@ -28,14 +31,14 @@ prerequisites:
 >
 > **관련 태스크:**
 >
-> - 태스크 0: 데모 환경 구축 (week12-3-waf-api-protection.yaml 사용)
+> - 태스크 0: 실습 환경 구축 (week12-3-waf-api-protection.yaml 사용)
 
 > [!WARNING]
-> 이 데모에서 생성하는 리소스는 데모 종료 후 반드시 삭제해야 합니다.
+> 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
 
-## 태스크 0: AWS CloudFormation 데모 환경 구축
+## 태스크 0: AWS CloudFormation 실습 환경 구축
 
-이 태스크에서는 AWS CloudFormation을 사용하여 데모에 필요한 서버리스 API 인프라를 자동으로 생성합니다.
+이 태스크에서는 AWS CloudFormation을 사용하여 실습에 필요한 서버리스 API 인프라를 자동으로 생성합니다.
 
 ### 환경 구성 요소
 
@@ -106,7 +109,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!IMPORTANT]
 > 이 출력값은 이후 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
 
-✅ **태스크 완료**: 데모 환경이 준비되었습니다.
+✅ **태스크 완료**: 실습 환경이 준비되었습니다.
 
 ## 태스크 1: Amazon API Gateway 보호 전 취약점 확인
 
@@ -209,7 +212,7 @@ curl -s -X POST $API_URL/reservations \
 > AWS WAF와 AWS Shield는 동일한 콘솔에서 관리됩니다.
 
 > [!WARNING]
-> 2025년 이후 AWS WAF 콘솔이 새 버전(Protection packs)으로 변경되었습니다. 이 데모는 기존 콘솔 기준으로 진행합니다. 새 콘솔("Protection packs (web ACLs)")이 표시되면 왼쪽 메뉴에서 **Switch to the old WAF console**을 클릭하여 기존 콘솔로 전환합니다.
+> 2025년 이후 AWS WAF 콘솔이 새 버전(Protection packs)으로 변경되었습니다. 이 실습은 기존 콘솔 기준으로 진행합니다. 새 콘솔("Protection packs (web ACLs)")이 표시되면 왼쪽 메뉴에서 **Switch to the old WAF console**을 클릭하여 기존 콘솔로 전환합니다.
 
 28. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
 29. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
@@ -337,7 +340,7 @@ curl -s -X POST $API_URL/reservations \
 > [!NOTE]
 > Rate limit 100은 동일 IP에서 5분 동안 100개 이상의 요청이 오면 차단한다는 의미입니다. 2024년 8월부터 최소 10까지 설정 가능합니다. 프로덕션 환경에서는 서비스 특성에 맞게 조정합니다 (예: 일반 웹사이트 2,000, API 서비스 1,000).
 >
-> 이 데모에서는 테스트 편의를 위해 낮은 값(100)을 설정합니다.
+> 이 실습에서는 테스트 편의를 위해 낮은 값(100)을 설정합니다.
 
 56. **IP address to use for rate limiting**에서 `Source IP address`를 선택합니다.
 57. **Action**에서 `Block`을 선택합니다.
@@ -580,7 +583,7 @@ Week 4-2에서 구축한 QuickTable API를 AWS WAF로 보호하여, 인증(Week 
 
 ## 1단계: 생성된 리소스 확인 (Tag Editor)
 
-데모에서 생성한 모든 리소스를 확인합니다.
+실습에서 생성한 모든 리소스를 확인합니다.
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -647,7 +650,7 @@ Week 4-2에서 구축한 QuickTable API를 AWS WAF로 보호하여, 인증(Week 
 28. Tag key: `Week`, Tag value: `12-3`으로 검색합니다.
 29. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 
-✅ **데모 종료**: 모든 리소스가 정리되었습니다.
+✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 📚 참고: AWS WAF 및 AWS Shield 아키텍처
 
@@ -655,11 +658,11 @@ Week 4-2에서 구축한 QuickTable API를 AWS WAF로 보호하여, 인증(Week 
 
 **요청 처리 흐름**:
 
-1. 클라이언트가 API 요청을 전송합니다.
-2. AWS WAF가 Web ACL의 규칙을 우선순위 순서대로 평가합니다.
-3. 규칙에 매칭되면 해당 규칙의 동작(Block/Allow/Count)을 수행합니다.
-4. 어떤 규칙에도 매칭되지 않으면 기본 동작(Default Action)을 수행합니다.
-5. Allow된 요청만 Amazon API Gateway로 전달됩니다.
+30. 클라이언트가 API 요청을 전송합니다.
+31. AWS WAF가 Web ACL의 규칙을 우선순위 순서대로 평가합니다.
+32. 규칙에 매칭되면 해당 규칙의 동작(Block/Allow/Count)을 수행합니다.
+33. 어떤 규칙에도 매칭되지 않으면 기본 동작(Default Action)을 수행합니다.
+34. Allow된 요청만 Amazon API Gateway로 전달됩니다.
 
 **WAF 규칙 유형**:
 
@@ -722,12 +725,12 @@ Week 4-2에서 구축한 QuickTable API를 AWS WAF로 보호하여, 인증(Week 
 
 **QuickTable 보안 아키텍처 전체 흐름**:
 
-1. AWS Shield Standard → L3/L4 DDoS 자동 방어
-2. AWS WAF → SQL Injection, XSS, Rate limiting
-3. Amazon API Gateway → 요청 검증, 스로틀링
-4. Amazon Cognito (Week 4-2) → JWT 토큰 인증
-5. AWS Lambda → 비즈니스 로직 처리
-6. Amazon DynamoDB → 데이터 저장
+35. AWS Shield Standard → L3/L4 DDoS 자동 방어
+36. AWS WAF → SQL Injection, XSS, Rate limiting
+37. Amazon API Gateway → 요청 검증, 스로틀링
+38. Amazon Cognito (Week 4-2) → JWT 토큰 인증
+39. AWS Lambda → 비즈니스 로직 처리
+40. Amazon DynamoDB → 데이터 저장
 
 ### 프로덕션 환경 개선사항
 

@@ -18,7 +18,7 @@
 
 ### Amazon EKS 리소스
 - **EKS 클러스터**: Kubernetes 버전 1.32
-- **노드 그룹**: t3.medium 인스턴스 2개 (기본값)
+- **노드 그룹**: t3.medium 인스턴스 2개 (기본값), Amazon Linux 2023 AMI
 
 ## 파라미터
 

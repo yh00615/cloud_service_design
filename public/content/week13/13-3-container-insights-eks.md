@@ -65,7 +65,7 @@ kind: ClusterConfig
 metadata:
   name: container-insights-cluster
   region: ap-northeast-2
-  version: "1.29"
+  version: "1.32"
   tags:
     Project: AWS-Lab
     Week: "13-3"
@@ -101,7 +101,7 @@ EOF
 ```
 
 > [!NOTE]
-> Amazon EKS 버전 1.29를 사용합니다. 버전 1.28은 2024년 11월에 지원이 종료되었습니다.
+> Amazon EKS 버전 1.32를 사용합니다. 사용 가능한 최신 버전은 [Amazon EKS 문서](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)에서 확인할 수 있습니다.
 > CloudWatchAgentServerPolicy를 노드 그룹에 추가하여 Amazon CloudWatch Container Insights 메트릭 수집 권한을 부여합니다.
 
 5. 파일 내용을 확인합니다:
@@ -159,8 +159,8 @@ kubectl get nodes
 >
 > ```text
 > NAME                                               STATUS   ROLES    AGE   VERSION
-> ip-192-168-1-10.ap-northeast-2.compute.internal   Ready    <none>   5m    v1.29.0-eks-5e0fdde
-> ip-192-168-2-20.ap-northeast-2.compute.internal   Ready    <none>   5m    v1.29.0-eks-5e0fdde
+> ip-192-168-1-10.ap-northeast-2.compute.internal   Ready    <none>   5m    v1.32.0-eks-5e0fdde
+> ip-192-168-2-20.ap-northeast-2.compute.internal   Ready    <none>   5m    v1.32.0-eks-5e0fdde
 > ```
 
 ✅ **태스크 완료**: Amazon EKS 클러스터가 생성되었습니다.
@@ -1103,10 +1103,10 @@ kubectl autoscale deployment my-app \
 
 **HPA 동작 원리**:
 
-60. Metrics Server가 Pod CPU/메모리 사용률 수집.
-61. HPA가 목표 사용률과 현재 사용률 비교.
-62. 필요 시 Pod 수를 자동으로 증가/감소.
-63. 스케일링 쿨다운 기간 적용 (기본 5분).
+- Metrics Server가 Pod CPU/메모리 사용률 수집.
+- HPA가 목표 사용률과 현재 사용률 비교.
+- 필요 시 Pod 수를 자동으로 증가/감소.
+- 스케일링 쿨다운 기간 적용 (기본 5분).
 
 **Vertical Pod Autoscaler (VPA)**:
 
@@ -1148,10 +1148,10 @@ kubectl autoscale deployment my-app \
 
 **비용 절감 방법**:
 
-64. **로그 필터링**: 불필요한 로그 수집 제외.
-65. **보관 기간 설정**: 오래된 로그 자동 삭제.
-66. **로그 샘플링**: 모든 로그 대신 샘플만 수집.
-67. **메트릭 해상도**: 1분 대신 5분 간격 사용.
+- **로그 필터링**: 불필요한 로그 수집 제외.
+- **보관 기간 설정**: 오래된 로그 자동 삭제.
+- **로그 샘플링**: 모든 로그 대신 샘플만 수집.
+- **메트릭 해상도**: 1분 대신 5분 간격 사용.
 
 **Container Insights 비용**:
 
@@ -1189,26 +1189,26 @@ kubectl autoscale deployment my-app \
 
 **메트릭이 표시되지 않는 경우**:
 
-68. Amazon CloudWatch 에이전트 Pod 상태 확인.
-69. AWS IAM 역할 권한 확인.
-70. 로그 그룹 생성 확인.
-71. 5-10분 대기 후 재확인.
+- Amazon CloudWatch 에이전트 Pod 상태 확인.
+- AWS IAM 역할 권한 확인.
+- 로그 그룹 생성 확인.
+- 5-10분 대기 후 재확인.
 
 **로그가 수집되지 않는 경우**:
 
-72. Fluent Bit Pod 상태 확인.
-73. ConfigMap 설정 확인.
-74. 로그 그룹 권한 확인.
+- Fluent Bit Pod 상태 확인.
+- ConfigMap 설정 확인.
+- 로그 그룹 권한 확인.
 
 **높은 CPU/메모리 사용률**:
 
-75. 리소스 제한 증가.
-76. HPA로 자동 스케일링.
-77. 애플리케이션 최적화.
-78. 노드 타입 업그레이드.
+- 리소스 제한 증가.
+- HPA로 자동 스케일링.
+- 애플리케이션 최적화.
+- 노드 타입 업그레이드.
 
 **Pod OOMKilled**:
 
-79. 메모리 제한 증가.
-80. 메모리 누수 확인.
-81. 애플리케이션 프로파일링.
+- 메모리 제한 증가.
+- 메모리 누수 확인.
+- 애플리케이션 프로파일링.

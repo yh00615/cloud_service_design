@@ -2,23 +2,38 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "AllowS3DuringBusinessHours",
+      "Sid": "AllowDuringSpecificPeriod",
       "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::YOUR_BUCKET_NAME",
-        "arn:aws:s3:::YOUR_BUCKET_NAME/*"
-      ],
+      "Action": "s3:*",
+      "Resource": "*",
       "Condition": {
         "DateGreaterThan": {
-          "aws:CurrentTime": "2024-01-01T09:00:00Z"
+          "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
         },
         "DateLessThan": {
-          "aws:CurrentTime": "2024-12-31T18:00:00Z"
+          "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
+        }
+      }
+    },
+    {
+      "Sid": "DenyOutsideSpecificPeriod",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "DateLessThan": {
+          "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "Sid": "DenyAfterSpecificPeriod",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "DateGreaterThan": {
+          "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
         }
       }
     }

@@ -1,5 +1,5 @@
 ---
-title: "AWS Infrastructure Composer를 활용한 서버리스 템플릿 설계"
+title: 'AWS Infrastructure Composer를 활용한 서버리스 템플릿 설계'
 week: 6
 session: 3
 awsServices:
@@ -519,8 +519,8 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 ## 추가 학습 리소스
 
 - [AWS Application Composer 사용 설명서](https://docs.aws.amazon.com/ko_kr/application-composer/latest/dg/what-is-composer.html)
-- [Infrastructure Composer로 인프라 설계](https://docs.aws.amazon.com/ko_kr/application-composer/latest/dg/infrastructure-composer.html)
-- [AWS CloudFormation 템플릿 자동 생성](https://docs.aws.amazon.com/ko_kr/application-composer/latest/dg/template-generation.html)
+- [Infrastructure Composer로 인프라 설계](https://docs.aws.amazon.com/infrastructure-composer/latest/dg/using-composer-basics.html)
+- [AWS CloudFormation 템플릿 자동 생성](https://docs.aws.amazon.com/infrastructure-composer/latest/dg/getting-started-build.html)
 
 ## 📚 참고: 코드 vs 하이브리드 비교
 
@@ -551,11 +551,11 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 - **AWS IAM**: AWS Lambda 함수가 Amazon DynamoDB에 접근할 수 있도록 권한을 부여합니다
 
 **데이터 흐름**:
-13. 클라이언트가 Amazon API Gateway 엔드포인트로 HTTP 요청을 보냅니다.
-14. Amazon API Gateway가 AWS Lambda 함수를 호출합니다.
-15. AWS Lambda 함수가 Amazon DynamoDB 테이블에서 데이터를 조회하거나 생성합니다.
-16. AWS Lambda 함수가 결과를 Amazon API Gateway로 반환합니다.
-17. Amazon API Gateway가 HTTP 응답을 클라이언트에게 전달합니다.
+- 클라이언트가 Amazon API Gateway 엔드포인트로 HTTP 요청을 보냅니다.
+- Amazon API Gateway가 AWS Lambda 함수를 호출합니다.
+- AWS Lambda 함수가 Amazon DynamoDB 테이블에서 데이터를 조회하거나 생성합니다.
+- AWS Lambda 함수가 결과를 Amazon API Gateway로 반환합니다.
+- Amazon API Gateway가 HTTP 응답을 클라이언트에게 전달합니다.
 
 ### Infrastructure Composer의 장점
 
@@ -631,10 +631,10 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 ### 하이브리드 접근 방식
 
 **최적의 워크플로우**:
-18. Infrastructure Composer로 초기 서버리스 아키텍처 설계.
-19. 자동 생성된 템플릿을 다운로드.
-20. 코드 에디터에서 세밀한 조정 (AWS Lambda 코드, AWS IAM 정책 등).
-21. Git에 저장하고 버전 관리.
-22. CI/CD 파이프라인으로 배포.
+- Infrastructure Composer로 초기 서버리스 아키텍처 설계.
+- 자동 생성된 템플릿을 다운로드.
+- 코드 에디터에서 세밀한 조정 (AWS Lambda 코드, AWS IAM 정책 등).
+- Git에 저장하고 버전 관리.
+- CI/CD 파이프라인으로 배포.
 
 이 방식은 두 접근 방식의 장점을 모두 활용할 수 있습니다.

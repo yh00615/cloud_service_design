@@ -1,5 +1,5 @@
 ---
-title: "kubectl을 활용한 Amazon EKS 클러스터 운영"
+title: 'kubectl을 활용한 Amazon EKS 클러스터 운영'
 week: 7
 session: 3
 awsServices:
@@ -41,6 +41,13 @@ prerequisites:
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 **즉시 삭제**해야 합니다.
 
+> [!COST]
+> **Kubernetes 1.32 Extended Support 비용 안내**: Kubernetes 1.32는 2026년 3월 21일부터 Extended Support에 진입했습니다.
+> Extended Support 기간에는 클러스터 비용이 시간당 $0.10에서 **$0.60으로 6배 증가**합니다.
+> 실습 시간(1-2시간) 동안 약 $0.50-$1.00의 추가 비용이 발생할 수 있습니다.
+> 추가 비용을 피하려면 `week7-3-eks-lab.yaml` 파일에서 Kubernetes 버전을 Standard Support 버전(예: `1.33` 이상)으로 변경합니다.
+> 지원 버전 확인 방법은 📚 참고 섹션의 "Kubernetes 버전 지원 정책"을 참조합니다.
+
 > [!TIP]
 > **실습 시간 최적화**: 태스크 0의 AWS CloudFormation 스택 생성에 20-30분이 소요됩니다.
 > 수업 시작 전 사전 과제로 태스크 0을 미리 수행하면 실습 시간을 효율적으로 활용할 수 있습니다.
@@ -56,7 +63,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 - **Amazon VPC 및 네트워크**: Amazon VPC, 퍼블릭 서브넷 2개, 인터넷 게이트웨이, 라우팅 테이블
 - **AWS IAM 역할**: Amazon EKS 클러스터 역할 (AmazonEKSClusterPolicy), 워커 노드 역할 (AmazonEKSWorkerNodePolicy, AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy)
 - **Amazon EKS 클러스터**: Kubernetes 버전 1.32, Public 엔드포인트
-- **노드 그룹**: t3.medium 인스턴스 2개, Amazon Linux 2 AMI
+- **노드 그룹**: t3.medium 인스턴스 2개, Amazon Linux 2023 AMI
 
 > [!WARNING]
 > **보안 주의**: 이 실습에서는 간소화를 위해 퍼블릭 서브넷만 사용합니다.
@@ -442,7 +449,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.21
+        image: nginx:1.25
         ports:
         - containerPort: 80
   strategy:
@@ -1048,7 +1055,7 @@ kubectl delete deployment nginx-app
 - [Amazon EKS 사용 설명서](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/)
 - [Kubernetes 공식 문서](https://kubernetes.io/docs/home/)
 - [kubectl 치트 시트](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
-- [Amazon EKS 모범 사례 가이드](https://aws.github.io/aws-eks-best-practices/)
+- [Amazon EKS 모범 사례 가이드](https://docs.aws.amazon.com/eks/latest/best-practices/introduction.html)
 
 ## 📚 참고: Amazon EKS 및 Kubernetes 핵심 개념
 
@@ -1082,10 +1089,10 @@ aws eks describe-cluster-versions --query 'clusterVersions[?status==`STANDARD_SU
 
 **템플릿 수정 방법:**
 
-27. `week7-3-eks-lab.yaml` 파일을 텍스트 에디터로 엽니다.
-28. `KubernetesVersion: '1.32'` 줄을 찾습니다.
-29. 지원되는 최신 버전으로 변경합니다 (예: `KubernetesVersion: '1.33'` 또는 `'1.34'`).
-30. 파일을 저장하고 AWS CloudFormation 스택을 생성합니다.
+- `week7-3-eks-lab.yaml` 파일을 텍스트 에디터로 엽니다.
+- `KubernetesVersion: '1.32'` 줄을 찾습니다.
+- 지원되는 최신 버전으로 변경합니다 (예: `KubernetesVersion: '1.33'` 또는 `'1.34'`).
+- 파일을 저장하고 AWS CloudFormation 스택을 생성합니다.
 
 ### kubectl 수동 설치 방법
 
@@ -1168,9 +1175,9 @@ kubectl version --client
 - 무중단 배포(Zero-downtime deployment) 구현
 
 **동작 방식:**
-31. 새 버전의 Pod를 하나씩 생성합니다.
-32. 새 Pod가 Ready 상태가 되면 기존 Pod를 하나씩 종료합니다.
-33. 모든 Pod가 새 버전으로 교체될 때까지 반복합니다.
+- 새 버전의 Pod를 하나씩 생성합니다.
+- 새 Pod가 Ready 상태가 되면 기존 Pod를 하나씩 종료합니다.
+- 모든 Pod가 새 버전으로 교체될 때까지 반복합니다.
 
 **롤링 업데이트 전략 설정:**
 ```yaml
@@ -1280,8 +1287,8 @@ kubectl delete pod <pod-name>                     # Pod 삭제
 AWS에서는 Classic Load Balancer를 레거시로 분류하고, Application Load Balancer(ALB) 또는 Network Load Balancer(NLB) 사용을 권장합니다.
 
 **AWS Load Balancer Controller 사용:**
-34. AWS Load Balancer Controller를 클러스터에 설치합니다.
-35. Ingress 리소스(ALB) 또는 Service 어노테이션(NLB)을 사용합니다.
+- AWS Load Balancer Controller를 클러스터에 설치합니다.
+- Ingress 리소스(ALB) 또는 Service 어노테이션(NLB)을 사용합니다.
 
 **ALB 사용 예시 (Ingress):**
 ```yaml
@@ -1419,7 +1426,7 @@ phases:
 - **Week 10-3**: Amazon CloudFront로 글로벌 배포 (성능 최적화)
 
 **실전 프로젝트 흐름**:
-36. Amazon EKS 클러스터 이해 (Week 7-3).
-37. 컨테이너 이미지 빌드 자동화 (Week 9-2).
-38. 웹사이트 배포 자동화 (Week 9-3).
-39. CDN으로 성능 최적화 (Week 10-3).
+- Amazon EKS 클러스터 이해 (Week 7-3).
+- 컨테이너 이미지 빌드 자동화 (Week 9-2).
+- 웹사이트 배포 자동화 (Week 9-3).
+- CDN으로 성능 최적화 (Week 10-3).

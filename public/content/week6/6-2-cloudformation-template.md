@@ -1,5 +1,5 @@
 ---
-title: "AWS CloudFormation 템플릿 분석 및 스택 배포"
+title: 'AWS CloudFormation 템플릿 분석 및 스택 배포'
 week: 6
 session: 2
 awsServices:
@@ -587,7 +587,8 @@ Outputs:
 8. AWS CloudFormation 콘솔로 이동합니다.
 9. `lab-vpc-stack`을 선택합니다.
 10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+11. 확인 창에서 스택 이름 `lab-vpc-stack`을 입력합니다.
+12. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation이 모든 리소스를 자동으로 삭제합니다.

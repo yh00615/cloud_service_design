@@ -24,7 +24,6 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 > [week3-1-vpc-lab.zip](/files/week3/week3-1-vpc-lab.zip)
 >
 > - `week3-1-vpc-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 VPC, 서브넷, IGW, NAT Gateway, EC2 자동 생성)
-> - `week3-vpc-base.yaml` - VPC 기본 환경 템플릿 (참고용)
 >
 > **관련 태스크:**
 >
@@ -349,8 +348,6 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 ## 태스크 5: Amazon VPC Endpoint 동작 검증
 
 이 태스크에서는 Amazon VPC Endpoint만으로 Amazon S3에 접근할 수 있는지 실제로 검증합니다. NAT Gateway 경로를 일시적으로 제거하여 Amazon VPC Endpoint를 통한 Amazon S3 접근을 증명합니다.
-
-### 태스크 5.1: 현재 상태 확인 (NAT Gateway + Amazon VPC Endpoint)
 
 ### 태스크 5.1: 현재 상태 확인 (NAT Gateway + Amazon VPC Endpoint)
 

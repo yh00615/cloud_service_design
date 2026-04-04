@@ -1,5 +1,5 @@
 ---
-title: "AWS CloudFormation 스택 생명주기 관리"
+title: 'AWS CloudFormation 스택 생명주기 관리'
 week: 6
 session: 1
 awsServices:
@@ -62,15 +62,13 @@ prerequisites:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Week 6-1: Simple S3 Bucket Stack - CloudFormation CREATE Lifecycle'
+Description: 'Simple Amazon S3 bucket for AWS CloudFormation demo - CREATE lifecycle'
 
 Parameters:
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
-    Description: S3 bucket name prefix
-    AllowedPattern: ^[a-z0-9-]*$
-    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
+    Description: Amazon S3 bucket name prefix
 
 Resources:
   DemoBucket:
@@ -80,8 +78,11 @@ Resources:
 
 Outputs:
   BucketName:
-    Description: Name of the S3 bucket
+    Description: Name of the Amazon S3 bucket
     Value: !Ref DemoBucket
+  BucketArn:
+    Description: ARN of the Amazon S3 bucket
+    Value: !GetAtt DemoBucket.Arn
 ```
 
 4. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
@@ -157,30 +158,13 @@ Outputs:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Week 6-1: S3 Bucket with Tags - CloudFormation UPDATE Lifecycle'
+Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
 
 Parameters:
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
-    Description: S3 bucket name prefix
-    AllowedPattern: ^[a-z0-9-]*$
-    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed
-
-  ProjectTag:
-    Type: String
-    Default: 'AWS-Lab'
-    Description: Project tag value
-
-  WeekTag:
-    Type: String
-    Default: '6-1'
-    Description: Week tag value
-
-  CreatedByTag:
-    Type: String
-    Default: 'CloudFormation'
-    Description: CreatedBy tag value
+    Description: Amazon S3 bucket name prefix
 
 Resources:
   DemoBucket:
@@ -191,21 +175,25 @@ Resources:
         - Key: Name
           Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
         - Key: Project
-          Value: !Ref ProjectTag
+          Value: AWS-Lab
         - Key: Week
-          Value: !Ref WeekTag
+          Value: '6-1'
         - Key: CreatedBy
-          Value: !Ref CreatedByTag
+          Value: CloudFormation
 
 Outputs:
   BucketName:
-    Description: Name of the S3 bucket
+    Description: Name of the Amazon S3 bucket
     Value: !Ref DemoBucket
+  BucketArn:
+    Description: ARN of the Amazon S3 bucket
+    Value: !GetAtt DemoBucket.Arn
 ```
 
 > [!NOTE]
-> 이 템플릿은 태스크 1에서 콘솔로 수동 추가한 태그들을 템플릿 코드에 반영한 버전입니다.
+> 이 템플릿은 태스크 1에서 콘솔로 수동 추가한 태그들을 템플릿 코드에 직접 작성한 버전입니다.
 > 수동으로 관리하던 태그를 Infrastructure as Code 방식으로 전환하여 버전 관리와 재사용이 가능하도록 개선합니다.
+> 태그 값이 하드코딩되어 있어 간단하지만, 파라미터로 분리하면 재사용성을 더 높일 수 있습니다.
 > 
 > 버킷 이름은 동일하므로 기존 버킷이 수정됩니다.
 
@@ -228,9 +216,6 @@ Outputs:
 37. **Changeset name**에 `update-tags-changeset`을 입력합니다 (또는 자동 생성된 이름 사용).
 38. **Parameters** 섹션에서 기본값을 확인합니다:
     - **BucketPrefix**: `cfn-demo-bucket`
-    - **ProjectTag**: `AWS-Lab`
-    - **WeekTag**: `6-1`
-    - **CreatedByTag**: `CloudFormation`
 39. [[Next]] 버튼을 클릭합니다.
 40. **Configure change set options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
 41. **Review change set** 페이지에서 설정을 확인합니다.
@@ -319,7 +304,7 @@ Outputs:
 
 > [!NOTE]
 > 태스크 1에서는 콘솔에서 수동으로 스택 태그 3개(Project, Week, CreatedBy)를 추가했습니다.
-> 태스크 2에서는 이 태그들을 YAML 파일 코드에 작성하여 Infrastructure as Code 방식으로 전환했습니다.
+> 태스크 2에서는 이 태그들을 YAML 파일 코드에 직접 작성하여 Infrastructure as Code 방식으로 전환했습니다.
 > 
 > 이제 태그가 YAML 파일에 코드로 작성되어 있으므로 버전 관리가 가능하고, 동일한 파일로 여러 환경에 재사용할 수 있습니다.
 
@@ -425,28 +410,28 @@ Outputs:
 > Amazon S3 버킷에 파일이 있으면 AWS CloudFormation 스택 삭제가 실패합니다.
 > 버킷에 파일을 업로드한 경우에만 다음 단계를 수행합니다.
 
-79. Amazon S3 콘솔로 이동합니다.
-80. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-81. [[Empty]] 버튼을 클릭합니다.
-82. 확인 창에서 `permanently delete`를 입력합니다.
-83. [[Empty]] 버튼을 클릭합니다.
+1. Amazon S3 콘솔로 이동합니다.
+2. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+3. [[Empty]] 버튼을 클릭합니다.
+4. 확인 창에서 `permanently delete`를 입력합니다.
+5. [[Empty]] 버튼을 클릭합니다.
 
 ### 2단계: AWS CloudFormation 스택 삭제
 
-84. AWS CloudFormation 콘솔로 이동합니다.
-85. `demo-s3-stack`을 선택합니다.
-86. [[Delete stack]] 버튼을 클릭합니다.
-87. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
-88. [[Delete stack]] 버튼을 클릭합니다.
-89. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-90. 스택 삭제가 완료될 때까지 기다립니다.
+6. AWS CloudFormation 콘솔로 이동합니다.
+7. `demo-s3-stack`을 선택합니다.
+8. [[Delete stack]] 버튼을 클릭합니다.
+9. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+10. [[Delete stack]] 버튼을 클릭합니다.
+11. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+12. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-91. 페이지를 새로고침합니다.
-92. 스택이 목록에서 사라졌는지 확인합니다.
+13. 페이지를 새로고침합니다.
+14. 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
@@ -454,8 +439,8 @@ Outputs:
 
 ### 3단계: 리소스 삭제 확인
 
-88. Amazon S3 콘솔로 이동합니다.
-89. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+15. Amazon S3 콘솔로 이동합니다.
+16. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
 
 > [!TIP]
 > AWS CloudFormation 스택을 삭제하면 스택이 생성한 모든 리소스(Amazon S3 버킷)가 자동으로 삭제됩니다.

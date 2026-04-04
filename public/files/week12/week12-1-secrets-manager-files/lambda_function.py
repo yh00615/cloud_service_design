@@ -1,6 +1,6 @@
 import json
 import boto3
-import pymysql
+import mysql.connector
 import os
 from botocore.exceptions import ClientError
 
@@ -54,20 +54,20 @@ def lambda_handler(event, context):
         db_user = db_credentials['username']
         db_password = db_credentials['password']
         
-        connection = pymysql.connect(
+        connection = mysql.connector.connect(
             host=db_host,
             port=db_port,
             user=db_user,
             password=db_password,
-            connect_timeout=5
+            connection_timeout=5
         )
         
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT VERSION()")
-            db_version = cursor.fetchone()[0]
-            cursor.execute("SELECT DATABASE()")
-            current_db = cursor.fetchone()[0]
-        
+        cursor = connection.cursor()
+        cursor.execute("SELECT VERSION()")
+        db_version = cursor.fetchone()[0]
+        cursor.execute("SELECT DATABASE()")
+        current_db = cursor.fetchone()[0]
+        cursor.close()
         connection.close()
         
         results['database_connection'] = {
@@ -92,7 +92,7 @@ def lambda_handler(event, context):
                 'message': str(e)
             })
         }
-    except pymysql.MySQLError as e:
+    except mysql.connector.Error as e:
         return {
             'statusCode': 500,
             'body': json.dumps({

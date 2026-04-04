@@ -32,6 +32,10 @@ AWS CloudFormation이 Amazon S3 버킷과 샘플 데이터를 자동으로 준�
 > - `week11-2-datalake-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon S3 버킷 3개, AWS IAM 역할, 샘플 데이터 자동 업로드)
 > - `sales.csv` - 매출 샘플 데이터 (참고용)
 > - `customers.json` - 고객 샘플 데이터 (참고용)
+>
+> **관련 태스크:**
+>
+> - 태스크 0: 실습 환경 구축 (AWS CloudFormation 템플릿으로 Amazon S3 버킷, AWS IAM 역할, 샘플 데이터 자동 생성)
 
 ## 태스크 0: Amazon S3 데이터 레이크 환경 구축
 
@@ -363,17 +367,17 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 ### 태스크 4.1: Amazon Athena Workgroup 생성
 
 65. AWS Management Console에 로그인한 후 상단 검색창에 `Athena`를 입력하고 선택합니다.
-66. Amazon Athena 시작 페이지가 표시되면 **Query your data in Athena console**을 선택합니다.
-67. [[Launch query editor]] 버튼을 클릭합니다.
+66. Amazon Athena 시작 페이지가 표시됩니다.
+67. 왼쪽 메뉴에서 **Query editor**를 클릭합니다.
 
 > [!NOTE]
-> Amazon Athena 시작 페이지에는 두 가지 옵션이 라디오 버튼으로 표시됩니다:
+> Amazon Athena 시작 페이지에는 두 가지 옵션이 표시됩니다:
 >
-> - **Query your data in Amazon SageMaker Unified Studio**: SageMaker 통합 환경
+> - **Query your data in Amazon SageMaker Unified Studio**: SageMaker 통합 환경 (이 실습에서는 사용하지 않음)
 > - **Query your data in Athena console**: Athena 콘솔 Query editor (이 실습에서 사용)
 >
-> 두 번째 옵션을 선택하면 버튼이 **Launch query editor**로 변경됩니다.
-> 이미 Athena 콘솔을 사용한 적이 있으면 시작 페이지가 표시되지 않을 수 있습니다.
+> 왼쪽 메뉴에서 **Query editor**를 직접 클릭하면 바로 쿼리 편집기로 이동합니다.
+> 이미 Athena 콘솔을 사용한 적이 있으면 시작 페이지가 표시되지 않고 바로 Query editor가 열릴 수 있습니다.
 
 68. 왼쪽 메뉴에서 **Administration** > **Workgroups**를 선택합니다.
 69. [[Create workgroup]] 버튼을 클릭합니다.
@@ -412,7 +416,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 4.2: 기본 쿼리 실행
 
-78. 왼쪽 메뉴에서 **Query editor tabs**를 선택합니다.
+78. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
 
 > [!WARNING]
 > **Workgroup 변경 전 주의사항**:

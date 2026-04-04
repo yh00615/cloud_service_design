@@ -82,9 +82,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 스택 생성에 5-7분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-17. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-18. **Outputs** 탭을 선택합니다.
-19. 출력값들을 확인하고 메모장에 복사합니다:
+18. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+19. **Outputs** 탭을 선택합니다.
+20. 출력값들을 확인하고 메모장에 복사합니다:
     - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
     - `PrivateSubnetAId`: 프라이빗 서브넷 A ID (ap-northeast-2a)
     - `PrivateSubnetCId`: 프라이빗 서브넷 C ID (ap-northeast-2c)
@@ -102,13 +102,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 엔진 및 템플릿 선택
 
-20. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
-21. 상단 검색창에 `RDS`을 입력하고 선택합니다.
-22. 왼쪽 메뉴에서 **Databases**를 선택합니다.
-23. [[Create database]] 버튼을 클릭합니다.
-24. **Engine type**에서 `MySQL`을 선택합니다.
-25. **Engine version**에서 콘솔에서 기본 선택되는 MySQL 버전을 사용합니다.
-26. **Templates**에서 `Dev/Test`를 선택합니다.
+21. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
+22. 상단 검색창에 `RDS`을 입력하고 선택합니다.
+23. 왼쪽 메뉴에서 **Databases**를 선택합니다.
+24. [[Create database]] 버튼을 클릭합니다.
+25. **Engine type**에서 `MySQL`을 선택합니다.
+26. **Engine version**에서 콘솔에서 기본 선택되는 MySQL 버전을 사용합니다.
+27. **Templates**에서 `Dev/Test`를 선택합니다.
 
 > [!IMPORTANT]
 > **무료 플랜(Free tier)은 Multi-AZ 배포를 지원하지 않습니다.**  
@@ -117,8 +117,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 가용성 및 내구성 설정
 
-27. **Availability and durability** 섹션에서 **Deployment options**를 확인합니다.
-28. `Multi-AZ DB instance deployment (2 instances)`를 선택합니다.
+28. **Availability and durability** 섹션에서 **Deployment options**를 확인합니다.
+29. `Multi-AZ DB instance deployment (2 instances)`를 선택합니다.
 
 > [!NOTE]
 > Multi-AZ DB instance deployment는 Primary 인스턴스와 읽기 불가능한 Standby 인스턴스를 서로 다른 가용 영역에 생성합니다.
@@ -126,60 +126,60 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 기본 설정
 
-29. **DB instance identifier**에 `mysql-lab-instance`를 입력합니다.
-30. **Credentials Settings** 섹션에서 **Master username**에 `admin`을 입력합니다.
-31. **Credentials management**에서 `Self managed`를 선택합니다.
-32. **Master password**에 `MyPassword123!`을 입력합니다.
-33. **Confirm password**에 `MyPassword123!`을 입력합니다.
+30. **DB instance identifier**에 `mysql-lab-instance`를 입력합니다.
+31. **Credentials Settings** 섹션에서 **Master username**에 `admin`을 입력합니다.
+32. **Credentials management**에서 `Self managed`를 선택합니다.
+33. **Master password**에 `MyPassword123!`을 입력합니다.
+34. **Confirm password**에 `MyPassword123!`을 입력합니다.
 
 > [!WARNING]
 > 이 실습에서는 학습 목적으로 간단한 비밀번호를 사용합니다. 프로덕션 환경에서는 강력한 비밀번호 정책을 적용하고, AWS Secrets Manager를 사용하여 데이터베이스 자격 증명을 안전하게 관리합니다.
 
 ### 인스턴스 구성 및 스토리지 설정
 
-34. **DB instance class**에서 `Burstable classes` - `db.t3.small`을 선택합니다.
+35. **DB instance class**에서 `Burstable classes` - `db.t3.small`을 선택합니다.
 
 > [!IMPORTANT]
 > **db.t3.micro는 대부분의 리전에서 Multi-AZ를 지원하지 않습니다.**
 > Multi-AZ 배포를 위해서는 `db.t3.small` 이상의 인스턴스 클래스를 선택해야 합니다.
 
-35. **Storage type**에서 `General Purpose SSD (gp3)`를 선택합니다.
-36. **Allocated storage**에 기본값 `200`이 표시됩니다. 이를 `20` GiB로 수정합니다.
+36. **Storage type**에서 `General Purpose SSD (gp3)`를 선택합니다.
+37. **Allocated storage**에 기본값 `200`이 표시됩니다. 이를 `20` GiB로 수정합니다.
 
 > [!TIP]
 > 기본값은 200 GiB이지만, 실습 비용 절감을 위해 20 GiB로 변경합니다.
 > 20 GiB로 설정하면 Provisioned IOPS와 Storage throughput은 기본값(Baseline)으로 자동 설정됩니다.
 
-36. **Additional storage configuration** 섹션을 확장합니다.
-37. ▢ **Enable storage autoscaling**을 체크 해제합니다.
+38. **Additional storage configuration** 섹션을 확장합니다.
+39. ▢ **Enable storage autoscaling**을 체크 해제합니다.
 
 ### 네트워크 설정
 
-38. **Compute resource** 섹션에서 `Don't connect to an EC2 compute resource`를 선택합니다.
+40. **Compute resource** 섹션에서 `Don't connect to an EC2 compute resource`를 선택합니다.
 
 > [!NOTE]
 > 이 실습에서는 EC2 인스턴스와의 자동 연결 설정을 사용하지 않고, VPC와 보안 그룹을 수동으로 구성합니다.
 > EC2 자동 연결을 선택하면 AWS가 네트워크 설정을 자동으로 구성하지만, 학습 목적으로 각 설정을 직접 구성합니다.
 
-39. **Virtual private cloud (Amazon VPC)**에서 태스크 0에서 생성한 Amazon VPC를 선택합니다 (week5-1-rds-VPC).
-40. **DB subnet group**에서 태스크 0에서 생성한 서브넷 그룹을 선택합니다 (week5-1-rds-db-subnet-group).
-41. **Public access**에서 `No`를 선택합니다.
-42. **VPC security group**에서 `Choose existing`을 선택합니다.
-43. 기본(default) 보안 그룹의 [[X]] 버튼을 클릭하여 제거합니다.
+41. **Virtual private cloud (Amazon VPC)**에서 태스크 0에서 생성한 Amazon VPC를 선택합니다 (week5-1-rds-VPC).
+42. **DB subnet group**에서 태스크 0에서 생성한 서브넷 그룹을 선택합니다 (week5-1-rds-db-subnet-group).
+43. **Public access**에서 `No`를 선택합니다.
+44. **VPC security group**에서 `Choose existing`을 선택합니다.
+45. 기본(default) 보안 그룹의 [[X]] 버튼을 클릭하여 제거합니다.
 
 > [!NOTE]
 > VPC를 선택하면 기본(default) 보안 그룹이 자동으로 선택됩니다.
 > RDS 인스턴스가 올바르게 작동하려면 default 보안 그룹을 제거하고 태스크 0에서 생성한 RDS 전용 보안 그룹을 선택해야 합니다.
 
-44. 태스크 0에서 생성한 Amazon RDS 보안 그룹을 선택합니다 (week5-1-rds-RDS-SG).
+46. 태스크 0에서 생성한 Amazon RDS 보안 그룹을 선택합니다 (week5-1-rds-RDS-SG).
 
 > [!NOTE]
 > Single-AZ 배포에서는 Availability Zone을 직접 선택할 수 있지만, Multi-AZ deployment를 선택하면 AWS가 Primary와 Standby를 자동으로 서로 다른 AZ에 배치하므로 해당 선택 옵션이 표시되지 않습니다.
 
 ### 태그 및 모니터링 설정
 
-45. 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-46. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+47. 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
+48. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -187,28 +187,28 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `5-1`     |
 | `CreatedBy` | `Student` |
 
-47. 아래로 스크롤하여 **Monitoring** 섹션을 확인합니다.
-48. ▢ **Enable Enhanced monitoring**을 체크 해제합니다 (비용 절감).
+49. 아래로 스크롤하여 **Monitoring** 섹션을 확인합니다.
+50. ▢ **Enable Enhanced monitoring**을 체크 해제합니다 (비용 절감).
 
 ### 추가 설정 및 생성
 
-49. **Additional configuration** 섹션을 확장합니다.
-50. **Initial database name**에 `labdb`를 입력합니다.
-51. ☑️ **Enable automated backups**를 체크합니다.
+51. **Additional configuration** 섹션을 확장합니다.
+52. **Initial database name**에 `labdb`를 입력합니다.
+53. ☑️ **Enable automated backups**를 체크합니다.
 
 > [!IMPORTANT]
 > **자동 백업은 Read Replica 생성의 필수 조건입니다.**
 > Read Replica는 자동 백업이 활성화된 경우에만 생성할 수 있습니다.
 > 이 설정을 체크하지 않으면 태스크 4에서 Read Replica를 생성할 수 없습니다.
 
-52. **Backup retention period**에서 `7` days를 선택합니다.
+54. **Backup retention period**에서 `7` days를 선택합니다.
 
 > [!WARNING]
 > 백업 보존 기간이 7일로 설정되면 최대 7개의 자동 백업이 보관되어 스토리지 비용이 발생합니다.
 > **실습 종료 후 반드시 모든 RDS 리소스를 삭제하여 백업 스토리지 비용이 누적되지 않도록 합니다.**
 
-53. ▢ **Deletion protection**을 체크 해제합니다.
-54. [[Create database]] 버튼을 클릭합니다.
+55. ▢ **Deletion protection**을 체크 해제합니다.
+56. [[Create database]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon RDS 인스턴스 생성에 약 10-15분이 소요됩니다. 상태가 "Available"로 변경될 때까지 기다립니다.
@@ -220,15 +220,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 생성된 Amazon RDS 인스턴스의 연결 정보와 Multi-AZ 구성을 확인합니다.
 
-55. Amazon RDS 콘솔에서 생성된 `mysql-lab-instance`를 선택합니다.
-56. **Connectivity & security** 탭을 선택합니다.
-57. **Endpoints** 버튼을 클릭하여 연결 정보를 확인합니다.
-58. 다음 정보를 확인하고 메모장에 복사합니다:
+57. Amazon RDS 콘솔에서 생성된 `mysql-lab-instance`를 선택합니다.
+58. **Connectivity & security** 탭을 선택합니다.
+59. **Endpoints** 버튼을 클릭하여 연결 정보를 확인합니다.
+60. 다음 정보를 확인하고 메모장에 복사합니다:
     - **Endpoint**: 데이터베이스 연결 주소
     - **Port**: `3306`
 
-59. **Configuration** 탭을 선택합니다.
-60. 다음 정보를 확인합니다:
+61. **Configuration** 탭을 선택합니다.
+62. 다음 정보를 확인합니다:
     - **Multi-AZ**: `Yes`
     - **Secondary Zone**: Standby AZ (예: ap-northeast-2c)
 
@@ -251,27 +251,27 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > - **자동 전환**: Amazon RDS가 장애를 감지하고 자동으로 페일오버 수행
 > - **데이터 무손실**: 동기식 복제로 데이터 손실 없이 전환
 
-61. Amazon RDS 콘솔에서 `mysql-lab-instance`를 선택합니다.
-62. **Actions** > `Reboot`를 선택합니다.
-63. ☑️ **Reboot With Failover?**를 체크합니다.
-64. [[Confirm]] 버튼을 클릭합니다.
-65. 상태가 "Rebooting"으로 변경됩니다.
-66. 상태가 "Available"로 변경될 때까지 기다립니다.
+63. Amazon RDS 콘솔에서 `mysql-lab-instance`를 선택합니다.
+64. **Actions** > `Reboot`를 선택합니다.
+65. ☑️ **Reboot With Failover?**를 체크합니다.
+66. [[Confirm]] 버튼을 클릭합니다.
+67. 상태가 "Rebooting"으로 변경됩니다.
+68. 상태가 "Available"로 변경될 때까지 기다립니다.
 
 💡 **참고**: 페일오버는 1-2분 내에 완료되지만, 콘솔에서 상태가 "Available"로 표시되기까지 추가 시간이 소요될 수 있습니다. 30초 간격으로 페이지를 새로고침하여 상태 변경을 확인합니다.
 
 ### 페일오버 결과 확인
 
-67. 페이지를 새로고침합니다.
-68. **Connectivity & security** 탭을 선택합니다.
-69. **Endpoints** 버튼을 클릭합니다.
-70. **Endpoint**를 확인합니다.
+69. 페이지를 새로고침합니다.
+70. **Connectivity & security** 탭을 선택합니다.
+71. **Endpoints** 버튼을 클릭합니다.
+72. **Endpoint**를 확인합니다.
 
 > [!TIP]
 > Endpoint가 동일하게 유지됩니다. 이는 Multi-AZ의 핵심 가치로, 페일오버가 발생해도 애플리케이션 코드를 변경할 필요가 없습니다.
 
-71. **Logs & events** 탭을 선택합니다.
-72. **Events** 섹션에서 다음 페일오버 관련 이벤트들을 확인합니다:
+73. **Logs & events** 탭을 선택합니다.
+74. **Events** 섹션에서 다음 페일오버 관련 이벤트들을 확인합니다:
 
 ```
 The user requested a failover of the DB instance.
@@ -293,22 +293,22 @@ DB instance restarted
 > - **Multi-AZ Standby**는 읽기/쓰기가 불가능한 대기 전용 인스턴스입니다. 오직 페일오버를 위해 존재하며, 평상시에는 사용할 수 없습니다.
 > - **Read Replica**는 읽기 전용 쿼리를 처리할 수 있어 읽기 부하를 분산할 수 있습니다. 따라서 읽기 성능 확장을 위해서는 Read Replica를 별도로 생성해야 합니다.
 
-73. `mysql-lab-instance`를 선택합니다.
-74. **Actions** > `Create read replica`를 선택합니다.
-75. **DB instance identifier**에 `mysql-lab-replica`를 입력합니다.
-76. **DB instance class**에서 `db.t3.small`을 선택합니다.
-77. **Storage**는 기본값을 유지합니다.
-78. **Availability** 섹션에서 기본값을 확인합니다.
+75. `mysql-lab-instance`를 선택합니다.
+76. **Actions** > `Create read replica`를 선택합니다.
+77. **DB instance identifier**에 `mysql-lab-replica`를 입력합니다.
+78. **DB instance class**에서 `db.t3.small`을 선택합니다.
+79. **Storage**는 기본값을 유지합니다.
+80. **Availability** 섹션에서 기본값을 확인합니다.
 
 > [!NOTE]
 > Primary 인스턴스가 Multi-AZ이므로 Read Replica도 Multi-AZ로 기본 선택됩니다. 
 > 실습에서는 기본값을 유지합니다.
 
-79. **Connectivity** 섹션에서 다음이 선택되어 있는지 확인합니다:
+81. **Connectivity** 섹션에서 다음이 선택되어 있는지 확인합니다:
     - **DB subnet group**: `week5-1-rds-db-subnet-group`
     - **VPC security groups**: `week5-1-rds-RDS-SG`
-80. 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-81. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다.:
+82. 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
+83. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다.:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -316,9 +316,9 @@ DB instance restarted
 | `Week`      | `5-1`     |
 | `CreatedBy` | `Student` |
 
-82. ▢ **Monitoring** 섹션에서 **Enhanced monitoring**을 체크 해제합니다.
-83. [[Create read replica]] 버튼을 클릭합니다.
-84. `mysql-lab-replica`의 상태가 "Available"로 변경될 때까지 기다립니다.
+84. ▢ **Monitoring** 섹션에서 **Enhanced monitoring**을 체크 해제합니다.
+85. [[Create read replica]] 버튼을 클릭합니다.
+86. `mysql-lab-replica`의 상태가 "Available"로 변경될 때까지 기다립니다.
 
 > [!NOTE]
 > Read Replica 생성에 약 5-10분이 소요됩니다. 상태가 "Available"로 변경될 때까지 기다린 후 다음 태스크를 진행합니다.
@@ -329,11 +329,11 @@ DB instance restarted
 
 이 태스크에서는 데이터베이스의 수동 스냅샷을 생성합니다. 수동 스냅샷은 명시적으로 삭제하기 전까지 보관되며, 특정 시점의 데이터를 복구할 때 사용합니다.
 
-85. `mysql-lab-instance`를 선택합니다.
-86. **Actions** > `Take snapshot`을 선택합니다.
-87. **Snapshot name**에 `mysql-lab-snapshot-manual`을 입력합니다.
-88. [[Take snapshot]] 버튼을 클릭합니다.
-89. 왼쪽 메뉴에서 **Snapshots**를 선택하여 스냅샷 생성 진행 상황을 확인합니다.
+87. `mysql-lab-instance`를 선택합니다.
+88. **Actions** > `Take snapshot`을 선택합니다.
+89. **Snapshot name**에 `mysql-lab-snapshot-manual`을 입력합니다.
+90. [[Take snapshot]] 버튼을 클릭합니다.
+91. 왼쪽 메뉴에서 **Snapshots**를 선택하여 스냅샷 생성 진행 상황을 확인합니다.
 
 ✅ **태스크 완료**: 수동 스냅샷이 생성되었습니다.
 
@@ -341,9 +341,9 @@ DB instance restarted
 
 이 태스크에서는 Amazon RDS의 자동 백업 설정을 확인합니다. 자동 백업은 지정된 보관 기간 동안 매일 자동으로 생성되며, 특정 시점으로 복구(Point-in-Time Recovery)를 지원합니다.
 
-90. `mysql-lab-instance`를 선택합니다.
-91. **Maintenance & backups** 탭을 선택합니다.
-92. **Automated backups** 섹션에서 다음을 확인합니다:
+92. `mysql-lab-instance`를 선택합니다.
+93. **Maintenance & backups** 탭을 선택합니다.
+94. **Automated backups** 섹션에서 다음을 확인합니다:
     - **Backup retention period**: `7 days`
     - **Backup window**: 설정된 시간
     - **Latest restore time**: 복구 가능한 최신 시점
@@ -440,10 +440,10 @@ DB instance restarted
 
 **수동 스냅샷 삭제**
 
-24. 왼쪽 메뉴에서 **Snapshots**를 선택합니다.
-25. `mysql-lab-snapshot-manual`을 선택합니다.
-26. **Actions** > `Delete snapshot`을 선택합니다.
-27. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+25. 왼쪽 메뉴에서 **Snapshots**를 선택합니다.
+26. `mysql-lab-snapshot-manual`을 선택합니다.
+27. **Actions** > `Delete snapshot`을 선택합니다.
+28. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ### 옵션 2: AWS CloudShell 스크립트로 일괄 삭제
 
@@ -452,8 +452,8 @@ DB instance restarted
 >
 > 콘솔 방식이 더 편하다면 위 [옵션 1](#option-1)을 참고합니다.
 
-28. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
-29. CloudShell이 열리면 다음 명령어를 실행합니다:
+29. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
+30. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 # Read Replica 삭제 (먼저 삭제 필수)
@@ -514,13 +514,13 @@ echo "모든 Amazon RDS 리소스 삭제 완료"
 > Amazon RDS 인스턴스(Primary, Read Replica)가 모두 삭제 완료된 후에 AWS CloudFormation 스택을 삭제합니다.
 > Amazon RDS 인스턴스가 남아있으면 Amazon VPC 관련 리소스 삭제가 실패합니다.
 
-30. AWS CloudFormation 콘솔로 이동합니다.
-31. `week5-1-rds-stack` 스택을 선택합니다.
-32. [[Delete stack]] 버튼을 클릭합니다.
-33. 확인 창에서 스택 이름 `week5-1-rds-stack`을 입력합니다.
-34. [[Delete stack]] 버튼을 클릭합니다.
-35. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-36. 스택 삭제가 완료될 때까지 기다립니다.
+31. AWS CloudFormation 콘솔로 이동합니다.
+32. `week5-1-rds-stack` 스택을 선택합니다.
+33. [[Delete stack]] 버튼을 클릭합니다.
+34. 확인 창에서 스택 이름 `week5-1-rds-stack`을 입력합니다.
+35. [[Delete stack]] 버튼을 클릭합니다.
+36. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
+37. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. 삭제가 완료되면 스택 목록에서 사라집니다.
@@ -531,15 +531,15 @@ echo "모든 Amazon RDS 리소스 삭제 완료"
 
 ## 4단계: Tag Editor로 모든 리소스 삭제 확인
 
-37. AWS Management Console 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
-38. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-39. **Regions**에서 `ap-northeast-2`를 선택합니다.
-40. **Resource types**에서 `All supported resource types`를 선택합니다.
-41. **Tags** 섹션에서 다음을 입력합니다:
+38. AWS Management Console 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+39. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+40. **Regions**에서 `ap-northeast-2`를 선택합니다.
+41. **Resource types**에서 `All supported resource types`를 선택합니다.
+42. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `5-1`
-42. [[Search resources]] 버튼을 클릭합니다.
-43. 검색 결과에 리소스가 표시되지 않는지 확인합니다.
+43. [[Search resources]] 버튼을 클릭합니다.
+44. 검색 결과에 리소스가 표시되지 않는지 확인합니다.
 
 > [!NOTE]
 > 모든 리소스가 정상적으로 삭제되었다면 검색 결과에 아무것도 표시되지 않습니다.
@@ -571,10 +571,10 @@ Multi-AZ 페일오버는 다음 상황에서 자동으로 발생합니다:
 
 **페일오버 프로세스**
 
-35. Amazon RDS가 Primary 인스턴스의 장애를 감지합니다.
-36. DNS 레코드가 Standby 인스턴스를 가리키도록 자동 업데이트됩니다.
-37. Standby 인스턴스가 새로운 Primary가 됩니다.
-38. 애플리케이션은 동일한 Endpoint를 사용하여 자동으로 재연결됩니다.
+- Amazon RDS가 Primary 인스턴스의 장애를 감지합니다.
+- DNS 레코드가 Standby 인스턴스를 가리키도록 자동 업데이트됩니다.
+- Standby 인스턴스가 새로운 Primary가 됩니다.
+- 애플리케이션은 동일한 Endpoint를 사용하여 자동으로 재연결됩니다.
 
 ### Read Replica 사용 사례
 

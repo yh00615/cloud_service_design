@@ -1,5 +1,5 @@
 ---
-title: "Amazon ElastiCache 캐싱"
+title: 'Amazon ElastiCache 캐싱'
 week: 10
 session: 2
 awsServices:
@@ -10,7 +10,6 @@ learningObjectives:
   - Amazon EC2 인스턴스에서 Valkey CLI로 기본 명령어를 실습할 수 있습니다.
   - Cache-Aside 패턴을 적용한 애플리케이션을 테스트할 수 있습니다.
 prerequisites:
-  - Week 5-1 Amazon RDS Multi-AZ 실습 완료 (MySQL 기본 지식)
   - Week 4-3 QuickTable 예약 API 실습 완료 (Amazon DynamoDB 기본 지식)
   - Python 기본 문법 이해
 ---
@@ -21,10 +20,10 @@ Cache-Aside 패턴을 구현하여 데이터베이스 조회 속도를 10-50배 
 
 > [!DOWNLOAD]
 > [week10-2-elasticache-lab.zip](/files/week10/week10-2-elasticache-lab.zip)
-> - `app.py` - FastAPI 애플리케이션 (Cache-Aside 패턴 구현)
+> - `app.py` - FastAPI 애플리케이션 (Cache-Aside 패턴 구현, DynamoDB + Valkey)
 > - `requirements.txt` - Python 의존성 패키지
 > - `.env.example` - 환경 변수 설정 예제
-> - `init_db.sql` - 데이터베이스 초기화 스크립트
+> - `init_dynamodb.py` - DynamoDB 테이블 초기화 스크립트
 > - `benchmark.py` - 성능 벤치마크 스크립트
 > 
 > **관련 태스크:**
@@ -46,6 +45,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 - **Amazon VPC 및 네트워크**: Amazon VPC, 퍼블릭/프라이빗 서브넷, 인터넷 게이트웨이, NAT Gateway
 - **보안 그룹**: Amazon ElastiCache 보안 그룹, Amazon EC2 보안 그룹
 - **Amazon ElastiCache Subnet Group**: Valkey 캐시 배치를 위한 서브넷 그룹
+- **SSM 인스턴스 프로파일**: Amazon EC2에서 Session Manager 접속을 위한 AWS IAM 역할 및 인스턴스 프로파일
 - **Amazon DynamoDB 테이블**: QuickTable 예약 데이터 저장용 테이블
 
 ### 상세 단계
@@ -93,6 +93,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `PrivateSubnetCId`: 프라이빗 서브넷 C ID (예: subnet-9i8h7g6f5e4d3c2b1)
     - `ElastiCacheSecurityGroupId`: Amazon ElastiCache 보안 그룹 ID (예: sg-0123456789abcdef0)
     - `EC2SecurityGroupId`: Amazon EC2 보안 그룹 ID (예: sg-9876543210fedcba0)
+    - `SSMInstanceProfileName`: SSM 인스턴스 프로파일 이름
     - `ElastiCacheSubnetGroupName`: Amazon ElastiCache 서브넷 그룹 이름
     - `DynamoDBTableName`: Amazon DynamoDB 테이블 이름
 
@@ -137,6 +138,9 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 	- **Name**: `quicktable-cache`
 	- **Description**: `QuickTable reservation cache`
 27. **Engine version**에서 `8`을 선택합니다.
+
+> [!NOTE]
+> ElastiCache 콘솔에서 Valkey 엔진 버전 `8`, `8.1`, `8.2` 등이 표시될 수 있습니다. 이 실습에서는 `8` (= 8.0)을 선택합니다. 8.1이나 8.2를 선택해도 실습 진행에는 문제 없습니다.
 28. **Default settings**를 체크 해제하고 다음을 설정합니다:
 	- **Port**: `6379` (기본값)
 	- **Parameter group**: `default.valkey8` (기본값)
@@ -149,7 +153,7 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
    - **Selected subnets**: 프라이빗 서브넷 2개가 자동 선택됨
 30. **Availability zone placements**에서 `No preference`를 선택합니다.
 31. **Security** 섹션에서 다음을 설정합니다:
-    - **Security groups**: 태스크 0에서 생성한 `week10-2-elasticache-sg` 보안 그룹 선택
+    - **Security groups**: 태스크 0에서 생성한 `week10-2-elasticache-lab-ElastiCache-SG` 보안 그룹 선택
     - **Encryption at rest**: 체크 해제 (실습 환경)
     - **Encryption in-transit**: 체크 해제 (실습 환경)
 32. **Logs** 섹션에서 모두 체크 해제합니다.
@@ -230,9 +234,9 @@ Valkey CLI를 사용하여 기본 명령어를 실습하고 캐싱 동작을 이
 	- **Subnet**: 프라이빗 서브넷 중 하나 선택
 	- **Auto-assign public IP**: Disable
    - **Firewall (security groups)**: Select existing security group
-   - **Security groups**: 태스크 0에서 생성한 `week10-2-ec2-sg` 보안 그룹 선택
+   - **Security groups**: 태스크 0에서 생성한 `week10-2-elasticache-lab-EC2-SG` 보안 그룹 선택
 52. **Advanced details** 섹션을 확장합니다.
-53. **AWS IAM instance profile**에서 `SSMInstanceProfile`을 선택합니다.
+53. **AWS IAM instance profile**에서 태스크 0에서 생성한 `week10-2-elasticache-lab-SSMInstanceProfile`을 선택합니다.
 54. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key | Value |
@@ -265,7 +269,7 @@ sudo cp src/valkey-cli /usr/local/bin/
 ```
 
 > [!NOTE]
-> Valkey 8.0.7은 2026년 2월 기준 최신 안정 버전입니다. 실습 시점에 더 새로운 버전이 출시되었을 수 있습니다.
+> Valkey 8.0.7은 8.0.x 시리즈의 최신 안정 버전입니다 (2026년 2월 릴리스). Valkey 9.0.x 시리즈도 출시되었으나, ElastiCache에서 사용하는 엔진 버전과 맞추기 위해 8.0.x를 사용합니다.
 > 최신 버전은 [Valkey Releases](https://github.com/valkey-io/valkey/releases) 페이지에서 확인할 수 있으며, 위 명령어의 버전 번호(`8.0.7`)를 변경하여 사용합니다.
 
 62. Valkey CLI 설치를 확인합니다:
@@ -454,7 +458,7 @@ exit
 ### 태스크 설명
 
 이 태스크에서는 FastAPI 애플리케이션을 실행하여 Cache-Aside 패턴을 실전에서 테스트합니다.
-Amazon DynamoDB 테이블을 초기화하고, API를 호출하여 캐시 성능을 측정합니다.
+데이터베이스를 초기화하고, API를 호출하여 캐시 성능을 측정합니다.
 
 ### 상세 단계
 
@@ -487,6 +491,7 @@ pip3 install -r requirements.txt
 ```bash
 export REDIS_HOST=<Primary-Endpoint>
 export REDIS_PORT=6379
+export DYNAMODB_TABLE=week10-2-elasticache-lab-APIData
 export AWS_DEFAULT_REGION=ap-northeast-2
 ```
 
@@ -494,7 +499,7 @@ export AWS_DEFAULT_REGION=ap-northeast-2
 > `<Primary-Endpoint>`를 태스크 2에서 복사한 엔드포인트로 대체합니다.
 > 환경 변수명이 `REDIS_HOST`인 이유는 Valkey가 Redis OSS와 호환되어 기존 Redis 클라이언트 라이브러리를 그대로 사용하기 때문입니다.
 
-82. Amazon DynamoDB 테이블을 초기화합니다:
+82. DynamoDB 테이블을 초기화합니다:
 
 ```bash
 python3 init_dynamodb.py
@@ -502,8 +507,8 @@ python3 init_dynamodb.py
 
 > [!OUTPUT]
 > ```
-> Amazon DynamoDB 테이블 초기화 중...
-> 10개의 예약 데이터가 추가되었습니다.
+> DynamoDB 테이블 초기화 중...
+> 10개의 사용자 데이터가 추가되었습니다.
 > ```
 
 83. FastAPI 애플리케이션을 백그라운드로 실행합니다:
@@ -531,10 +536,10 @@ curl http://localhost:5000/health
 > }
 > ```
 
-85. 캐시 없이 예약 정보를 조회합니다 (첫 번째 요청):
+85. 캐시 없이 사용자 정보를 조회합니다 (첫 번째 요청):
 
 ```bash
-curl http://localhost:5000/reservation/user123/res001/nocache
+curl http://localhost:5000/user/1/nocache
 ```
 
 > [!OUTPUT]
@@ -542,21 +547,20 @@ curl http://localhost:5000/reservation/user123/res001/nocache
 > {
 >   "source": "database",
 >   "data": {
->     "userId": "user123",
->     "reservationId": "res001",
->     "restaurantName": "Seoul BBQ",
->     "date": "2024-02-20",
->     "time": "19:00",
->     "partySize": 4
+>     "id": 1,
+>     "name": "김철수",
+>     "email": "kim@example.com",
+>     "age": 28,
+>     "city": "Seoul"
 >   },
 >   "responseTimeMs": 45.23
 > }
 > ```
 
-86. 캐시를 사용하여 동일한 예약 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
+86. 캐시를 사용하여 동일한 사용자 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
 
 ```bash
-curl http://localhost:5000/reservation/user123/res001
+curl http://localhost:5000/user/1
 ```
 
 > [!OUTPUT]
@@ -564,12 +568,11 @@ curl http://localhost:5000/reservation/user123/res001
 > {
 >   "source": "database",
 >   "data": {
->     "userId": "user123",
->     "reservationId": "res001",
->     "restaurantName": "Seoul BBQ",
->     "date": "2024-02-20",
->     "time": "19:00",
->     "partySize": 4
+>     "id": 1,
+>     "name": "김철수",
+>     "email": "kim@example.com",
+>     "age": 28,
+>     "city": "Seoul"
 >   },
 >   "responseTimeMs": 43.87
 > }
@@ -578,7 +581,7 @@ curl http://localhost:5000/reservation/user123/res001
 87. 동일한 요청을 다시 실행합니다 (두 번째 요청 - 캐시 히트):
 
 ```bash
-curl http://localhost:5000/reservation/user123/res001
+curl http://localhost:5000/user/1
 ```
 
 > [!OUTPUT]
@@ -586,12 +589,11 @@ curl http://localhost:5000/reservation/user123/res001
 > {
 >   "source": "cache",
 >   "data": {
->     "userId": "user123",
->     "reservationId": "res001",
->     "restaurantName": "Seoul BBQ",
->     "date": "2024-02-20",
->     "time": "19:00",
->     "partySize": 4
+>     "id": 1,
+>     "name": "김철수",
+>     "email": "kim@example.com",
+>     "age": 28,
+>     "city": "Seoul"
 >   },
 >   "responseTimeMs": 2.15
 > }

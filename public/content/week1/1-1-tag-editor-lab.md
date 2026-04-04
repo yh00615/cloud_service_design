@@ -19,11 +19,11 @@ prerequisites:
 > [!DOWNLOAD]
 > [week1-1-tag-editor-lab.zip](/files/week1/week1-1-tag-editor-lab.zip)
 >
-> - `week1-1-tag-editor-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 QuickTable 리소스 자동 생성: Amazon S3 버킷 2개, AWS Lambda 함수 1개, Amazon DynamoDB 테이블 1개, AWS IAM 역할 1개)
+> - `tag-editor-lab-stack.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 QuickTable 리소스 자동 생성: Amazon S3 버킷 2개, AWS Lambda 함수 1개, Amazon DynamoDB 테이블 1개, AWS IAM 역할 1개)
 >
 > **관련 태스크:**
 >
-> - 태스크 0: 실습 환경 구축 (`week1-1-tag-editor-lab.yaml` 파일을 사용하여 AWS CloudFormation 스택 생성)
+> - 태스크 0: 실습 환경 구축 (`tag-editor-lab-stack.yaml` 파일을 사용하여 AWS CloudFormation 스택 생성)
 
 이 데모에서는 **AWS Resource Groups & Tag Editor**를 사용하여 태그 기반으로 리소스를 검색하고 관리하는 방법을 학습합니다.  
 태그는 AWS 리소스 관리의 핵심 도구입니다.
@@ -87,7 +87,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 버튼명이나 화면 구성이 가이드와 다를 수 있으나, 전체 흐름(템플릿 업로드 → 스택 이름 입력 → 태그 추가 → 생성)은 동일합니다.
 
 1. 다운로드한 `week1-1-tag-editor-lab.zip` 파일의 압축을 해제합니다.
-2. `week1-1-tag-editor-lab.yaml` 파일을 확인합니다.
+2. `tag-editor-lab-stack.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
@@ -102,7 +102,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
-7. [[Choose file]] 버튼을 클릭한 후 **week1-1-tag-editor-lab.yaml** 파일을 선택합니다.
+7. [[Choose file]] 버튼을 클릭한 후 **tag-editor-lab-stack.yaml** 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 
    <img src="/images/week1/1-1-task0-step8-next-button.png" alt="CloudFormation 템플릿 업로드 후 Next 버튼 클릭" class="guide-img-md" />
@@ -122,7 +122,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `CreatedBy` | `CloudFormation` |
 
 > [!NOTE]
-> **AWS CloudFormation 템플릿 태그**: AWS CloudFormation 템플릿은 모든 리소스에 필수 태그 3개(`Project`, `Week`, `CreatedBy`)와 추가 태그(`Component`)를 자동으로 추가했습니다. 이 태스크에서는 이미 추가된 태그를 확인하고, 실습 목적으로 추가 태그를 수동으로 추가하는 방법을 학습합니다.
+> **AWS CloudFormation 템플릿 태그**: AWS CloudFormation 템플릿은 모든 리소스에 `Week=1-1` 태그를 자동으로 추가했습니다. 이 태스크에서는 이미 추가된 태그를 확인하고, 실습 목적으로 추가 태그를 수동으로 추가하는 방법을 학습합니다.
 
 > [!NOTE]
 > **스택 레벨 태그 전파**: 태스크 0에서 AWS CloudFormation 스택에 추가한 `Project`와 `CreatedBy` 태그는 태그 전파를 지원하는 일부 리소스에 자동으로 전파될 수 있습니다. 이 실습에서는 템플릿 레벨 태그와 스택 레벨 태그의 차이를 이해하고, 수동 태그 추가 방법을 학습하는 것이 목적입니다.
@@ -227,8 +227,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 >
 > ```
 > Custom tags:
-> - Component: Storage
-> - CreatedBy: Student
+> - CreatedBy: CloudFormation
 > - Environment: Development
 > - Owner: TeamA
 > - Project: AWS-Lab
@@ -244,8 +243,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 >
 > ```
 > Custom tags:
-> - Component: Logging
-> - CreatedBy: Student
+> - CreatedBy: CloudFormation
 > - Project: AWS-Lab
 > - Week: 1-1
 >
@@ -350,7 +348,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 57. 각 리소스를 선택하여 태그 상세 정보를 확인합니다.
 
 > [!TIP]
-> 두 Amazon S3 버킷 모두 이제 Week=1-1, Project=AWS-Lab, CreatedBy=Student 태그를 가지고 있습니다.  
+> 두 Amazon S3 버킷 모두 이제 Week=1-1, Project=AWS-Lab, CreatedBy=CloudFormation 태그를 가지고 있습니다.  
 > AWS CloudFormation 시스템 태그(aws:cloudformation:stack-name 등)가 추가로 표시될 수 있습니다.
 
 ✅ **태스크 완료**: Tag Editor로 모든 리소스를 검색했습니다.
@@ -424,15 +422,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 실습에서 생성한 모든 리소스를 확인합니다.
 
-69. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
-70. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-71. **Regions**에서 `All regions`를 선택합니다.
-72. **Resource types**에서 `All supported resource types`를 선택합니다.
-73. **Tags** 섹션에서 다음을 입력합니다:
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+3. **Regions**에서 `All regions`를 선택합니다.
+4. **Resource types**에서 `All supported resource types`를 선택합니다.
+5. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `1-1`
-74. [[Search resources]] 버튼을 클릭합니다.
-75. 이 실습에서 생성한 모든 QuickTable 리소스가 표시됩니다.
+6. [[Search resources]] 버튼을 클릭합니다.
+7. 이 실습에서 생성한 모든 QuickTable 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
@@ -444,19 +442,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 실습에서는 추가로 리소스를 만들지 않았기 때문에 AWS CloudFormation 스택을 삭제하면 태스크 0에서 생성한 모든 리소스가 자동으로 삭제됩니다.
 
-76. AWS CloudFormation 콘솔로 이동합니다.
-77. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
-78. `week1-1-tag-editor-lab-stack` 스택을 선택합니다.
-79. [[Delete stack]] 버튼을 클릭합니다.
+8. AWS CloudFormation 콘솔로 이동합니다.
+9. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
+10. `week1-1-tag-editor-lab-stack` 스택을 선택합니다.
+11. [[Delete stack]] 버튼을 클릭합니다.
    <img src="/images/week1/1-1-cleanup-step4-delete-stack.png" alt="CloudFormation 스택 Delete 버튼" class="guide-img-sm" />
-80. 확인 창이 나타나면 입력 필드에 삭제할 스택 이름을 입력합니다.
+12. 확인 창이 나타나면 입력 필드에 삭제할 스택 이름을 입력합니다.
 
 > [!NOTE]
 > 입력 필드 위에 "Type "{스택이름}" to confirm deletion of the stack" 메시지가 표시됩니다. 이 메시지에 표시된 스택 이름을 정확히 입력해야 합니다. 이번 실습에서는 `week1-1-tag-editor-lab-stack`을 입력합니다.
 
-81. [[Delete stack]] 버튼을 클릭합니다.
+13. [[Delete stack]] 버튼을 클릭합니다.
    <img src="/images/week1/1-1-cleanup-step6-delete-stack-button.png" alt="스택 삭제 확인 후 Delete stack 버튼 클릭" class="guide-img-sm" />
-82. 스택 삭제가 완료될 때까지 기다립니다.
+14. 스택 삭제가 완료될 때까지 기다립니다.
    <img src="/images/week1/1-1-cleanup-step7-stack-deleting.png" alt="CloudFormation 스택 삭제 진행 중" class="guide-img-md" />
 
 > [!NOTE]
@@ -471,12 +469,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 AWS CloudFormation 스택 삭제 후 별도로 삭제해야 합니다.
 
-83. AWS Management Console 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
-84. 왼쪽 메뉴에서 **Saved resource groups**를 선택합니다.
-85. `week1-1-lab-resources` 그룹 이름을 클릭하거나 그룹을 선택한 후 [[View details]] 버튼을 클릭합니다.
-86. [[Delete]] 버튼을 클릭합니다.
+15. AWS Management Console 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+16. 왼쪽 메뉴에서 **Saved resource groups**를 선택합니다.
+17. `week1-1-lab-resources` 그룹 이름을 클릭하거나 그룹을 선택한 후 [[View details]] 버튼을 클릭합니다.
+18. [[Delete]] 버튼을 클릭합니다.
     <img src="/images/week1/1-1-cleanup-step11-rg-delete.png" alt="Resource Group Delete 버튼" class="guide-img-md" />
-87. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+19. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
     <img src="/images/week1/1-1-cleanup-step12-rg-delete-confirm.png" alt="Resource Group 삭제 확인 대화상자" class="guide-img-sm" />
 
 > [!IMPORTANT]
@@ -486,14 +484,14 @@ Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 
 
 모든 리소스가 삭제되었는지 확인합니다.
 
-88. Tag Editor로 이동합니다.
-89. **Regions**에서 `All regions`를 선택합니다.
-90. **Resource types**에서 `All supported resource types`를 선택합니다.
-91. **Tags** 섹션에서 다음 태그를 입력합니다:
+20. Tag Editor로 이동합니다.
+21. **Regions**에서 `All regions`를 선택합니다.
+22. **Resource types**에서 `All supported resource types`를 선택합니다.
+23. **Tags** 섹션에서 다음 태그를 입력합니다:
     - **Tag key**: `Week`
     - **Optional tag value**: `1-1`
-92. [[Search resources]] 버튼을 클릭합니다.
-93. 검색 결과가 비어있는지 확인합니다.
+24. [[Search resources]] 버튼을 클릭합니다.
+25. 검색 결과가 비어있는지 확인합니다.
    <img src="/images/week1/1-1-cleanup-step3-6-search-empty.png" alt="Tag Editor 검색 결과가 비어있는 화면" class="guide-img-md" />
 
 > [!NOTE]
@@ -597,11 +595,11 @@ AWS 태그는 리소스를 효과적으로 관리하기 위한 핵심 도구입�
 
 **실습 종료 시 리소스 정리 프로세스**:
 
-94. Tag Editor로 Week 태그 검색 (예: Week=1-1)
-95. 해당 주차에서 생성한 모든 리소스 확인
-96. AWS CloudFormation 스택 삭제 (자동 생성 리소스)
-97. Resource Groups 삭제 (별도 삭제 필요)
-98. Tag Editor로 삭제 확인
+1. Tag Editor로 Week 태그 검색 (예: Week=1-1)
+2. 해당 주차에서 생성한 모든 리소스 확인
+3. AWS CloudFormation 스택 삭제 (자동 생성 리소스)
+4. Resource Groups 삭제 (별도 삭제 필요)
+5. Tag Editor로 삭제 확인
 
 **장점**:
 

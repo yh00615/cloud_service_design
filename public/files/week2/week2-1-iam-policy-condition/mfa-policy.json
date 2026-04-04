@@ -4,26 +4,29 @@
     {
       "Sid": "AllowListBucketWithoutMFA",
       "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME"
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
     },
     {
-      "Sid": "AllowReadObjectWithoutMFA",
+      "Sid": "AllowS3WriteWithMFA",
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ],
-      "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
+      "Resource": "*",
+      "Condition": {
+        "BoolIfExists": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
     },
     {
-      "Sid": "DenyDeleteWithoutMFA",
+      "Sid": "DenyS3ActionsWithoutMFA",
       "Effect": "Deny",
-      "Action": [
-        "s3:DeleteObject",
-        "s3:DeleteObjectVersion"
-      ],
-      "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*",
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
+      "Resource": "*",
       "Condition": {
         "BoolIfExists": {
           "aws:MultiFactorAuthPresent": "false"

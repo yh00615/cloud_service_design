@@ -1,5 +1,5 @@
 ---
-title: "AWS CodePipeline으로 Amazon S3 정적 웹사이트 배포 자동화"
+title: 'AWS CodePipeline으로 Amazon S3 정적 웹사이트 배포 자동화'
 week: 9
 session: 3
 awsServices:
@@ -9,35 +9,33 @@ awsServices:
   - Amazon S3
   - AWS CloudFormation
 learningObjectives:
-  - AWS CodePipeline의 파이프라인 단계(Source, Build, Deploy)를 이해할 수 있습니다.
-  - 프론트엔드 코드를 AWS CodeCommit에 푸시하고 파이프라인을 트리거할 수 있습니다.
+  - AWS CodePipeline의 파이프라인 단계(Source, Build)를 이해할 수 있습니다.
+  - 정적 웹사이트 파일을 AWS CodeCommit에 푸시하고 파이프라인을 트리거할 수 있습니다.
   - AWS CodePipeline을 통해 Amazon S3에 자동 배포되는 과정을 확인할 수 있습니다.
   - 코드 변경 후 자동 배포를 테스트하고 웹사이트를 확인할 수 있습니다.
 prerequisites:
   - Week 1 완료 (Amazon S3 기본 개념)
   - Week 9-2 완료 (AWS CodeBuild 기본)
   - Git 기본 명령어 이해
-  - HTML/CSS 기본 지식
 ---
 
-이 실습에서는 AWS CodePipeline을 사용하여 QuickTable 레스토랑 예약 시스템의 프론트엔드 웹사이트를 Amazon S3에 자동으로 배포하는 CI/CD 파이프라인을 구축하는 방법을 학습합니다.
+이 실습에서는 AWS CodePipeline을 사용하여 정적 웹사이트를 Amazon S3에 자동으로 배포하는 CI/CD 파이프라인을 구축하는 방법을 학습합니다.
 
-Week 4-2에서 구축한 QuickTable 예약 API와 연동되는 사용자 인터페이스를 개발하고, 코드 변경 시 자동으로 Amazon S3에 배포되는 전체 워크플로우를 구현합니다.
+AWS CodeCommit에 소스 코드를 저장하고, 코드 변경 시 AWS CodePipeline이 자동으로 AWS CodeBuild를 실행하여 Amazon S3에 배포하는 전체 워크플로우를 구현합니다.
 
 > [!DOWNLOAD]
 > [week9-3-s3-website-lab.zip](/files/week9/week9-3-s3-website-lab.zip)
 > - `week9-3-s3-website-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon S3 버킷, CodeCommit, AWS CodeBuild, AWS CodePipeline 자동 생성)
-> - `index.html` - QuickTable 메인 페이지 (레스토랑 목록 표시, 태스크 1에서 CodeCommit에 푸시)
-> - `reservation.html` - 예약 생성 페이지 (날짜/시간/인원 선택 폼, 태스크 1에서 CodeCommit에 푸시)
-> - `my-reservations.html` - 내 예약 조회 페이지 (예약 목록 표시, 태스크 1에서 CodeCommit에 푸시)
+> - `index.html` - 메인 페이지 (CI/CD Pipeline Demo, 태스크 1에서 CodeCommit에 푸시)
+> - `about.html` - 소개 페이지 (프로젝트 및 AWS 서비스 설명, 태스크 1에서 CodeCommit에 푸시)
 > - `style.css` - 스타일시트 (태스크 1에서 CodeCommit에 푸시)
-> - `app.js` - JavaScript 파일 (Week 4-2 API 연동, Amazon Cognito 인증, 태스크 1에서 CodeCommit에 푸시)
+> - `script.js` - JavaScript 파일 (인터랙티브 기능, 태스크 1에서 CodeCommit에 푸시)
 > - `buildspec.yml` - AWS CodeBuild 빌드 스펙 (태스크 1에서 CodeCommit에 푸시)
 > 
 > **관련 태스크:**
 > 
 > - 태스크 0: 실습 환경 구축 (week9-3-s3-website-lab.yaml을 사용하여 Amazon S3 버킷, CodeCommit 리포지토리, AWS CodeBuild 프로젝트, AWS CodePipeline 자동 생성)
-> - 태스크 1: QuickTable 프론트엔드 코드 준비 및 CodeCommit에 푸시 (index.html, reservation.html, my-reservations.html, style.css, app.js, buildspec.yml을 CodeCommit에 업로드하여 예약 시스템 UI 구축)
+> - 태스크 1: 웹사이트 코드 준비 및 CodeCommit에 푸시 (index.html, about.html, style.css, script.js, buildspec.yml을 CodeCommit에 업로드)
 > - 태스크 2: AWS CodePipeline 확인 및 첫 번째 배포
 
 > [!WARNING]
@@ -110,21 +108,20 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ✅ **태스크 완료**: 실습 환경이 준비되었습니다.
 
-## 태스크 1: QuickTable 프론트엔드 코드 준비 및 CodeCommit에 푸시
+## 태스크 1: 웹사이트 코드 준비 및 CodeCommit에 푸시
 
-이 태스크에서는 QuickTable 레스토랑 예약 시스템의 프론트엔드 파일들을 CodeCommit 리포지토리에 푸시합니다.
+이 태스크에서는 CI/CD Demo 정적 웹사이트 파일들을 CodeCommit 리포지토리에 푸시합니다.
 
-이 파일들은 CI/CD 파이프라인에서 자동으로 빌드되고 Amazon S3에 배포됩니다. Week 4-2에서 구축한 예약 API와 연동되어 사용자가 레스토랑을 검색하고 예약을 생성할 수 있는 웹 인터페이스를 제공합니다.
+이 파일들은 CI/CD 파이프라인에서 자동으로 빌드되고 Amazon S3에 배포됩니다.
 
 ### 상세 단계
 
 22. 태스크 0에서 압축 해제한 `week9-3-s3-website-lab` 폴더를 엽니다.
 23. 폴더 내에 다음 파일들이 있는지 확인합니다:
 	- `index.html`
-	- `reservation.html`
-	- `my-reservations.html`
+	- `about.html`
    - `style.css`
-   - `app.js`
+   - `script.js`
    - `buildspec.yml`
    - `week9-3-s3-website-lab.yaml` (태스크 0에서 사용)
 
@@ -134,10 +131,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > week9-3-s3-website-lab/
 > ├── week9-3-s3-website-lab.yaml
 > ├── index.html
-> ├── reservation.html
-> ├── my-reservations.html
+> ├── about.html
 > ├── style.css
-> ├── app.js
+> ├── script.js
 > └── buildspec.yml
 > ```
 
@@ -203,14 +199,13 @@ git config user.email "your.email@example.com"
 
 > [!NOTE]
 > AWS CloudShell의 Upload file 기능은 한 번에 1개 파일만 업로드할 수 있습니다.
-> 6개의 파일을 모두 업로드하려면 이 과정을 6번 반복해야 합니다.
+> 5개의 파일을 모두 업로드하려면 이 과정을 5번 반복해야 합니다.
 > `week9-3-s3-website-lab.yaml` 파일은 태스크 0에서 이미 사용했으므로 CodeCommit에 푸시할 필요가 없습니다.
 
 35. 업로드가 완료되면 같은 방법으로 나머지 파일들을 하나씩 업로드합니다:
-    - `reservation.html`
-    - `my-reservations.html`
+    - `about.html`
     - `style.css`
-    - `app.js`
+    - `script.js`
     - `buildspec.yml`
 
 > [!NOTE]
@@ -219,7 +214,7 @@ git config user.email "your.email@example.com"
 36. 모든 파일 업로드가 완료되면 다음 명령어를 실행하여 파일을 리포지토리 디렉토리로 이동합니다:
 
 ```bash
-mv ~/index.html ~/reservation.html ~/my-reservations.html ~/style.css ~/app.js ~/buildspec.yml .
+mv ~/index.html ~/about.html ~/style.css ~/script.js ~/buildspec.yml .
 ```
 
 > [!TIP]
@@ -235,14 +230,13 @@ ls -la
 > ```
 > drwxr-xr-x 3 cloudshell-user cloudshell-user   96 Feb  7 10:00 .git
 > -rw-r--r-- 1 cloudshell-user cloudshell-user 2048 Feb  7 10:00 index.html
-> -rw-r--r-- 1 cloudshell-user cloudshell-user 1536 Feb  7 10:00 reservation.html
-> -rw-r--r-- 1 cloudshell-user cloudshell-user 1280 Feb  7 10:00 my-reservations.html
-> -rw-r--r-- 1 cloudshell-user cloudshell-user 1024 Feb  7 10:00 style.css
-> -rw-r--r-- 1 cloudshell-user cloudshell-user 3072 Feb  7 10:00 app.js
+> -rw-r--r-- 1 cloudshell-user cloudshell-user 1536 Feb  7 10:00 about.html
+> -rw-r--r-- 1 cloudshell-user cloudshell-user 3072 Feb  7 10:00 style.css
+> -rw-r--r-- 1 cloudshell-user cloudshell-user 1024 Feb  7 10:00 script.js
 > -rw-r--r-- 1 cloudshell-user cloudshell-user  384 Feb  7 10:00 buildspec.yml
 > ```
 
-38. 6개의 파일과 .git 디렉토리가 모두 표시되는지 확인합니다.
+38. 5개의 파일과 .git 디렉토리가 모두 표시되는지 확인합니다.
 39. 모든 파일을 Git에 추가합니다:
 
 ```bash
@@ -260,30 +254,28 @@ git status
 > On branch main
 > Changes to be committed:
 >   (use "git restore --staged <file>..." to unstage)
->         new file:   app.js
+>         new file:   about.html
 >         new file:   buildspec.yml
 >         new file:   index.html
->         new file:   my-reservations.html
->         new file:   reservation.html
+>         new file:   script.js
 >         new file:   style.css
 > ```
 
-41. 6개의 파일이 모두 "new file"로 표시되는지 확인합니다.
+41. 5개의 파일이 모두 "new file"로 표시되는지 확인합니다.
 42. 커밋을 생성합니다:
 
 ```bash
-git commit -m "Initial commit: QuickTable frontend files"
+git commit -m "Initial commit: CI/CD Demo website files"
 ```
 
 > [!OUTPUT]
 > ```
-> [main abc1234] Initial commit: QuickTable frontend files
->  6 files changed, 250 insertions(+)
->  create mode 100644 app.js
+> [main abc1234] Initial commit: CI/CD Demo website files
+>  5 files changed, 200 insertions(+)
+>  create mode 100644 about.html
 >  create mode 100644 buildspec.yml
 >  create mode 100644 index.html
->  create mode 100644 my-reservations.html
->  create mode 100644 reservation.html
+>  create mode 100644 script.js
 >  create mode 100644 style.css
 > ```
 
@@ -304,19 +296,19 @@ git push origin main
 > Compressing objects: 100% (5/5), done.
 > Writing objects: 100% (6/6), 2.0 KiB | 2.0 MiB/s, done.
 > Total 6 (delta 0), reused 0 (delta 0)
-> To https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/...
+> To codecommit::ap-northeast-2://...
 >    abc1234..def5678  main -> main
 > ```
 
 44. 푸시가 성공적으로 완료되었는지 확인합니다.
 45. CodeCommit 콘솔로 이동합니다.
 46. 생성한 리포지토리를 선택합니다.
-47. **Code** 탭에서 6개의 파일이 모두 표시되는지 확인합니다.
+47. **Code** 탭에서 5개의 파일이 모두 표시되는지 확인합니다.
 
 > [!TIP]
-> 각 파일을 클릭하여 내용을 확인할 수 있습니다. `app.js` 파일에는 Week 4-2에서 구축한 QuickTable API와 연동하는 코드가 포함되어 있으며, Amazon Cognito 인증 로직도 구현되어 있습니다.
+> 각 파일을 클릭하여 내용을 확인할 수 있습니다. `index.html`은 CI/CD Pipeline Demo 메인 페이지이며, `about.html`은 프로젝트 소개 페이지입니다.
 
-✅ **태스크 완료**: QuickTable 프론트엔드 코드가 CodeCommit에 푸시되었습니다.
+✅ **태스크 완료**: 웹사이트 코드가 CodeCommit에 푸시되었습니다.
 
 ## 태스크 2: AWS CodePipeline 확인 및 첫 번째 배포
 
@@ -371,9 +363,9 @@ git push origin main
 
 ✅ **태스크 완료**: CodePipeline이 확인되고 첫 번째 배포가 완료되었습니다.
 
-## 태스크 3: 배포 확인 및 QuickTable 웹사이트 접근
+## 태스크 3: 배포 확인 및 웹사이트 접근
 
-이 태스크에서는 Amazon S3에 배포된 QuickTable 프론트엔드 웹사이트가 정상적으로 접근 가능한지 확인합니다.
+이 태스크에서는 Amazon S3에 배포된 정적 웹사이트가 정상적으로 접근 가능한지 확인합니다.
 
 ### 상세 단계
 
@@ -386,36 +378,25 @@ git push origin main
 64. 태스크 0에서 복사한 `WebsiteBucketName` 값의 버킷을 선택합니다.
 65. **Objects** 탭에서 배포된 파일들을 확인합니다:
 	- `index.html`
-	- `reservation.html`
-	- `my-reservations.html`
+	- `about.html`
    - `style.css`
-   - `app.js`
+   - `script.js`
 
 > [!NOTE]
 > buildspec.yml은 빌드 스펙 파일이므로 Amazon S3에 배포되지 않습니다.
 
 66. 새 브라우저 탭을 엽니다.
 67. 태스크 0에서 복사한 `WebsiteURL` 값을 주소창에 붙여넣고 Enter를 누릅니다.
-68. QuickTable 메인 페이지가 정상적으로 표시되는지 확인합니다.
+68. CI/CD Pipeline Demo 메인 페이지가 정상적으로 표시되는지 확인합니다.
 
 > [!NOTE]
-> QuickTable 메인 페이지에는 레스토랑 목록이 표시됩니다. Week 4-2에서 구축한 API와 연동되어 실제 레스토랑 데이터를 가져옵니다.
-> 
-> **Week 4-2 의존성:**
-> 
-> - Week 4-2 API가 없어도 정적 페이지 자체는 정상적으로 표시됩니다
-> - API 연동 기능은 Week 4-2 리소스가 활성화된 경우에만 작동합니다
-> - 브라우저 개발자 도구(F12)에서 API 호출 관련 에러가 표시될 수 있으나, 이는 Week 4-2 리소스가 없기 때문이며 정상입니다
+> 메인 페이지에는 "🚀 AWS CI/CD Pipeline Demo" 제목과 함께 CodeCommit, CodeBuild, CodePipeline, Amazon S3 서비스 소개가 표시됩니다.
+> 배포 프로세스 설명과 "소개 페이지로 이동" 버튼이 포함되어 있습니다.
 
-69. 웹사이트에서 "예약하기" 버튼을 클릭합니다.
-70. `reservation.html` 페이지가 정상적으로 표시되는지 확인합니다.
-71. "내 예약" 링크를 클릭합니다.
-72. `my-reservations.html` 페이지가 정상적으로 표시되는지 확인합니다.
+69. 웹사이트에서 "소개 페이지로 이동" 버튼을 클릭합니다.
+70. `about.html` 페이지가 정상적으로 표시되는지 확인합니다.
 
-> [!TIP]
-> Week 4-2에서 생성한 Amazon Cognito User Pool로 로그인하면 실제 예약 생성 및 조회 기능을 테스트할 수 있습니다.
-
-✅ **태스크 완료**: QuickTable 프론트엔드 웹사이트가 Amazon S3에 성공적으로 배포되고 접근 가능합니다.
+✅ **태스크 완료**: 정적 웹사이트가 Amazon S3에 성공적으로 배포되고 접근 가능합니다.
 
 ## 태스크 4: 코드 변경 및 자동 배포 테스트
 
@@ -423,70 +404,70 @@ git push origin main
 
 ### 상세 단계
 
-73. CloudShell에서 리포지토리 디렉토리로 이동합니다:
+71. CloudShell에서 리포지토리 디렉토리로 이동합니다:
 
 ```bash
 cd ~/quicktable-frontend/<repository-name>
 ```
 
-74. 변경할 문자열이 있는지 먼저 확인합니다:
+72. 변경할 문자열이 있는지 먼저 확인합니다:
 
 ```bash
-grep "QuickTable v1.0" index.html
+grep "Version: 1.0" index.html
 ```
 
 > [!OUTPUT]
 > ```
->         <h1>QuickTable v1.0</h1>
+>                 <p class="version">Version: 1.0</p>
 > ```
 
-75. `index.html` 파일을 편집합니다:
+73. `index.html` 파일을 편집합니다:
 
 ```bash
-sed -i 's/QuickTable v1.0/QuickTable v2.0/g' index.html
+sed -i 's/Version: 1.0/Version: 2.0/g' index.html
 ```
 
-76. 변경사항을 확인합니다:
+74. 변경사항을 확인합니다:
 
 ```bash
-cat index.html | grep -i "QuickTable v"
+cat index.html | grep -i "Version:"
 ```
 
 > [!OUTPUT]
 > ```
->         <h1>QuickTable v2.0</h1>
+>                 <p class="version">Version: 2.0</p>
 > ```
 
-77. 변경사항을 Git에 추가합니다:
+75. 변경사항을 Git에 추가합니다:
 
 ```bash
 git add index.html
 ```
 
-78. 커밋을 생성합니다:
+76. 커밋을 생성합니다:
 
 ```bash
-git commit -m "Update QuickTable version to 2.0"
+git commit -m "Update version to 2.0"
 ```
 
-79. CodeCommit에 푸시합니다:
+77. CodeCommit에 푸시합니다:
 
 ```bash
 git push origin main
 ```
 
-80. AWS CodePipeline 콘솔로 이동합니다.
-81. 태스크 0에서 복사한 `CodePipelineName` 값의 파이프라인을 선택합니다.
-82. 파이프라인이 자동으로 실행되는지 확인합니다.
-83. Source 단계가 "Succeeded"로 표시될 때까지 기다립니다.
-84. Build 단계가 진행되는 것을 확인합니다.
-85. Build 단계가 완료될 때까지 기다립니다.
+78. AWS CodePipeline 콘솔로 이동합니다.
+79. 태스크 0에서 복사한 `CodePipelineName` 값의 파이프라인을 선택합니다.
+80. 파이프라인이 자동으로 실행되는지 확인합니다.
+81. Source 단계가 "Succeeded"로 표시될 때까지 기다립니다.
+82. Build 단계가 진행되는 것을 확인합니다.
+83. Build 단계가 완료될 때까지 기다립니다.
 
 > [!NOTE]
 > 전체 파이프라인 실행에 3-5분이 소요됩니다. 각 단계의 로그를 클릭하여 상세 진행 상황을 확인할 수 있습니다.
 
-86. 웹 브라우저에서 Amazon S3 웹사이트 URL을 새로고침합니다.
-87. 버전이 "QuickTable v2.0"으로 업데이트되었는지 확인합니다.
+84. 웹 브라우저에서 Amazon S3 웹사이트 URL을 새로고침합니다.
+85. 버전이 "Version: 2.0"으로 업데이트되었는지 확인합니다.
 
 ✅ **태스크 완료**: 코드 변경이 자동으로 빌드되고 Amazon S3에 배포되었습니다.
 
@@ -495,11 +476,10 @@ git push origin main
 다음을 성공적으로 수행했습니다:
 
 - AWS CloudFormation으로 Amazon S3 버킷과 CI/CD 인프라를 자동으로 구축했습니다
-- CodeCommit에 QuickTable 프론트엔드 코드를 저장했습니다
+- CodeCommit에 정적 웹사이트 코드를 저장했습니다
 - AWS CodeBuild로 웹사이트를 빌드하고 Amazon S3에 배포했습니다
 - CodePipeline으로 전체 CI/CD 워크플로우를 자동화했습니다
 - 코드 변경 시 자동으로 Amazon S3에 배포되는 파이프라인을 테스트했습니다
-- Week 4-2에서 구축한 QuickTable API와 연동되는 프론트엔드 UI를 배포했습니다
 
 # 🗑️ 리소스 정리
 
@@ -568,7 +548,7 @@ git push origin main
 - [Amazon S3 정적 웹사이트 호스팅](https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/WebsiteHosting.html)
 - [AWS CodeBuild buildspec 참조](https://docs.aws.amazon.com/ko_kr/codebuild/latest/userguide/build-spec-ref.html)
 
-## 📚 참고: Amazon S3 정적 웹사이트 호스팅 및 QuickTable 아키텍처
+## 📚 참고: Amazon S3 정적 웹사이트 호스팅 및 CI/CD 아키텍처
 
 ### Amazon S3 정적 웹사이트 호스팅
 
@@ -580,48 +560,13 @@ Amazon S3는 정적 웹사이트를 호스팅할 수 있는 기능을 제공합�
 - 저렴한 비용
 - Amazon CloudFront와 통합 가능
 
-### QuickTable 프론트엔드 아키텍처
+### CI/CD Demo 웹사이트 구성
 
 **구성 요소:**
-- **index.html**: 레스토랑 목록 표시 (Week 4-2 API 호출)
-- **reservation.html**: 예약 생성 폼 (날짜/시간/인원 선택)
-- **my-reservations.html**: 내 예약 조회 페이지
-- **app.js**: API 연동 로직 (Amazon Cognito 인증 포함)
-- **style.css**: 반응형 디자인
-
-**API 연동:**
-```javascript
-// Week 4-2에서 구축한 API 엔드포인트
-// 이 코드는 참고용 예시입니다. 실제 app.js 파일에서는 본인의 Amazon API Gateway URL로 대체해야 합니다.
-const API_BASE_URL = 'https://your-api-gateway-url.execute-api.ap-northeast-2.amazonaws.com/prod';
-
-// 레스토랑 목록 조회
-async function getRestaurants() {
-  const response = await fetch(`${API_BASE_URL}/restaurants`, {
-    headers: {
-      'Authorization': `Bearer ${idToken}`
-    }
-  });
-  return await response.json();
-}
-
-// 예약 생성
-async function createReservation(data) {
-  const response = await fetch(`${API_BASE_URL}/reservations`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
-    body: JSON.stringify(data)
-  });
-  return await response.json();
-}
-```
-
-> [!NOTE]
-> Week 4-2 실습을 완료한 경우 app.js 파일에서 `API_BASE_URL`을 본인의 Amazon API Gateway URL로 변경해야 합니다.
-> Week 4-2 리소스가 없어도 정적 웹사이트는 정상적으로 표시되지만, API 연동 기능은 작동하지 않습니다.
+- **index.html**: 메인 페이지 (CI/CD Pipeline Demo, 서비스 소개, 배포 프로세스 설명)
+- **about.html**: 소개 페이지 (프로젝트 설명, 사용된 AWS 서비스, 학습 목표)
+- **script.js**: 인터랙티브 기능 (애니메이션, 배포 정보 로깅)
+- **style.css**: 반응형 디자인 (그리드 레이아웃, 호버 효과)
 
 ### buildspec.yml의 Amazon S3 배포 단계
 
@@ -660,29 +605,24 @@ aws s3 sync . s3://$BUCKET_NAME --delete --exclude "buildspec.yml"
 }
 ```
 
-### QuickTable 전체 아키텍처 연결
+### CI/CD 파이프라인 전체 아키텍처
 
-**Week 4-2 (백엔드):**
-- AWS Lambda 함수: CreateReservation, GetReservations
-- Amazon API Gateway: /reservations 엔드포인트
-- Amazon Cognito User Pool: 사용자 인증
-- Amazon DynamoDB: Reservations 테이블
+**Week 9-2 (빌드):**
+- AWS CodeBuild: Docker 이미지 빌드
+- AWS CodeCommit: 소스 코드 저장소
+- Amazon ECR: 컨테이너 이미지 레지스트리
 
-**Week 9-3 (프론트엔드):**
+**Week 9-3 (배포):**
 - Amazon S3: 정적 웹사이트 호스팅
 - AWS CodePipeline: CI/CD 자동화
-- 사용자 UI: 예약 생성/조회 인터페이스
+- Amazon EventBridge: 코드 변경 감지 및 파이프라인 트리거
 
 **데이터 흐름:**
-1. 사용자가 QuickTable 웹사이트 접속 (Amazon S3).
-2. Amazon Cognito로 로그인하여 ID 토큰 획득.
-3. 예약 생성 버튼 클릭.
-4. Amazon API Gateway로 POST 요청 전송.
-
-> [!NOTE]
-> Authorization 헤더에 ID 토큰을 포함하여 인증된 요청을 보냅니다.
-5. AWS Lambda 함수가 Amazon DynamoDB에 예약 데이터 저장.
-6. 응답을 프론트엔드에 반환하여 화면 업데이트.
+- 개발자가 CodeCommit에 코드를 푸시합니다.
+- Amazon EventBridge가 변경 사항을 감지합니다.
+- AWS CodePipeline이 자동으로 실행됩니다.
+- AWS CodeBuild가 파일을 Amazon S3에 동기화합니다.
+- 웹사이트가 자동으로 업데이트됩니다.
 
 ### 모범 사례
 

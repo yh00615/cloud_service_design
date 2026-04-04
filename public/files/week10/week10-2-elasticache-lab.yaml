@@ -297,6 +297,11 @@ Resources:
           ToPort: 443
           CidrIp: 0.0.0.0/0
           Description: Allow HTTPS outbound
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: Allow HTTP outbound
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-EC2-SG'
@@ -337,6 +342,37 @@ Resources:
       ToPort: 6379
       DestinationSecurityGroupId: !Ref ElastiCacheSecurityGroup
       Description: Allow Redis access to ElastiCache
+
+  # SSM Role for EC2 Instance
+  SSMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-SSMRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-SSMRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  SSMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub '${EnvironmentName}-SSMInstanceProfile'
+      Roles:
+        - !Ref SSMRole
 
   # Lambda Execution Role
   LambdaExecutionRole:
@@ -458,6 +494,12 @@ Outputs:
     Value: !Ref EC2SecurityGroup
     Export:
       Name: !Sub '${AWS::StackName}-EC2SecurityGroupId'
+
+  SSMInstanceProfileName:
+    Description: SSM Instance Profile Name for EC2
+    Value: !Ref SSMInstanceProfile
+    Export:
+      Name: !Sub '${AWS::StackName}-SSMInstanceProfileName'
 
   LambdaExecutionRoleArn:
     Description: Lambda Execution Role ARN

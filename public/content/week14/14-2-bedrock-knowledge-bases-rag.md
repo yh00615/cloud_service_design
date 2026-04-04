@@ -127,7 +127,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 > [!NOTE]
 > Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
-> 별도의 모델 액세스 요청 없이 바로 사용할 수 있습니다.
+> Anthropic Claude 모델은 처음 사용 시 일회성 **Use case details** 양식 제출이 필요하지만, 14-1 실습에서 이미 완료한 경우 추가 제출 없이 바로 사용할 수 있습니다.
 
 22. Amazon Bedrock 콘솔로 이동합니다.
 23. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
@@ -350,15 +350,15 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ## 1단계: 생성된 리소스 확인 (Tag Editor)
 
-66. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
-67. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-68. **Regions**에서 `ap-northeast-2`를 선택합니다.
-69. **Resource types**에서 `All supported resource types`를 선택합니다.
-70. **Tags** 섹션에서 다음을 입력합니다:
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+3. **Regions**에서 `ap-northeast-2`를 선택합니다.
+4. **Resource types**에서 `All supported resource types`를 선택합니다.
+5. **Tags** 섹션에서 다음을 입력합니다:
 	- **Tag key**: `Week`
 	- **Tag value**: `14-2`
-71. [[Search resources]] 버튼을 클릭합니다.
-72. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+6. [[Search resources]] 버튼을 클릭합니다.
+7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -367,13 +367,13 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### Amazon Bedrock Knowledge Base 삭제
 
-73. Amazon Bedrock 콘솔로 이동합니다.
-74. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
-75. `quicktable-restaurant-kb`를 선택합니다.
-76. [[Delete]] 버튼을 클릭합니다.
-77. `delete`를 입력하여 삭제를 확인합니다.
-78. [[Delete]] 버튼을 클릭합니다.
-79. 삭제가 완료될 때까지 기다립니다.
+8. Amazon Bedrock 콘솔로 이동합니다.
+9. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
+10. `quicktable-restaurant-kb`를 선택합니다.
+11. [[Delete]] 버튼을 클릭합니다.
+12. `delete`를 입력하여 삭제를 확인합니다.
+13. [[Delete]] 버튼을 클릭합니다.
+14. 삭제가 완료될 때까지 기다립니다.
 
 > [!WARNING]
 > Knowledge Base를 삭제해도 OpenSearch Serverless 컬렉션은 자동으로 삭제되지 않습니다.
@@ -381,12 +381,12 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### OpenSearch Serverless 컬렉션 삭제 확인
 
-80. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
-81. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
-82. Knowledge Base와 연결된 컬렉션이 삭제되었는지 확인합니다.
-83. 컬렉션이 남아있다면 선택 후 [[Delete]] 버튼을 클릭합니다.
-84. 확인 창에서 `confirm`을 입력합니다.
-85. [[Delete]] 버튼을 클릭합니다.
+15. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
+16. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
+17. Knowledge Base와 연결된 컬렉션이 삭제되었는지 확인합니다.
+18. 컬렉션이 남아있다면 선택 후 [[Delete]] 버튼을 클릭합니다.
+19. 확인 창에서 `confirm`을 입력합니다.
+20. [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
 > OpenSearch Serverless 컬렉션이 삭제되지 않으면 OCU당 시간당 $0.24 비용이 계속 발생합니다.
@@ -394,35 +394,35 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### Amazon S3 버킷 삭제
 
-86. Amazon S3 콘솔로 이동합니다.
-87. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-88. [[Empty]] 버튼을 클릭합니다.
-89. `permanently delete`를 입력합니다.
-90. [[Empty]] 버튼을 클릭합니다.
-91. 버킷을 선택합니다.
-92. [[Delete]] 버튼을 클릭합니다.
-93. 버킷 이름을 입력합니다.
-94. [[Delete bucket]] 버튼을 클릭합니다.
+21. Amazon S3 콘솔로 이동합니다.
+22. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
+23. [[Empty]] 버튼을 클릭합니다.
+24. `permanently delete`를 입력합니다.
+25. [[Empty]] 버튼을 클릭합니다.
+26. 버킷을 선택합니다.
+27. [[Delete]] 버튼을 클릭합니다.
+28. 버킷 이름을 입력합니다.
+29. [[Delete bucket]] 버튼을 클릭합니다.
 
 ### Amazon CloudWatch Log Group 삭제
 
-95. 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-96. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-97. 검색창에 `bedrock`을 입력합니다.
+30. 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
+31. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+32. 검색창에 `bedrock`을 입력합니다.
 
 > [!NOTE]
 > Knowledge Base 사용량에 따라 Amazon CloudWatch Log Group이 생성되지 않을 수 있습니다.
 > 검색 결과가 없으면 이 단계를 건너뜁니다.
 
-98. Knowledge Base 관련 로그 그룹을 선택합니다.
-99. **Actions** > `Delete log group(s)`를 선택합니다.
-100. [[Delete]] 버튼을 클릭합니다.
+33. Knowledge Base 관련 로그 그룹을 선택합니다.
+34. **Actions** > `Delete log group(s)`를 선택합니다.
+35. [[Delete]] 버튼을 클릭합니다.
 
 ## 3단계: 삭제 확인
 
-101. `Resource Groups & Tag Editor`로 이동합니다.
-102. Tag key: `Week`, Tag value: `14-2`로 검색합니다.
-103. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+36. `Resource Groups & Tag Editor`로 이동합니다.
+37. Tag key: `Week`, Tag value: `14-2`로 검색합니다.
+38. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 
 > [!SUCCESS]
 > 모든 리소스가 정리되었습니다.

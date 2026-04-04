@@ -22,21 +22,33 @@ prerequisites:
 
 이 실습에서는 AWS Secrets Manager의 핵심 기능인 **자동 로테이션**을 학습합니다. Amazon RDS MySQL 데이터베이스를 생성하고, Secrets Manager에 자격증명을 저장한 후, 자동 로테이션을 설정하여 비밀번호를 주기적으로 변경합니다. AWS Lambda 함수에서 Secrets Manager와 Parameter Store를 조회하여 실제 데이터베이스에 연결하는 과정을 실습합니다.
 
-이 실습을 시작하기 전에 AWS 콘솔 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**로 설정되어 있는지 확인합니다.
-
-> [!WARNING]
-> 이 실습에서 생성하는 리소스는 실습 종료 후 **반드시 삭제**해야 합니다.
-
 > [!DOWNLOAD]
 > [week12-1-secrets-manager-lab.zip](/files/week12/week12-1-secrets-manager-lab.zip)
 >
 > - `week12-1-secrets-manager-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon RDS, Amazon VPC, AWS Lambda 함수 자동 생성)
 > - `lambda_function.py` - AWS Lambda 함수 코드 (참고용)
+> - `lambda-iam-policy.json` - AWS Lambda 실행 역할 IAM 정책 (참고용)
+> - `README.txt` - 실습 안내 파일
 >
 > **관련 태스크:**
 >
 > - 태스크 0: 실습 환경 구축 (AWS CloudFormation으로 Amazon RDS + AWS Lambda 자동 생성)
 > - 태스크 5: AWS Lambda 함수 테스트 (이미 생성된 함수 사용)
+
+> [!CONCEPT] 자격증명 관리 아키텍처
+>
+> 코드에 자격증명을 하드코딩하면 소스 코드 유출 시 보안 사고로 이어집니다. **중앙 집중식 자격증명 관리**는 이를 해결하는 핵심 아키텍처입니다.
+>
+> - **AWS Secrets Manager**: 데이터베이스 자격증명 등 민감 정보를 저장하고, **자동 로테이션**으로 비밀번호를 주기적으로 변경합니다
+> - **AWS Systems Manager Parameter Store**: 애플리케이션 설정값을 계층 구조(`/prod/app/config/`)로 관리하며, SecureString으로 암호화를 지원합니다
+> - **AWS KMS**: 두 서비스에서 저장하는 데이터를 암호화하는 키를 관리합니다
+>
+> 애플리케이션은 런타임에 Secrets Manager/Parameter Store에서 자격증명을 조회하여 사용합니다.
+
+> [!WARNING]
+> 이 실습에서 생성하는 리소스는 실습 종료 후 **반드시 삭제**해야 합니다.
+
+이 실습을 시작하기 전에 AWS 콘솔 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**로 설정되어 있는지 확인합니다.
 
 ## 태스크 0: 실습 환경 구축
 
@@ -58,7 +70,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week12-1-secrets-manager-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
+5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week12-1-secrets-manager-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.

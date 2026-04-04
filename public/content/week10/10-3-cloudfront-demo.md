@@ -4,6 +4,7 @@ week: 10
 session: 3
 awsServices:
   - Amazon CloudFront
+  - Amazon S3
 learningObjectives:
   - CDN의 개념과 Amazon CloudFront의 엣지 로케이션 동작 원리를 이해할 수 있습니다.
   - Amazon S3 오리진을 준비하고 Amazon CloudFront 배포를 생성할 수 있습니다.
@@ -35,7 +36,7 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 > - 태스크 5: CloudFront Functions로 URL 리다이렉트 (엣지 컴퓨팅)
 
 > [!NOTE]
-> 이 데모는 비용이 거의 발생하지 않습니다. Amazon CloudFront 프리 티어에서 매월 50GB 데이터 전송과 2,000,000건의 요청을 무료로 제공합니다.
+> 이 데모는 비용이 거의 발생하지 않습니다. Amazon CloudFront 프리 티어에서 매월 1TB 데이터 전송과 10,000,000건의 요청을 무료로 제공합니다.
 
 ## 태스크 1: QuickTable 프론트엔드 Amazon S3 오리진 준비
 
@@ -78,10 +79,13 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 ## 태스크 2: QuickTable Amazon CloudFront 배포 생성
 
-이 태스크에서는 Amazon S3 버킷을 오리진으로 하는 Amazon CloudFront 배포를 생성하여 QuickTable을 전 세계에 배포합니다. CloudFront 배포 생성은 4단계 위자드로 진행됩니다.
+이 태스크에서는 Amazon S3 버킷을 오리진으로 하는 Amazon CloudFront 배포를 생성하여 QuickTable을 전 세계에 배포합니다. CloudFront 배포 생성은 5단계 위자드로 진행됩니다.
 
 14. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFront`을 입력하고 선택합니다.
 15. [[Create distribution]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> CloudFront 콘솔에 "Flat-rate security and delivery plans" 배너가 표시될 수 있습니다. 이 실습에서는 사용량 기반(pay-as-you-go) 배포를 사용하므로 배너를 닫고 [[Create distribution]] 버튼을 클릭합니다. "Create a flat-rate distribution"은 선택하지 않습니다.
 
 ### Step 1: Get started
 
@@ -136,11 +140,20 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 28. [[Next]] 버튼을 클릭합니다.
 
-### Step 4: Review and create
+### Step 4: Get TLS certificate
 
-29. **General configuration**, **Origin**, **Cache settings**, **Security** 설정을 검토합니다.
-30. **Grant CloudFront access to origin**이 `Yes`로 표시되는지 확인합니다.
-31. [[Create distribution]] 버튼을 클릭합니다.
+29. 이 실습에서는 커스텀 도메인을 사용하지 않으므로 기본 설정을 유지합니다.
+
+> [!NOTE]
+> 커스텀 도메인을 사용하는 경우 이 단계에서 AWS Certificate Manager(ACM)를 통해 TLS 인증서를 프로비저닝할 수 있습니다. 이 실습에서는 CloudFront 기본 도메인(`d1234abcd.cloudfront.net`)을 사용하므로 별도 설정이 필요 없습니다.
+
+30. [[Next]] 버튼을 클릭합니다.
+
+### Step 5: Review and create
+
+31. **General configuration**, **Origin**, **Cache settings**, **Security** 설정을 검토합니다.
+32. **Grant CloudFront access to origin**이 `Yes`로 표시되는지 확인합니다.
+33. [[Create distribution]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > CloudFront가 자동으로 Amazon S3 버킷 정책을 업데이트하여 OAC 접근을 허용합니다. 별도로 버킷 정책을 수동 설정할 필요가 없습니다.
@@ -148,9 +161,9 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 > [!NOTE]
 > 배포 생성에 5-15분이 소요됩니다. 상태가 "Deploying"에서 "Enabled"로 변경될 때까지 기다립니다.
 
-32. 대기하는 동안 이전 차시 내용을 복습하거나 다음 태스크를 미리 읽어봅니다.
-33. 페이지를 새로고침하여 최신 상태를 확인합니다.
-34. 배포 상태가 "Enabled"로 변경될 때까지 기다립니다.
+34. 대기하는 동안 이전 차시 내용을 복습하거나 다음 태스크를 미리 읽어봅니다.
+35. 페이지를 새로고침하여 최신 상태를 확인합니다.
+36. 배포 상태가 "Enabled"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: Amazon CloudFront 배포가 생성되고 Amazon S3 버킷 정책이 자동으로 업데이트되었습니다.
 
@@ -158,31 +171,31 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 이 태스크에서는 CloudFront를 통해 콘텐츠에 접근하고 캐싱 동작을 확인합니다.
 
-35. Amazon CloudFront 콘솔에서 배포 상태가 `Enabled`가 될 때까지 기다립니다.
-36. **Distribution domain name**을 복사합니다.
+37. Amazon CloudFront 콘솔에서 배포 상태가 `Enabled`가 될 때까지 기다립니다.
+38. **Distribution domain name**을 복사합니다.
 
 > [!NOTE]
 > 도메인 이름은 `d1234abcd.cloudfront.net` 형식입니다.
 
-37. 새 브라우저 탭을 엽니다.
-38. 주소창에 복사한 도메인을 붙여넣고 Enter를 누릅니다.
-39. QuickTable 웹사이트가 정상적으로 로드되는지 확인합니다.
+39. 새 브라우저 탭을 엽니다.
+40. 주소창에 복사한 도메인을 붙여넣고 Enter를 누릅니다.
+41. QuickTable 웹사이트가 정상적으로 로드되는지 확인합니다.
 
 > [!CONCEPT] 엣지 로케이션 (Edge Location)
 > Amazon CloudFront는 전 세계 400개 이상의 엣지 로케이션에서 콘텐츠를 캐싱합니다.
 > 사용자는 가장 가까운 엣지 로케이션에서 콘텐츠를 받아 빠른 속도를 경험합니다.
 
-40. 브라우저 개발자 도구를 엽니다 (F12 키).
-41. **Network** 탭을 선택합니다.
-42. **Disable cache** 체크박스를 체크합니다.
+42. 브라우저 개발자 도구를 엽니다 (F12 키).
+43. **Network** 탭을 선택합니다.
+44. **Disable cache** 체크박스를 체크합니다.
 
 > [!IMPORTANT]
 > 브라우저 캐시를 비활성화하지 않으면 CloudFront 캐시 헤더를 정확히 확인할 수 없습니다. 브라우저가 로컬 캐시를 사용하여 CloudFront에 요청을 보내지 않을 수 있습니다.
 
-43. 페이지를 새로고침합니다 (Ctrl+R 또는 Cmd+R).
-44. `index.html` 요청을 선택합니다.
-45. **Headers** 섹션에서 **Response Headers**를 확인합니다.
-46. `x-cache` 헤더를 찾습니다.
+45. 페이지를 새로고침합니다 (Ctrl+R 또는 Cmd+R).
+46. `index.html` 요청을 선택합니다.
+47. **Headers** 섹션에서 **Response Headers**를 확인합니다.
+48. `x-cache` 헤더를 찾습니다.
 
 > [!NOTE]
 > 첫 요청에서 `Miss from cloudfront`가 아닌 `Hit from cloudfront`가 표시될 수 있습니다. 이는 다른 사용자가 동일 엣지 로케이션에서 이미 해당 콘텐츠를 요청하여 캐시에 저장된 경우입니다. 이것은 정상 동작입니다.
@@ -194,16 +207,16 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 > - **x-amz-cf-pop** - 요청을 처리한 엣지 로케이션 (예: ICN54-C1은 서울)
 > - **age** - 캐시된 시간 (초 단위)
 
-47. 페이지를 다시 새로고침합니다.
-48. `x-cache` 헤더가 `Hit from cloudfront`로 변경되었는지 확인합니다.
-49. `age` 헤더 값이 증가하는 것을 확인합니다.
-50. 주소창에 `http://` + 복사한 도메인을 입력합니다.
+49. 페이지를 다시 새로고침합니다.
+50. `x-cache` 헤더가 `Hit from cloudfront`로 변경되었는지 확인합니다.
+51. `age` 헤더 값이 증가하는 것을 확인합니다.
+52. 주소창에 `http://` + 복사한 도메인을 입력합니다.
 
 > [!NOTE]
 > 예: `http://d1234abcd.cloudfront.net`
 
-51. 자동으로 `https://`로 리다이렉트되는지 확인합니다.
-52. **Network** 탭에서 301 또는 302 리다이렉트 응답을 확인합니다.
+53. 자동으로 `https://`로 리다이렉트되는지 확인합니다.
+54. **Network** 탭에서 301 또는 302 리다이렉트 응답을 확인합니다.
 
 > [!NOTE]
 > CloudFront 권장 설정은 기본적으로 HTTP를 HTTPS로 리다이렉트합니다. 모든 HTTP 요청은 자동으로 HTTPS로 리다이렉트됩니다.
@@ -214,19 +227,19 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 이 태스크에서는 QuickTable 콘텐츠를 업데이트하고 캐시된 콘텐츠를 강제로 갱신하는 방법을 학습합니다.
 
-53. 텍스트 에디터에서 `index.html` 파일을 엽니다.
-54. 제목을 "QuickTable v2.0 - 더 빠른 예약 경험"으로 변경합니다.
-55. 파일을 저장합니다.
-56. Amazon S3 콘솔에서 버킷을 선택합니다.
-57. [[Upload]] 버튼을 클릭합니다.
-58. 수정한 `index.html` 파일을 선택합니다.
+55. 텍스트 에디터에서 `index.html` 파일을 엽니다.
+56. 제목을 "QuickTable v2.0 - 더 빠른 예약 경험"으로 변경합니다.
+57. 파일을 저장합니다.
+58. Amazon S3 콘솔에서 버킷을 선택합니다.
+59. [[Upload]] 버튼을 클릭합니다.
+60. 수정한 `index.html` 파일을 선택합니다.
 
 > [!NOTE]
 > 동일한 파일명으로 업로드하면 기존 파일을 덮어씁니다. Amazon S3는 자동으로 버전 관리를 하지 않으므로 이전 버전은 삭제됩니다.
 
-59. [[Upload]] 버튼을 클릭합니다.
-60. Amazon CloudFront 도메인으로 다시 접속합니다.
-61. 여전히 이전 버전이 표시되는 것을 확인합니다.
+61. [[Upload]] 버튼을 클릭합니다.
+62. Amazon CloudFront 도메인으로 다시 접속합니다.
+63. 여전히 이전 버전이 표시되는 것을 확인합니다.
 
 > [!NOTE]
 > 캐시된 이전 버전이 표시됩니다. 권장 캐시 설정의 기본 TTL 동안 CloudFront는 캐시된 콘텐츠를 제공합니다. Amazon S3에 새 파일을 업로드해도 TTL이 만료되기 전까지는 이전 버전이 제공됩니다. 이것이 캐시 무효화가 필요한 이유입니다.
@@ -235,32 +248,32 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 > 캐시된 콘텐츠를 즉시 갱신하려면 무효화를 생성해야 합니다.
 > 무효화는 모든 엣지 로케이션의 캐시를 제거하여 다음 요청 시 오리진에서 새 콘텐츠를 가져오도록 합니다.
 
-62. Amazon CloudFront 콘솔에서 배포를 선택합니다.
-63. **Invalidations** 탭을 선택합니다.
-64. [[Create invalidation]] 버튼을 클릭합니다.
-65. **Object paths**에 `/index.html`을 입력합니다.
+64. Amazon CloudFront 콘솔에서 배포를 선택합니다.
+65. **Invalidations** 탭을 선택합니다.
+66. [[Create invalidation]] 버튼을 클릭합니다.
+67. **Object paths**에 `/index.html`을 입력합니다.
 
 > [!NOTE]
 > 모든 파일을 무효화하려면 `/*`를 입력합니다. 매월 처음 1,000개 경로는 무료이며, 이후 경로당 $0.005가 부과됩니다.
 
-66. [[Create invalidation]] 버튼을 클릭합니다.
-67. 무효화 상태가 `Completed`가 될 때까지 기다립니다.
+68. [[Create invalidation]] 버튼을 클릭합니다.
+69. 무효화 상태가 `Completed`가 될 때까지 기다립니다.
 
 > [!NOTE]
 > 무효화는 1-2분 소요됩니다.
 
-68. 브라우저 개발자 도구(F12)에서 **Network** 탭을 선택합니다.
-69. **Disable cache** 체크박스가 활성화되어 있는지 확인합니다.
-70. 강력 새로고침을 수행합니다 (Ctrl+Shift+R 또는 Cmd+Shift+R).
-71. `index.html` 요청을 선택합니다.
-72. `x-cache` 헤더가 `Miss from cloudfront`로 표시되는지 확인합니다.
+70. 브라우저 개발자 도구(F12)에서 **Network** 탭을 선택합니다.
+71. **Disable cache** 체크박스가 활성화되어 있는지 확인합니다.
+72. 강력 새로고침을 수행합니다 (Ctrl+Shift+R 또는 Cmd+Shift+R).
+73. `index.html` 요청을 선택합니다.
+74. `x-cache` 헤더가 `Miss from cloudfront`로 표시되는지 확인합니다.
 
 > [!NOTE]
 > 무효화 직후 첫 요청은 반드시 `Miss from cloudfront`여야 합니다. 이는 캐시가 제거되어 오리진에서 새 콘텐츠를 가져오는 것을 의미합니다.
 
-73. 변경된 제목 "QuickTable v2.0 - 더 빠른 예약 경험"이 표시되는 것을 확인합니다.
-74. 페이지를 다시 새로고침합니다.
-75. `x-cache` 헤더가 `Hit from cloudfront`로 변경되는지 확인합니다.
+75. 변경된 제목 "QuickTable v2.0 - 더 빠른 예약 경험"이 표시되는 것을 확인합니다.
+76. 페이지를 다시 새로고침합니다.
+77. `x-cache` 헤더가 `Hit from cloudfront`로 변경되는지 확인합니다.
 
 ✅ **태스크 완료**: 캐시 무효화를 통해 QuickTable 콘텐츠를 갱신했습니다.
 
@@ -268,11 +281,11 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 이 태스크에서는 CloudFront Functions를 사용하여 엣지 로케이션에서 URL 리다이렉트를 처리하는 함수를 생성합니다. CloudFront Functions는 뷰어 요청/응답 시점에 경량 JavaScript 코드를 실행하여 헤더 조작, URL 리다이렉트, 요청 인증 등을 수행할 수 있습니다.
 
-76. Amazon CloudFront 콘솔의 왼쪽 메뉴에서 **Functions**를 선택합니다.
-77. [[Create function]] 버튼을 클릭합니다.
-78. **Name**에 `quicktable-redirect`를 입력합니다.
-79. **Description**에 `Redirect /old to /about.html`을 입력합니다.
-80. **Runtime**에서 `cloudfront-js-2.0`을 선택합니다.
+78. Amazon CloudFront 콘솔의 왼쪽 메뉴에서 **Functions**를 선택합니다.
+79. [[Create function]] 버튼을 클릭합니다.
+80. **Name**에 `quicktable-redirect`를 입력합니다.
+81. **Description**에 `Redirect /old to /about.html`을 입력합니다.
+82. **Runtime**에서 `cloudfront-js-2.0`을 선택합니다.
 
 > [!CONCEPT] CloudFront Functions 런타임
 > CloudFront Functions는 두 가지 JavaScript 런타임을 지원합니다.
@@ -280,8 +293,8 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 > - **cloudfront-js-1.0**: ECMAScript 5.1 호환 (레거시)
 > - **cloudfront-js-2.0**: async/await 등 최신 JavaScript 지원 (권장)
 
-81. [[Create function]] 버튼을 클릭합니다.
-82. **Function code** 섹션에서 기본 코드를 삭제하고 다음 코드를 붙여넣습니다:
+83. [[Create function]] 버튼을 클릭합니다.
+84. **Function code** 섹션에서 기본 코드를 삭제하고 다음 코드를 붙여넣습니다:
 
 ```javascript
 /**
@@ -321,15 +334,15 @@ function handler(event) {
 > 위 코드는 `/old` 경로로 들어오는 요청을 `/about.html`로 302 리다이렉트합니다.
 > 리다이렉트가 아닌 일반 요청은 그대로 오리진으로 전달됩니다.
 
-83. [[Save changes]] 버튼을 클릭합니다.
+85. [[Save changes]] 버튼을 클릭합니다.
 
 ### 함수 테스트
 
-84. **Test** 탭을 선택합니다.
-85. **Event type**에서 `Viewer request`를 선택합니다.
-86. **Request** 섹션에서 **URL path**를 `/old`로 변경합니다.
-87. [[Test function]] 버튼을 클릭합니다.
-88. **Output** 섹션에서 결과를 확인합니다:
+86. **Test** 탭을 선택합니다.
+87. **Event type**에서 `Viewer request`를 선택합니다.
+88. **Request** 섹션에서 **URL path**를 `/old`로 변경합니다.
+89. [[Test function]] 버튼을 클릭합니다.
+90. **Output** 섹션에서 결과를 확인합니다:
     - **Status code**: `302`
     - **Location** 헤더: `/about.html`
     - **cloudfront-functions** 헤더: `quicktable-redirect`
@@ -337,53 +350,53 @@ function handler(event) {
 > [!NOTE]
 > Compute utilization 값이 표시됩니다. 이 값이 100에 가까우면 함수가 시간 제한에 근접한 것입니다. 일반적으로 30 이하면 충분한 여유가 있습니다.
 
-89. **URL path**를 `/index.html`로 변경합니다.
-90. [[Test function]] 버튼을 클릭합니다.
-91. 이번에는 리다이렉트 없이 원래 요청이 그대로 반환되는지 확인합니다.
+91. **URL path**를 `/index.html`로 변경합니다.
+92. [[Test function]] 버튼을 클릭합니다.
+93. 이번에는 리다이렉트 없이 원래 요청이 그대로 반환되는지 확인합니다.
 
 > [!TIP]
 > `/old` 경로만 리다이렉트되고 다른 경로는 정상 처리되는 것을 테스트로 확인했습니다. Publish 전에 테스트하면 잘못된 함수가 프로덕션에 배포되는 것을 방지할 수 있습니다.
 
 ### 함수 배포 및 연결
 
-92. **Publish** 탭을 선택합니다.
-93. [[Publish function]] 버튼을 클릭합니다.
+94. **Publish** 탭을 선택합니다.
+95. [[Publish function]] 버튼을 클릭합니다.
 
 > [!IMPORTANT]
 > 함수를 배포에 연결하려면 반드시 먼저 Publish해야 합니다. Development 상태에서는 연결할 수 없습니다.
 
-94. **Publish** 탭에서 [[Add association]] 버튼을 클릭합니다.
-95. **Distribution**에서 태스크 2에서 생성한 배포를 선택합니다.
-96. **Event type**에서 `Viewer request`를 선택합니다.
-97. **Cache behavior**에서 `Default (*)`를 선택합니다.
-98. [[Add association]] 버튼을 클릭합니다.
+96. **Publish** 탭에서 [[Add association]] 버튼을 클릭합니다.
+97. **Distribution**에서 태스크 2에서 생성한 배포를 선택합니다.
+98. **Event type**에서 `Viewer request`를 선택합니다.
+99. **Cache behavior**에서 `Default (*)`를 선택합니다.
+100. [[Add association]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 함수 연결 후 배포가 업데이트됩니다. 상태가 "Deployed"가 될 때까지 잠시 기다립니다.
 
-99. 브라우저에서 `https://` + CloudFront 도메인 + `/old`를 입력합니다.
+101. 브라우저에서 `https://` + CloudFront 도메인 + `/old`를 입력합니다.
 
 > [!NOTE]
 > 예: `https://d1234abcd.cloudfront.net/old`
 
-100. QuickTable 소개 페이지(`about.html`)로 리다이렉트되는지 확인합니다.
-101. 브라우저 개발자 도구(F12)의 **Network** 탭에서 `/old` 요청을 선택합니다.
-102. **Response Headers**에서 `302 Found` 상태 코드를 확인합니다.
-103. `cloudfront-functions: quicktable-redirect` 커스텀 헤더를 확인합니다.
-104. `x-cache: FunctionGeneratedResponse from cloudfront` 헤더를 확인합니다.
+102. QuickTable 소개 페이지(`about.html`)로 리다이렉트되는지 확인합니다.
+103. 브라우저 개발자 도구(F12)의 **Network** 탭에서 `/old` 요청을 선택합니다.
+104. **Response Headers**에서 `302 Found` 상태 코드를 확인합니다.
+105. `cloudfront-functions: quicktable-redirect` 커스텀 헤더를 확인합니다.
+106. `x-cache: FunctionGeneratedResponse from cloudfront` 헤더를 확인합니다.
 
 > [!CONCEPT] FunctionGeneratedResponse
 > `x-cache` 헤더가 `FunctionGeneratedResponse from cloudfront`로 표시되면 응답이 오리진이 아닌 CloudFront Functions에서 직접 생성된 것입니다. 오리진에 요청을 보내지 않으므로 지연 시간이 매우 짧습니다.
 
 ### 성능 비교: CloudFront Functions vs 오리진 응답
 
-105. **Network** 탭에서 `/old` 요청의 **Time** 열을 확인합니다.
+107. **Network** 탭에서 `/old` 요청의 **Time** 열을 확인합니다.
 
 > [!NOTE]
 > Time 열이 보이지 않으면 Network 탭의 열 헤더를 우클릭하여 **Time**을 활성화합니다.
 
-106. `/about.html` 요청의 **Time** 열을 확인합니다.
-107. 두 응답 시간을 비교합니다.
+108. `/about.html` 요청의 **Time** 열을 확인합니다.
+109. 두 응답 시간을 비교합니다.
 
 > [!CONCEPT] CloudFront Functions 성능 이점
 > `/old` 요청은 CloudFront Functions가 엣지 로케이션에서 직접 302 응답을 생성합니다. 오리진(Amazon S3)에 요청을 보내지 않으므로 응답 시간이 매우 짧습니다.

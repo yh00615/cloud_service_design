@@ -27,6 +27,8 @@ prerequisites:
 > - `mfa-policy.json` - MFA Condition 정책 JSON 샘플 (태스크 2 참고용)
 > - `ip-restriction-policy.json` - IP 제한 정책 JSON 샘플 (태스크 3 참고용)
 > - `time-based-policy.json` - 시간 기반 정책 JSON 샘플 (태스크 4 참고용)
+> - `week2-1-iam-policy-condition.yaml` - AWS CloudFormation 템플릿 (선택사항, lab-user 자동 생성)
+> - `README.md` - 실습 파일 설명 및 참고 자료
 >
 > **관련 태스크:**
 >

@@ -20,7 +20,7 @@ prerequisites:
 > [!IMPORTANT]
 > **리전 설정 필수**: 이 실습은 **Week 14-2와 동일한 리전**에서 진행합니다.
 >
-> - **권장 리전**: US East (N. Virginia) 또는 US West (Oregon)
+> - **권장 리전**: Asia Pacific (Seoul) ap-northeast-2
 > - Week 14-2에서 생성한 Knowledge Base를 연결하려면 같은 리전을 사용해야 합니다
 > - Amazon Bedrock Agent는 모든 모델이 지원되는 리전에서 사용합니다
 
@@ -609,6 +609,10 @@ def cancel_reservation(params):
 
 이 태스크에서는 QuickTable 챗봇의 핵심인 Amazon Bedrock Agent를 생성합니다.
 
+> [!NOTE]
+> Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
+> Anthropic Claude 모델은 처음 사용 시 일회성 **Use case details** 양식 제출이 필요하지만, 14-1 실습에서 이미 완료한 경우 추가 제출 없이 바로 사용할 수 있습니다.
+
 54. Amazon Bedrock 콘솔로 이동합니다.
 55. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
 56. [[Create Agent]] 버튼을 클릭합니다.
@@ -748,7 +752,7 @@ def cancel_reservation(params):
 > [!IMPORTANT]
 > 이 단계는 Week 14-2를 완료한 경우에만 수행합니다.
 > Week 14-2에서 생성한 Knowledge Base를 연결하여 레스토랑 정보 질문에 답변할 수 있도록 합니다.
-> 14-2 실습을 완료하지 않았다면 이 단계(23-27)를 건너뛰고 28번으로 이동합니다.
+> 14-2 실습을 완료하지 않았다면 이 단계(75-79)를 건너뛰고 80번으로 이동합니다.
 
 80. **Select knowledge base**에서 `quicktable-restaurant-kb`를 선택합니다 (14-2에서 생성).
 81. **Knowledge base instructions for Agent**에 다음을 입력합니다:
@@ -860,7 +864,7 @@ def cancel_reservation(params):
 2월 15일 예약 목록을 보여주세요.
 ```
 
-98. Trace 패널에서 Agent의 사고 과정을 확인합니다:
+99. Trace 패널에서 Agent의 사고 과정을 확인합니다:
 	- **Pre-processing**: 사용자 입력 분석
 	- **Orchestration**: 어떤 함수를 호출할지 결정
 	- **Action invocation**: AWS Lambda 함수 호출
@@ -1140,7 +1144,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
 
-### 방법 1: Tag Editor로 리소스 찾기 (권장)
+## 1단계: 생성된 리소스 확인 (Tag Editor)
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -1155,12 +1159,12 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
 
-### 방법 2: 수동 삭제
+## 2단계: 리소스 삭제
 
-#### 1. Amazon Bedrock Agent 삭제
+### Amazon Bedrock Agent 삭제
 
 8. AWS Management Console에 로그인한 후 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
-9. 왼쪽 메뉴에서 **Orchestration** > **Agents**를 선택합니다.
+9. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
 10. `QuickTableAssistant` Agent를 선택합니다.
 11. [[Delete]] 버튼을 클릭합니다.
 12. 확인 창에서 `delete`를 입력합니다.
@@ -1169,7 +1173,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!NOTE]
 > Agent를 삭제하면 모든 별칭과 버전도 함께 삭제됩니다.
 
-#### 2. AWS Lambda 함수 삭제
+### AWS Lambda 함수 삭제
 
 14. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
 15. `BedrockAgentReservationHandler` 함수를 선택합니다.
@@ -1178,7 +1182,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 18. [[Delete]] 버튼을 클릭합니다.
 19. 같은 방식으로 `BedrockAgentInvoker` 함수도 삭제합니다.
 
-#### 3. Amazon DynamoDB 테이블 삭제
+### Amazon DynamoDB 테이블 삭제
 
 20. AWS Management Console에 로그인한 후 상단 검색창에 `DynamoDB`을 입력하고 선택합니다.
 21. 왼쪽 메뉴에서 **Tables**를 선택합니다.
@@ -1187,7 +1191,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 24. 확인 창에서 `confirm`을 입력합니다.
 25. [[Delete]] 버튼을 클릭합니다.
 
-#### 4. AWS IAM 역할 삭제
+### AWS IAM 역할 삭제
 
 26. AWS Management Console에 로그인한 후 상단 검색창에 `IAM`을 입력하고 선택합니다.
 27. 왼쪽 메뉴에서 **Roles**를 선택합니다.
@@ -1202,7 +1206,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > AWS IAM 역할 이름은 `AmazonBedrockExecutionRoleForAgents_` 또는 `BedrockAgentReservationHandler-role-` 형식입니다.
 > 역할을 삭제하기 전에 다른 Agent나 AWS Lambda 함수에서 사용 중인지 확인합니다.
 
-#### 5. Amazon CloudWatch Log Group 삭제
+### Amazon CloudWatch Log Group 삭제
 
 34. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
 35. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
@@ -1216,14 +1220,14 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!NOTE]
 > Amazon CloudWatch Log Group은 자동으로 생성되며, 삭제하지 않으면 로그 저장 비용이 계속 발생합니다.
 
-#### 6. Week 14-2 리소스 삭제 (Knowledge Base 연결 시)
+### Week 14-2 리소스 삭제 (Knowledge Base 연결 시)
 
 > [!IMPORTANT]
 > Week 14-2에서 생성한 Knowledge Base와 OpenSearch Serverless 컬렉션을 삭제하지 않았다면 반드시 삭제합니다.
 > OpenSearch Serverless는 시간당 $0.48 (월 $346) 비용이 계속 발생합니다.
 
 40. Amazon Bedrock 콘솔로 이동합니다.
-41. 왼쪽 메뉴에서 **Orchestration** > **Knowledge bases**를 선택합니다.
+41. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
 42. `quicktable-restaurant-kb`를 선택합니다.
 43. [[Delete]] 버튼을 클릭합니다.
 44. 확인 창에서 `delete`를 입력합니다.
@@ -1244,6 +1248,12 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > Knowledge Base를 삭제하면 Amazon S3 버킷의 문서는 삭제되지 않습니다.
 > Amazon S3 버킷도 삭제하려면 Amazon S3 콘솔에서 `quicktable-kb-documents-YOUR-INITIALS` 버킷을 삭제합니다.
 
+## 3단계: 삭제 확인
+
+52. `Resource Groups & Tag Editor`로 이동합니다.
+53. Tag key: `Week`, Tag value: `14-3`으로 검색합니다.
+54. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
@@ -1251,7 +1261,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 - [Amazon Bedrock Agents 개요](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents.html)
 - [Amazon Bedrock Agents Action Groups](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-action-groups.html)
 - [Amazon Bedrock Agents Knowledge Bases](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/knowledge-base.html)
-- [Claude 3 모델 가이드](https://docs.anthropic.com/claude/docs/models-overview)
+- [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)
 - [Amazon Bedrock 요금](https://aws.amazon.com/ko/bedrock/pricing/)
 - [AWS Lambda와 Amazon Bedrock 통합](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-lambda.html)
 
@@ -1319,10 +1329,10 @@ Amazon Bedrock Agent는 다음 구성 요소로 이루어져 있습니다:
 
 ```
 주요 역할:
-52. 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
-53. 예약 번호로 기존 예약을 조회합니다.
-54. 특정 날짜의 예약 목록을 확인합니다.
-55. 예약 취소 요청을 처리합니다.
+55. 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
+56. 예약 번호로 기존 예약을 조회합니다.
+57. 특정 날짜의 예약 목록을 확인합니다.
+58. 예약 취소 요청을 처리합니다.
 ```
 
 **3. 대화 규칙 명시**
@@ -1767,10 +1777,10 @@ paths:
 
 **OpenAPI 스키마 사용 방법**
 
-56. Agent builder에서 Action Group 생성 시 **Action group type**에서 `Define with API schemas`를 선택합니다.
-57. **Action group schema**에서 `Upload API schema`를 선택합니다.
-58. [[Choose file]] 버튼을 클릭하여 OpenAPI YAML 파일을 업로드합니다.
-59. **Action group invocation**에서 AWS Lambda 함수를 선택합니다.
+- Agent builder에서 Action Group 생성 시 **Action group type**에서 `Define with API schemas`를 선택합니다.
+- **Action group schema**에서 `Upload API schema`를 선택합니다.
+- [[Choose file]] 버튼을 클릭하여 OpenAPI YAML 파일을 업로드합니다.
+- **Action group invocation**에서 AWS Lambda 함수를 선택합니다.
 
 **OpenAPI 스키마의 장점**
 
@@ -1794,10 +1804,10 @@ paths:
 
 **해결**:
 
-60. 함수 설명을 더 명확하고 구체적으로 작성합니다.
-61. 프롬프트에 "예약 요청 시 create_reservation 함수를 호출합니다" 같은 명시적 지침을 추가합니다.
-62. 사용자에게 더 구체적인 정보를 요청하도록 프롬프트를 수정합니다.
-63. Agent 테스트 시 Trace를 활성화하여 Agent의 사고 과정을 확인합니다.
+- 함수 설명을 더 명확하고 구체적으로 작성합니다.
+- 프롬프트에 "예약 요청 시 create_reservation 함수를 호출합니다" 같은 명시적 지침을 추가합니다.
+- 사용자에게 더 구체적인 정보를 요청하도록 프롬프트를 수정합니다.
+- Agent 테스트 시 Trace를 활성화하여 Agent의 사고 과정을 확인합니다.
 
 **문제 2: AWS Lambda 함수 응답 파싱 오류**
 
@@ -1811,7 +1821,7 @@ paths:
 
 **해결**:
 
-64. AWS Lambda 함수 응답이 올바른 형식인지 확인합니다:
+- AWS Lambda 함수 응답이 올바른 형식인지 확인합니다:
 
 ```python
 return {
@@ -1830,8 +1840,8 @@ return {
 }
 ```
 
-65. Amazon CloudWatch Logs에서 AWS Lambda 함수 로그를 확인합니다.
-66. 응답 데이터가 JSON 직렬화 가능한지 확인합니다 (datetime 객체는 문자열로 변환).
+- Amazon CloudWatch Logs에서 AWS Lambda 함수 로그를 확인합니다.
+- 응답 데이터가 JSON 직렬화 가능한지 확인합니다 (datetime 객체는 문자열로 변환).
 
 **문제 3: "Access Denied" 오류**
 
@@ -1844,11 +1854,11 @@ return {
 
 **해결**:
 
-67. AWS Lambda 함수 콘솔로 이동합니다.
-68. **Configuration** 탭을 선택합니다.
-69. 왼쪽 메뉴에서 **Permissions**를 선택합니다.
-70. **Resource-based policy statements** 섹션에서 Amazon Bedrock Agent 권한을 확인합니다.
-71. 권한이 없으면 다음 명령어로 추가합니다:
+- AWS Lambda 함수 콘솔로 이동합니다.
+- **Configuration** 탭을 선택합니다.
+- 왼쪽 메뉴에서 **Permissions**를 선택합니다.
+- **Resource-based policy statements** 섹션에서 Amazon Bedrock Agent 권한을 확인합니다.
+- 권한이 없으면 다음 명령어로 추가합니다:
 
 ```bash
 aws lambda add-permission \
@@ -1871,10 +1881,10 @@ aws lambda add-permission \
 
 **해결**:
 
-72. Knowledge Base 설정에서 청크 크기를 조정합니다 (300 → 500 토큰).
-73. 임베딩 모델을 Cohere Embed Multilingual v3로 변경합니다.
-74. 문서에 메타데이터를 추가하여 필터링을 활성화합니다.
-75. 사용자 질문을 더 구체적으로 유도하도록 프롬프트를 수정합니다.
+- Knowledge Base 설정에서 청크 크기를 조정합니다 (300 → 500 토큰).
+- 임베딩 모델을 Cohere Embed Multilingual v3로 변경합니다.
+- 문서에 메타데이터를 추가하여 필터링을 활성화합니다.
+- 사용자 질문을 더 구체적으로 유도하도록 프롬프트를 수정합니다.
 
 **문제 5: 응답 속도가 느림**
 
@@ -1889,11 +1899,11 @@ aws lambda add-permission \
 
 **해결**:
 
-76. AWS Lambda 함수에 Provisioned Concurrency를 설정하여 콜드 스타트 방지합니다.
-77. Amazon DynamoDB 테이블에 적절한 인덱스를 생성합니다.
-78. Knowledge Base 검색 결과 수를 줄입니다 (기본 5개 → 3개).
-79. 프롬프트를 간결하게 수정하여 토큰 수를 줄입니다.
-80. 더 빠른 모델(Claude 3 Haiku)을 사용합니다.
+- AWS Lambda 함수에 Provisioned Concurrency를 설정하여 콜드 스타트 방지합니다.
+- Amazon DynamoDB 테이블에 적절한 인덱스를 생성합니다.
+- Knowledge Base 검색 결과 수를 줄입니다 (기본 5개 → 3개).
+- 프롬프트를 간결하게 수정하여 토큰 수를 줄입니다.
+- 더 빠른 모델(Claude 3 Haiku)을 사용합니다.
 
 ### 추가 모범 사례
 
