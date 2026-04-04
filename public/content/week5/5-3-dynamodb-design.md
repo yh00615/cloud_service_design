@@ -19,6 +19,19 @@ prerequisites:
 
 LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여 다양한 쿼리 패턴을 지원하고, 두 인덱스의 차이를 실습을 통해 이해합니다. On-Demand와 Provisioned 용량 모드를 비교하고, Amazon DynamoDB 용량 모드 및 모니터링 방법을 학습합니다.
 
+> [!CONCEPT] Amazon DynamoDB 키 설계와 보조 인덱스
+> Amazon DynamoDB의 데이터 모델링은 키 설계가 핵심입니다.
+>
+> **기본 키 구성**:
+>
+> - **파티션 키(Partition Key)**: 데이터를 분산 저장하는 기준입니다. 높은 카디널리티(고유값이 많은)를 가진 속성을 선택합니다
+> - **정렬 키(Sort Key)**: 같은 파티션 내에서 데이터를 정렬합니다. 범위 쿼리(between, begins_with)가 가능합니다
+>
+> **보조 인덱스**:
+>
+> - **LSI(Local Secondary Index)**: 같은 파티션 키 + 다른 정렬 키. 테이블 생성 시에만 추가 가능합니다
+> - **GSI(Global Secondary Index)**: 다른 파티션 키 + 다른 정렬 키. 테이블 생성 후에도 추가/삭제 가능합니다
+
 > [!DOWNLOAD]
 > [week5-3-dynamodb-lab.zip](/files/week5/week5-3-dynamodb-lab.zip)
 >

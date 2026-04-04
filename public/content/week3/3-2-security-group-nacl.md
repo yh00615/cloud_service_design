@@ -16,6 +16,21 @@ prerequisites:
 
 이 실습에서는 3-Tier 아키텍처에 맞는 보안 그룹과 NACL을 구성하여 다층 보안을 구현합니다. 보안 그룹 체인을 설계하여 ALB, Web Server, App Server, Database 간의 트래픽을 제어하고, NACL을 사용하여 서브넷 레벨의 방화벽을 구성합니다. Session Manager를 사용하여 EC2 인스턴스에 접속하고 실제 트래픽 테스트를 수행하여 보안 그룹과 NACL의 동작을 확인합니다.
 
+> [!CONCEPT] 보안 그룹 vs NACL (Network ACL)
+> AWS에서 네트워크 보안은 두 가지 레벨에서 제어됩니다.
+>
+> **보안 그룹 (Security Group)** — 인스턴스 레벨:
+>
+> - **상태 저장(Stateful)**: 인바운드 허용 시 아웃바운드 응답이 자동 허용됩니다
+> - 허용 규칙만 지정 가능합니다 (거부 규칙 없음)
+> - 다른 보안 그룹을 소스로 참조할 수 있습니다 (보안 그룹 체인)
+>
+> **NACL (Network ACL)** — 서브넷 레벨:
+>
+> - **무상태(Stateless)**: 인바운드와 아웃바운드를 각각 별도로 설정해야 합니다
+> - 허용 규칙과 거부 규칙 모두 지정 가능합니다
+> - 규칙 번호 순서대로 평가됩니다 (낮은 번호 우선)
+
 > [!DOWNLOAD]
 > [week3-2-security-group-lab.zip](/files/week3/week3-2-security-group-lab.zip)
 >

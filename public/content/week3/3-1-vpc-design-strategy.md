@@ -20,6 +20,22 @@ prerequisites:
 
 Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을 제공하여 인터넷을 통하지 않고도 AWS 서비스에 접근할 수 있게 합니다. Interface Endpoint(ENI 기반)와 Gateway Endpoint(라우팅 테이블 기반)의 차이를 AWS 콘솔에서 직접 확인하고, 각각의 동작 방식을 실제로 검증합니다.
 
+> [!CONCEPT] Amazon VPC Endpoint 타입 비교
+> Amazon VPC Endpoint는 두 가지 타입이 있으며, 동작 방식이 다릅니다.
+>
+> **Interface Endpoint (ENI 기반)**:
+>
+> - 서브넷에 ENI(Elastic Network Interface)를 생성하여 프라이빗 IP를 할당합니다
+> - AWS PrivateLink 기술을 사용합니다
+> - 대부분의 AWS 서비스를 지원합니다 (AWS Systems Manager, Amazon CloudWatch, AWS KMS 등)
+> - 시간당 요금 + 데이터 처리 요금이 발생합니다
+>
+> **Gateway Endpoint (라우팅 테이블 기반)**:
+>
+> - 라우팅 테이블에 경로를 추가하여 트래픽을 전달합니다
+> - Amazon S3와 Amazon DynamoDB만 지원합니다
+> - 추가 비용이 발생하지 않습니다 (무료)
+
 > [!DOWNLOAD]
 > [week3-1-vpc-lab.zip](/files/week3/week3-1-vpc-lab.zip)
 >

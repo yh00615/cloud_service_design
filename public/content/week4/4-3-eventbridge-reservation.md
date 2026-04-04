@@ -682,7 +682,28 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 ---
 
-## 1단계: 리소스 삭제
+## 1단계: 생성된 리소스 확인 (Tag Editor)
+
+실습에서 생성한 모든 리소스를 확인합니다.
+
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+3. **Regions**에서 `All regions`를 선택합니다.
+4. **Resource types**에서 `All supported resource types`를 선택합니다.
+5. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `4-3`
+6. [[Search resources]] 버튼을 클릭합니다.
+7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!NOTE]
+> Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
+> 실제 삭제는 2단계에서 수행합니다.
+> Amazon EventBridge 규칙과 Event Bus는 Tag Editor에서 검색되지 않을 수 있으므로, 아래 단계에서 직접 삭제합니다.
+
+---
+
+## 2단계: 리소스 삭제
 
 다음 두 가지 방법 중 하나를 선택하여 리소스를 삭제할 수 있습니다.
 
@@ -783,7 +804,7 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 
 ---
 
-## 2단계: AWS CloudFormation 스택 삭제
+## 3단계: AWS CloudFormation 스택 삭제
 
 16. AWS CloudFormation 콘솔로 이동합니다.
 17. `week4-3-quicktable-events-lab-stack` 스택을 선택합니다.
@@ -796,7 +817,7 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 
 ---
 
-## 3단계: Amazon CloudWatch Log Groups 삭제
+## 4단계: Amazon CloudWatch Log Groups 삭제
 
 이 실습에서는 AWS CloudFormation 템플릿에 Amazon CloudWatch Log Groups가 포함되어 있어 스택 삭제 시 자동으로 삭제됩니다. 하지만 스택 삭제 전에 AWS Lambda 함수가 실행되면서 추가 Log Groups가 생성될 수 있으므로, 다음 단계로 확인하고 남아있는 Log Groups를 삭제합니다.
 
@@ -839,6 +860,28 @@ fi
 
 > [!NOTE]
 > AWS Lambda 함수가 3개이므로 Log Group도 3개 생성됩니다. 스크립트는 모든 Log Group을 자동으로 찾아 삭제합니다.
+
+---
+
+## 5단계: 삭제 확인
+
+모든 리소스가 삭제되었는지 확인합니다.
+
+28. Tag Editor로 이동합니다.
+29. **Regions**에서 `All regions`를 선택합니다.
+30. **Resource types**에서 `All supported resource types`를 선택합니다.
+31. **Tags** 섹션에서 다음 태그를 입력합니다:
+    - **Tag key**: `Week`
+    - **Optional tag value**: `4-3`
+32. [[Search resources]] 버튼을 클릭합니다.
+33. 검색 결과가 비어있는지 확인합니다.
+
+> [!NOTE]
+> 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
+> Amazon EventBridge 규칙과 Event Bus는 Tag Editor에서 검색되지 않을 수 있으므로, Amazon EventBridge 콘솔에서 직접 삭제 여부를 확인합니다.
+
+> [!SUCCESS]
+> 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

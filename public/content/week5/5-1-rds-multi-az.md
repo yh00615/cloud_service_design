@@ -9,6 +9,9 @@ learningObjectives:
   - Amazon RDS MySQL 인스턴스를 Multi-AZ로 생성하고 페일오버를 시뮬레이션할 수 있습니다.
   - Amazon RDS Read Replica를 생성하고 읽기 부하를 분산할 수 있습니다.
   - 수동 스냅샷과 자동 백업을 생성하고 관리할 수 있습니다.
+prerequisites:
+  - 관계형 데이터베이스 기본 개념 이해
+  - Amazon VPC 및 서브넷 기본 개념 이해
 ---
 
 이 실습에서는 Amazon RDS MySQL 인스턴스를 Multi-AZ 배포로 생성하고 고가용성 데이터베이스 아키텍처를 구축합니다. Primary DB와 Standby DB가 서로 다른 가용 영역에 자동으로 배포되어 동기식 복제가 이루어지며, 페일오버 테스트를 통해 자동 전환 과정을 확인합니다. Read Replica를 생성하여 읽기 성능을 확장하고, 자동 백업과 수동 스냅샷을 구성하여 데이터 보호 전략을 학습합니다.

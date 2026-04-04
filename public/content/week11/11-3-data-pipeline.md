@@ -27,6 +27,19 @@ prerequisites:
 
 이후 **AWS Glue Visual ETL**을 사용하여 **CSV 데이터를 Parquet 형식으로 변환**하는 ETL Job을 직접 구성하고 실행합니다. 변환된 데이터를 **Amazon Athena**로 쿼리하여 분석한 후, 새로운 데이터를 업로드하여 **EventBridge**와 **AWS Lambda**가 자동으로 Crawler를 트리거하는 **이벤트 기반 파이프라인 흐름**을 확인합니다.
 
+> [!CONCEPT] ETL과 데이터 파이프라인
+> **ETL(Extract, Transform, Load)**은 데이터를 추출하고 변환하여 적재하는 프로세스입니다.
+>
+> - **Extract**: 소스(Amazon S3, 데이터베이스 등)에서 원시 데이터를 추출합니다
+> - **Transform**: 데이터 형식 변환, 정제, 집계 등을 수행합니다 (예: CSV → Parquet)
+> - **Load**: 변환된 데이터를 대상 저장소에 적재합니다
+>
+> **Parquet 형식의 장점**:
+>
+> - 열 기반(Columnar) 저장으로 분석 쿼리 성능이 우수합니다
+> - 압축 효율이 높아 스토리지 비용을 절감합니다
+> - Amazon Athena, Amazon Redshift 등 분석 서비스와 호환됩니다
+
 > [!NOTE]
 > **이 실습의 자동화 범위**:
 >

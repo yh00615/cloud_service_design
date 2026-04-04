@@ -402,7 +402,25 @@ Outputs:
 > [!WARNING]
 > 이 데모는 비용이 거의 발생하지 않지만, 실습 종료 후 모든 리소스를 삭제하는 것이 좋습니다.
 
-### 1단계: Amazon S3 버킷 비우기 (필요시)
+### 1단계: 생성된 리소스 확인 (Tag Editor)
+
+실습에서 생성한 모든 리소스를 확인합니다.
+
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+3. **Regions**에서 `All regions`를 선택합니다.
+4. **Resource types**에서 `All supported resource types`를 선택합니다.
+5. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `6-1`
+6. [[Search resources]] 버튼을 클릭합니다.
+7. 이 실습에서 생성한 리소스가 표시됩니다.
+
+> [!NOTE]
+> Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
+> 실제 삭제는 2단계에서 수행합니다.
+
+### 2단계: Amazon S3 버킷 비우기 (필요시)
 
 > [!NOTE]
 > 이 데모에서는 버킷에 파일을 업로드하지 않았으므로 이 단계는 건너뛸 수 있습니다.
@@ -416,9 +434,9 @@ Outputs:
 4. 확인 창에서 `permanently delete`를 입력합니다.
 5. [[Empty]] 버튼을 클릭합니다.
 
-### 2단계: AWS CloudFormation 스택 삭제
+### 3단계: AWS CloudFormation 스택 삭제
 
-6. AWS CloudFormation 콘솔로 이동합니다.
+8. AWS CloudFormation 콘솔로 이동합니다.
 7. `demo-s3-stack`을 선택합니다.
 8. [[Delete stack]] 버튼을 클릭합니다.
 9. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
@@ -437,14 +455,24 @@ Outputs:
 > DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
 > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
 
-### 3단계: 리소스 삭제 확인
+### 4단계: 삭제 확인
 
-15. Amazon S3 콘솔로 이동합니다.
-16. `cfn-demo-bucket-`로 시작하는 버킷이 목록에서 사라졌는지 확인합니다.
+모든 리소스가 삭제되었는지 확인합니다.
 
-> [!TIP]
-> AWS CloudFormation 스택을 삭제하면 스택이 생성한 모든 리소스(Amazon S3 버킷)가 자동으로 삭제됩니다.
-> 수동으로 각 리소스를 삭제할 필요가 없습니다.
+17. Tag Editor로 이동합니다.
+18. **Regions**에서 `All regions`를 선택합니다.
+19. **Resource types**에서 `All supported resource types`를 선택합니다.
+20. **Tags** 섹션에서 다음 태그를 입력합니다:
+    - **Tag key**: `Week`
+    - **Optional tag value**: `6-1`
+21. [[Search resources]] 버튼을 클릭합니다.
+22. 검색 결과가 비어있는지 확인합니다.
+
+> [!NOTE]
+> 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
+
+> [!SUCCESS]
+> 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

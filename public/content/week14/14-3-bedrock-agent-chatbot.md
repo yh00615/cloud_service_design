@@ -26,6 +26,14 @@ prerequisites:
 
 이 실습에서는 Amazon Bedrock Agent를 사용하여 QuickTable 레스토랑 예약 시스템의 지능형 챗봇을 구축합니다. 고객이 자연어로 대화하며 예약을 관리할 수 있는 AI 어시스턴트를 완성합니다. AWS Lambda 함수를 Action Group으로 연결하여 예약 조회, 생성, 취소 등의 실제 작업을 수행하고, Week 14-2에서 생성한 Knowledge Base를 통합하여 레스토랑 정보 질문에도 답변할 수 있도록 합니다. 대화형 AI의 핵심 개념과 프롬프트 엔지니어링 기법을 학습합니다.
 
+> [!CONCEPT] Amazon Bedrock Agent 아키텍처
+> Amazon Bedrock Agent는 자연어 요청을 이해하고 자율적으로 작업을 수행하는 AI 에이전트입니다.
+>
+> - **ReAct 프롬프팅**: Reasoning(추론) + Acting(행동)을 반복하여 복잡한 작업을 단계별로 수행합니다
+> - **Action Group**: AWS Lambda 함수와 연결하여 실제 작업(예약 조회, 생성, 취소)을 수행합니다
+> - **Knowledge Base**: RAG(Retrieval-Augmented Generation)를 통해 외부 문서 기반으로 답변합니다
+> - **에이전트 흐름**: 사용자 요청 → 의도 파악 → Action Group 호출 또는 Knowledge Base 검색 → 응답 생성
+
 > [!DOWNLOAD]
 > [week14-3-bedrock-agent-lab.zip](/files/week14/week14-3-bedrock-agent-lab.zip)
 >

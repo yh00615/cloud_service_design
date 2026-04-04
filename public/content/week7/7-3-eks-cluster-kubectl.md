@@ -234,7 +234,7 @@ kubectl get nodes
 27. 다음 명령어를 실행하여 nginx Pod를 생성합니다:
 
 ```bash
-kubectl run nginx-pod --image=nginx:1.25
+kubectl run nginx-pod --image=nginx:1.28
 ```
 
 > [!OUTPUT]
@@ -309,7 +309,7 @@ nginx -v
 34. 다음 명령어를 실행하여 nginx Deployment를 생성합니다:
 
 ```bash
-kubectl create deployment nginx-deployment --image=nginx:1.25 --replicas=2
+kubectl create deployment nginx-deployment --image=nginx:1.28 --replicas=2
 ```
 
 > [!OUTPUT]
@@ -449,7 +449,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.25
+        image: nginx:1.28
         ports:
         - containerPort: 80
   strategy:
@@ -563,13 +563,13 @@ kubectl describe deployment nginx-app | grep Image
 
 > [!OUTPUT]
 > ```
->     Image:        nginx:1.25
+>     Image:        nginx:1.28
 > ```
 
 53. 다음 명령어를 실행하여 이미지를 업데이트합니다:
 
 ```bash
-kubectl set image deployment/nginx-app nginx=nginx:1.26
+kubectl set image deployment/nginx-app nginx=nginx:1.29
 ```
 
 > [!OUTPUT]
@@ -583,7 +583,7 @@ kubectl set image deployment/nginx-app nginx=nginx:1.26
 > 
 > **대안 방법 (선언형)**: YAML 파일을 수정하여 업데이트할 수도 있습니다:
 > ```bash
-> sed -i 's/nginx:1.25/nginx:1.26/' nginx-deployment.yaml
+> sed -i 's/nginx:1.28/nginx:1.29/' nginx-deployment.yaml
 > kubectl apply -f nginx-deployment.yaml
 > ```
 > 선언형 방식은 YAML 파일을 Git으로 버전 관리할 수 있어 프로덕션 환경에서 권장됩니다.
@@ -604,7 +604,7 @@ kubectl rollout status deployment/nginx-app
 
 > [!NOTE]
 > 현재 nginx-app의 replicas는 3입니다 (태스크 4에서 2→3으로 변경).
-> 롤링 업데이트는 3개 Pod를 순차적으로 nginx:1.26으로 교체합니다.
+> 롤링 업데이트는 3개 Pod를 순차적으로 nginx:1.29으로 교체합니다.
 
 55. 업데이트된 이미지 버전을 확인합니다:
 
@@ -614,7 +614,7 @@ kubectl describe deployment nginx-app | grep Image
 
 > [!OUTPUT]
 > ```
->     Image:        nginx:1.26
+>     Image:        nginx:1.29
 > ```
 
 56. 롤아웃 히스토리를 확인합니다:
@@ -632,8 +632,8 @@ kubectl rollout history deployment/nginx-app
 > ```
 
 > [!NOTE]
-> REVISION 1: nginx:1.25 (최초 생성)
-> REVISION 2: nginx:1.26 (이미지 업데이트)
+> REVISION 1: nginx:1.28 (최초 생성)
+> REVISION 2: nginx:1.29 (이미지 업데이트)
 
 57. 특정 리비전의 상세 정보를 확인합니다:
 
@@ -653,13 +653,13 @@ kubectl rollout undo deployment/nginx-app
 > ```
 
 > [!NOTE]
-> 롤백을 실행하면 이전 버전(nginx:1.25)으로 되돌아갑니다.
+> 롤백을 실행하면 이전 버전(nginx:1.28)으로 되돌아갑니다.
 > 
 > **REVISION 번호 변화:**
 > 
-> - 최초: REVISION 1 (nginx:1.25)
-> - 업데이트: REVISION 2 (nginx:1.26)
-> - 롤백: REVISION 3 (nginx:1.25) ← 새로운 리비전 생성
+> - 최초: REVISION 1 (nginx:1.28)
+> - 업데이트: REVISION 2 (nginx:1.29)
+> - 롤백: REVISION 3 (nginx:1.28) ← 새로운 리비전 생성
 > 
 > 롤백 자체도 하나의 배포로 기록되므로 REVISION 1은 사라지고 REVISION 2, 3이 남습니다.
 
@@ -677,7 +677,7 @@ kubectl describe deployment nginx-app | grep Image
 
 > [!OUTPUT]
 > ```
->     Image:        nginx:1.25
+>     Image:        nginx:1.28
 > ```
 
 61. 롤아웃 히스토리를 다시 확인합니다:
@@ -697,16 +697,16 @@ kubectl rollout history deployment/nginx-app
 > [!NOTE]
 > **REVISION 번호 변화 확인:**
 > 
-> - REVISION 1은 사라지고, REVISION 2(nginx:1.26)와 REVISION 3(nginx:1.25, 롤백)이 남습니다.
+> - REVISION 1은 사라지고, REVISION 2(nginx:1.29)와 REVISION 3(nginx:1.28, 롤백)이 남습니다.
 > - 롤백 자체도 하나의 새로운 배포로 기록되므로 REVISION 번호가 증가합니다.
 > - 가장 오래된 REVISION(1)은 히스토리에서 제거됩니다.
 > 
 > **특정 리비전으로 롤백:**
-> 다시 nginx:1.26으로 돌아가려면 다음 명령어를 실행합니다:
+> 다시 nginx:1.29으로 돌아가려면 다음 명령어를 실행합니다:
 > ```bash
 > kubectl rollout undo deployment/nginx-app --to-revision=2
 > ```
-> 이 경우 REVISION 4가 생성되며 이미지는 nginx:1.26이 됩니다.
+> 이 경우 REVISION 4가 생성되며 이미지는 nginx:1.29이 됩니다.
 > 
 > 이 명령어는 선택사항입니다. 실행하지 않아도 다음 태스크에 영향이 없습니다.
 

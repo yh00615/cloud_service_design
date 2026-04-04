@@ -24,6 +24,14 @@ prerequisites:
 이 실습에서는 Amazon Bedrock Playground를 사용하여 프롬프트 엔지니어링의 핵심 기법을 학습합니다.
 효과적인 프롬프트 작성 방법을 익히고, 다양한 프롬프팅 기법을 실습하여 생성형 AI의 응답 품질을 최적화하는 방법을 배웁니다.
 
+> [!CONCEPT] 프롬프트 엔지니어링 핵심 기법
+> 프롬프트 엔지니어링은 생성형 AI 모델로부터 원하는 응답을 얻기 위해 입력을 최적화하는 기술입니다.
+>
+> - **Zero-shot**: 예시 없이 작업을 직접 요청합니다. 간단한 작업에 적합합니다
+> - **Few-shot**: 몇 가지 예시를 제공하여 패턴을 학습시킵니다. 일관된 형식이 필요할 때 사용합니다
+> - **Chain-of-Thought (CoT)**: 단계별 사고 과정을 유도합니다. 복잡한 추론이 필요할 때 사용합니다
+> - **시스템 프롬프트**: 모델의 역할, 응답 형식, 제약 조건을 정의합니다
+
 > [!NOTE]
 > Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
 > 단, Anthropic Claude 모델을 처음 사용하는 경우 일회성 **Use case details** 양식을 제출해야 합니다.
@@ -372,6 +380,25 @@ Top P 값의 의미를 이해합니다.
 > 이 실습에서는 별도의 리소스 정리가 필요하지 않습니다.
 > Amazon Bedrock Playground는 영구적인 리소스를 생성하지 않으며, 모델 사용 시에만 토큰 기반 비용이 발생합니다.
 > 모든 서버리스 Foundation Model에 대한 액세스는 자동으로 활성화되어 있으며, Anthropic 모델의 Use case details 양식은 일회성이므로 별도의 비활성화 작업이 필요하지 않습니다.
+
+## 삭제 확인
+
+이 실습에서는 AWS 리소스를 생성하지 않았으므로 Tag Editor 검색 시 결과가 표시되지 않아야 합니다.
+
+1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+3. **Regions**에서 `All regions`를 선택합니다.
+4. **Resource types**에서 `All supported resource types`를 선택합니다.
+5. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `14-1`
+6. [[Search resources]] 버튼을 클릭합니다.
+7. 검색 결과가 비어있는지 확인합니다.
+
+> [!SUCCESS]
+> 검색 결과가 비어있으면 정상입니다. 이 실습에서는 영구적인 AWS 리소스를 생성하지 않았습니다.
+
+✅ **실습 종료**: 별도의 리소스 정리가 필요하지 않습니다.
 
 ## 마무리
 
