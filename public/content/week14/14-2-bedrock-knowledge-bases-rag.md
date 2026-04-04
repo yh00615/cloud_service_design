@@ -22,9 +22,9 @@ prerequisites:
 >
 > **권장 이유**:
 >
-> - 모든 Amazon Bedrock 모델(Claude 3.5 Sonnet, Titan Embeddings 등)이 지원됩니다
-> - Knowledge Base와 Agent 통합 시 안정적입니다
-> - Week 14-3 Agent와 같은 리전에서 통합해야 합니다
+> - 모든 Amazon Bedrock 모델(Claude 3.5 Sonnet, Titan Embeddings 등)이 지원됩니다.
+> - Knowledge Base와 Agent 통합 시 안정적입니다.
+> - Week 14-3 Agent와 같은 리전에서 통합해야 합니다.
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
@@ -39,15 +39,15 @@ QuickTable 레스토랑의 메뉴, 영업 정보, FAQ 문서를 벡터 데이터
 >
 > **LLM의 한계:**
 >
-> - 학습 데이터에 없는 최신 정보에 대해 답변하기 어렵습니다
-> - 기업 내부 문서나 특정 도메인 지식에 접근할 수 없습니다
-> - 잘못된 정보를 생성할 수 있습니다 (Hallucination)
+> - 학습 데이터에 없는 최신 정보에 대해 답변하기 어렵습니다.
+> - 기업 내부 문서나 특정 도메인 지식에 접근할 수 없습니다.
+> - 잘못된 정보를 생성할 수 있습니다. (Hallucination)
 >
 > **RAG 동작 원리:**
 >
-> - **Retrieval (검색)**: 사용자 질문과 관련된 문서를 벡터 데이터베이스에서 검색합니다
-> - **Augmentation (증강)**: 검색된 문서를 컨텍스트로 LLM에 제공합니다
-> - **Generation (생성)**: LLM이 컨텍스트를 기반으로 정확한 답변을 생성합니다
+> - **Retrieval (검색)**: 사용자 질문과 관련된 문서를 벡터 데이터베이스에서 검색합니다.
+> - **Augmentation (증강)**: 검색된 문서를 컨텍스트로 LLM에 제공합니다.
+> - **Generation (생성)**: LLM이 컨텍스트를 기반으로 정확한 답변을 생성합니다.
 
 > [!DOWNLOAD]
 > [week14-2-knowledge-base-lab.zip](/files/week14/week14-2-knowledge-base-lab.zip)
@@ -70,10 +70,10 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 > [!IMPORTANT]
 > **리전 선택 주의사항:**
 >
-> - 이 실습은 Amazon Bedrock이 지원되는 리전에서 진행해야 합니다
+> - 이 실습은 Amazon Bedrock이 지원되는 리전에서 진행해야 합니다.
 > - **권장 리전**: US East (N. Virginia) 또는 US West (Oregon) - 모든 모델 지원
-> - **서울 리전(ap-northeast-2)**: 일부 모델(Claude 3.5 Sonnet 등)이 지원되지 않을 수 있습니다
-> - Week 14-3 Agent와 통합하려면 같은 리전을 사용해야 합니다
+> - **서울 리전(ap-northeast-2)**: 일부 모델(Claude 3.5 Sonnet 등)이 지원되지 않을 수 있습니다.
+> - Week 14-3 Agent와 통합하려면 같은 리전을 사용해야 합니다.
 >
 > **모델 가용성 확인 방법:**
 >
@@ -83,13 +83,26 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 
 2. 상단 검색창에 `S3`을 입력하고 선택합니다.
 3. [[Create bucket]] 버튼을 클릭합니다.
-4. **Bucket name**에 `quicktable-kb-documents-YOUR-INITIALS`을 입력합니다.
+4. **AWS Region**이 `US East (N. Virginia) us-east-1`로 설정되어 있는지 확인합니다.
+
+> [!NOTE]
+> Amazon S3 버킷은 Knowledge Base와 같은 리전에 생성해야 데이터 소스 연결이 원활합니다.
+> 이 실습에서는 Amazon Bedrock Knowledge Base를 US East (N. Virginia)에서 생성하므로 Amazon S3 버킷도 같은 리전에 생성합니다.
+
+5. **Bucket name**에 `quicktable-kb-documents-YOUR-INITIALS`을 입력합니다.
 
 > [!TIP]
 > `YOUR-INITIALS`를 본인의 이니셜로 변경합니다 (예: `quicktable-kb-documents-jdoe`).
 > 버킷 이름은 전 세계적으로 고유해야 합니다.
 
-5. **AWS Region**에서 `Asia Pacific (Seoul) ap-northeast-2`를 선택합니다.
+> [!NOTE]
+> **Bucket namespace** 옵션이 표시될 수 있습니다.
+>
+> - **Global namespace (기본값)**: 버킷 이름이 전 세계 모든 AWS 계정에서 고유해야 합니다. 기존 S3 방식과 동일합니다.
+> - **Account Regional namespace (권장)**: 버킷 이름이 내 계정 + 리전 내에서만 고유하면 됩니다. 다른 계정에서 같은 이름을 사용해도 충돌하지 않습니다.
+>
+> 이 실습에서는 기본값인 Global namespace를 사용합니다.
+
 6. 아래로 스크롤하여 **Tags - optional** 섹션을 확인합니다.
 7. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -117,9 +130,9 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 16. [[Upload]] 버튼을 클릭합니다.
 17. [[Add files]]를 클릭합니다.
 18. 압축 해제한 폴더에서 3개 파일을 모두 선택합니다:
-	- `quicktable-menu.txt`
-	- `quicktable-info.txt`
-	- `quicktable-faq.txt`
+    - `quicktable-menu.txt`
+    - `quicktable-info.txt`
+    - `quicktable-faq.txt`
 19. [[Upload]] 버튼을 클릭합니다.
 20. 업로드가 완료될 때까지 기다립니다.
 
@@ -128,9 +141,9 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 > 여러 문서로 분리하면 RAG 시스템의 다중 문서 검색 효과를 더 잘 확인할 수 있습니다.
 
 21. 업로드된 파일을 확인합니다:
-	- `quicktable-menu.txt`
-	- `quicktable-info.txt`
-	- `quicktable-faq.txt`
+    - `quicktable-menu.txt`
+    - `quicktable-info.txt`
+    - `quicktable-faq.txt`
 
 ✅ **태스크 완료**: Amazon S3 버킷이 생성되고 QuickTable 레스토랑 문서가 업로드되었습니다.
 
@@ -143,18 +156,25 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > Amazon Bedrock에서는 모든 Foundation Model에 대한 액세스가 기본적으로 활성화되어 있습니다.
 > AWS Marketplace 권한만 있으면 바로 모델을 사용할 수 있으며, Cohere 및 Anthropic 모델의 경우 첫 사용 시 사용 사례 양식만 제출하면 됩니다.
 
-22. Amazon Bedrock 콘솔로 이동합니다.
+22. 상단 검색창에 `Bedrock`을 입력하고 **Amazon Bedrock**을 선택합니다.
 23. 왼쪽 메뉴에서 **Build** > **Knowledge Bases**를 선택합니다.
-24. [[Create]] 버튼을 클릭합니다.
-25. **Knowledge Base with vector store**의 [[Create]] 버튼을 클릭합니다.
+24. [[Create]] 드롭다운을 클릭한 후 **Knowledge Base with vector store**를 선택합니다.
 
 > [!NOTE]
 > Knowledge Base 유형으로 Vector store, Structured data store, Kendra GenAI Index를 선택할 수 있습니다. 이 실습에서는 Vector store를 사용합니다.
 
-26. **Knowledge Base name**에 `quicktable-restaurant-kb`를 입력합니다.
-27. **Knowledge Base description**에 `QuickTable restaurant menu and information knowledge base`를 입력합니다.
-28. **IAM permissions**에서 `Create and use a new service role`을 선택합니다.
-29. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
+25. **Knowledge Base name**에 `quicktable-restaurant-kb`를 입력합니다.
+26. **Knowledge Base description**에 `QuickTable restaurant menu and information knowledge base`를 입력합니다.
+27. **IAM permissions**에서 `Create and use a new service role`을 선택합니다.
+28. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
+29. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+
+| Key         | Value     |
+| ----------- | --------- |
+| `Project`   | `AWS-Lab` |
+| `Week`      | `14-2`    |
+| `CreatedBy` | `Student` |
+
 30. [[Next]] 버튼을 클릭합니다.
 
 > [!CONCEPT] Knowledge Base 아키텍처
@@ -165,12 +185,10 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 3. **Vector database**: 벡터를 저장하고 검색하는 데이터베이스 (OpenSearch Serverless)
 > 4. **Foundation model**: 검색된 문서를 기반으로 답변을 생성하는 LLM
 
-29. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
-30. [[Next]] 버튼을 클릭합니다.
 31. **Data source name**에 `s3-documents`를 입력합니다.
 32. **S3 URI**에서 [[Browse S3]]를 클릭합니다.
-33. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-34. `documents` 폴더를 선택합니다.
+33. `quicktable-kb-documents-YOUR-INITIALS` 버킷명을 클릭합니다.
+34. `documents` 폴더를 클릭합니다.
 35. [[Choose]] 버튼을 클릭합니다.
 
 > [!TIP]
@@ -184,35 +202,31 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > Knowledge Base는 Amazon S3 버킷의 모든 파일을 자동으로 읽어 처리합니다.
 > 지원 형식: TXT, PDF, MD, HTML, DOC, DOCX, CSV 등
 
-39. **Embeddings model**에서 `Cohere Embed Multilingual v3`를 선택합니다.
-
-임베딩 모델을 선택합니다.
+39. **Embeddings model**에서 모델을 선택합니다. Categories에서 `Amazon`을 선택하고, Models에서 `Titan Text Embeddings V2`를 선택한 후 [[Apply]] 버튼을 클릭합니다.
 
 > [!CONCEPT] 임베딩 모델 선택
 > Amazon Bedrock은 여러 임베딩 모델을 제공합니다:
 >
-> - **Cohere Embed Multilingual v3**: 다국어 지원 우수, 한국어 임베딩 품질 높음 (권장)
-> - **Titan Embeddings G1 - Text**: 영어 중심, 한국어 지원 제한적
-> - **Titan Embeddings V2**: 개선된 다국어 지원
->
-> 한국어 문서의 경우 Cohere Embed Multilingual v3가 가장 적합합니다.
+> - **Titan Text Embeddings V2**: 다국어 지원 개선, 안정적인 Knowledge Base 통합 (권장)
+> - **Titan Embeddings G1 - Text**: 이전 세대, 영어 중심
+> - **Cohere Embed Multilingual v3**: 한국어 임베딩 품질 우수하나, Knowledge Base 생성 시 호환성 문제가 발생할 수 있음
 
-40. **Vector database**에서 `Quick create a new vector store`를 선택합니다.
+40. **Vector store** 섹션에서 `Quick create a new vector store`가 선택되어 있는지 확인합니다.
+41. **Vector store type** 드롭다운에서 `Amazon OpenSearch Serverless`를 선택합니다.
 
 > [!NOTE]
-> Quick create는 OpenSearch Serverless 컬렉션을 자동으로 생성합니다.
-> 최소 2 OCU(OpenSearch Compute Unit)를 사용하며 시간당 약 $0.48 비용이 발생합니다.
-> 수동으로 생성하려면 "Use an existing vector store"를 선택할 수 있습니다.
+> Quick create를 선택하면 Vector store type에서 선택한 벡터 데이터베이스를 자동으로 구성합니다.
+> OpenSearch Serverless는 최소 2 OCU(OpenSearch Compute Unit)를 사용하며 시간당 약 $0.48 비용이 발생합니다.
 
-41. [[Next]] 버튼을 클릭합니다.
-42. 설정을 검토합니다.
-43. [[Create knowledge base]] 버튼을 클릭합니다.
+42. [[Next]] 버튼을 클릭합니다.
+43. 설정을 검토합니다.
+44. [[Create Knowledge Base]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base 생성에 2-3분이 소요됩니다.
 > OpenSearch Serverless 컬렉션이 자동으로 생성되고 AWS IAM 역할이 구성됩니다.
 
-44. 상태가 "Creating"에서 "Active"로 변경될 때까지 기다립니다.
+45. 상태가 "Creating"에서 "Active"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: Knowledge Base가 생성되었습니다.
 
@@ -221,9 +235,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 이 태스크에서는 Amazon S3 버킷의 문서를 Knowledge Base로 동기화합니다.
 동기화 과정에서 문서가 청크(chunk)로 분할되고, 각 청크가 벡터로 변환되어 OpenSearch Serverless에 저장됩니다.
 
-45. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
-46. `s3-documents` 데이터 소스를 선택합니다.
-47. [[Sync]] 버튼을 클릭합니다.
+46. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
+47. `s3-documents` 데이터 소스를 선택합니다.
+48. [[Sync]] 버튼을 클릭합니다.
 
 > [!CONCEPT] 문서 청킹 (Chunking)
 > 긴 문서를 작은 조각(chunk)으로 나누는 과정입니다.
@@ -231,20 +245,19 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 사용자 질문과 가장 관련성 높은 청크만 검색하여 LLM에 제공합니다.
 > 기본 청크 크기: 300 토큰 (약 200-250 단어)
 
-44. 동기화 상태가 "In progress"로 표시됩니다.
-45. 상태가 "Completed"로 변경될 때까지 기다립니다.
+49. 동기화 상태가 "In progress"로 표시됩니다.
+50. 상태가 "Completed"로 변경될 때까지 기다립니다.
 
 > [!NOTE]
 > 동기화에 1-2분이 소요됩니다.
 
 > [!NOTE]
-> 동기화가 완료되면 **Sync history**에서 처리된 문서 수와 청크 수를 확인할 수 있습니다.
+> 동기화가 완료되면 **Sync history**에서 처리 결과를 확인할 수 있습니다.
 > Status가 "Completed"이면 동기화가 성공한 것입니다.
-> Documents processed 수가 3으로 표시되면 3개 파일이 모두 처리된 것입니다.
-> Chunks created 항목은 콘솔 버전에 따라 표시되지 않을 수 있습니다.
+> Source files 수가 3으로 표시되면 3개 파일이 모두 처리된 것입니다.
 
-46. **Sync history** 섹션에서 최근 동기화 결과를 확인합니다.
-47. **Documents processed**와 **Chunks created** 수를 확인합니다.
+51. **Sync history** 섹션에서 최근 동기화 결과를 확인합니다.
+52. Status가 **Completed**이고, **Source files**가 **3**, **Failed files**가 **0**인지 확인합니다.
 
 ✅ **태스크 완료**: 데이터 소스가 동기화되었습니다.
 
@@ -255,21 +268,43 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### 태스크 4.1: 기본 질문 테스트
 
-48. Knowledge Base 상세 페이지에서 **Test knowledge base** 섹션으로 스크롤합니다.
-49. **Select model**에서 최신 Claude 모델을 선택합니다 (예: `Anthropic Claude Sonnet 4.6` 또는 `Anthropic Claude Opus 4.6`).
+53. Knowledge Base 상세 페이지에서 우측 상단의 [[Test Knowledge Base]] 버튼을 클릭합니다.
+54. **Select model**을 클릭합니다. Categories에서 `Anthropic`을 선택하고, Models에서 `Claude Sonnet 4.6`을 선택한 후, Inference에서 `US Anthropic Claude Sonnet 4.6`을 선택하고 [[Apply]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> Anthropic 모델을 처음 사용하는 경우 **Submit use case details** 양식이 나타납니다.
+> 이 양식은 계정당 한 번만 제출하면 되며, 이후에는 나타나지 않습니다.
+> 모든 항목이 필수이므로 다음과 같이 입력합니다:
+>
+> - **Company name**: `Student` (또는 본인 이름)
+> - **Company website URL**: `https://example.com`
+> - **Industry**: `Education`
+> - **Intended users**: `Internal users` 체크
+> - **Use cases**: `Learning RAG with Amazon Bedrock Knowledge Bases`
+>
+> [[Submit use case details]] 버튼을 클릭하면 즉시 승인됩니다.
 
 > [!CONCEPT] Foundation Model 선택
-> Knowledge Base는 다양한 Foundation Model과 통합할 수 있습니다:
+> Knowledge Base는 다양한 Foundation Model과 통합할 수 있습니다.:
 >
-> - **Claude Opus 4.6**: 최고 성능, 복잡한 질문에 최적 (2026년 2월 출시)
-> - **Claude Sonnet 4.6**: 성능과 비용의 균형, 한국어 지원 우수 (권장, 2026년 2월 출시)
+> - **Claude Sonnet 4.6**: 성능과 비용의 균형, 한국어 지원 우수 (권장)
+> - **Claude Opus 4.6**: 최고 성능, 복잡한 질문에 최적
 > - **Claude Haiku 4.5**: 빠른 응답 속도, 저렴한 비용
 >
-> 한국어 질문의 경우 Claude Sonnet 4.6 또는 Claude Opus 4.6이 권장됩니다.
+> Inference 프로필은 US와 Global 두 가지가 있습니다.
+> Knowledge Base가 US East 리전에 있으므로 US 프로필을 선택하면 지연 시간이 낮아 더 적합합니다.
 
-50. 질문 입력창에 다음을 입력합니다: `안심 스테이크 가격이 얼마인가요?`.
-51. [[Run]] 버튼을 클릭합니다.
-52. **Generated response** 섹션에서 답변을 확인합니다.
+> [!NOTE]
+> 테스트 화면에서 **Retrieval and response generation** 옵션이 두 가지 있습니다:
+>
+> - **Retrieval only: data sources**: 관련 문서 청크만 검색하여 원본 텍스트를 반환합니다. LLM 답변 생성 없음.
+> - **Retrieval and response generation: data sources and model**: 관련 문서를 검색한 후 LLM이 자연어 답변을 생성합니다. (RAG 전체 과정)
+>
+> 이 실습에서는 두 번째 옵션이 선택되어 있는지 확인합니다.
+
+55. 질문 입력창에 다음을 입력합니다: `안심 스테이크 가격이 얼마인가요?`.
+56. [[Run]] 버튼을 클릭합니다.
+57. **Generated response** 섹션에서 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -278,20 +313,20 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 미디엄 레어로 추천되며, 감자 퓨레와 구운 야채가 포함되어 있습니다.
 > ```
 
-53. **Source attribution** 섹션에서 답변의 근거가 된 문서를 확인합니다.
-54. 문서 청크와 유사도 점수를 확인합니다.
+58. 답변 아래의 **Details** 링크를 클릭하면 오른쪽에 해당 답변의 **Source chunks**가 표시됩니다.
+59. 답변의 근거가 된 문서 청크 내용을 확인합니다.
 
 > [!NOTE]
-> Source attribution은 답변의 신뢰성을 보장합니다.
+> Source chunks는 답변의 신뢰성을 보장합니다.
 > 각 답변이 어떤 문서에서 나왔는지 추적할 수 있어 환각(hallucination)을 방지합니다.
 
 ✅ **하위 태스크 완료**: 기본 질문 테스트가 완료되었습니다.
 
 ### 태스크 4.2: 복잡한 질문 테스트
 
-55. 질문 입력창에 다음을 입력합니다: `주말에 4명이 방문하려고 하는데, 주차가 가능하고 영업 시간은 언제까지인가요?`.
-56. [[Run]] 버튼을 클릭합니다.
-57. 답변을 확인합니다.
+60. 질문 입력창에 다음을 입력합니다: `주말에 4명이 방문하려고 하는데, 주차가 가능하고 영업 시간은 언제까지인가요?`.
+61. [[Run]] 버튼을 클릭합니다.
+62. 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -305,7 +340,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 예상 출력은 참고용이며, 실제 응답은 모델에 따라 다를 수 있습니다.
 > 답변은 업로드한 문서의 내용만을 기반으로 생성됩니다.
 
-58. **Source attribution**에서 여러 문서 청크가 사용되었는지 확인합니다.
+63. **Details** 패널의 **Source chunks**에서 여러 문서 청크가 사용되었는지 확인합니다.
 
 > [!CONCEPT] 다중 문서 검색
 > RAG는 여러 문서 청크를 동시에 검색하여 복잡한 질문에 답변할 수 있습니다.
@@ -315,9 +350,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### 태스크 4.3: FAQ 기반 질문 테스트
 
-59. 질문 입력창에 다음을 입력합니다: `배달 서비스가 가능한가요?`.
-60. [[Run]] 버튼을 클릭합니다.
-61. 답변을 확인합니다.
+64. 질문 입력창에 다음을 입력합니다: `배달 서비스가 가능한가요?`.
+65. [[Run]] 버튼을 클릭합니다.
+66. 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -328,6 +363,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 > [!NOTE]
 > 이 질문에 대한 답변은 `quicktable-faq.txt` 파일에 포함되어 있습니다.
+> Details 패널에서 **Metadata associated with this chunk**를 확장하면 소스 파일명을 확인할 수 있습니다.
 > 실제 응답은 모델에 따라 다를 수 있습니다.
 
 > [!CONCEPT] 환각 방지 (Hallucination Prevention)
@@ -341,12 +377,12 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 다음을 성공적으로 수행했습니다:
 
-- RAG (Retrieval-Augmented Generation) 아키텍처를 이해했습니다
-- Amazon Bedrock Knowledge Base를 생성하고 구성했습니다
-- QuickTable 레스토랑의 메뉴, 영업 정보, FAQ를 3개 문서로 분리하여 데이터 소스로 연결하고 동기화했습니다
-- 벡터 임베딩과 의미 기반 검색 원리를 학습했습니다
-- 생성형 AI와 지식 베이스를 통합하여 정확한 답변을 생성했습니다
-- 환각 방지와 Source attribution의 중요성을 이해했습니다
+- RAG (Retrieval-Augmented Generation) 아키텍처를 이해했습니다.
+- Amazon Bedrock Knowledge Base를 생성하고 구성했습니다.
+- QuickTable 레스토랑의 메뉴, 영업 정보, FAQ를 3개 문서로 분리하여 데이터 소스로 연결하고 동기화했습니다.
+- 벡터 임베딩과 의미 기반 검색 원리를 학습했습니다.
+- 생성형 AI와 지식 베이스를 통합하여 정확한 답변을 생성했습니다.
+- 환각 방지와 Source attribution의 중요성을 이해했습니다.
 
 이 Knowledge Base는 다음 세션인 Week 14-3에서 Amazon Bedrock Agent와 통합하여 QuickTable AI 챗봇의 핵심 구성 요소로 사용됩니다.
 
@@ -364,16 +400,20 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-3. **Regions**에서 `ap-northeast-2`를 선택합니다.
+3. **Regions**에서 `us-east-1`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `14-2`
+   - **Tag key**: `Week`
+   - **Tag value**: `14-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
+
+> [!WARNING]
+> OpenSearch Serverless 컬렉션은 Quick create로 자동 생성되어 Tag Editor에 검색되지 않습니다.
+> 컬렉션이 삭제되지 않으면 시간당 약 $0.48 비용이 계속 발생하므로, 반드시 아래 단계에서 OpenSearch 콘솔을 통해 직접 삭제해야 합니다.
 
 ### 방법 2: 수동 삭제
 
@@ -404,31 +444,50 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > OpenSearch Serverless 컬렉션이 삭제되지 않으면 시간당 $0.24 비용이 계속 발생합니다.
 > 반드시 삭제 여부를 확인합니다.
 
+#### OpenSearch Serverless 보안 정책 삭제
+
+> [!WARNING]
+> Knowledge Base 생성 시 OpenSearch Serverless에 보안 정책이 자동으로 생성됩니다.
+> Knowledge Base를 삭제하거나 생성에 실패해도 이 정책들은 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
+21. 왼쪽 메뉴에서 **Serverless** > **Security** > **Data access policies**를 선택합니다.
+22. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+23. [[Delete]] 버튼을 클릭합니다.
+24. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+25. 왼쪽 메뉴에서 **Encryption policies**를 선택합니다.
+26. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+27. [[Delete]] 버튼을 클릭합니다.
+28. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+29. 왼쪽 메뉴에서 **Network policies**를 선택합니다.
+30. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+31. [[Delete]] 버튼을 클릭합니다.
+32. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+
 #### Amazon S3 버킷 삭제
 
-21. Amazon S3 콘솔로 이동합니다.
-22. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-23. [[Empty]] 버튼을 클릭합니다.
-24. `permanently delete`를 입력합니다.
-25. [[Empty]] 버튼을 클릭합니다.
-26. 버킷을 선택합니다.
-27. [[Delete]] 버튼을 클릭합니다.
-28. 버킷 이름을 입력합니다.
-29. [[Delete bucket]] 버튼을 클릭합니다.
+33. Amazon S3 콘솔로 이동합니다.
+34. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
+35. [[Empty]] 버튼을 클릭합니다.
+36. `permanently delete`를 입력합니다.
+37. [[Empty]] 버튼을 클릭합니다.
+38. 버킷을 선택합니다.
+39. [[Delete]] 버튼을 클릭합니다.
+40. 버킷 이름을 입력합니다.
+41. [[Delete bucket]] 버튼을 클릭합니다.
 
 #### Amazon CloudWatch Log Group 삭제
 
-30. 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-31. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-32. 검색창에 `bedrock`을 입력합니다.
+42. 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
+43. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+44. 검색창에 `bedrock`을 입력합니다.
 
 > [!NOTE]
 > Knowledge Base 사용량에 따라 Amazon CloudWatch Log Group이 생성되지 않을 수 있습니다.
 > 검색 결과가 없으면 이 단계를 건너뜁니다.
 
-33. Knowledge Base 관련 로그 그룹을 선택합니다.
-34. **Actions** > `Delete log group(s)`를 선택합니다.
-35. [[Delete]] 버튼을 클릭합니다.
+45. Knowledge Base 관련 로그 그룹을 선택합니다.
+46. **Actions** > `Delete log group(s)`를 선택합니다.
+47. [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
@@ -491,9 +550,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 **Embedding Model (임베딩 모델):**
 
-- Cohere Embed Multilingual v3: 다국어 지원 우수, 한국어 임베딩 품질 높음 (권장)
-- Titan Embeddings G1: 영어 중심, 한국어 지원 제한적
-- Titan Embeddings V2: 개선된 다국어 지원
+- Titan Text Embeddings V2: 다국어 지원 개선, Knowledge Base 통합 안정적 (권장)
+- Titan Embeddings G1: 이전 세대, 영어 중심
+- Cohere Embed Multilingual v3: 한국어 임베딩 품질 우수하나, Knowledge Base 생성 시 호환성 문제 발생 가능
 - 벡터 차원: 1024 (Titan G1), 1024 (Cohere Multilingual v3)
 
 **Vector Database (벡터 데이터베이스):**
