@@ -18,6 +18,17 @@ prerequisites:
 
 이 실습에서는 AWS X-Ray를 사용하여 QuickTable 레스토랑 예약 시스템의 분산 추적을 구현합니다. Week 4에서 구축한 QuickTable API에 AWS X-Ray SDK를 통합하고, 서비스 맵과 트레이스를 분석하여 예약 생성 및 조회 과정의 성능과 병목 지점을 식별하는 방법을 학습합니다. Amazon API Gateway → AWS Lambda → Amazon DynamoDB로 이어지는 전체 요청 흐름을 추적하고, 각 단계의 실행 시간과 오류를 시각화합니다.
 
+> [!CONCEPT] 분산 추적 (Distributed Tracing)
+> 분산 추적은 마이크로서비스 아키텍처에서 하나의 요청이 여러 서비스를 거치는 과정을 추적하는 기술입니다. 각 서비스에서 소요된 시간, 발생한 오류, 호출 순서를 시각화하여 성능 병목 지점과 장애 원인을 빠르게 파악할 수 있습니다.
+>
+> **AWS X-Ray**는 AWS에서 제공하는 분산 추적 서비스로, 애플리케이션의 요청 흐름을 서비스 맵과 트레이스 타임라인으로 시각화합니다. 주요 구성 요소:
+>
+> - **트레이스 (Trace)**: 하나의 요청이 시작부터 끝까지 거치는 전체 경로
+> - **세그먼트 (Segment)**: 각 서비스(API Gateway, Lambda 등)에서 처리한 작업 단위
+> - **서브세그먼트 (Subsegment)**: 세그먼트 내 세부 작업 (DynamoDB 호출, 비즈니스 로직 등)
+> - **어노테이션 (Annotation)**: 검색 가능한 키-값 메타데이터
+> - **서비스 맵 (Service Map)**: 서비스 간 연결과 상태를 보여주는 시각적 다이어그램
+
 > [!DOWNLOAD]
 > [week13-2-xray-lab.zip](/files/week13/week13-2-xray-lab.zip)
 >
@@ -31,8 +42,13 @@ prerequisites:
 > - 태스크 2: AWS X-Ray 추적 활성화 확인 (AWS Lambda 함수의 Active tracing 설정 확인)
 > - 태스크 3: API 호출 및 트레이스 생성 (예약 생성/조회 API 호출하여 AWS X-Ray 트레이스 데이터 생성)
 
+> [!NOTE]
+> 이 실습에서는 `aws_xray_sdk` (AWS X-Ray SDK for Python)를 사용합니다.
+> AWS X-Ray SDK/Daemon은 2026년 2월 25일부터 유지보수 모드에 진입하여 보안 패치만 제공되고 있습니다.
+> 새로운 프로젝트에서는 [OpenTelemetry 기반 계측](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html)이 권장되지만, 기존 X-Ray SDK 코드는 계속 동작합니다.
+
 > [!WARNING]
-> 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
+> 이 실습에서 생성하는 리소스는 실습 종료 후 **반드시 삭제해야 합니다**.
 
 ## 태스크 0: 실습 환경 구축
 
@@ -78,7 +94,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 15. [[Next]] 버튼을 클릭합니다.
-16. **Review** 페이지에서 설정을 확인합니다.
+16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
 18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
@@ -89,10 +105,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
 21. 출력값들을 확인하고 메모장에 복사합니다:
-	- `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
-	- `CreateReservationFunctionName`: 예약 생성 AWS Lambda 함수 이름
-	- `GetReservationsFunctionName`: 예약 조회 AWS Lambda 함수 이름
-	- `DynamoDBTableName`: Amazon DynamoDB 테이블 이름 (Reservations)
+	- `ApiUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
+	- `CreateFunctionName`: 예약 생성 AWS Lambda 함수 이름
+	- `GetFunctionName`: 예약 조회 AWS Lambda 함수 이름
+	- `TableName`: Amazon DynamoDB 테이블 이름 (Reservations)
 
 다음 태스크에서 이 값들을 사용합니다.
 
@@ -119,7 +135,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 >
 > - `from aws_xray_sdk.core import patch_all, xray_recorder` - SDK 임포트
 > - `patch_all()` - boto3 Amazon DynamoDB 호출 자동 추적
-> - `@xray_recorder.capture('create_reservation')` - 커스텀 서브세그먼트 데코레이터
+> - `xray_recorder.begin_subsegment()` / `xray_recorder.end_subsegment()` - 커스텀 서브세그먼트 생성
 > - `subsegment.put_annotation()` - 검색 가능한 어노테이션 추가
 > - `subsegment.put_metadata()` - 상세 메타데이터 추가
 >
@@ -129,11 +145,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > from aws_xray_sdk.core import patch_all, xray_recorder
 > patch_all()  # boto3 Amazon DynamoDB 호출 자동 추적
 >
-> @xray_recorder.capture('create_reservation')
-> def create_reservation(event):
->     subsegment = xray_recorder.current_subsegment()
->     subsegment.put_annotation('restaurantName', restaurant_name)
->     subsegment.put_metadata('reservation_data', reservation)
+> # 커스텀 서브세그먼트 생성
+> subsegment = xray_recorder.begin_subsegment('create_dynamodb_item')
+> subsegment.put_annotation('reservation_id', reservation_id)
+> subsegment.put_metadata('item', item)
+> xray_recorder.end_subsegment()
 > ```
 
 27. `GetReservations`로 시작하는 함수도 동일하게 확인합니다.
@@ -154,6 +170,8 @@ AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 > [!NOTE]
 > AWS CloudFormation 템플릿에서 Active tracing이 자동으로 활성화되었습니다.
 > 이 설정으로 AWS Lambda 함수의 모든 호출이 AWS X-Ray에 자동으로 추적됩니다.
+>
+> AWS Lambda 콘솔 UI에 따라 이 섹션이 "CloudWatch Application Signals and AWS X-Ray"로 표시될 수 있습니다.
 
 32. `GetReservations` 함수도 동일하게 확인합니다.
 
@@ -203,31 +221,24 @@ echo $API_URL
 ```bash
 curl -X POST ${API_URL}/reservations \
   -H "Content-Type: application/json" \
-  -d '{"restaurantName": "강남 맛집", "date": "2024-02-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}'
+  -d '{"userId": "anonymous", "restaurantName": "강남 맛집", "date": "2026-05-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}'
 ```
 
 > [!OUTPUT]
 >
 > ```json
 > {
->   "userId": "anonymous",
->   "reservationId": "res-1234567890",
->   "restaurantName": "강남 맛집",
->   "date": "2024-02-20",
->   "time": "18:00",
->   "partySize": 4,
->   "phoneNumber": "010-1234-5678",
->   "status": "pending",
->   "createdAt": "2024-02-15T10:30:00.123456"
+>   "message": "Reservation created",
+>   "reservationId": "RSV-20260520-a1b2c3d4"
 > }
 > ```
 
 요청이 성공적으로 처리되었습니다.
 
 > [!NOTE]
-> 요청 본문에 `userId` 필드가 없으므로 AWS Lambda 함수가 기본값 "anonymous"를 설정합니다.
+> 요청 본문에 `userId`를 `"anonymous"`로 지정했습니다.
 >
-> **userId 기본값 동작**:
+> **userId 동작**:
 >
 > - Amazon DynamoDB 테이블의 키가 userId/reservationId이므로, 모든 예약이 "anonymous" 사용자로 생성됩니다
 > - 예약 조회 시 "anonymous" 사용자의 모든 예약이 반환됩니다
@@ -253,14 +264,13 @@ curl -X GET ${API_URL}/reservations
 > [
 >   {
 >     "userId": "anonymous",
->     "reservationId": "res-1234567890",
+>     "reservationId": "RSV-20260520-a1b2c3d4",
 >     "restaurantName": "강남 맛집",
->     "date": "2024-02-20",
+>     "date": "2026-05-20",
 >     "time": "18:00",
 >     "partySize": 4,
->     "phoneNumber": "010-1234-5678",
->     "status": "pending",
->     "createdAt": "2024-02-15T10:30:00.123456"
+>     "status": "confirmed",
+>     "createdAt": "2026-05-15T10:30:00.123456"
 >   }
 > ]
 > ```
@@ -277,9 +287,9 @@ curl -X GET ${API_URL}/reservations
 
 > [!NOTE]
 > AWS X-Ray는 Amazon CloudWatch 콘솔에 통합되어 있습니다.
-> 왼쪽 메뉴의 **Application Signals (APM)** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
+> 왼쪽 메뉴의 **X-Ray traces** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
 
-42. 왼쪽 메뉴에서 **Application Signals (APM)** > **Trace Map**을 선택합니다.
+42. 왼쪽 메뉴에서 **X-Ray traces** > **Trace Map**을 선택합니다.
 43. 서비스 맵에서 다음 구성 요소를 확인합니다:
 	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
 	- **Amazon API Gateway**: QuickTableXRayAPI
@@ -304,7 +314,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인합니다.
 
-46. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
+46. 왼쪽 메뉴에서 **X-Ray traces** > **Traces**를 선택합니다.
 47. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
 48. 트레이스 타임라인에서 다음 정보를 확인합니다:
 	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
@@ -333,7 +343,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray Insights와 Analytics를 사용하여 자동 이상 탐지 및 트레이스 분석 기능을 확인합니다.
 
-53. Amazon CloudWatch 콘솔 왼쪽 메뉴 하단의 **Insights**를 선택합니다.
+53. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **X-Ray traces** > **Insights**를 선택합니다.
 54. Insights 대시보드에서 다음 정보를 확인합니다:
 	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
 	- **오류율 이상**: 오류율이 증가한 경우
@@ -350,7 +360,7 @@ curl -X GET ${API_URL}/reservations
 > - 자동으로 이상을 탐지하고 알림을 받고 싶은 경우
 > - 특정 시간대에 성능 저하가 발생했는지 확인하고 싶은 경우
 
-55. **Application Signals (APM)** > **Traces** 페이지로 이동합니다.
+55. **X-Ray traces** > **Traces** 페이지로 이동합니다.
 
 > [!NOTE]
 > 이전에는 별도의 Analytics 메뉴가 있었으나, 현재는 Traces 페이지에서 필터링 및 그룹화 기능을 사용하여 동일한 분석을 수행할 수 있습니다.
@@ -441,6 +451,8 @@ curl -X GET ${API_URL}/reservations
 - [AWS Lambda와 AWS X-Ray 통합](https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/services-xray.html)
 - [AWS X-Ray 서비스 맵](https://docs.aws.amazon.com/ko_kr/xray/latest/devguide/xray-console-servicemap.html)
 - [AWS X-Ray Insights](https://docs.aws.amazon.com/ko_kr/xray/latest/devguide/xray-insights.html)
+- [AWS X-Ray SDK에서 OpenTelemetry로 마이그레이션](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html)
+- [AWS X-Ray SDK/Daemon 지원 타임라인](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-daemon-timeline.html)
 
 ## 📚 참고: QuickTable 예약 시스템의 AWS X-Ray 추적
 
@@ -450,10 +462,10 @@ QuickTable 레스토랑 예약 시스템에서 AWS X-Ray는 다음과 같은 분
 
 **요청 흐름**:
 
-18. 클라이언트가 Amazon API Gateway에 예약 생성 요청을 전송합니다.
-19. Amazon API Gateway가 CreateReservation AWS Lambda 함수를 호출합니다.
-20. AWS Lambda 함수가 Amazon DynamoDB Reservations 테이블에 예약 데이터를 저장합니다.
-21. 응답이 역순으로 클라이언트에게 전달됩니다.
+- 클라이언트가 Amazon API Gateway에 예약 생성 요청을 전송합니다.
+- Amazon API Gateway가 CreateReservation AWS Lambda 함수를 호출합니다.
+- AWS Lambda 함수가 Amazon DynamoDB Reservations 테이블에 예약 데이터를 저장합니다.
+- 응답이 역순으로 클라이언트에게 전달됩니다.
 
 **추적 정보**:
 
@@ -525,13 +537,11 @@ patch_all()  # boto3 Amazon DynamoDB 호출 자동 추적
 ```python
 from aws_xray_sdk.core import xray_recorder
 
-@xray_recorder.capture('create_reservation')
-def create_reservation(event):
-    # 예약 생성 로직
-    subsegment = xray_recorder.current_subsegment()
-    subsegment.put_annotation('restaurantName', restaurant_name)
-    subsegment.put_annotation('date', date)
-    subsegment.put_metadata('reservation_data', reservation)
+# 서브세그먼트 수동 생성
+subsegment = xray_recorder.begin_subsegment('create_dynamodb_item')
+subsegment.put_annotation('reservation_id', reservation_id)
+subsegment.put_metadata('item', item)
+xray_recorder.end_subsegment()
 ```
 
 **어노테이션 및 메타데이터**:
@@ -558,7 +568,7 @@ segment.put_metadata('request', event)  # 상세 정보
 **3. 용량 계획**:
 
 - 서비스 맵에서 피크 시간대 요청 수 확인
-- Amazon DynamoDB Amazon EC2 Auto Scaling 설정으로 용량 자동 조정
+- Amazon DynamoDB Auto Scaling 설정으로 용량 자동 조정
 
 **4. 사용자 경험 개선**:
 
@@ -590,3 +600,42 @@ segment.put_metadata('request', event)  # 상세 정보
 - 예: 예약 생성은 100%, 예약 조회는 10% 샘플링
 - **기본 샘플링**: 초당 1개 요청 + 추가 요청의 5% (Reservoir + Fixed rate)
 - **커스텀 규칙**: AWS X-Ray 콘솔에서 URL 패턴, HTTP 메서드, 서비스별로 샘플링 비율 설정 가능
+
+### AWS X-Ray SDK 유지보수 모드 및 OpenTelemetry 마이그레이션
+
+AWS X-Ray SDK/Daemon은 2026년 2월 25일부터 유지보수 모드에 진입했습니다. 유지보수 모드에서는 보안 패치만 제공되며, 새로운 기능은 추가되지 않습니다.
+
+**타임라인**:
+
+- **2026년 2월 25일**: 유지보수 모드 진입 (보안 패치만 제공) ← 현재
+- **2027년 2월 25일**: 지원 종료 (End of Support)
+
+**권장 사항**:
+
+- 이 실습에서 사용한 `aws_xray_sdk`는 계속 동작하지만, 새로운 프로젝트에서는 OpenTelemetry 기반 계측을 권장합니다
+- OpenTelemetry는 벤더 중립적인 오픈소스 표준으로, AWS X-Ray뿐 아니라 다양한 백엔드(Jaeger, Zipkin 등)로 트레이스를 전송할 수 있습니다
+- AWS는 AWS Distro for OpenTelemetry(ADOT)를 통해 OpenTelemetry를 지원합니다
+
+**X-Ray SDK와 OpenTelemetry 비교**:
+
+| 항목 | AWS X-Ray SDK | OpenTelemetry (ADOT) |
+|------|---------------|----------------------|
+| 상태 | 유지보수 모드 (2026.02~) | 활발히 개발 중 |
+| 표준 | AWS 전용 | 벤더 중립 오픈소스 표준 |
+| 백엔드 | AWS X-Ray만 지원 | X-Ray, Jaeger, Zipkin 등 다중 지원 |
+| 자동 계측 | `patch_all()` | OpenTelemetry Auto-Instrumentation |
+| AWS Lambda 지원 | Active tracing | ADOT Lambda Layer |
+
+**OpenTelemetry 마이그레이션 예시** (참고용):
+
+```python
+# 기존 X-Ray SDK 방식
+from aws_xray_sdk.core import patch_all, xray_recorder
+patch_all()
+
+# OpenTelemetry 방식 (권장)
+from opentelemetry import trace
+from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
+BotocoreInstrumentor().instrument()
+tracer = trace.get_tracer(__name__)
+```
