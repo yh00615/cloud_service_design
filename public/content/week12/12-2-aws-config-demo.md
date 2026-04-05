@@ -589,8 +589,8 @@ AWS Config Remediation이 SNS 알림을 전송하려면 SSM Automation이 사용
 7. AWS Config 콘솔로 이동합니다.
 8. 왼쪽 메뉴에서 **Conformance packs**를 선택합니다.
 9. `demo-s3-best-practices` Conformance Pack을 선택합니다.
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 `delete`를 입력합니다.
+10. **Actions** 드롭다운에서 `Delete`를 선택합니다.
+11. 확인 창에서 `confirm`을 입력합니다.
 12. [[Delete]] 버튼을 클릭합니다.
 
 #### AWS Config Rules 삭제
@@ -598,17 +598,22 @@ AWS Config Remediation이 SNS 알림을 전송하려면 SSM Automation이 사용
 > [!IMPORTANT]
 > Remediation 설정이 활성화된 상태에서 AWS Config Rule을 삭제하면 오류가 발생할 수 있습니다. 반드시 Remediation을 먼저 제거한 후 Rule을 삭제해야 합니다.
 
+> [!NOTE]
+> Conformance Pack을 삭제하면 해당 Pack에 포함된 규칙들은 자동으로 삭제됩니다. 여기서는 직접 생성한 규칙만 삭제합니다.
+
 13. AWS Config 콘솔로 이동합니다.
 14. 왼쪽 메뉴에서 **Rules**를 선택합니다.
-15. Remediation이 설정된 규칙(`s3-bucket-public-read-prohibited`)을 선택합니다.
-16. **Actions** 드롭다운에서 `Manage remediation`을 선택합니다.
-17. [[Delete]] 버튼을 클릭하여 Remediation 설정을 제거합니다.
-18. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+15. Remediation이 설정된 규칙(`s3-bucket-public-read-prohibited`)을 클릭하여 상세 페이지로 이동합니다.
+16. **Remediation action** 섹션에서 [[Delete]] 버튼을 클릭합니다.
+17. 확인 창에서 `confirm`을 입력합니다.
+18. [[Delete]] 버튼을 클릭하여 Remediation 설정을 제거합니다.
 
-19. 생성한 규칙을 하나씩 선택합니다.
-20. [[Delete rule]] 버튼을 클릭합니다.
-21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-22. 모든 규칙에 대해 반복합니다:
+19. 왼쪽 메뉴에서 **Rules**를 선택합니다.
+20. 삭제할 규칙을 선택합니다.
+21. **Actions** 드롭다운에서 `Delete rule`을 선택합니다.
+22. 확인 창에서 `confirm`을 입력합니다.
+23. [[Delete]] 버튼을 클릭합니다.
+24. 직접 생성한 모든 규칙에 대해 반복합니다:
     - `s3-bucket-public-read-prohibited`
     - `s3-bucket-server-side-encryption-enabled`
     - `ec2-instance-managed-by-systems-manager`
@@ -617,10 +622,8 @@ AWS Config Remediation이 SNS 알림을 전송하려면 SSM Automation이 사용
 
 #### Configuration Recorder 중지 및 삭제
 
-23. 왼쪽 메뉴에서 **Settings**를 선택합니다.
-24. **Recorder** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-25. **Recording is on** 토글을 끕니다.
-26. [[Save]] 버튼을 클릭합니다.
+25. 왼쪽 메뉴에서 **Settings**를 선택합니다.
+26. **Recorder** 섹션에서 [[Stop recording]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Configuration Recorder를 중지하면 리소스 변경 추적이 중단되지만, 기존 데이터는 Amazon S3에 유지됩니다.

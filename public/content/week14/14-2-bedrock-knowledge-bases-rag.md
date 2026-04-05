@@ -355,6 +355,10 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
 
+> [!WARNING]
+> 리소스 삭제 순서를 반드시 지켜야 합니다: **Knowledge Base → OpenSearch Serverless → S3** 순서로 삭제합니다.
+> OpenSearch Serverless 컬렉션을 먼저 삭제하면 Knowledge Base가 벡터 데이터를 정리하지 못해 삭제 실패(DELETE_UNSUCCESSFUL) 상태에 빠질 수 있으며, 이 경우 복구가 매우 어렵습니다.
+
 ## 1단계: 생성된 리소스 확인 (Tag Editor)
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
