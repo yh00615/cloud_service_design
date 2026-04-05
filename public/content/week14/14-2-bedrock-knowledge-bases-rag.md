@@ -75,6 +75,14 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 > `YOUR-INITIALS`를 본인의 이니셜로 변경합니다 (예: `quicktable-kb-documents-jdoe`).
 > 버킷 이름은 전 세계적으로 고유해야 합니다.
 
+> [!NOTE]
+> **Bucket namespace** 옵션이 표시될 수 있습니다.
+>
+> - **Global namespace (기본값)**: 버킷 이름이 전 세계 모든 AWS 계정에서 고유해야 합니다. 기존 S3 방식과 동일합니다.
+> - **Account Regional namespace (권장)**: 버킷 이름이 내 계정 + 리전 내에서만 고유하면 됩니다. 다른 계정에서 같은 이름을 사용해도 충돌하지 않습니다.
+>
+> 이 실습에서는 기본값인 Global namespace를 사용합니다.
+
 5. **AWS Region**이 `Asia Pacific (Seoul) ap-northeast-2`로 설정되어 있는지 확인합니다.
 6. 아래로 스크롤하여 **Tags - optional** 섹션을 확인합니다.
 7. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
@@ -105,9 +113,9 @@ Knowledge Base는 Amazon S3 버킷의 문서를 자동으로 읽어 벡터 임�
 15. [[Upload]] 버튼을 클릭합니다.
 16. [[Add files]]를 클릭합니다.
 17. 압축 해제한 폴더에서 3개 파일을 모두 선택합니다:
-	- `quicktable-menu.txt`
-	- `quicktable-info.txt`
-	- `quicktable-faq.txt`
+    - `quicktable-menu.txt`
+    - `quicktable-info.txt`
+    - `quicktable-faq.txt`
 18. [[Upload]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -138,7 +146,15 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 24. **Knowledge Base description**에 `QuickTable restaurant menu and information knowledge base`를 입력합니다.
 25. **IAM permissions**에서 `Create and use a new service role`을 선택합니다.
 26. **Choose data source type**에서 `Amazon S3`가 선택되어 있는지 확인합니다.
-27. [[Next]] 버튼을 클릭합니다.
+27. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+
+| Key         | Value     |
+| ----------- | --------- |
+| `Project`   | `AWS-Lab` |
+| `Week`      | `14-2`    |
+| `CreatedBy` | `Student` |
+
+28. [[Next]] 버튼을 클릭합니다.
 
 > [!CONCEPT] Knowledge Base 아키텍처
 > Knowledge Base는 다음 구성 요소로 이루어집니다:
@@ -148,18 +164,18 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 3. **Vector database**: 벡터를 저장하고 검색하는 데이터베이스 (OpenSearch Serverless)
 > 4. **Foundation model**: 검색된 문서를 기반으로 답변을 생성하는 LLM
 
-28. **Data source name**에 `s3-documents`를 입력합니다.
-29. **S3 URI**에서 [[Browse S3]]를 클릭합니다.
-30. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-31. `documents` 폴더를 선택합니다.
-32. [[Choose]] 버튼을 클릭합니다.
+29. **Data source name**에 `s3-documents`를 입력합니다.
+30. **S3 URI**에서 [[Browse S3]]를 클릭합니다.
+31. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
+32. `documents` 폴더를 선택합니다.
+33. [[Choose]] 버튼을 클릭합니다.
 
 > [!TIP]
 > Amazon S3 URI를 직접 입력할 수도 있습니다: `s3://quicktable-kb-documents-YOUR-INITIALS/documents/`
 
-33. **Parsing strategy**에서 `Amazon Bedrock default parser`가 선택되어 있는지 확인합니다.
-34. **Chunking strategy**에서 `Default chunking`이 선택되어 있는지 확인합니다.
-35. [[Next]] 버튼을 클릭합니다.
+34. **Parsing strategy**에서 `Amazon Bedrock default parser`가 선택되어 있는지 확인합니다.
+35. **Chunking strategy**에서 `Default chunking`이 선택되어 있는지 확인합니다.
+36. [[Next]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base는 Amazon S3 버킷의 모든 파일을 자동으로 읽어 처리합니다.
@@ -167,7 +183,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > Chunking strategy는 Default 외에 Fixed size, Hierarchical, Semantic, No chunking을 선택할 수 있습니다.
 > 이 실습에서는 Default chunking을 사용합니다.
 
-36. **Embeddings model**에서 `Titan Text Embeddings V2`를 선택합니다.
+37. **Embeddings model**에서 `Titan Text Embeddings V2`를 선택합니다.
 
 > [!CONCEPT] 임베딩 모델 선택
 > Amazon Bedrock은 여러 임베딩 모델을 제공합니다:
@@ -178,7 +194,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 >
 > 이 실습에서는 OpenSearch Serverless 벡터 스토어와의 차원 호환성을 위해 Titan Text Embeddings V2를 사용합니다.
 
-37. **Vector database**에서 `Quick create a new vector store`를 선택합니다.
+38. **Vector database**에서 `Quick create a new vector store`를 선택합니다.
 
 > [!NOTE]
 > Quick create는 OpenSearch Serverless 컬렉션을 자동으로 생성합니다.
@@ -187,9 +203,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > OCU당 시간당 $0.24 비용이 발생하므로 실습 후 반드시 삭제해야 합니다.
 > 수동으로 생성하려면 "Choose a vector store you have created"를 선택할 수 있습니다.
 
-38. [[Next]] 버튼을 클릭합니다.
-39. 설정을 검토합니다.
-40. [[Create knowledge base]] 버튼을 클릭합니다.
+39. [[Next]] 버튼을 클릭합니다.
+40. 설정을 검토합니다.
+41. [[Create knowledge base]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base 생성에 2-3분이 소요됩니다.
@@ -203,9 +219,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 이 태스크에서는 Amazon S3 버킷의 문서를 Knowledge Base로 동기화합니다.
 동기화 과정에서 문서가 청크(chunk)로 분할되고, 각 청크가 벡터로 변환되어 OpenSearch Serverless에 저장됩니다.
 
-41. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
-42. `s3-documents` 데이터 소스를 선택합니다.
-43. [[Sync]] 버튼을 클릭합니다.
+42. Knowledge Base 상세 페이지에서 **Data source** 섹션을 확인합니다.
+43. `s3-documents` 데이터 소스를 선택합니다.
+44. [[Sync]] 버튼을 클릭합니다.
 
 > [!CONCEPT] 문서 청킹 (Chunking)
 > 긴 문서를 작은 조각(chunk)으로 나누는 과정입니다.
@@ -220,8 +236,8 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > Documents processed 수가 3으로 표시되면 3개 파일이 모두 처리된 것입니다.
 > Chunks created 항목은 콘솔 버전에 따라 표시되지 않을 수 있습니다.
 
-44. **Sync history** 섹션에서 최근 동기화 결과를 확인합니다.
-45. **Documents processed**와 **Chunks created** 수를 확인합니다.
+45. **Sync history** 섹션에서 최근 동기화 결과를 확인합니다.
+46. **Documents processed**와 **Chunks created** 수를 확인합니다.
 
 ✅ **태스크 완료**: 데이터 소스가 동기화되었습니다.
 
@@ -232,8 +248,8 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### 태스크 4.1: 기본 질문 테스트
 
-46. Knowledge Base 상세 페이지에서 **Test knowledge base** 섹션으로 스크롤합니다.
-47. **Select model**에서 추론 프로파일(inference profile)을 선택합니다 (예: `Anthropic Claude Sonnet 4.6` 또는 `Anthropic Claude Opus 4.6`).
+47. Knowledge Base 상세 페이지에서 **Test knowledge base** 섹션으로 스크롤합니다.
+48. **Select model**에서 추론 프로파일(inference profile)을 선택합니다 (예: `Anthropic Claude Sonnet 4.6` 또는 `Anthropic Claude Opus 4.6`).
 
 > [!CONCEPT] Foundation Model 선택과 추론 프로파일
 > Claude 4.5 이상 모델은 추론 프로파일(inference profile)을 통해서만 호출할 수 있습니다.
@@ -246,9 +262,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 한국어 질문의 경우 Claude Sonnet 4.6 또는 Claude Opus 4.6이 권장됩니다.
 > 추론 프로파일은 크로스 리전 라우팅을 지원하여 가용성과 처리량을 높여줍니다.
 
-48. 질문 입력창에 다음을 입력합니다: `안심 스테이크 가격이 얼마인가요?`.
-49. [[Run]] 버튼을 클릭합니다.
-50. **Generated response** 섹션에서 답변을 확인합니다.
+49. 질문 입력창에 다음을 입력합니다: `안심 스테이크 가격이 얼마인가요?`.
+50. [[Run]] 버튼을 클릭합니다.
+51. **Generated response** 섹션에서 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -257,20 +273,20 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 미디엄 레어로 추천되며, 감자 퓨레와 구운 야채가 포함되어 있습니다.
 > ```
 
-51. **Source attribution** 섹션에서 답변의 근거가 된 문서를 확인합니다.
-52. 문서 청크와 유사도 점수를 확인합니다.
+52. 답변 아래의 **Details** 링크를 클릭하면 오른쪽에 해당 답변의 **Source chunks**가 표시됩니다.
+53. 답변의 근거가 된 문서 청크 내용을 확인합니다.
 
 > [!NOTE]
-> Source attribution은 답변의 신뢰성을 보장합니다.
+> Source chunks는 답변의 신뢰성을 보장합니다.
 > 각 답변이 어떤 문서에서 나왔는지 추적할 수 있어 환각(hallucination)을 방지합니다.
 
 ✅ **하위 태스크 완료**: 기본 질문 테스트가 완료되었습니다.
 
 ### 태스크 4.2: 복잡한 질문 테스트
 
-53. 질문 입력창에 다음을 입력합니다: `주말에 4명이 방문하려고 하는데, 주차가 가능하고 영업 시간은 언제까지인가요?`.
-54. [[Run]] 버튼을 클릭합니다.
-55. 답변을 확인합니다.
+54. 질문 입력창에 다음을 입력합니다: `주말에 4명이 방문하려고 하는데, 주차가 가능하고 영업 시간은 언제까지인가요?`.
+55. [[Run]] 버튼을 클릭합니다.
+56. 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -284,7 +300,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 예상 출력은 참고용이며, 실제 응답은 모델에 따라 다를 수 있습니다.
 > 답변은 업로드한 문서의 내용만을 기반으로 생성됩니다.
 
-56. **Source attribution**에서 여러 문서 청크가 사용되었는지 확인합니다.
+57. **Details** 패널의 **Source chunks**에서 여러 문서 청크가 사용되었는지 확인합니다.
 
 > [!CONCEPT] 다중 문서 검색
 > RAG는 여러 문서 청크를 동시에 검색하여 복잡한 질문에 답변할 수 있습니다.
@@ -294,9 +310,9 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 ### 태스크 4.3: FAQ 기반 질문 테스트
 
-57. 질문 입력창에 다음을 입력합니다: `배달 서비스가 가능한가요?`.
-58. [[Run]] 버튼을 클릭합니다.
-59. 답변을 확인합니다.
+58. 질문 입력창에 다음을 입력합니다: `배달 서비스가 가능한가요?`.
+59. [[Run]] 버튼을 클릭합니다.
+60. 답변을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -346,8 +362,8 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `14-2`
+   - **Tag key**: `Week`
+   - **Tag value**: `14-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -386,23 +402,42 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > OpenSearch Serverless 컬렉션이 삭제되지 않으면 OCU당 시간당 $0.24 비용이 계속 발생합니다.
 > 반드시 삭제 여부를 확인합니다.
 
+### OpenSearch Serverless 보안 정책 삭제
+
+> [!WARNING]
+> Knowledge Base 생성 시 OpenSearch Serverless에 보안 정책이 자동으로 생성됩니다.
+> Knowledge Base를 삭제하거나 생성에 실패해도 이 정책들은 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
+18. 왼쪽 메뉴에서 **Serverless** > **Security** > **Data access policies**를 선택합니다.
+19. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+20. [[Delete]] 버튼을 클릭합니다.
+21. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+22. 왼쪽 메뉴에서 **Encryption policies**를 선택합니다.
+23. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+24. [[Delete]] 버튼을 클릭합니다.
+25. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+26. 왼쪽 메뉴에서 **Network policies**를 선택합니다.
+27. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+28. [[Delete]] 버튼을 클릭합니다.
+29. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+
 ### Amazon S3 버킷 삭제
 
-18. Amazon S3 콘솔로 이동합니다.
-19. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
-20. [[Empty]] 버튼을 클릭합니다.
-21. `permanently delete`를 입력합니다.
-22. [[Empty]] 버튼을 클릭합니다.
-23. 버킷을 선택합니다.
-24. [[Delete]] 버튼을 클릭합니다.
-25. 버킷 이름을 입력합니다.
-26. [[Delete bucket]] 버튼을 클릭합니다.
+30. Amazon S3 콘솔로 이동합니다.
+31. `quicktable-kb-documents-YOUR-INITIALS` 버킷을 선택합니다.
+32. [[Empty]] 버튼을 클릭합니다.
+33. `permanently delete`를 입력합니다.
+34. [[Empty]] 버튼을 클릭합니다.
+35. 버킷을 선택합니다.
+36. [[Delete]] 버튼을 클릭합니다.
+37. 버킷 이름을 입력합니다.
+38. [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 3단계: 삭제 확인
 
-27. `Resource Groups & Tag Editor`로 이동합니다.
-28. Tag key: `Week`, Tag value: `14-2`로 검색합니다.
-29. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+39. `Resource Groups & Tag Editor`로 이동합니다.
+40. Tag key: `Week`, Tag value: `14-2`로 검색합니다.
+41. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 
 > [!SUCCESS]
 > 모든 리소스가 정리되었습니다.
