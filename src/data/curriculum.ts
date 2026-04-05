@@ -34,7 +34,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 1,
         type: 'demo',
-        title: 'AWS 클라우드 아키텍처 개요',
+        title: 'AWS Resource Groups & Tag Editor를 활용한 리소스 관리',
         hasContent: true,
         markdownPath: '/content/week1/1-1-tag-editor-lab.md',
         description:
@@ -50,7 +50,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 2,
         type: 'lab',
-        title: 'AWS Well-Architected Framework',
+        title: 'AWS Well-Architected Tool 워크로드 평가',
         hasContent: true,
         markdownPath: '/content/week1/1-2-well-architected-tool-lab.md',
         description:
@@ -66,7 +66,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: 'AWS 클라우드 아키텍처 패턴',
+        title: 'draw.io로 HA 아키텍처 다이어그램 작성',
         hasContent: true,
         markdownPath: '/content/week1/1-3-drawio-architecture.md',
         description:
@@ -264,7 +264,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 1,
         type: 'demo',
-        title: 'Amazon RDS Multi-AZ 고가용성 구성 및 운영',
+        title: 'Amazon RDS Multi-AZ 장애 조치 시뮬레이션',
         hasContent: true,
         markdownPath: '/content/week5/5-1-rds-multi-az.md',
         description:
@@ -294,7 +294,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: 'Amazon DynamoDB 테이블 생성 및 보조 인덱스 활용',
+        title: 'Amazon DynamoDB 테이블 생성 및 보조인덱스 활용',
         hasContent: true,
         markdownPath: '/content/week5/5-3-dynamodb-design.md',
         description:
@@ -658,7 +658,7 @@ export const curriculum: WeekCurriculum[] = [
       },
       {
         session: 2,
-        type: 'lab',
+        type: 'demo',
         title: 'AWS Config 규칙 생성 및 모니터링',
         hasContent: true,
         markdownPath: '/content/week12/12-2-aws-config-demo.md',
@@ -675,7 +675,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: '웹 애플리케이션 보안 및 위협 탐지',
+        title: 'AWS WAF와 AWS Shield를 활용한 웹 애플리케이션 보안',
         hasContent: true,
         markdownPath: '/content/week12/12-3-waf-api-protection.md',
         description:
@@ -719,7 +719,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 2,
         type: 'demo',
-        title: 'AWS X-Ray 분산 추적',
+        title: 'AWS X-Ray를 활용한 서버리스 애플리케이션 추적',
         hasContent: true,
         markdownPath: '/content/week13/13-2-xray-tracing.md',
         description:
@@ -735,7 +735,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: '컨테이너 관찰 가능성',
+        title: 'Amazon CloudWatch Container Insights로 Amazon EKS 모니터링',
         hasContent: true,
         markdownPath: '/content/week13/13-3-container-insights-eks.md',
         description:
