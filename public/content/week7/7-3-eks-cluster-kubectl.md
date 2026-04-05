@@ -7,6 +7,7 @@ awsServices:
   - Kubernetes
 learningObjectives:
   - Kubernetes의 기본 개념(Pod, Deployment, Service)과 Amazon EKS 아키텍처를 이해할 수 있습니다.
+  - Amazon EKS 콘솔에서 클러스터를 생성하고 노드 그룹을 추가할 수 있습니다.
   - kubectl을 구성하고 Amazon EKS 클러스터에 연결할 수 있습니다.
   - Pod와 Deployment를 생성하고 롤링 업데이트/롤백을 수행할 수 있습니다.
   - Kubernetes Service를 생성하고 애플리케이션을 외부에 노출할 수 있습니다.
@@ -15,7 +16,7 @@ prerequisites:
   - 컨테이너 기본 개념 이해
 ---
 
-이 실습에서는 Amazon EKS(Elastic Kubernetes Service)를 사용하여 관리형 Kubernetes 클러스터를 생성하고, kubectl 명령어를 사용하여 기본적인 Kubernetes 리소스를 관리하는 방법을 학습합니다.
+이 실습에서는 Amazon EKS(Elastic Kubernetes Service) 콘솔에서 관리형 Kubernetes 클러스터를 직접 생성하고, kubectl 명령어를 사용하여 기본적인 Kubernetes 리소스를 관리하는 방법을 학습합니다.
 
 > [!NOTE]
 > **QuickTable 프로젝트 연계**: 이 실습에서 학습하는 Amazon EKS와 Kubernetes 개념은 Week 9-2에서 QuickTable 컨테이너 이미지를 빌드하고 Amazon ECR에 푸시하는 데 활용됩니다.
@@ -27,43 +28,41 @@ prerequisites:
 
 > [!DOWNLOAD]
 > [week7-3-eks-lab.zip](/files/week7/week7-3-eks-lab.zip)
-> - `week7-3-eks-lab.yaml` - Amazon EKS 클러스터 및 노드 그룹 AWS CloudFormation 템플릿
-> - `nginx-deployment.yaml` - Nginx Deployment 매니페스트 (태스크 3에서 사용)
-> - `nginx-service.yaml` - Nginx Service 매니페스트 (태스크 6에서 사용)
+> - `week7-3-eks-lab.yaml` - VPC, IAM 역할 사전 구성 AWS CloudFormation 템플릿
+> - `nginx-deployment.yaml` - Nginx Deployment 매니페스트 (태스크 6에서 사용)
+> - `nginx-service.yaml` - Nginx Service 매니페스트 (태스크 8에서 사용)
 > - `nginx-ingress-alb.yaml` - ALB Ingress 매니페스트 (참고용)
 > 
 > **관련 태스크:**
 > 
-> - 태스크 0: 실습 환경 구축 (week7-3-eks-lab.yaml을 사용하여 Amazon EKS 클러스터, 워커 노드, AWS IAM 역할 자동 생성)
-> - 태스크 3: Deployment 생성 (nginx-deployment.yaml을 사용하여 Nginx 애플리케이션 배포)
-> - 태스크 6: Service 생성 (nginx-service.yaml을 사용하여 LoadBalancer 타입 Service 생성)
+> - 태스크 0: 사전 인프라 구축 (week7-3-eks-lab.yaml을 사용하여 VPC, IAM 역할 자동 생성)
+> - 태스크 1: Amazon EKS 콘솔에서 클러스터 생성
+> - 태스크 2: 노드 그룹 추가
+> - 태스크 6: YAML 매니페스트로 Deployment 생성 (nginx-deployment.yaml 사용)
+> - 태스크 8: Service 생성 (nginx-service.yaml 사용)
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 **즉시 삭제**해야 합니다.
 
 > [!COST]
-> **Kubernetes 1.32 Extended Support 비용 안내**: Kubernetes 1.32는 2026년 3월 21일부터 Extended Support에 진입했습니다.
-> Extended Support 기간에는 클러스터 비용이 시간당 $0.10에서 **$0.60으로 6배 증가**합니다.
-> 실습 시간(1-2시간) 동안 약 $0.50-$1.00의 추가 비용이 발생할 수 있습니다.
-> 추가 비용을 피하려면 `week7-3-eks-lab.yaml` 파일에서 Kubernetes 버전을 Standard Support 버전(예: `1.33` 이상)으로 변경합니다.
+> **Kubernetes Extended Support 비용 안내**: Kubernetes 버전이 Extended Support에 진입하면 클러스터 비용이 시간당 $0.10에서 **$0.60으로 6배 증가**합니다.
+> 추가 비용을 피하려면 클러스터 생성 시 Standard Support 버전을 선택합니다.
 > 지원 버전 확인 방법은 📚 참고 섹션의 "Kubernetes 버전 지원 정책"을 참조합니다.
 
 > [!TIP]
-> **실습 시간 최적화**: 태스크 0의 AWS CloudFormation 스택 생성에 20-30분이 소요됩니다.
-> 수업 시작 전 사전 과제로 태스크 0을 미리 수행하면 실습 시간을 효율적으로 활용할 수 있습니다.
+> **실습 시간 최적화**: 태스크 0의 AWS CloudFormation 스택 생성에 3-5분, 태스크 1의 EKS 클러스터 생성에 10-15분이 소요됩니다.
+> 수업 시작 전 사전 과제로 태스크 0~2를 미리 수행하면 실습 시간을 효율적으로 활용할 수 있습니다.
 
-## 태스크 0: 실습 환경 구축
+## 태스크 0: 사전 인프라 구축
 
-이 태스크에서는 AWS CloudFormation을 사용하여 실습에 필요한 Amazon EKS 클러스터와 워커 노드를 자동으로 생성합니다.
+이 태스크에서는 AWS CloudFormation을 사용하여 EKS 클러스터에 필요한 VPC와 IAM 역할을 미리 생성합니다.
 
 ### 환경 구성 요소
 
 AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
-- **Amazon VPC 및 네트워크**: Amazon VPC, 퍼블릭 서브넷 2개, 인터넷 게이트웨이, 라우팅 테이블
+- **Amazon VPC 및 네트워크**: Amazon VPC (10.0.0.0/16), 퍼블릭 서브넷 2개, 인터넷 게이트웨이, 라우팅 테이블
 - **AWS IAM 역할**: Amazon EKS 클러스터 역할 (AmazonEKSClusterPolicy), 워커 노드 역할 (AmazonEKSWorkerNodePolicy, AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy)
-- **Amazon EKS 클러스터**: Kubernetes 버전 1.32, Public 엔드포인트
-- **노드 그룹**: t3.medium 인스턴스 2개, Amazon Linux 2023 AMI
 
 > [!WARNING]
 > **보안 주의**: 이 실습에서는 간소화를 위해 퍼블릭 서브넷만 사용합니다.
@@ -75,20 +74,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > - NAT Gateway를 통해 아웃바운드 트래픽만 허용하고 인바운드는 차단해야 합니다
 > - Week 3-2에서 학습한 최소 권한 원칙을 적용합니다
 
-Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
-
-> [!WARNING]
-> **Kubernetes 버전 확인 필수**: AWS CloudFormation 템플릿은 Kubernetes 버전 1.32를 사용합니다.
-> 
-> 1.32가 지원되지 않으면 `week7-3-eks-lab.yaml` 파일을 텍스트 에디터로 열고,
-> `KubernetesVersion: '1.32'` 줄을 지원되는 최신 버전으로 변경합니다 (예: `'1.33'` 또는 `'1.34'`).
-> 
-> 지원 버전 확인 및 상세 정보는 📚 참고 섹션의 "Kubernetes 버전 지원 정책"을 참조합니다.
-
 ### 상세 단계
 
 > [!NOTE]
-> AWS CloudFormation 콘솔 UI는 주기적으로 업데이트됩니다.  
+> AWS CloudFormation 콘솔 UI는 주기적으로 업데이트됩니다.
 > 버튼명이나 화면 구성이 가이드와 다를 수 있으나, 전체 흐름(템플릿 업로드 → 스택 이름 입력 → 태그 추가 → 생성)은 동일합니다.
 
 1. 다운로드한 `week7-3-eks-lab.zip` 파일의 압축을 해제합니다.
@@ -102,11 +91,8 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 9. **Stack name**에 `week7-3-eks-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **ClusterName**: `my-eks-cluster`
-    - **NodeGroupName**: `my-node-group`
-    - **NodeInstanceType**: `t3.medium`
-    - **DesiredCapacity**: `2`
-    - **MinSize**: `1`
-    - **MaxSize**: `3`
+    - **ProjectTag**: `AWS-Lab`
+    - **WeekTag**: `7-3`
 
 > [!IMPORTANT]
 > 모든 파라미터는 기본값을 그대로 사용합니다.
@@ -128,26 +114,125 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 17. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 생성에 20-30분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> VPC와 IAM 역할만 생성하므로 3-5분 내에 완료됩니다.
+> 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+
+18. 스택 상태가 **CREATE_COMPLETE**로 변경되면 **Outputs** 탭을 선택합니다.
+19. 출력값들을 확인하고 메모장에 복사합니다:
+    - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
+    - `PublicSubnet1Id`: 퍼블릭 서브넷 1 ID
+    - `PublicSubnet2Id`: 퍼블릭 서브넷 2 ID
+    - `ClusterRoleName`: EKS 클러스터 IAM 역할 이름 (예: my-eks-cluster-cluster-role)
+    - `NodeRoleName`: 워커 노드 IAM 역할 이름 (예: my-eks-cluster-node-role)
+
+> [!IMPORTANT]
+> 이 출력값들은 태스크 1, 2에서 사용됩니다. 반드시 메모장에 저장합니다.
+
+✅ **태스크 완료**: VPC와 IAM 역할이 준비되었습니다.
+
+## 태스크 1: Amazon EKS 콘솔에서 클러스터 생성
+
+이 태스크에서는 Amazon EKS 콘솔에서 직접 Kubernetes 클러스터를 생성합니다.
+
+20. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
+21. 왼쪽 메뉴에서 **Clusters**를 선택합니다.
+22. [[Create cluster]] 버튼을 클릭합니다.
+
+### Configuration options 선택
+
+23. **Configuration options**에서 `Custom configuration`을 선택합니다.
+
+> [!NOTE]
+> **Quick configuration (with EKS Auto Mode)**는 EKS Auto Mode를 사용하여 노드 프로비저닝을 자동화합니다.
+> 이 실습에서는 Kubernetes 구성 요소를 직접 이해하기 위해 Custom configuration을 사용합니다.
+
+### Cluster configuration
+
+24. **Name**에 `my-eks-cluster`를 입력합니다.
+25. **Kubernetes version**에서 Standard Support 버전을 선택합니다.
+
+> [!NOTE]
+> Standard Support 버전을 선택해야 추가 비용이 발생하지 않습니다.
+> 버전 목록에서 "(Extended support)" 표시가 없는 최신 버전을 선택합니다.
+> 지원 버전 확인 방법은 📚 참고 섹션의 "Kubernetes 버전 지원 정책"을 참조합니다.
+
+26. **Cluster IAM role**에서 `my-eks-cluster-cluster-role`을 선택합니다.
+
+> [!NOTE]
+> 이 역할은 태스크 0에서 AWS CloudFormation으로 생성한 역할입니다.
+> 드롭다운에 표시되지 않으면 태스크 0의 스택 생성이 완료되었는지 확인합니다.
+
+### Networking
+
+27. **VPC**에서 태스크 0에서 생성한 VPC를 선택합니다 (이름: `my-eks-cluster-vpc`).
+28. **Subnets**에서 두 개의 퍼블릭 서브넷이 자동으로 선택되었는지 확인합니다:
+    - `my-eks-cluster-public-subnet-1`
+    - `my-eks-cluster-public-subnet-2`
+
+> [!NOTE]
+> VPC를 선택하면 해당 VPC의 서브넷이 자동으로 표시됩니다.
+> 두 서브넷 모두 선택되어 있어야 합니다.
+
+29. **Cluster endpoint access**에서 `Public`을 선택합니다.
+
+> [!WARNING]
+> **보안 주의**: Public 엔드포인트는 실습 환경에서만 사용합니다.
+> 프로덕션 환경에서는 `Public and private` 또는 `Private`을 선택하여 접근을 제한해야 합니다.
+
+30. 나머지 설정은 변경하지 않고 페이지 하단으로 스크롤합니다.
+31. [[Create]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 클러스터 생성에 10-15분이 소요됩니다. 상태가 "Creating"에서 "**Active**"로 변경될 때까지 기다립니다.
+> 대기하는 동안 📚 참고 섹션의 Kubernetes 아키텍처를 미리 읽어봅니다.
 
 > [!WARNING]
 > **AWS CloudShell 세션 타임아웃 주의**: CloudShell은 약 20분 비활성 시 세션이 자동 종료됩니다.
-> 스택 생성 중 AWS CloudShell 세션이 끊어지면 다음 태스크에서 다시 CloudShell을 열고 `aws eks update-kubeconfig` 명령을 재실행합니다.
+> 클러스터 생성 중 AWS CloudShell 세션이 끊어지면 태스크 3에서 다시 CloudShell을 열고 `aws eks update-kubeconfig` 명령을 재실행합니다.
 
-18. **Outputs** 탭을 선택합니다.
-19. 출력값들을 확인하고 메모장에 복사합니다:
-    - `ClusterName`: Amazon EKS 클러스터 이름 (예: my-eks-cluster)
-    - `ClusterEndpoint`: Amazon EKS 클러스터 엔드포인트 URL
-    - `NodeGroupName`: 노드 그룹 이름 (예: my-node-group)
-    - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
+✅ **태스크 완료**: Amazon EKS 클러스터가 생성되었습니다.
 
-> [!IMPORTANT]
-> 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
+## 태스크 2: 노드 그룹 추가
 
-✅ **태스크 완료**: 실습 환경이 준비되었습니다.
+이 태스크에서는 생성한 EKS 클러스터에 워커 노드 그룹을 추가합니다.
 
-## 태스크 1: kubectl 구성 및 클러스터 연결
+32. Amazon EKS 콘솔에서 `my-eks-cluster` 클러스터를 선택합니다.
+33. **Compute** 탭을 선택합니다.
+34. **Node groups** 섹션에서 [[Add node group]] 버튼을 클릭합니다.
+
+### Node group configuration
+
+35. **Name**에 `my-node-group`을 입력합니다.
+36. **Node IAM role**에서 `my-eks-cluster-node-role`을 선택합니다.
+
+> [!NOTE]
+> 이 역할은 태스크 0에서 AWS CloudFormation으로 생성한 역할입니다.
+
+37. [[Next]] 버튼을 클릭합니다.
+
+### Compute and scaling configuration
+
+38. **AMI type**에서 `Amazon Linux 2023 (AL2023_x86_64_STANDARD)`를 선택합니다.
+39. **Instance types**에서 `t3.medium`을 선택합니다.
+40. **Scaling configuration**에서 다음 값을 설정합니다:
+    - **Desired size**: `2`
+    - **Minimum size**: `1`
+    - **Maximum size**: `3`
+41. [[Next]] 버튼을 클릭합니다.
+
+### Networking
+
+42. **Subnets**에서 두 개의 퍼블릭 서브넷이 선택되어 있는지 확인합니다.
+43. [[Next]] 버튼을 클릭합니다.
+44. **Review** 페이지에서 설정을 확인합니다.
+45. [[Create]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 노드 그룹 생성에 3-5분이 소요됩니다. 상태가 "Creating"에서 "**Active**"로 변경될 때까지 기다립니다.
+
+✅ **태스크 완료**: 워커 노드 그룹이 추가되었습니다.
+
+## 태스크 3: kubectl 구성 및 클러스터 연결
 
 이 태스크에서는 CloudShell에서 kubectl을 사용하여 Amazon EKS 클러스터에 연결합니다.
 
@@ -157,12 +242,8 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 > 
 > **kubectl 버전 호환성**: 버전이 호환 범위를 벗어나면 📚 참고 섹션의 "kubectl 수동 설치 방법"을 참조합니다.
 
-22. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-
-> [!NOTE]
-> CloudShell이 시작될 때까지 기다립니다.
-
-23. kubectl 버전을 확인합니다:
+46. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
+47. CloudShell이 시작되면 kubectl 버전을 확인합니다:
 
 ```bash
 kubectl version --client
@@ -174,25 +255,18 @@ kubectl version --client
 > Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
 > ```
 
-> [!NOTE]
-> AWS CloudShell의 kubectl 버전은 정기적으로 업데이트됩니다.
-> 2026년 2월 기준으로 v1.32 이상의 버전이 설치되어 있을 수 있습니다.
-
-25. AWS CLI를 사용하여 kubeconfig를 업데이트합니다:
+48. AWS CLI를 사용하여 kubeconfig를 업데이트합니다:
 
 ```bash
 aws eks update-kubeconfig --name my-eks-cluster --region ap-northeast-2
 ```
-
-> [!NOTE]
-> 태스크 0에서 ClusterName 파라미터를 변경했다면, `my-eks-cluster` 대신 변경한 이름을 사용합니다.
 
 > [!OUTPUT]
 > ```
 > Added new context arn:aws:eks:ap-northeast-2:xxxx:cluster/my-eks-cluster to /home/cloudshell-user/.kube/config
 > ```
 
-26. 클러스터 연결을 확인합니다:
+49. 클러스터 연결을 확인합니다:
 
 ```bash
 kubectl get nodes
@@ -222,7 +296,7 @@ kubectl get nodes
 
 ✅ **태스크 완료**: kubectl이 Amazon EKS 클러스터에 연결되었습니다.
 
-## 태스크 2: Kubernetes Pod 생성 및 관리
+## 태스크 4: Kubernetes Pod 생성 및 관리
 
 이 태스크에서는 kubectl을 사용하여 Pod를 생성하고 관리하는 방법을 학습합니다.
 
@@ -230,9 +304,7 @@ kubectl get nodes
 > Pod를 직접 생성하는 방식은 학습 및 디버깅 목적으로만 사용합니다.
 > 프로덕션 환경에서는 Pod가 삭제되면 자동으로 재생성되지 않으므로, 항상 Deployment를 사용해야 합니다.
 
-이제 nginx Pod를 생성해봅시다.
-
-27. 다음 명령어를 실행하여 nginx Pod를 생성합니다:
+50. 다음 명령어를 실행하여 nginx Pod를 생성합니다:
 
 ```bash
 kubectl run nginx-pod --image=nginx:1.28
@@ -243,7 +315,7 @@ kubectl run nginx-pod --image=nginx:1.28
 > pod/nginx-pod created
 > ```
 
-28. Pod 목록을 확인합니다:
+51. Pod 목록을 확인합니다:
 
 ```bash
 kubectl get pods
@@ -255,7 +327,7 @@ kubectl get pods
 > nginx-pod   1/1     Running   0          10s
 > ```
 
-29. Pod의 상세 정보를 확인합니다:
+52. Pod의 상세 정보를 확인합니다:
 
 ```bash
 kubectl describe pod nginx-pod
@@ -268,22 +340,17 @@ kubectl describe pod nginx-pod
 > - **Node**: Pod가 실행 중인 워커 노드
 > - **Events**: Pod 생성 과정 (Scheduled → Pulling → Pulled → Created → Started)
 
-30. Pod의 로그를 확인합니다:
+53. Pod의 로그를 확인합니다:
 
 ```bash
 kubectl logs nginx-pod
 ```
 
-> [!OUTPUT]
-> ```
-> (빈 출력 또는 nginx 기본 로그)
-> ```
-
 > [!NOTE]
 > nginx Pod에 아직 HTTP 요청이 없으므로 로그가 비어 있거나 기본 시작 로그만 표시될 수 있습니다.
 > 웹 브라우저나 curl로 nginx에 접속하면 액세스 로그가 표시됩니다.
 
-31. Pod 내부에 접속합니다:
+54. Pod 내부에 접속합니다:
 
 ```bash
 kubectl exec -it nginx-pod -- /bin/bash
@@ -293,21 +360,21 @@ kubectl exec -it nginx-pod -- /bin/bash
 > `kubectl exec`는 디버깅 목적으로만 사용합니다.
 > 프로덕션 환경에서는 Pod 내부 접속을 RBAC으로 제한하고, 감사 로그를 활성화해야 합니다.
 
-32. Pod 내부에서 nginx 버전을 확인합니다:
+55. Pod 내부에서 nginx 버전을 확인합니다:
 
 ```bash
 nginx -v
 ```
 
-33. `exit` 명령어를 입력하여 Pod에서 나옵니다.
+56. `exit` 명령어를 입력하여 Pod에서 나옵니다.
 
 ✅ **태스크 완료**: Kubernetes Pod를 생성하고 관리했습니다.
 
-## 태스크 3: Kubernetes Deployment 생성 (명령형)
+## 태스크 5: Kubernetes Deployment 생성 (명령형)
 
 이 태스크에서는 명령형 방식으로 Deployment를 생성하고 관리하는 방법을 학습합니다.
 
-34. 다음 명령어를 실행하여 nginx Deployment를 생성합니다:
+57. 다음 명령어를 실행하여 nginx Deployment를 생성합니다:
 
 ```bash
 kubectl create deployment nginx-deployment --image=nginx:1.28 --replicas=2
@@ -325,7 +392,7 @@ kubectl create deployment nginx-deployment --image=nginx:1.28 --replicas=2
 > replicas를 2로 설정하여 리소스 사용량을 최소화합니다.
 > t3.medium 2대에서 총 4 vCPU, 8GB 메모리를 사용할 수 있습니다.
 
-35. Deployment 목록을 확인합니다:
+58. Deployment 목록을 확인합니다:
 
 ```bash
 kubectl get deployments
@@ -337,7 +404,7 @@ kubectl get deployments
 > nginx-deployment   2/2     2            2           20s
 > ```
 
-36. Pod 목록을 확인합니다:
+59. Pod 목록을 확인합니다:
 
 ```bash
 kubectl get pods
@@ -351,7 +418,7 @@ kubectl get pods
 > nginx-pod                           1/1     Running   0          5m
 > ```
 
-37. Deployment를 스케일링합니다:
+60. Deployment를 스케일링합니다:
 
 ```bash
 kubectl scale deployment nginx-deployment --replicas=3
@@ -362,23 +429,23 @@ kubectl scale deployment nginx-deployment --replicas=3
 > deployment.apps/nginx-deployment scaled
 > ```
 
-38. Pod 개수가 증가했는지 확인합니다:
+61. Pod 개수가 증가했는지 확인합니다:
 
 ```bash
 kubectl get pods
 ```
 
-39. Deployment의 상세 정보를 확인합니다:
+62. Deployment의 상세 정보를 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-deployment
 ```
 
 > [!NOTE]
-> **다음 태스크 준비**: 태스크 4에서는 선언형 방식으로 새로운 Deployment를 생성합니다.
-> 리소스 사용량을 관리하기 위해 태스크 3에서 생성한 리소스를 먼저 정리합니다.
+> **다음 태스크 준비**: 태스크 6에서는 선언형 방식으로 새로운 Deployment를 생성합니다.
+> 리소스 사용량을 관리하기 위해 태스크 5에서 생성한 리소스를 먼저 정리합니다.
 
-40. 태스크 3에서 생성한 Deployment를 삭제합니다:
+63. 태스크 5에서 생성한 Deployment를 삭제합니다:
 
 ```bash
 kubectl delete deployment nginx-deployment
@@ -389,7 +456,7 @@ kubectl delete deployment nginx-deployment
 > deployment.apps "nginx-deployment" deleted
 > ```
 
-41. 태스크 2에서 생성한 Pod를 삭제합니다:
+64. 태스크 4에서 생성한 Pod를 삭제합니다:
 
 ```bash
 kubectl delete pod nginx-pod
@@ -400,7 +467,7 @@ kubectl delete pod nginx-pod
 > pod "nginx-pod" deleted
 > ```
 
-42. 삭제가 완료되었는지 확인합니다:
+65. 삭제가 완료되었는지 확인합니다:
 
 ```bash
 kubectl get pods
@@ -412,11 +479,11 @@ kubectl get pods
 > ```
 
 > [!NOTE]
-> 모든 Pod가 삭제되었습니다. 이제 태스크 4를 진행할 준비가 되었습니다.
+> 모든 Pod가 삭제되었습니다. 이제 태스크 6을 진행할 준비가 되었습니다.
 
 ✅ **태스크 완료**: 명령형 방식으로 Kubernetes Deployment를 생성하고 스케일링했습니다.
 
-## 태스크 4: YAML 매니페스트로 Deployment 생성 (선언형)
+## 태스크 6: YAML 매니페스트로 Deployment 생성 (선언형)
 
 이 태스크에서는 선언형 방식으로 YAML 매니페스트 파일을 사용하여 Deployment를 생성하는 방법을 학습합니다.
 
@@ -429,7 +496,7 @@ kubectl get pods
 > - 장점: Git으로 버전 관리, 재현 가능, 변경 이력 추적, 프로덕션 권장
 > - 단점: 초기 학습 곡선
 
-43. 다운로드한 실습 파일에서 `nginx-deployment.yaml` 파일을 확인합니다.
+66. 다운로드한 실습 파일에서 `nginx-deployment.yaml` 파일을 확인합니다.
 
 ```yaml
 apiVersion: apps/v1
@@ -460,17 +527,17 @@ spec:
       maxUnavailable: 0
 ```
 
-44. CloudShell에 파일을 업로드합니다:
+67. CloudShell에 파일을 업로드합니다:
 	- CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
 	- `nginx-deployment.yaml` 파일을 선택합니다.
 
-45. 업로드된 파일을 확인합니다:
+68. 업로드된 파일을 확인합니다:
 
 ```bash
 cat nginx-deployment.yaml
 ```
 
-46. YAML 파일을 사용하여 Deployment를 생성합니다:
+69. YAML 파일을 사용하여 Deployment를 생성합니다:
 
 ```bash
 kubectl apply -f nginx-deployment.yaml
@@ -481,7 +548,7 @@ kubectl apply -f nginx-deployment.yaml
 > deployment.apps/nginx-app created
 > ```
 
-47. Deployment 목록을 확인합니다:
+70. Deployment 목록을 확인합니다:
 
 ```bash
 kubectl get deployments
@@ -493,7 +560,7 @@ kubectl get deployments
 > nginx-app   3/3     3            3           10s
 > ```
 
-48. Pod 목록을 확인합니다:
+71. Pod 목록을 확인합니다:
 
 ```bash
 kubectl get pods -l app=nginx
@@ -508,17 +575,17 @@ kubectl get pods -l app=nginx
 > ```
 
 > [!NOTE]
-> 태스크 3에서 이전 리소스를 모두 정리했으므로, nginx-app 3개만 실행됩니다.
+> 태스크 5에서 이전 리소스를 모두 정리했으므로, nginx-app 3개만 실행됩니다.
 > 각 Pod는 cpu: 100m request를 사용하므로, 총 300m(0.3 vCPU)가 필요합니다.
 > t3.medium 2대는 총 4 vCPU, 8GB 메모리를 제공하므로 충분히 수용 가능합니다.
 
-49. Deployment의 상세 정보를 확인합니다:
+72. Deployment의 상세 정보를 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-app
 ```
 
-50. 롤링 업데이트 전략을 확인합니다:
+73. 롤링 업데이트 전략을 확인합니다:
 
 ```bash
 kubectl get deployment nginx-app -o yaml | grep -A 3 "strategy:"
@@ -533,19 +600,13 @@ kubectl get deployment nginx-app -o yaml | grep -A 3 "strategy:"
 >     type: RollingUpdate
 > ```
 
-51. Pod 개수가 증가했는지 확인합니다:
-
-```bash
-kubectl get pods -l app=nginx
-```
-
 > [!TIP]
 > YAML 매니페스트 파일은 Git 저장소에 저장하여 버전 관리하고, CI/CD 파이프라인에서 자동 배포할 수 있습니다.
 > 이를 GitOps라고 하며, 프로덕션 환경에서 권장되는 방식입니다.
 
-✅ **태스크 완료**: YAML 매니페스트를 사용하여 선언형 방식으로 Deployment를 생성하고 수정했습니다.
+✅ **태스크 완료**: YAML 매니페스트를 사용하여 선언형 방식으로 Deployment를 생성했습니다.
 
-## 태스크 5: 롤링 업데이트 및 롤백
+## 태스크 7: 롤링 업데이트 및 롤백
 
 이 태스크에서는 Deployment의 롤링 업데이트와 롤백 기능을 학습합니다.
 
@@ -556,7 +617,7 @@ kubectl get pods -l app=nginx
 > 2. 새 Pod가 Ready 상태가 되면 기존 Pod를 하나씩 종료합니다
 > 3. 모든 Pod가 새 버전으로 교체될 때까지 반복합니다
 
-52. 현재 nginx-app Deployment의 이미지 버전을 확인합니다:
+74. 현재 nginx-app Deployment의 이미지 버전을 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-app | grep Image
@@ -567,7 +628,7 @@ kubectl describe deployment nginx-app | grep Image
 >     Image:        nginx:1.28
 > ```
 
-53. 다음 명령어를 실행하여 이미지를 업데이트합니다:
+75. 다음 명령어를 실행하여 이미지를 업데이트합니다:
 
 ```bash
 kubectl set image deployment/nginx-app nginx=nginx:1.29
@@ -589,7 +650,7 @@ kubectl set image deployment/nginx-app nginx=nginx:1.29
 > ```
 > 선언형 방식은 YAML 파일을 Git으로 버전 관리할 수 있어 프로덕션 환경에서 권장됩니다.
 
-54. 롤링 업데이트 진행 상황을 실시간으로 확인합니다:
+76. 롤링 업데이트 진행 상황을 실시간으로 확인합니다:
 
 ```bash
 kubectl rollout status deployment/nginx-app
@@ -603,11 +664,7 @@ kubectl rollout status deployment/nginx-app
 > deployment "nginx-app" successfully rolled out
 > ```
 
-> [!NOTE]
-> 현재 nginx-app의 replicas는 3입니다 (태스크 4에서 2→3으로 변경).
-> 롤링 업데이트는 3개 Pod를 순차적으로 nginx:1.29으로 교체합니다.
-
-55. 업데이트된 이미지 버전을 확인합니다:
+77. 업데이트된 이미지 버전을 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-app | grep Image
@@ -618,7 +675,7 @@ kubectl describe deployment nginx-app | grep Image
 >     Image:        nginx:1.29
 > ```
 
-56. 롤아웃 히스토리를 확인합니다:
+78. 롤아웃 히스토리를 확인합니다:
 
 ```bash
 kubectl rollout history deployment/nginx-app
@@ -636,13 +693,13 @@ kubectl rollout history deployment/nginx-app
 > REVISION 1: nginx:1.28 (최초 생성)
 > REVISION 2: nginx:1.29 (이미지 업데이트)
 
-57. 특정 리비전의 상세 정보를 확인합니다:
+79. 특정 리비전의 상세 정보를 확인합니다:
 
 ```bash
 kubectl rollout history deployment/nginx-app --revision=2
 ```
 
-58. 이전 버전으로 롤백합니다:
+80. 이전 버전으로 롤백합니다:
 
 ```bash
 kubectl rollout undo deployment/nginx-app
@@ -664,13 +721,13 @@ kubectl rollout undo deployment/nginx-app
 > 
 > 롤백 자체도 하나의 배포로 기록되므로 REVISION 1은 사라지고 REVISION 2, 3이 남습니다.
 
-59. 롤백 진행 상황을 확인합니다:
+81. 롤백 진행 상황을 확인합니다:
 
 ```bash
 kubectl rollout status deployment/nginx-app
 ```
 
-60. 이미지 버전이 1.25로 롤백되었는지 확인합니다:
+82. 이미지 버전이 1.28로 롤백되었는지 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-app | grep Image
@@ -681,7 +738,7 @@ kubectl describe deployment nginx-app | grep Image
 >     Image:        nginx:1.28
 > ```
 
-61. 롤아웃 히스토리를 다시 확인합니다:
+83. 롤아웃 히스토리를 다시 확인합니다:
 
 ```bash
 kubectl rollout history deployment/nginx-app
@@ -724,13 +781,13 @@ kubectl rollout history deployment/nginx-app
 
 ✅ **태스크 완료**: 롤링 업데이트를 수행하고 이전 버전으로 롤백했습니다.
 
-## 태스크 6: Kubernetes Service 생성
+## 태스크 8: Kubernetes Service 생성
 
 이 태스크에서는 Service를 사용하여 Pod에 네트워크 접근을 제공하는 방법을 학습합니다.
 
 ### 방법 1: 명령형 방식 (빠른 테스트)
 
-62. 다음 명령어를 실행하여 LoadBalancer 타입의 Service를 생성합니다:
+84. 다음 명령어를 실행하여 LoadBalancer 타입의 Service를 생성합니다:
 
 ```bash
 kubectl expose deployment nginx-app --type=LoadBalancer --port=80
@@ -743,7 +800,7 @@ kubectl expose deployment nginx-app --type=LoadBalancer --port=80
 
 ### 방법 2: 선언형 방식 (프로덕션 권장)
 
-63. 다운로드한 실습 파일에서 `nginx-service.yaml` 파일을 확인합니다.
+85. 다운로드한 실습 파일에서 `nginx-service.yaml` 파일을 확인합니다.
 
 ```yaml
 apiVersion: v1
@@ -759,11 +816,11 @@ spec:
     targetPort: 80
 ```
 
-64. CloudShell에 파일을 업로드합니다:
+86. CloudShell에 파일을 업로드합니다:
 	- CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
 	- `nginx-service.yaml` 파일을 선택합니다.
 
-65. YAML 파일을 사용하여 Service를 생성합니다:
+87. YAML 파일을 사용하여 Service를 생성합니다:
 
 ```bash
 kubectl apply -f nginx-service.yaml
@@ -779,7 +836,7 @@ kubectl apply -f nginx-service.yaml
 
 ### Service 확인
 
-66. Service 목록을 확인합니다:
+88. Service 목록을 확인합니다:
 
 ```bash
 kubectl get services
@@ -795,7 +852,7 @@ kubectl get services
 > [!NOTE]
 > EXTERNAL-IP가 생성되는 데 1-2분이 소요될 수 있습니다. `<pending>` 상태에서 실제 주소로 변경될 때까지 기다립니다.
 
-67. EXTERNAL-IP가 할당될 때까지 실시간으로 확인합니다:
+89. EXTERNAL-IP가 할당될 때까지 실시간으로 확인합니다:
 
 ```bash
 kubectl get service nginx-app -w
@@ -805,20 +862,13 @@ kubectl get service nginx-app -w
 > `-w` (watch) 옵션을 사용하면 상태 변경을 실시간으로 확인할 수 있습니다.
 > EXTERNAL-IP가 `<pending>`에서 실제 주소로 변경되면 Ctrl+C를 눌러 종료합니다.
 
-> [!OUTPUT]
-> ```
-> NAME        TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-> nginx-app   LoadBalancer   10.100.xxx.xxx  <pending>     80:xxxxx/TCP   10s
-> nginx-app   LoadBalancer   10.100.xxx.xxx  xxxxx-xxxxxxxx.ap-northeast-2.elb.amazonaws.com   80:xxxxx/TCP   1m
-> ```
-
-68. Service의 상세 정보를 확인합니다:
+90. Service의 상세 정보를 확인합니다:
 
 ```bash
 kubectl describe service nginx-app
 ```
 
-69. AWS CLI로 Load Balancer DNS 이름을 확인합니다:
+91. kubectl로 Load Balancer DNS 이름을 확인합니다:
 
 ```bash
 kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
@@ -829,30 +879,26 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 > xxxxx-xxxxxxxx.ap-northeast-2.elb.amazonaws.com
 > ```
 
-> [!TIP]
-> AWS CLI를 사용하면 Load Balancer DNS 이름을 정확하게 추출할 수 있습니다.
-> 이 명령어는 자동화 스크립트나 CI/CD 파이프라인에서 유용하게 사용됩니다.
-
-70. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
-71. 왼쪽 메뉴에서 **Instances**를 선택합니다.
-72. 인스턴스 목록에서 이름에 `my-node-group`이 포함된 워커 노드 인스턴스를 하나 선택합니다.
-73. 하단의 **Security** 탭을 선택합니다.
-74. **Security groups** 섹션에서 보안 그룹 이름을 확인합니다 (예: `eks-cluster-sg-my-eks-cluster-xxxxx`).
+92. AWS Management Console 상단 검색창에 `EC2`를 입력하고 선택합니다.
+93. 왼쪽 메뉴에서 **Instances**를 선택합니다.
+94. 인스턴스 목록에서 이름에 `my-node-group`이 포함된 워커 노드 인스턴스를 하나 선택합니다.
+95. 하단의 **Security** 탭을 선택합니다.
+96. **Security groups** 섹션에서 보안 그룹 이름을 확인합니다 (예: `eks-cluster-sg-my-eks-cluster-xxxxx`).
 
 > [!NOTE]
 > Amazon EKS 워커 노드에 연결된 보안 그룹을 수정해야 LoadBalancer Service가 NodePort를 통해 Pod에 접근할 수 있습니다.
 > 워커 노드 인스턴스의 Security 탭에서 확인한 보안 그룹이 수정 대상입니다.
 
-75. 왼쪽 메뉴에서 **Security Groups**를 선택합니다.
-76. 검색창에서 방금 확인한 보안 그룹 이름을 입력하여 찾습니다.
-77. 해당 보안 그룹을 선택합니다.
-78. 하단의 **Inbound rules** 탭을 선택합니다.
-79. [[Edit inbound rules]] 버튼을 클릭합니다.
-80. [[Add rule]] 버튼을 클릭합니다.
-81. **Type**에서 `Custom TCP`를 선택합니다.
-82. **Port range**에 `30000-32767`을 입력합니다.
-83. **Source**에서 `Anywhere-IPv4` (0.0.0.0/0)를 선택합니다.
-84. [[Save rules]] 버튼을 클릭합니다.
+97. 왼쪽 메뉴에서 **Security Groups**를 선택합니다.
+98. 검색창에서 방금 확인한 보안 그룹 이름을 입력하여 찾습니다.
+99. 해당 보안 그룹을 선택합니다.
+100. 하단의 **Inbound rules** 탭을 선택합니다.
+101. [[Edit inbound rules]] 버튼을 클릭합니다.
+102. [[Add rule]] 버튼을 클릭합니다.
+103. **Type**에서 `Custom TCP`를 선택합니다.
+104. **Port range**에 `30000-32767`을 입력합니다.
+105. **Source**에서 `Anywhere-IPv4` (0.0.0.0/0)를 선택합니다.
+106. [[Save rules]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > **학습 목적**: 이 단계는 Kubernetes Service와 AWS 보안 그룹의 관계를 이해하기 위한 학습 목적입니다.
@@ -878,23 +924,7 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 > ```
 > 이 명령어로 Load Balancer 연결 상태를 확인할 수 있습니다.
 
-85. 웹 브라우저에서 EXTERNAL-IP 주소로 접속하여 nginx 기본 페이지를 확인합니다.
-
-> [!TIP]
-> Service도 YAML 매니페스트로 생성할 수 있습니다:
-> ```yaml
-> apiVersion: v1
-> kind: Service
-> metadata:
->   name: nginx-app
-> spec:
->   type: LoadBalancer
->   selector:
->     app: nginx
->   ports:
->   - port: 80
->     targetPort: 80
-> ```
+107. 웹 브라우저에서 EXTERNAL-IP 주소로 접속하여 nginx 기본 페이지를 확인합니다.
 
 ✅ **태스크 완료**: Kubernetes Service를 생성하고 외부에서 접근했습니다.
 
@@ -902,7 +932,8 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon EKS 클러스터를 생성하고 워커 노드를 추가했습니다
+- AWS CloudFormation으로 VPC와 IAM 역할을 사전 구성했습니다
+- Amazon EKS 콘솔에서 클러스터를 생성하고 노드 그룹을 추가했습니다
 - kubectl을 구성하고 Amazon EKS 클러스터에 연결했습니다
 - 명령형 방식으로 Kubernetes Pod와 Deployment를 생성했습니다
 - 선언형 방식으로 YAML 매니페스트를 사용하여 Deployment를 관리했습니다
@@ -916,7 +947,7 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 
 ### 방법 1: Tag Editor로 리소스 찾기 (권장)
 
-1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
+1. AWS Management Console 상단 검색창에 `Resource Groups & Tag Editor`를 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
@@ -925,9 +956,6 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 	- **Tag value**: `7-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-> [!OUTPUT]
-> 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
-
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
 
@@ -935,7 +963,7 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 
 #### Kubernetes 리소스 삭제
 
-7. Service 삭제 전에 Load Balancer 정보를 확인합니다:
+7. CloudShell에서 Service 삭제 전에 Load Balancer 정보를 확인합니다:
 
 ```bash
 kubectl describe service nginx-app | grep "LoadBalancer Ingress"
@@ -945,24 +973,19 @@ kubectl describe service nginx-app | grep "LoadBalancer Ingress"
 > 이 명령어로 확인한 Load Balancer 주소를 메모합니다.
 > AWS 콘솔에서 해당 Load Balancer를 찾을 때 사용합니다.
 
-9. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
-10. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
-11. Load Balancer 목록에서 메모한 주소와 일치하는 Load Balancer를 찾습니다.
-12. 해당 Load Balancer를 선택하고 **Tags** 탭을 선택합니다.
-13. 태그에서 `kubernetes.io/service-name: default/nginx-app`이 있는지 확인합니다.
-
-> [!NOTE]
-> Amazon EKS가 생성한 Load Balancer는 자동 생성된 이름(예: a1b2c3d4e5f6g7h8i9)을 가지므로,
-> 태그를 통해 실습에서 생성한 Load Balancer를 식별할 수 있습니다.
-
-14. Load Balancer 이름을 메모장에 복사합니다.
+8. AWS Management Console 상단 검색창에 `EC2`를 입력하고 선택합니다.
+9. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
+10. Load Balancer 목록에서 메모한 주소와 일치하는 Load Balancer를 찾습니다.
+11. 해당 Load Balancer를 선택하고 **Tags** 탭을 선택합니다.
+12. 태그에서 `kubernetes.io/service-name: default/nginx-app`이 있는지 확인합니다.
+13. Load Balancer 이름을 메모장에 복사합니다.
 
 > [!IMPORTANT]
 > 이 Load Balancer 이름은 Service 삭제 후 Load Balancer가 완전히 삭제되었는지 확인할 때 사용합니다.
 > 반드시 메모장에 저장합니다.
 
-15. CloudShell로 이동합니다.
-16. 다음 명령어를 실행하여 Service를 삭제합니다:
+14. CloudShell로 이동합니다.
+15. 다음 명령어를 실행하여 Service를 삭제합니다:
 
 ```bash
 kubectl delete service nginx-app
@@ -975,40 +998,56 @@ kubectl delete service nginx-app
 
 > [!IMPORTANT]
 > Service 삭제 후 AWS Load Balancer가 완전히 삭제될 때까지 1-2분 대기합니다.
-> Load Balancer가 남아있으면 AWS CloudFormation 스택 삭제가 실패하고 Amazon VPC 삭제가 불가능합니다.
+> Load Balancer가 남아있으면 Amazon VPC 삭제가 불가능합니다.
 
-17. Amazon EC2 콘솔의 Load Balancer 목록으로 이동합니다.
-18. Load Balancer 목록에서 메모한 이름의 Load Balancer가 사라졌는지 확인합니다.
+16. Amazon EC2 콘솔의 Load Balancer 목록으로 이동합니다.
+17. Load Balancer 목록에서 메모한 이름의 Load Balancer가 사라졌는지 확인합니다.
 
 > [!NOTE]
 > Load Balancer가 완전히 삭제되면 목록에서 사라집니다. 1-2분 정도 소요될 수 있습니다.
 
-19. CloudShell로 이동합니다.
-20. Deployment를 삭제합니다:
+18. CloudShell로 이동합니다.
+19. Deployment를 삭제합니다:
 
 ```bash
 kubectl delete deployment nginx-app
 ```
 
 > [!NOTE]
-> nginx-deployment와 nginx-pod는 태스크 3에서 이미 삭제했습니다.
+> nginx-deployment와 nginx-pod는 태스크 5에서 이미 삭제했습니다.
 > 다시 삭제를 시도하면 "not found" 오류가 표시되며, 이는 정상입니다.
 
+#### Amazon EKS 클러스터 삭제
+
+20. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
+21. **Clusters**에서 `my-eks-cluster`를 선택합니다.
+22. **Compute** 탭을 선택합니다.
+23. **Node groups** 섹션에서 `my-node-group`을 선택합니다.
+24. [[Delete]] 버튼을 클릭합니다.
+25. 확인 창에서 `my-node-group`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+
 > [!NOTE]
-> YAML 파일(nginx-deployment.yaml)은 AWS CloudShell 홈 디렉토리에 남아있지만, AWS 리소스 비용과는 무관합니다.
-> 필요시 `rm nginx-deployment.yaml` 명령어로 삭제할 수 있습니다.
+> 노드 그룹 삭제에 3-5분이 소요됩니다. 상태가 "Deleting"에서 완전히 사라질 때까지 기다립니다.
+> 노드 그룹이 삭제되어야 클러스터를 삭제할 수 있습니다.
+
+26. 노드 그룹이 삭제되면 클러스터 목록으로 돌아갑니다.
+27. `my-eks-cluster`를 선택합니다.
+28. [[Delete cluster]] 버튼을 클릭합니다.
+29. 확인 창에서 `my-eks-cluster`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 클러스터 삭제에 5-10분이 소요됩니다. 상태가 "Deleting"에서 완전히 사라질 때까지 기다립니다.
 
 #### AWS CloudFormation 스택 삭제
 
-21. AWS CloudFormation 콘솔로 이동합니다.
-22. `week7-3-eks-lab-stack` 스택을 선택합니다.
-23. [[Delete]] 버튼을 클릭합니다.
-24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+30. AWS Management Console 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+31. `week7-3-eks-lab-stack` 스택을 선택합니다.
+32. [[Delete]] 버튼을 클릭합니다.
+33. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 삭제에 10-15분이 소요됩니다. 상태가 "DELETE_IN_PROGRESS"에서 "DELETE_COMPLETE"로 변경될 때까지 기다립니다.
-> AWS CloudFormation 스택을 삭제하면 노드 그룹, Amazon EKS 클러스터, AWS IAM 역할, Amazon VPC 등 모든 리소스가 자동으로 삭제됩니다.
-> 페이지를 새로고침하여 최신 상태를 확인할 수 있습니다.
+> 스택 삭제에 3-5분이 소요됩니다. 상태가 "DELETE_IN_PROGRESS"에서 "DELETE_COMPLETE"로 변경될 때까지 기다립니다.
+> AWS CloudFormation 스택을 삭제하면 VPC, 서브넷, IAM 역할 등 모든 사전 인프라가 자동으로 삭제됩니다.
 
 > [!TROUBLESHOOTING]
 > **문제**: AWS CloudFormation 스택 삭제 시 "DELETE_FAILED" 상태가 되고 Amazon VPC 삭제가 실패합니다.
@@ -1088,13 +1127,6 @@ aws eks describe-addon-versions --query 'addons[0].addonVersions[0].compatibilit
 aws eks describe-cluster-versions --query 'clusterVersions[?status==`STANDARD_SUPPORT`].clusterVersion' --output text
 ```
 
-**템플릿 수정 방법:**
-
-- `week7-3-eks-lab.yaml` 파일을 텍스트 에디터로 엽니다.
-- `KubernetesVersion: '1.32'` 줄을 찾습니다.
-- 지원되는 최신 버전으로 변경합니다 (예: `KubernetesVersion: '1.33'` 또는 `'1.34'`).
-- 파일을 저장하고 AWS CloudFormation 스택을 생성합니다.
-
 ### kubectl 수동 설치 방법
 
 CloudShell의 kubectl 버전이 클러스터와 호환되지 않으면 다음 명령어로 수동 설치합니다:
@@ -1114,8 +1146,6 @@ kubectl version --client
 > [!NOTE]
 > `stable-${CLUSTER_VERSION}` URL은 해당 마이너 버전의 최신 패치 버전을 자동으로 다운로드합니다.
 > 예: 클러스터가 1.32이면 1.32.x의 최신 안정 버전(예: 1.32.3)을 다운로드합니다.
-> 
-> kubectl과 클러스터 간 버전 호환성 규칙은 위의 "Kubernetes 버전 지원 정책" 섹션을 참조합니다.
 
 ### Kubernetes 아키텍처
 

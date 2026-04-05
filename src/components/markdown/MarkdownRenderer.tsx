@@ -59,7 +59,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     const pattern = /(\[\[([^\]]+)\]\]|\{\{([^}]+)\}\}|\(\(([^)]+)\)\))/g;
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
-    let match;
+    let match: RegExpExecArray | null = null;
 
     while ((match = pattern.exec(text)) !== null) {
       // 패턴 이전의 텍스트 추가
@@ -75,7 +75,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           'publish', 'enable', 'activate', 'confirm'
         ];
         const isPrimary = primaryKeywords.some(k =>
-          match[2].toLowerCase().includes(k)
+          match![2].toLowerCase().includes(k)
         );
         parts.push(
           <span key={match.index} className="markdown-button-wrapper">

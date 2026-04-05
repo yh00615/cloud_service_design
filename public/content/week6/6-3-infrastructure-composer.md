@@ -405,18 +405,14 @@ Outputs:
 > [!NOTE]
 > Infrastructure Composer의 Deploy 버튼은 로컬 파일 시스템과 동기화된 프로젝트에서만 정상 작동합니다.
 > 브라우저 전용 모드에서는 위의 수동 배포 방법을 사용하는 것이 더 안정적입니다.
-
-73. AWS CloudFormation 콘솔에서 스택 생성이 시작됩니다.
-74. **Events** 탭을 선택합니다.
-
-> [!NOTE]
+> 
 > **Events** 탭에는 리소스 생성 과정이 실시간으로 표시됩니다.
 > Amazon DynamoDB 테이블, AWS IAM 역할, AWS Lambda 함수, Amazon API Gateway가 순차적으로 생성됩니다.
 > 스택 생성에 2-3분이 소요됩니다. 대기하는 동안 Infrastructure Composer 탭을 선택하여 생성한 아키텍처 다이어그램을 다시 확인하거나, Week 6-1과 6-2에서 학습한 AWS CloudFormation 개념을 복습할 수 있습니다.
 > 
 > **스택 태그 자동 전파**: 스택에 추가한 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스(Amazon DynamoDB, AWS Lambda, Amazon API Gateway 등)에 자동으로 전파됩니다.
-
-75. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> 
+> 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: AWS CloudFormation 스택이 배포되었습니다.
 
@@ -424,21 +420,19 @@ Outputs:
 
 이 태스크에서는 생성된 Amazon API Gateway 엔드포인트로 HTTP 요청을 보내 REST API가 정상적으로 작동하는지 확인합니다.
 
-76. AWS CloudFormation 콘솔에서 `infrastructure-composer-serverless-api` 스택을 선택합니다.
-77. **Outputs** 탭을 선택합니다.
-78. **Key**가 `ApiUrl`인 출력값을 찾습니다.
-79. **Value** 열의 URL을 복사합니다.
+73. AWS CloudFormation 콘솔에서 `infrastructure-composer-serverless-api` 스택을 선택합니다.
+74. **Outputs** 탭을 선택합니다.
+75. **Key**가 `ApiUrl`인 출력값을 찾습니다.
+76. **Value** 열의 URL을 복사합니다.
 
 > [!NOTE]
 > API URL은 다음과 같은 형식입니다: `https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items`
 
-80. CloudShell 아이콘을 클릭합니다.
-81. CloudShell이 시작될 때까지 기다립니다.
-
+77. CloudShell 아이콘을 클릭합니다.
 > [!NOTE]
 > CloudShell 시작에 1-2분이 소요될 수 있습니다.
 
-82. 다음 명령어를 실행하여 아이템을 생성합니다:
+78. 다음 명령어를 실행하여 아이템을 생성합니다:
 
 ```bash
 curl -X POST https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
@@ -454,7 +448,7 @@ curl -X POST https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/it
 > {"message": "Item created"}
 > ```
 
-83. 다음 명령어를 실행하여 모든 아이템을 조회합니다:
+79. 다음 명령어를 실행하여 모든 아이템을 조회합니다:
 
 ```bash
 curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
@@ -465,7 +459,7 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 > [{"id": "item1", "name": "Sample Item", "description": "Created from Infrastructure Composer"}]
 > ```
 
-84. 생성한 아이템이 조회되는지 확인합니다.
+80. 생성한 아이템이 조회되는지 확인합니다.
 
 > [!TIP]
 > 추가 아이템을 생성하려면 7단계의 명령어를 다른 `id` 값으로 반복 실행합니다.
@@ -498,20 +492,20 @@ curl https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items
 	- **Tag key**: `Week`
 	- **Tag value**: `6-3`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스(AWS CloudFormation 스택, Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway 등)가 표시됩니다.
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스(AWS CloudFormation 스택, Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway 등)가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
 
 ### 방법 2: AWS CloudFormation 스택 삭제
 
-8. AWS CloudFormation 콘솔로 이동합니다.
-9. `infrastructure-composer-serverless-api` 스택을 선택합니다.
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 대화상자에서 [[Delete]] 버튼을 클릭합니다.
-12. 스택 삭제가 완료될 때까지 기다립니다 (2-3분 소요).
-
+7. AWS CloudFormation 콘솔로 이동합니다.
+8. `infrastructure-composer-serverless-api` 스택을 선택합니다.
+9. [[Delete]] 버튼을 클릭합니다.
+10. 확인 대화상자에서 [[Delete]] 버튼을 클릭합니다.
 > [!NOTE]
+> 스택 삭제에 2-3분이 소요됩니다. 스택 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할, Amazon DynamoDB 테이블 등 모든 리소스가 자동으로 삭제됩니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.

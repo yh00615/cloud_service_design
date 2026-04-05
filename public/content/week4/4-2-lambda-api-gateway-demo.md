@@ -91,8 +91,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 7. [[Choose file]] 버튼을 클릭한 후 `week4-2-quicktable-api-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 9. **Stack name**에 `week4-2-quicktable-api-lab-stack`을 입력합니다.
-10. **Parameters** 섹션에서 기본값을 유지합니다.
-11. [[Next]] 버튼을 클릭합니다.
+10. [[Next]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> **Parameters** 섹션의 기본값을 유지합니다.
 12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
 13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -106,13 +108,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
-18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+18. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
-
-19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> 스택 생성이 시작되면 상태가 "CREATE_IN_PROGRESS"로 표시됩니다. 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
+> 대기하는 동안 다음 태스크를 미리 읽어봅니다. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
 21. 출력값들을 확인하고 메모장에 복사합니다:
     - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
@@ -182,7 +182,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 >
 > 버튼명이 "Create user directory" 또는 "Create your application"으로 표시될 수 있습니다. Amazon Cognito 콘솔 UI는 주기적으로 업데이트되므로 버튼명이 다를 수 있으나 동일한 기능입니다.
 
-33. User Pool 생성이 완료될 때까지 기다립니다.
+> [!NOTE]
+> User Pool 생성이 완료될 때까지 기다립니다.
 
 > [!IMPORTANT]
 > **ALLOW_USER_PASSWORD_AUTH 설정 필요:**
@@ -313,8 +314,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 ### 태스크 4.1: AWS CloudShell 환경 변수 설정
 
 70. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-71. CloudShell이 시작될 때까지 기다립니다.
-72. 다음 명령어로 환경 변수를 설정합니다:
+71. 다음 명령어로 환경 변수를 설정합니다:
+
+> [!NOTE]
+> CloudShell이 시작될 때까지 기다립니다.
 
 ```bash
 # Client ID 설정 (태스크 2에서 복사한 값으로 변경)

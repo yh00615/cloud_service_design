@@ -107,20 +107,17 @@ Outputs:
 16. [[Next]] 버튼을 클릭합니다.
 17. **Review and create** 페이지에서 설정을 확인합니다.
 18. [[Submit]] 버튼을 클릭합니다.
-19. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
-
 > [!NOTE]
-> 스택 생성에 1-2분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
+> 스택 생성에 1-2분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 생성하는 과정을 실시간으로 관찰합니다.
 > 
 > **스택 태그 자동 전파**: 스택에 추가한 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스(Amazon S3 버킷)에 자동으로 전파됩니다.
-
-20. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-21. **Outputs** 탭을 선택합니다.
-22. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
-23. **Resources** 탭을 선택합니다.
-24. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
-25. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
+19. **Outputs** 탭을 선택합니다.
+20. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
+21. **Resources** 탭을 선택합니다.
+22. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
+23. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
 
 ✅ **태스크 완료**: 스택 생성(CREATE) 생명주기를 시연했습니다.
 
@@ -153,8 +150,8 @@ Outputs:
 
 ### 상세 단계
 
-26. `s3-bucket-update.yaml` 파일을 텍스트 에디터로 엽니다.
-27. 템플릿 내용을 확인합니다:
+24. `s3-bucket-update.yaml` 파일을 텍스트 에디터로 엽니다.
+25. 템플릿 내용을 확인합니다:
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
@@ -197,10 +194,10 @@ Outputs:
 > 
 > 버킷 이름은 동일하므로 기존 버킷이 수정됩니다.
 
-28. AWS CloudFormation 콘솔로 이동합니다.
-29. `demo-s3-stack`을 선택합니다.
-30. [[Update stack]] 드롭다운을 클릭합니다.
-31. **Create a change set**을 선택합니다.
+26. AWS CloudFormation 콘솔로 이동합니다.
+27. `demo-s3-stack`을 선택합니다.
+28. [[Update stack]] 드롭다운을 클릭합니다.
+29. **Create a change set**을 선택합니다.
 
 > [!NOTE]
 > **변경 세트(Change Set) 방식:**
@@ -208,27 +205,27 @@ Outputs:
 > - 검토 후 문제가 없으면 변경 세트를 실행하여 실제 업데이트를 수행합니다
 > - 프로덕션 환경에서 안전한 업데이트를 위해 권장되는 방식입니다
 
-32. **Change set type**에서 `Standard change set`을 선택합니다.
-33. **Prerequisite - Prepare template**에서 `Replace existing template`을 선택합니다.
-34. **Specify template**에서 `Upload a template file`을 선택합니다.
-35. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
-36. [[Next]] 버튼을 클릭합니다.
-37. **Changeset name**에 `update-tags-changeset`을 입력합니다 (또는 자동 생성된 이름 사용).
-38. **Parameters** 섹션에서 기본값을 확인합니다:
+30. **Change set type**에서 `Standard change set`을 선택합니다.
+31. **Prerequisite - Prepare template**에서 `Replace existing template`을 선택합니다.
+32. **Specify template**에서 `Upload a template file`을 선택합니다.
+33. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
+34. [[Next]] 버튼을 클릭합니다.
+35. **Changeset name**에 `update-tags-changeset`을 입력합니다 (또는 자동 생성된 이름 사용).
+36. **Parameters** 섹션에서 기본값을 확인합니다:
     - **BucketPrefix**: `cfn-demo-bucket`
-39. [[Next]] 버튼을 클릭합니다.
-40. **Configure change set options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
-41. **Review change set** 페이지에서 설정을 확인합니다.
-42. [[Create change set]] 버튼을 클릭합니다.
+37. [[Next]] 버튼을 클릭합니다.
+38. **Configure change set options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+39. **Review change set** 페이지에서 설정을 확인합니다.
+40. [[Create change set]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 변경 세트 생성에 10-20초가 소요됩니다. 상태가 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
 
-43. 변경 세트가 생성되면 **Overview** 탭에서 다음 정보를 확인합니다:
+41. 변경 세트가 생성되면 **Overview** 탭에서 다음 정보를 확인합니다:
     - **Change set status**: CREATE_COMPLETE (초록색)
     - **Execution status**: AVAILABLE
-44. **Resource changes** 탭을 클릭합니다.
-45. 변경될 리소스 목록을 확인합니다:
+42. **Resource changes** 탭을 클릭합니다.
+43. 변경될 리소스 목록을 확인합니다:
     - **Logical ID**: `DemoBucket`
     - **Action**: `Modify`
     - **Replacement**: `False`
@@ -237,8 +234,8 @@ Outputs:
 > Resource changes 탭에서는 변경될 리소스의 기본 정보만 표시됩니다.
 > 구체적으로 어떤 속성이 어떻게 변경되는지 보려면 JSON changes 탭을 확인해야 합니다.
 
-46. **JSON changes** 탭을 클릭합니다.
-47. JSON 형식으로 표시된 상세 변경 내용을 확인합니다:
+44. **JSON changes** 탭을 클릭합니다.
+45. JSON 형식으로 표시된 상세 변경 내용을 확인합니다:
     - **action**: `Modify`
     - **logicalResourceId**: `DemoBucket`
     - **physicalResourceId**: 실제 버킷 이름 (예: cfn-demo-bucket-123456789012)
@@ -268,8 +265,8 @@ Outputs:
 > Replacement가 True인 경우 반드시 데이터 백업을 먼저 수행해야 합니다.
 > 특히 데이터베이스, 스토리지 리소스는 신중하게 검토합니다.
 
-48. 변경 내용을 확인한 후 우측 상단의 [[Execute changeset]] 버튼을 클릭합니다.
-49. 확인 대화상자가 나타나면 롤백 정책을 확인합니다:
+46. 변경 내용을 확인한 후 우측 상단의 [[Execute changeset]] 버튼을 클릭합니다.
+47. 확인 대화상자가 나타나면 롤백 정책을 확인합니다:
     - **Behaviour on provisioning failure**: `Roll back all stack resources` (기본값, 선택됨)
     - **Delete newly created resources during a rollback**: `Use deletion policy` (기본값, 선택됨)
 
@@ -285,18 +282,15 @@ Outputs:
 > 
 > 이 실습에서는 기본 설정을 사용하며, 실패 시 안전하게 이전 상태로 롤백됩니다.
 
-50. 기본 설정을 유지하고 [[Execute changeset]] 버튼을 클릭합니다.
-51. 스택 페이지로 돌아가며 상태가 "UPDATE_IN_PROGRESS"로 표시됩니다.
-
+48. 기본 설정을 유지하고 [[Execute changeset]] 버튼을 클릭합니다.
 > [!NOTE]
-> 스택 업데이트에 1-2분이 소요됩니다. **Events** 탭에서 업데이트 과정을 확인할 수 있습니다.
-
-52. 상태가 "UPDATE_COMPLETE"로 변경될 때까지 기다립니다.
-53. **Resources** 탭을 선택합니다.
-54. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
-55. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
-56. 하단의 **Tags** 섹션으로 스크롤합니다.
-57. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
+> 스택 업데이트에 1-2분이 소요됩니다. 상태가 "UPDATE_IN_PROGRESS"에서 "UPDATE_COMPLETE"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 업데이트 과정을 확인할 수 있습니다.
+49. **Resources** 탭을 선택합니다.
+50. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
+51. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
+52. 하단의 **Tags** 섹션으로 스크롤합니다.
+53. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
     - `Name: cfn-demo-bucket-123456789012`
     - `Project: AWS-Lab`
     - `Week: 6-1`
@@ -339,15 +333,15 @@ Outputs:
 
 #### 1단계: 수동으로 태그 추가 (드리프트 발생)
 
-58. Amazon S3 콘솔로 이동합니다.
-59. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-60. **Properties** 탭을 선택합니다.
-61. 하단의 **Tags** 섹션으로 스크롤합니다.
-62. [[Add new tag]] 버튼을 클릭합니다.
-63. 다음 태그를 추가합니다:
+54. Amazon S3 콘솔로 이동합니다.
+55. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+56. **Properties** 탭을 선택합니다.
+57. 하단의 **Tags** 섹션으로 스크롤합니다.
+58. [[Add new tag]] 버튼을 클릭합니다.
+59. 다음 태그를 추가합니다:
 	- **Key**: `ManualTag`
 	- **Value**: `AddedManually`
-64. [[Save changes]] 버튼을 클릭합니다.
+60. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 이 태그는 AWS CloudFormation 템플릿에 정의되지 않았으므로 드리프트가 발생합니다.
@@ -355,28 +349,28 @@ Outputs:
 
 #### 2단계: 드리프트 감지 실행
 
-65. AWS CloudFormation 콘솔로 이동합니다.
-66. `demo-s3-stack`을 선택합니다.
-67. **Stack actions** 드롭다운을 클릭합니다.
-68. `Detect drift`를 선택합니다.
+61. AWS CloudFormation 콘솔로 이동합니다.
+62. `demo-s3-stack`을 선택합니다.
+63. **Stack actions** 드롭다운을 클릭합니다.
+64. `Detect drift`를 선택합니다.
 
 > [!NOTE]
 > 드리프트 감지가 즉시 시작되며 1-2분이 소요됩니다. AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
 > 화면 상단에 "Drift detection has been initiated" 메시지가 표시됩니다.
 
-69. 페이지를 새로고침합니다.
-70. **Stack info** 탭에서 **Drift status**를 확인합니다.
-71. 상태가 "DRIFTED"로 표시되는지 확인합니다.
+65. 페이지를 새로고침합니다.
+66. **Stack info** 탭에서 **Drift status**를 확인합니다.
+67. 상태가 "DRIFTED"로 표시되는지 확인합니다.
 
 #### 3단계: 드리프트 상세 정보 확인
 
-72. **Stack actions** 드롭다운을 클릭합니다.
-73. `View drift results`를 선택합니다.
-74. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
-75. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
-76. **DemoBucket** 리소스를 선택합니다.
-77. [[View drift details]] 버튼을 클릭합니다.
-78. 드리프트 차이점을 확인합니다:
+68. **Stack actions** 드롭다운을 클릭합니다.
+69. `View drift results`를 선택합니다.
+70. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
+71. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
+72. **DemoBucket** 리소스를 선택합니다.
+73. [[View drift details]] 버튼을 클릭합니다.
+74. 드리프트 차이점을 확인합니다:
 	- **Property**: `Tags.1`
 	- **Change**: `ADD` (태그 추가됨)
 	- **Expected value**: `-` (템플릿에 정의되지 않음)
@@ -414,7 +408,8 @@ Outputs:
     - **Tag key**: `Week`
     - **Tag value**: `6-1`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 리소스가 표시됩니다.
+> [!OUTPUT]
+> 이 실습에서 생성한 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
@@ -428,48 +423,42 @@ Outputs:
 > Amazon S3 버킷에 파일이 있으면 AWS CloudFormation 스택 삭제가 실패합니다.
 > 버킷에 파일을 업로드한 경우에만 다음 단계를 수행합니다.
 
-1. Amazon S3 콘솔로 이동합니다.
-2. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
-3. [[Empty]] 버튼을 클릭합니다.
-4. 확인 창에서 `permanently delete`를 입력합니다.
-5. [[Empty]] 버튼을 클릭합니다.
+7. Amazon S3 콘솔로 이동합니다.
+8. `cfn-demo-bucket-`로 시작하는 버킷을 선택합니다.
+9. [[Empty]] 버튼을 클릭합니다.
+10. 확인 창에서 `permanently delete`를 입력합니다.
+11. [[Empty]] 버튼을 클릭합니다.
 
 ### 3단계: AWS CloudFormation 스택 삭제
 
-8. AWS CloudFormation 콘솔로 이동합니다.
-7. `demo-s3-stack`을 선택합니다.
-8. [[Delete stack]] 버튼을 클릭합니다.
-9. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
-10. [[Delete stack]] 버튼을 클릭합니다.
-11. 스택 상태가 "DELETE_IN_PROGRESS"로 변경됩니다.
-12. 스택 삭제가 완료될 때까지 기다립니다.
-
+12. AWS CloudFormation 콘솔로 이동합니다.
+13. `demo-s3-stack`을 선택합니다.
+14. [[Delete stack]] 버튼을 클릭합니다.
+15. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
+16. [[Delete stack]] 버튼을 클릭합니다.
 > [!NOTE]
-> 스택 삭제에 1-2분이 소요됩니다. **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
+> 스택 삭제에 1-2분이 소요됩니다. 상태가 "DELETE_IN_PROGRESS"에서 삭제 완료될 때까지 기다립니다.
+> **Events** 탭에서 삭제 과정을 확인할 수 있습니다.
 > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
-13. 페이지를 새로고침합니다.
-14. 스택이 목록에서 사라졌는지 확인합니다.
-
-> [!NOTE]
-> DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
+17. 페이지를 새로고침합니다.
+> [!OUTPUT]
+> 스택이 목록에서 사라졌는지 확인합니다. DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
 > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
 
 ### 4단계: 삭제 확인
 
 모든 리소스가 삭제되었는지 확인합니다.
 
-17. Tag Editor로 이동합니다.
-18. **Regions**에서 `All regions`를 선택합니다.
-19. **Resource types**에서 `All supported resource types`를 선택합니다.
-20. **Tags** 섹션에서 다음 태그를 입력합니다:
+18. Tag Editor로 이동합니다.
+19. **Regions**에서 `All regions`를 선택합니다.
+20. **Resource types**에서 `All supported resource types`를 선택합니다.
+21. **Tags** 섹션에서 다음 태그를 입력합니다:
     - **Tag key**: `Week`
     - **Optional tag value**: `6-1`
-21. [[Search resources]] 버튼을 클릭합니다.
-22. 검색 결과가 비어있는지 확인합니다.
-
-> [!NOTE]
-> 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
+22. [[Search resources]] 버튼을 클릭합니다.
+> [!OUTPUT]
+> 검색 결과가 비어있는지 확인합니다. 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
 
 > [!SUCCESS]
 > 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.

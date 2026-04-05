@@ -457,13 +457,10 @@ Outputs:
 27. [[Next]] 버튼을 클릭합니다.
 28. **Review and create** 페이지에서 설정을 확인합니다.
 29. [[Submit]] 버튼을 클릭합니다.
-30. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
-
 > [!NOTE]
-> 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
+> 스택 생성에 3-5분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
-
-31. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 
 ✅ **태스크 완료**: AWS CloudFormation 스택이 생성되었습니다.
 
@@ -473,9 +470,9 @@ Outputs:
 
 ### Resources 탭 확인
 
-32. `lab-vpc-stack`을 선택합니다.
-33. 하단의 **Resources** 탭을 선택합니다.
-34. 생성된 리소스 목록을 확인합니다:
+30. `lab-vpc-stack`을 선택합니다.
+31. 하단의 **Resources** 탭을 선택합니다.
+32. 생성된 리소스 목록을 확인합니다:
 
 | Logical ID | Type | Physical ID |
 |-----------|------|-------------|
@@ -497,11 +494,11 @@ Outputs:
 > - **Physical ID**: AWS가 실제로 생성한 리소스의 고유 ID (예: vpc-xxxxx, i-xxxxx)
 > - 일부 리소스(AttachGateway, Route, Association)는 Physical ID가 없습니다 (연결 리소스)
 
-35. **VPC** 리소스의 Physical ID (vpc-xxxxx)를 클릭합니다.
-36. VPC 콘솔로 이동하여 VPC 상세 정보를 확인합니다.
-37. 브라우저 뒤로가기 버튼을 클릭하여 AWS CloudFormation 콘솔로 이동합니다.
-38. **WebServer** 리소스의 Physical ID (i-xxxxx)를 클릭합니다.
-39. EC2 콘솔로 이동하여 인스턴스 상세 정보를 확인합니다.
+33. **VPC** 리소스의 Physical ID (vpc-xxxxx)를 클릭합니다.
+34. VPC 콘솔로 이동하여 VPC 상세 정보를 확인합니다.
+35. 브라우저 뒤로가기 버튼을 클릭하여 AWS CloudFormation 콘솔로 이동합니다.
+36. **WebServer** 리소스의 Physical ID (i-xxxxx)를 클릭합니다.
+37. EC2 콘솔로 이동하여 인스턴스 상세 정보를 확인합니다.
 
 > [!NOTE] 리소스 생성 순서
 > 
@@ -515,9 +512,9 @@ Outputs:
 
 ### Outputs 탭 확인
 
-40. AWS CloudFormation 콘솔로 이동합니다.
-41. 하단의 **Outputs** 탭을 선택합니다.
-42. 출력값을 확인합니다:
+38. AWS CloudFormation 콘솔로 이동합니다.
+39. 하단의 **Outputs** 탭을 선택합니다.
+40. 출력값을 확인합니다:
 
 | Key | Value | Export Name |
 |-----|-------|-------------|
@@ -532,7 +529,7 @@ Outputs:
 > - VPCId는 Export되어 있어 다른 스택에서 이 VPC를 참조할 수 있습니다
 > - WebServerURL은 바로 복사하여 브라우저에서 테스트 가능
 
-43. **WebServerURL** 값을 복사하여 메모장에 저장합니다.
+41. **WebServerURL** 값을 복사하여 메모장에 저장합니다.
 
 > [!NOTE]
 > 이 URL은 다음 태스크에서 웹 서버 테스트에 사용됩니다.
@@ -543,9 +540,9 @@ Outputs:
 
 이 태스크에서는 AWS CloudFormation으로 생성된 EC2 인스턴스의 웹 서버가 정상적으로 작동하는지 확인합니다. UserData 스크립트로 자동 설치된 Apache 웹 서버에 접속하여 테스트 페이지를 확인합니다.
 
-44. **Outputs** 탭에서 **WebServerURL** 값을 복사합니다.
-45. 새 브라우저 탭을 열고 복사한 URL을 붙여넣습니다.
-46. "Hello from AWS CloudFormation!" 메시지가 표시되는지 확인합니다.
+42. **Outputs** 탭에서 **WebServerURL** 값을 복사합니다.
+43. 새 브라우저 탭을 열고 복사한 URL을 붙여넣습니다.
+44. "Hello from AWS CloudFormation!" 메시지가 표시되는지 확인합니다.
 
 > [!NOTE]
 > 인스턴스가 완전히 시작되고 웹 서버가 실행되기까지 2-3분이 소요될 수 있습니다.
@@ -577,18 +574,19 @@ Outputs:
 	- **Tag key**: `Week`
 	- **Tag value**: `6-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
+> [!OUTPUT]
+> 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
 ### 단계 2: Amazon VPC 스택 삭제
 
-8. AWS CloudFormation 콘솔로 이동합니다.
-9. `lab-vpc-stack`을 선택합니다.
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 스택 이름 `lab-vpc-stack`을 입력합니다.
-12. [[Delete]] 버튼을 클릭합니다.
+7. AWS CloudFormation 콘솔로 이동합니다.
+8. `lab-vpc-stack`을 선택합니다.
+9. [[Delete]] 버튼을 클릭합니다.
+10. 확인 창에서 스택 이름 `lab-vpc-stack`을 입력합니다.
+11. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation이 모든 리소스를 자동으로 삭제합니다.
