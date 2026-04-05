@@ -273,7 +273,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 미디엄 레어로 추천되며, 감자 퓨레와 구운 야채가 포함되어 있습니다.
 > ```
 
-52. 답변 아래의 **Details** 링크를 클릭하여 **Source chunks**를 확인합니다.
+52. 답변 아래의 **Details** 링크를 클릭하면 오른쪽에 해당 답변의 **Source chunks**가 표시됩니다.
 53. 답변의 근거가 된 문서 청크 내용을 확인합니다.
 
 > [!NOTE]
@@ -354,6 +354,10 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
+
+> [!WARNING]
+> 리소스 삭제 순서를 반드시 지켜야 합니다: **Knowledge Base → OpenSearch Serverless → S3** 순서로 삭제합니다.
+> OpenSearch Serverless 컬렉션을 먼저 삭제하면 Knowledge Base가 벡터 데이터를 정리하지 못해 삭제 실패(DELETE_UNSUCCESSFUL) 상태에 빠질 수 있으며, 이 경우 복구가 매우 어렵습니다.
 
 ## 1단계: 생성된 리소스 확인 (Tag Editor)
 
