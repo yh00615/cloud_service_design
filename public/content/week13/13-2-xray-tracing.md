@@ -78,10 +78,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 7. [[Choose file]] 버튼을 클릭한 후 `week13-2-xray-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 9. **Stack name**에 `week13-2-xray-lab-stack`을 입력합니다.
-10. **Parameters** 섹션에서 기본값을 유지합니다.
-11. [[Next]] 버튼을 클릭합니다.
-12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+
+> [!NOTE]
+> **Parameters** 섹션의 기본값을 유지합니다.
+
+10. [[Next]] 버튼을 클릭합니다.
+11. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
+12. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value            |
 | ----------- | ---------------- |
@@ -92,19 +95,17 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!NOTE]
 > 이 태그들은 AWS CloudFormation 스택이 생성하는 모든 리소스(Amazon DynamoDB 테이블, AWS Lambda 함수 2개, Amazon API Gateway, AWS IAM 역할)에 자동으로 전파됩니다.
 
-14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-15. [[Next]] 버튼을 클릭합니다.
-16. **Review and create** 페이지에서 설정을 확인합니다.
-17. [[Submit]] 버튼을 클릭합니다.
-18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+14. [[Next]] 버튼을 클릭합니다.
+15. **Review and create** 페이지에서 설정을 확인합니다.
+16. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 2-3분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시되며, "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-20. **Outputs** 탭을 선택합니다.
-21. 출력값들을 확인하고 메모장에 복사합니다:
+17. **Outputs** 탭을 선택합니다.
+18. 출력값들을 확인하고 메모장에 복사합니다:
 	- `ApiUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
 	- `CreateFunctionName`: 예약 생성 AWS Lambda 함수 이름
 	- `GetFunctionName`: 예약 조회 AWS Lambda 함수 이름
@@ -121,11 +122,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS CloudFormation으로 배포된 AWS Lambda 함수의 코드를 확인합니다. AWS X-Ray SDK가 통합되어 있으며, 예약 생성 및 조회 작업을 추적합니다.
 
-22. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
-23. 왼쪽 메뉴에서 **Functions**를 선택합니다.
-24. 함수 목록에서 `CreateReservation`으로 시작하는 함수를 선택합니다.
-25. **Code** 탭을 선택합니다.
-26. 코드 편집기에서 AWS X-Ray SDK 통합 부분을 확인합니다.
+19. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
+20. 왼쪽 메뉴에서 **Functions**를 선택합니다.
+21. 함수 목록에서 `CreateReservation`으로 시작하는 함수를 선택합니다.
+22. **Code** 탭을 선택합니다.
+23. 코드 편집기에서 AWS X-Ray SDK 통합 부분을 확인합니다.
 
 > [!NOTE]
 > AWS CloudFormation 템플릿에서 AWS X-Ray SDK가 포함된 AWS Lambda 함수 코드가 자동으로 배포되었습니다.
@@ -152,7 +153,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > xray_recorder.end_subsegment()
 > ```
 
-27. `GetReservations`로 시작하는 함수도 동일하게 확인합니다.
+24. `GetReservations`로 시작하는 함수도 동일하게 확인합니다.
 
 ✅ **태스크 완료**: AWS Lambda 함수 코드를 확인했습니다.
 
@@ -160,10 +161,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS Lambda 함수의 AWS X-Ray 추적이 활성화되어 있는지 확인합니다.
 
-28. AWS Lambda 콘솔에서 `CreateReservation` 함수를 선택합니다.
-29. **Configuration** 탭을 선택합니다.
-30. 왼쪽 메뉴에서 **Monitoring and operations tools**를 선택합니다.
-31. **AWS X-Ray** 섹션에서 **Active tracing**이 활성화되어 있는지 확인합니다.
+25. AWS Lambda 콘솔에서 `CreateReservation` 함수를 선택합니다.
+26. **Configuration** 탭을 선택합니다.
+27. 왼쪽 메뉴에서 **Monitoring and operations tools**를 선택합니다.
+28. **AWS X-Ray** 섹션에서 **Active tracing**이 활성화되어 있는지 확인합니다.
 
 AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 
@@ -173,7 +174,7 @@ AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 >
 > AWS Lambda 콘솔 UI에 따라 이 섹션이 "CloudWatch Application Signals and AWS X-Ray"로 표시될 수 있습니다.
 
-32. `GetReservations` 함수도 동일하게 확인합니다.
+29. `GetReservations` 함수도 동일하게 확인합니다.
 
 ✅ **태스크 완료**: AWS X-Ray 추적이 활성화되어 있습니다.
 
@@ -181,9 +182,12 @@ AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 
 이 태스크에서는 QuickTable 예약 생성 API를 호출하여 AWS X-Ray 트레이스를 생성합니다.
 
-33. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-34. CloudShell이 시작될 때까지 기다립니다.
-35. 환경 변수를 설정합니다:
+30. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
+
+> [!NOTE]
+> CloudShell이 시작될 때까지 기다립니다.
+
+31. 환경 변수를 설정합니다:
 
 ```bash
 export API_URL="YOUR_API_URL"
@@ -210,13 +214,13 @@ export API_URL="YOUR_API_URL"
 > export API_URL="https://abc123def4.execute-api.ap-northeast-2.amazonaws.com/prod"
 > ```
 
-36. 환경 변수가 올바르게 설정되었는지 확인합니다:
+32. 환경 변수가 올바르게 설정되었는지 확인합니다:
 
 ```bash
 echo $API_URL
 ```
 
-37. 다음 명령어를 실행하여 예약을 생성합니다:
+33. 다음 명령어를 실행하여 예약을 생성합니다:
 
 ```bash
 curl -X POST ${API_URL}/reservations \
@@ -244,7 +248,7 @@ curl -X POST ${API_URL}/reservations \
 > - 예약 조회 시 "anonymous" 사용자의 모든 예약이 반환됩니다
 > - 실제 프로덕션 환경에서는 Amazon Cognito 등을 사용하여 실제 사용자 ID를 전달해야 합니다
 
-38. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다 (5-10회 권장).
+34. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다 (5-10회 권장).
 
 ✅ **태스크 완료**: 예약 생성 트레이스가 생성되었습니다.
 
@@ -252,7 +256,7 @@ curl -X POST ${API_URL}/reservations \
 
 이 태스크에서는 QuickTable 예약 조회 API를 호출하여 AWS X-Ray 트레이스를 생성합니다.
 
-39. CloudShell에서 다음 명령어를 실행하여 예약을 조회합니다:
+35. CloudShell에서 다음 명령어를 실행하여 예약을 조회합니다:
 
 ```bash
 curl -X GET ${API_URL}/reservations
@@ -275,7 +279,7 @@ curl -X GET ${API_URL}/reservations
 > ]
 > ```
 
-40. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다.
+36. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다.
 
 ✅ **태스크 완료**: 예약 조회 트레이스가 생성되었습니다.
 
@@ -283,14 +287,14 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 콘솔에서 QuickTable API의 서비스 맵을 확인합니다.
 
-41. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+37. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
 
 > [!NOTE]
 > AWS X-Ray는 Amazon CloudWatch 콘솔에 통합되어 있습니다.
 > 왼쪽 메뉴의 **X-Ray traces** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
 
-42. 왼쪽 메뉴에서 **X-Ray traces** > **Trace Map**을 선택합니다.
-43. 서비스 맵에서 다음 구성 요소를 확인합니다:
+38. 왼쪽 메뉴에서 **X-Ray traces** > **Trace Map**을 선택합니다.
+39. 서비스 맵에서 다음 구성 요소를 확인합니다:
 	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
 	- **Amazon API Gateway**: QuickTableXRayAPI
 	- **AWS Lambda**: CreateReservation, GetReservations
@@ -305,8 +309,8 @@ curl -X GET ${API_URL}/reservations
 > - **Amazon API Gateway 노드**: QuickTableXRayAPI REST API를 나타냅니다
 > - 두 노드는 별도로 표시됩니다
 
-44. AWS Lambda 함수 노드를 클릭합니다.
-45. 오른쪽 패널에서 평균 응답 시간, 요청 수, 오류율을 확인합니다.
+40. AWS Lambda 함수 노드를 클릭합니다.
+41. 오른쪽 패널에서 평균 응답 시간, 요청 수, 오류율을 확인합니다.
 
 ✅ **태스크 완료**: 서비스 맵을 확인했습니다.
 
@@ -314,15 +318,15 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인합니다.
 
-46. 왼쪽 메뉴에서 **X-Ray traces** > **Traces**를 선택합니다.
-47. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
-48. 트레이스 타임라인에서 다음 정보를 확인합니다:
+42. 왼쪽 메뉴에서 **X-Ray traces** > **Traces**를 선택합니다.
+43. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
+44. 트레이스 타임라인에서 다음 정보를 확인합니다:
 	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
 	- **세그먼트**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB 각각의 실행 시간
 	- **서브세그먼트**: create_reservation, dynamodb_put_item 등의 커스텀 서브세그먼트
 
-49. 세그먼트를 클릭하여 상세 정보를 확인합니다.
-50. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
+45. 세그먼트를 클릭하여 상세 정보를 확인합니다.
+46. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
 
 > [!NOTE]
 > AWS CloudFormation 템플릿으로 배포된 AWS Lambda 함수 코드에는 `subsegment.put_annotation()`으로 추가된 어노테이션이 포함되어 있습니다.
@@ -333,9 +337,9 @@ curl -X GET ${API_URL}/reservations
 > - 태스크 1에서 확인한 AWS Lambda 함수 코드에 `subsegment.put_annotation()` 호출이 있는지 재확인합니다
 > - 트레이스가 충분히 생성되었는지 확인합니다 (태스크 3, 4에서 5-10회 API 호출)
 
-51. **Metadata** 탭에서 예약 데이터를 확인합니다.
+47. **Metadata** 탭에서 예약 데이터를 확인합니다.
 
-52. GET /reservations 요청도 동일하게 분석합니다.
+48. GET /reservations 요청도 동일하게 분석합니다.
 
 ✅ **태스크 완료**: 트레이스를 분석했습니다.
 
@@ -343,8 +347,8 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray Insights와 Analytics를 사용하여 자동 이상 탐지 및 트레이스 분석 기능을 확인합니다.
 
-53. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **X-Ray traces** > **Insights**를 선택합니다.
-54. Insights 대시보드에서 다음 정보를 확인합니다:
+49. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **X-Ray traces** > **Insights**를 선택합니다.
+50. Insights 대시보드에서 다음 정보를 확인합니다:
 	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
 	- **오류율 이상**: 오류율이 증가한 경우
 	- **스로틀링 이상**: 요청이 제한된 경우
@@ -360,12 +364,12 @@ curl -X GET ${API_URL}/reservations
 > - 자동으로 이상을 탐지하고 알림을 받고 싶은 경우
 > - 특정 시간대에 성능 저하가 발생했는지 확인하고 싶은 경우
 
-55. **X-Ray traces** > **Traces** 페이지로 이동합니다.
+51. **X-Ray traces** > **Traces** 페이지로 이동합니다.
 
 > [!NOTE]
 > 이전에는 별도의 Analytics 메뉴가 있었으나, 현재는 Traces 페이지에서 필터링 및 그룹화 기능을 사용하여 동일한 분석을 수행할 수 있습니다.
 
-56. **Filter traces**에서 어노테이션 기반 조건을 추가하여 특정 트레이스를 필터링합니다.
+52. **Filter traces**에서 어노테이션 기반 조건을 추가하여 특정 트레이스를 필터링합니다.
 
 > [!NOTE]
 > Traces 페이지에서 어노테이션 기반으로 트레이스를 필터링할 수 있습니다.
@@ -402,41 +406,42 @@ curl -X GET ${API_URL}/reservations
 	- **Tag key**: `Week`
 	- **Tag value**: `13-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
 ### 스택 삭제: AWS CloudFormation 스택 삭제
 
-8. AWS CloudFormation 콘솔로 이동합니다.
-9. `week13-2-xray-lab-stack` 스택을 선택합니다.
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-12. 스택 삭제가 완료될 때까지 기다립니다.
+7. AWS CloudFormation 콘솔로 이동합니다.
+8. `week13-2-xray-lab-stack` 스택을 선택합니다.
+9. [[Delete]] 버튼을 클릭합니다.
+10. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
+> 스택 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할이 모두 자동으로 삭제됩니다.
 > AWS X-Ray 트레이스 데이터는 자동으로 삭제되지 않지만, 30일 후 자동으로 만료됩니다.
 
 ### Amazon CloudWatch Log Group 삭제
 
-13. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-14. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-15. 다음 로그 그룹을 검색하여 삭제합니다:
-	- `/aws/lambda/CreateReservation-*`
-	- `/aws/lambda/GetReservations-*`
-	- `/aws/apigateway/QuickTableXRayAPI`
+11. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
+12. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+13. 다음 로그 그룹을 검색하여 삭제합니다:
+	- `/aws/lambda/week13-2-xray-lab-CreateReservation`
+	- `/aws/lambda/week13-2-xray-lab-GetReservations`
 
 > [!NOTE]
-> AWS CloudFormation으로 생성된 AWS Lambda 함수 이름에는 스택 ID가 포함되어 있습니다.
-> 예: `/aws/lambda/CreateReservation-week13-2-xray-lab-stack-ABC123`
+> AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다.
+> 함수 이름은 CloudFormation 템플릿에서 `week13-2-xray-lab-CreateReservation`, `week13-2-xray-lab-GetReservations`로 지정되어 있습니다.
 >
 > Amazon API Gateway 로그 그룹(`/aws/apigateway/QuickTableXRayAPI`)은 AWS CloudFormation 템플릿에서 Amazon CloudWatch 로깅을 명시적으로 활성화한 경우에만 생성됩니다.
 > 해당 로그 그룹이 존재하지 않을 수 있으며, 존재하는 로그 그룹만 삭제하면 됩니다.
 
-16. 각 로그 그룹을 선택한 후 **Actions** > `Delete log group(s)`를 선택합니다.
-17. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+14. 각 로그 그룹을 선택한 후 **Actions** > `Delete log group(s)`를 선택합니다.
+15. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.

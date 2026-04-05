@@ -1,0 +1,364 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 13-2: QuickTable API with AWS X-Ray Tracing (DynamoDB, Lambda, API Gateway)'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: week13-2-xray-lab
+    Description: Environment name for resource naming
+    AllowedPattern: ^[a-z0-9-]+$
+    ConstraintDescription: Must contain only lowercase letters, numbers, and hyphens
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '13-2'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # Amazon DynamoDB 테이블: Reservations
+  ReservationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvironmentName}-Reservations'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: reservationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: reservationId
+          KeyType: RANGE
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # AWS IAM 역할: Lambda 실행 역할 (DynamoDB + X-Ray 권한)
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-Lambda-ExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                Resource: !GetAtt ReservationsTable.Arn
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # AWS Lambda 함수: CreateReservation (X-Ray SDK 통합)
+  CreateReservationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-CreateReservation'
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          """
+          QuickTable 예약 생성 Lambda 함수 (AWS X-Ray SDK 통합)
+
+          이 함수는 예약 생성 요청을 처리하고, AWS X-Ray SDK를 사용하여
+          커스텀 서브세그먼트, 어노테이션, 메타데이터를 기록합니다.
+
+          환경 변수:
+              TABLE_NAME (str): DynamoDB 테이블 이름
+          """
+          import json
+          import boto3
+          import os
+          import uuid
+          from datetime import datetime
+          from aws_xray_sdk.core import patch_all, xray_recorder
+
+          # boto3 DynamoDB 호출 자동 추적
+          patch_all()
+
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ['TABLE_NAME'])
+
+          def lambda_handler(event, context):
+              """
+              예약 생성 핸들러
+
+              Args:
+                  event (dict): API Gateway 프록시 이벤트
+                  context: Lambda 실행 컨텍스트
+
+              Returns:
+                  dict: HTTP 응답 (statusCode, headers, body)
+              """
+              try:
+                  body = json.loads(event.get('body', '{}'))
+                  user_id = body.get('userId', 'anonymous')
+                  date_str = body.get('date', '')
+                  time_str = body.get('time', '')
+                  reservation_id = f"RSV-{date_str.replace('-', '')}-{uuid.uuid4().hex[:8]}"
+
+                  # 커스텀 서브세그먼트: 입력 검증
+                  subsegment = xray_recorder.begin_subsegment('validate_input')
+                  subsegment.put_annotation('operation', 'create')
+                  subsegment.put_annotation('restaurantName', body.get('restaurantName', ''))
+                  subsegment.put_annotation('date', date_str)
+                  subsegment.put_metadata('request_body', body)
+                  xray_recorder.end_subsegment()
+
+                  # 커스텀 서브세그먼트: DynamoDB 저장
+                  subsegment = xray_recorder.begin_subsegment('create_dynamodb_item')
+                  item = {
+                      'userId': user_id,
+                      'reservationId': reservation_id,
+                      'restaurantName': body.get('restaurantName', ''),
+                      'date': date_str,
+                      'time': time_str,
+                      'partySize': int(body.get('partySize', 1)),
+                      'phoneNumber': body.get('phoneNumber', ''),
+                      'status': 'confirmed',
+                      'createdAt': datetime.utcnow().isoformat()
+                  }
+                  subsegment.put_annotation('reservation_id', reservation_id)
+                  subsegment.put_annotation('status', 'confirmed')
+                  subsegment.put_metadata('reservation_data', item)
+                  table.put_item(Item=item)
+                  xray_recorder.end_subsegment()
+
+                  return {
+                      'statusCode': 200,
+                      'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                      'body': json.dumps({'message': 'Reservation created', 'reservationId': reservation_id})
+                  }
+              except Exception as e:
+                  return {
+                      'statusCode': 500,
+                      'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                      'body': json.dumps({'error': str(e)})
+                  }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # AWS Lambda 함수: GetReservations (X-Ray SDK 통합)
+  GetReservationsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-GetReservations'
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          """
+          QuickTable 예약 조회 Lambda 함수 (AWS X-Ray SDK 통합)
+
+          이 함수는 예약 조회 요청을 처리하고, AWS X-Ray SDK를 사용하여
+          커스텀 서브세그먼트, 어노테이션, 메타데이터를 기록합니다.
+
+          환경 변수:
+              TABLE_NAME (str): DynamoDB 테이블 이름
+          """
+          import json
+          import boto3
+          import os
+          from decimal import Decimal
+          from aws_xray_sdk.core import patch_all, xray_recorder
+
+          # boto3 DynamoDB 호출 자동 추적
+          patch_all()
+
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ['TABLE_NAME'])
+
+          class DecimalEncoder(json.JSONEncoder):
+              """DynamoDB Decimal을 JSON 직렬화하기 위한 인코더"""
+              def default(self, obj):
+                  if isinstance(obj, Decimal):
+                      return int(obj)
+                  return super().default(obj)
+
+          def lambda_handler(event, context):
+              """
+              예약 조회 핸들러
+
+              Args:
+                  event (dict): API Gateway 프록시 이벤트
+                  context: Lambda 실행 컨텍스트
+
+              Returns:
+                  dict: HTTP 응답 (statusCode, headers, body)
+              """
+              try:
+                  user_id = 'anonymous'
+
+                  # 커스텀 서브세그먼트: DynamoDB 조회
+                  subsegment = xray_recorder.begin_subsegment('get_reservations')
+                  subsegment.put_annotation('operation', 'get')
+                  subsegment.put_annotation('user_id', user_id)
+
+                  response = table.query(
+                      KeyConditionExpression='userId = :uid',
+                      ExpressionAttributeValues={':uid': user_id}
+                  )
+                  items = response.get('Items', [])
+                  subsegment.put_metadata('reservation_count', len(items))
+                  subsegment.put_metadata('user_id', user_id)
+                  xray_recorder.end_subsegment()
+
+                  return {
+                      'statusCode': 200,
+                      'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                      'body': json.dumps(items, cls=DecimalEncoder)
+                  }
+              except Exception as e:
+                  return {
+                      'statusCode': 500,
+                      'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                      'body': json.dumps({'error': str(e)})
+                  }
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Amazon API Gateway: QuickTableXRayAPI
+  QuickTableXRayAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: QuickTableXRayAPI
+      Description: QuickTable Reservation API with X-Ray Tracing
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  ReservationsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref QuickTableXRayAPI
+      ParentId: !GetAtt QuickTableXRayAPI.RootResourceId
+      PathPart: reservations
+
+  CreateReservationMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref QuickTableXRayAPI
+      ResourceId: !Ref ReservationsResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateReservationFunction.Arn}/invocations'
+
+  GetReservationsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref QuickTableXRayAPI
+      ResourceId: !Ref ReservationsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetReservationsFunction.Arn}/invocations'
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - CreateReservationMethod
+      - GetReservationsMethod
+    Properties:
+      RestApiId: !Ref QuickTableXRayAPI
+      StageName: prod
+
+  CreateReservationInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CreateReservationFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${QuickTableXRayAPI}/*/*/*'
+
+  GetReservationsInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref GetReservationsFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${QuickTableXRayAPI}/*/*/*'
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway Invoke URL
+    Value: !Sub 'https://${QuickTableXRayAPI}.execute-api.${AWS::Region}.amazonaws.com/prod'
+
+  CreateFunctionName:
+    Description: CreateReservation Lambda Function Name
+    Value: !Ref CreateReservationFunction
+
+  GetFunctionName:
+    Description: GetReservations Lambda Function Name
+    Value: !Ref GetReservationsFunction
+
+  TableName:
+    Description: DynamoDB Table Name
+    Value: !Ref ReservationsTable

@@ -69,14 +69,13 @@ prerequisites:
 
 ### 태스크 1.3: Rules 설정 및 활성화
 
-11. **Step 2: Rules** 페이지에서 AWS Managed Rules 목록이 표시됩니다.
-12. 규칙을 선택하지 않고 [[Next]] 버튼을 클릭합니다.
+11. **Step 2: Rules** 페이지에서 규칙을 선택하지 않고 [[Next]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 규칙은 태스크 3에서 개별적으로 생성합니다. 여기서 규칙을 선택하면 불필요한 규칙이 추가될 수 있습니다.
 
-13. **Step 3: Review** 페이지에서 설정을 검토합니다.
-14. [[Confirm]] 버튼을 클릭합니다.
+12. **Step 3: Review** 페이지에서 설정을 검토합니다.
+13. [[Confirm]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS Config 활성화 후 초기 스냅샷 생성에 수 분이 소요되며, Amazon SNS 토픽도 이 시점에 생성됩니다.
@@ -85,23 +84,23 @@ prerequisites:
 
 AWS Config 설정에서 생성한 Amazon SNS 토픽에 이메일 구독을 추가합니다. 태스크 6에서 규정 위반 알림을 수신하려면 이 단계가 필요합니다.
 
-15. 상단 검색창에 `SNS`를 입력하고 **Simple Notification Service**를 선택합니다.
-16. 왼쪽 메뉴에서 **Topics**를 선택합니다.
-17. AWS Config가 생성한 토픽을 선택합니다 (이름: `config-topic-{계정ID}` 형식).
-18. [[Create subscription]] 버튼을 클릭합니다.
-19. **Protocol**에서 `Email`을 선택합니다.
-20. **Endpoint**에 알림을 수신할 이메일 주소를 입력합니다.
-21. [[Create subscription]] 버튼을 클릭합니다.
+14. 상단 검색창에 `SNS`를 입력하고 **Simple Notification Service**를 선택합니다.
+15. 왼쪽 메뉴에서 **Topics**를 선택합니다.
+16. AWS Config가 생성한 토픽을 선택합니다 (이름: `config-topic-{계정ID}` 형식).
+17. [[Create subscription]] 버튼을 클릭합니다.
+18. **Protocol**에서 `Email`을 선택합니다.
+19. **Endpoint**에 알림을 수신할 이메일 주소를 입력합니다.
+20. [[Create subscription]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS Config 설정 시 Amazon SNS 토픽은 자동으로 생성되지만, 이메일 구독은 자동으로 추가되지 않습니다. 알림을 수신하려면 직접 구독을 생성해야 합니다.
 
-22. 이메일 받은편지함을 확인합니다.
-23. "AWS Notification - Subscription Confirmation" 제목의 이메일을 엽니다.
-24. 이메일 본문의 **Confirm subscription** 링크를 클릭합니다.
-25. 브라우저에서 "Subscription confirmed!" 메시지를 확인합니다.
-26. Amazon SNS 콘솔로 돌아가 왼쪽 메뉴에서 **Subscriptions**를 선택합니다.
-27. 구독 상태가 "Confirmed"로 변경되었는지 확인합니다.
+21. 이메일 받은편지함을 확인합니다.
+22. "AWS Notification - Subscription Confirmation" 제목의 이메일을 엽니다.
+23. 이메일 본문의 **Confirm subscription** 링크를 클릭합니다.
+24. 브라우저에서 "Subscription confirmed!" 메시지를 확인합니다.
+25. Amazon SNS 콘솔로 돌아가 왼쪽 메뉴에서 **Subscriptions**를 선택합니다.
+26. 구독 상태가 "Confirmed"로 변경되었는지 확인합니다.
 
 > [!IMPORTANT]
 > 이메일 구독을 확인하지 않으면 태스크 6에서 규정 위반 알림을 받을 수 없습니다. 반드시 이메일 받은편지함을 확인하고 구독을 승인합니다.
@@ -112,20 +111,22 @@ AWS Config 설정에서 생성한 Amazon SNS 토픽에 이메일 구독을 추�
 
 ### 태스크 2.1: 리소스 타입 탐색
 
-28. AWS Config 콘솔에서 **Resources** 메뉴를 선택합니다.
-29. **Resource type** 필터에서 다양한 리소스 타입을 확인합니다.
-30. 특정 리소스 타입을 선택합니다 (예: `AWS::Amazon S3::Bucket`).
-31. 리소스 목록이 표시됩니다.
+27. AWS Config 콘솔에서 **Resources** 메뉴를 선택합니다.
+28. **Resource type** 필터에서 다양한 리소스 타입을 확인합니다.
+29. 특정 리소스 타입을 선택합니다 (예: `AWS::Amazon S3::Bucket`).
+
+> [!OUTPUT]
+> 선택한 리소스 타입에 해당하는 리소스 목록이 표시됩니다.
 
 ### 태스크 2.2: 리소스 상세 정보 및 변경 이력 확인
 
-32. 특정 리소스를 클릭하여 상세 정보를 확인합니다.
-33. **Resource timeline** 탭에서 변경 이력을 확인합니다.
+30. 특정 리소스를 클릭하여 상세 정보를 확인합니다.
+31. **Resource timeline** 탭에서 변경 이력을 확인합니다.
 
 리소스의 생성 시점, 설정 변경 이력, 변경한 사용자를 추적할 수 있습니다.
-34. **Configuration** 탭에서 현재 설정을 확인합니다.
-35. **Relationships** 탭에서 관련 리소스를 확인합니다.
-36. **Compliance** 탭에서 규정 준수 상태를 확인합니다.
+32. **Configuration** 탭에서 현재 설정을 확인합니다.
+33. **Relationships** 탭에서 관련 리소스를 확인합니다.
+34. **Compliance** 탭에서 규정 준수 상태를 확인합니다.
 
 ✅ **태스크 완료**: 리소스 인벤토리를 확인했습니다.
 
@@ -151,21 +152,26 @@ AWS Config 설정에서 생성한 Amazon SNS 토픽에 이메일 구독을 추�
 
 ### 태스크 3.1: Amazon S3 퍼블릭 읽기 금지 규칙 생성
 
-37. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
-38. [[Add rule]] 버튼을 클릭합니다.
-39. **Select rule type**에서 `Add AWS managed rule`을 선택합니다.
-40. 검색창에 `s3-bucket-public-read-prohibited`를 입력합니다.
-41. 해당 규칙을 선택하고 [[Next]] 버튼을 클릭합니다.
-42. **Name**은 기본값을 유지합니다.
-43. **Trigger** 섹션에서:
+35. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
+36. [[Add rule]] 버튼을 클릭합니다.
+37. **Select rule type**에서 `Add AWS managed rule`을 선택합니다.
+38. 검색창에 `s3-bucket-public-read-prohibited`를 입력합니다.
+39. 해당 규칙을 선택하고 [[Next]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> **Name**은 기본값을 유지합니다.
+
+40. **Trigger** 섹션에서:
 	- **Trigger type**: `Configuration changes`
 	- **Resources**: `AWS::Amazon S3::Bucket`
 
 AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 설정합니다. `Configuration changes`는 리소스 설정이 변경될 때마다 평가하며, `Periodic`은 주기적으로 평가합니다 (예: 24시간마다). 대부분의 관리형 규칙은 Configuration changes를 사용합니다.
 
-44. **Parameters** 섹션은 기본값을 유지합니다 (파라미터 없음).
-45. [[Next]] 버튼을 클릭합니다.
-46. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+> [!NOTE]
+> **Parameters** 섹션은 기본값을 유지합니다 (파라미터 없음).
+
+41. [[Next]] 버튼을 클릭합니다.
+42. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -173,7 +179,7 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 | `Week`      | `12-2`    |
 | `CreatedBy` | `Student` |
 
-47. 설정을 검토하고 [[Add rule]] 버튼을 클릭합니다.
+43. 설정을 검토하고 [[Add rule]] 버튼을 클릭합니다.
 
 이 규칙은 Amazon S3 버킷이 퍼블릭 읽기 액세스를 허용하는지 확인합니다. 퍼블릭 액세스가 허용된 버킷은 "Noncompliant"로 표시됩니다.
 
@@ -181,14 +187,14 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 다음 4개 규칙을 동일한 방법으로 생성하며, 각 규칙마다 위와 동일한 태그 3개(`Project=AWS-Lab`, `Week=12-2`, `CreatedBy=Student`)를 추가합니다.
 
-48. `s3-bucket-server-side-encryption-enabled` 규칙을 생성합니다:
+44. `s3-bucket-server-side-encryption-enabled` 규칙을 생성합니다:
     - [[Add rule]] 버튼 클릭
     - 규칙 검색 및 선택
     - **Parameters**: 기본값 유지 (파라미터 없음 - 모든 암호화 방식 허용)
     - **Tags**: 위와 동일한 태그 3개 추가
     - [[Add rule]] 클릭
 
-49. `ec2-instance-managed-by-systems-manager` 규칙을 생성합니다:
+45. `ec2-instance-managed-by-systems-manager` 규칙을 생성합니다:
     - [[Add rule]] 버튼 클릭
     - 규칙 검색 및 선택
     - **Parameters**: 기본값 유지 (파라미터 없음)
@@ -198,7 +204,7 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 > [!NOTE]
 > 실습 환경에 Amazon EC2 인스턴스가 없는 경우 이 규칙은 "Not applicable" 또는 "Insufficient data"로 표시될 수 있으며, 이는 정상입니다. 이 규칙은 Amazon EC2 인스턴스가 AWS Systems Manager에 의해 관리되는지 확인하는 규칙으로, 평가 대상 리소스가 없으면 해당 상태로 표시됩니다.
 
-50. `iam-password-policy` 규칙을 생성합니다:
+46. `iam-password-policy` 규칙을 생성합니다:
     - [[Add rule]] 버튼 클릭
     - 규칙 검색 및 선택
     - **Parameters** 섹션에서 다음을 입력:
@@ -211,7 +217,7 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 이 규칙의 파라미터 값은 반드시 문자열 형식(`"true"`, `"8"`)으로 입력해야 합니다. Boolean 값(`true`)이나 숫자 값(`8`)을 직접 입력하면 규칙 평가 시 오류가 발생할 수 있습니다.
 
-51. `vpc-sg-open-only-to-authorized-ports` 규칙을 생성합니다:
+47. `vpc-sg-open-only-to-authorized-ports` 규칙을 생성합니다:
     - [[Add rule]] 버튼 클릭
     - 규칙 검색 및 선택
     - **Parameters** 섹션에서:
@@ -241,15 +247,15 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 이 태스크에서는 규정 위반을 테스트하기 위한 Amazon S3 버킷을 생성합니다. 이 버킷은 퍼블릭 액세스를 허용하도록 설정하여 AWS Config Rules가 위반을 감지하도록 합니다.
 
-52. Amazon S3 콘솔로 이동합니다.
-53. [[Create bucket]] 버튼을 클릭합니다.
-54. **Bucket name**에 `config-test-bucket-{계정ID}`를 입력합니다.
+48. Amazon S3 콘솔로 이동합니다.
+49. [[Create bucket]] 버튼을 클릭합니다.
+50. **Bucket name**에 `config-test-bucket-{계정ID}`를 입력합니다.
 
 > [!NOTE]
 > `{계정ID}` 부분은 본인의 AWS 계정 ID로 대체합니다. 예: `config-test-bucket-123456789012`
 
-55. **Region**에서 `Asia Pacific (Seoul) ap-northeast-2`를 선택합니다.
-56. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+51. **Region**에서 `Asia Pacific (Seoul) ap-northeast-2`를 선택합니다.
+52. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -257,13 +263,13 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 | `Week`      | `12-2`    |
 | `CreatedBy` | `Student` |
 
-57. [[Create bucket]] 버튼을 클릭합니다.
-58. 생성한 버킷을 선택합니다.
-59. **Permissions** 탭을 선택합니다.
-60. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-61. **Block all public access**를 체크 해제합니다.
-62. [[Save changes]] 버튼을 클릭합니다.
-63. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
+53. [[Create bucket]] 버튼을 클릭합니다.
+54. 생성한 버킷을 선택합니다.
+55. **Permissions** 탭을 선택합니다.
+56. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+57. **Block all public access**를 체크 해제합니다.
+58. [[Save changes]] 버튼을 클릭합니다.
+59. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
 
 퍼블릭 액세스를 허용하면 AWS Config가 규정 위반을 감지합니다. 이는 계정 수준 설정이 아닌 버킷 수준 설정이므로, 다른 버킷에는 영향을 주지 않습니다.
 
@@ -278,19 +284,19 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 ### 태스크 5.1: 규정 준수 평가 확인
 
-64. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
-65. 생성한 규칙 목록을 확인합니다.
-66. 각 규칙의 **Compliance** 상태를 확인합니다.
-67. `Noncompliant` 상태인 규칙을 클릭합니다.
-68. **Resources in scope** 섹션에서 위반 리소스를 확인합니다.
-69. 위반 리소스를 클릭하여 상세 정보를 확인합니다.
-70. **Compliance timeline**에서 언제부터 위반되었는지 확인합니다.
-71. **Configuration** 탭에서 현재 설정을 확인합니다.
+60. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
+61. 생성한 규칙 목록을 확인합니다.
+62. 각 규칙의 **Compliance** 상태를 확인합니다.
+63. `Noncompliant` 상태인 규칙을 클릭합니다.
+64. **Resources in scope** 섹션에서 위반 리소스를 확인합니다.
+65. 위반 리소스를 클릭하여 상세 정보를 확인합니다.
+66. **Compliance timeline**에서 언제부터 위반되었는지 확인합니다.
+67. **Configuration** 탭에서 현재 설정을 확인합니다.
 
 ### 태스크 5.2: 위반 리소스 수정
 
-72. `s3-bucket-public-read-prohibited` 규칙을 선택합니다.
-73. **Resources in scope** 섹션에서 위반 리소스(버킷 이름)를 확인합니다.
+68. `s3-bucket-public-read-prohibited` 규칙을 선택합니다.
+69. **Resources in scope** 섹션에서 위반 리소스(버킷 이름)를 확인합니다.
 
 > [!OUTPUT]
 >
@@ -302,23 +308,23 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 > First detected: [실습 시점 날짜/시간]
 > ```
 
-74. 새 브라우저 탭을 열고 Amazon S3 콘솔로 이동합니다.
-75. 위반 버킷(`config-test-bucket-{계정ID}`)을 선택합니다.
-76. **Permissions** 탭을 선택합니다.
-77. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-78. **Block all public access**를 체크합니다.
-79. [[Save changes]] 버튼을 클릭합니다.
-80. 확인 창에서 `confirm`을 입력합니다.
-81. [[Confirm]] 버튼을 클릭합니다.
+70. 새 브라우저 탭을 열고 Amazon S3 콘솔로 이동합니다.
+71. 위반 버킷(`config-test-bucket-{계정ID}`)을 선택합니다.
+72. **Permissions** 탭을 선택합니다.
+73. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+74. **Block all public access**를 체크합니다.
+75. [[Save changes]] 버튼을 클릭합니다.
+76. 확인 창에서 `confirm`을 입력합니다.
+77. [[Confirm]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 퍼블릭 액세스 차단 설정이 적용되었습니다. 이제 AWS Config가 자동으로 재평가합니다.
 
-82. AWS Config 콘솔 탭으로 이동합니다.
-83. `s3-bucket-public-read-prohibited` 규칙 페이지를 새로고침합니다.
-84. [[Re-evaluate]] 버튼을 클릭하여 즉시 재평가를 트리거합니다.
-85. 페이지를 새로고침하여 준수 상태 변경을 확인합니다.
-86. **Resources in scope** 섹션에서 버킷의 **Compliance** 상태가 "Compliant"로 변경되었는지 확인합니다.
+78. AWS Config 콘솔 탭으로 이동합니다.
+79. `s3-bucket-public-read-prohibited` 규칙 페이지를 새로고침합니다.
+80. [[Re-evaluate]] 버튼을 클릭하여 즉시 재평가를 트리거합니다.
+81. 페이지를 새로고침하여 준수 상태 변경을 확인합니다.
+82. **Resources in scope** 섹션에서 버킷의 **Compliance** 상태가 "Compliant"로 변경되었는지 확인합니다.
 
 규칙 재평가는 수 분이 소요될 수 있습니다. 페이지를 여러 번 새로고침하여 상태 변경을 확인합니다.
 
@@ -349,18 +355,17 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 ### 태스크 6.1: Amazon SNS 알림 자동 전송 설정
 
-87. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
-88. 규칙을 선택합니다 (예: `s3-bucket-public-read-prohibited`).
-89. **Actions** 드롭다운에서 `Manage remediation`을 선택합니다.
-90. **Remediation action** 섹션에서:
+83. AWS Config 콘솔에서 **Rules** 메뉴를 선택합니다.
+84. 규칙을 선택합니다 (예: `s3-bucket-public-read-prohibited`).
+85. **Actions** 드롭다운에서 `Manage remediation`을 선택합니다.
+86. **Remediation action** 섹션에서:
 	- **Select remediation method**: `Automatic remediation`
 	- **Remediation action details**: `AWS-PublishSNSNotification` 선택
-91. **Resource ID parameter** 드롭다운에서 아무것도 선택하지 않거나, 기본값을 유지합니다.
 
 > [!WARNING]
-> **Resource ID parameter**에 `TopicArn`을 매핑하면 Amazon SNS 토픽 ARN 대신 위반 리소스 ID가 들어가게 되어 실행이 실패합니다. Resource ID parameter는 사용하지 않고, Parameters 섹션에서 TopicArn을 직접 입력해야 합니다.
+> **Resource ID parameter** 드롭다운은 아무것도 선택하지 않거나 기본값을 유지합니다. `TopicArn`을 매핑하면 Amazon SNS 토픽 ARN 대신 위반 리소스 ID가 들어가게 되어 실행이 실패합니다. Parameters 섹션에서 TopicArn을 직접 입력해야 합니다.
 
-92. **Parameters** 섹션에서:
+87. **Parameters** 섹션에서:
 	- **TopicArn**: Amazon SNS 토픽 ARN 입력 (태스크 1에서 생성한 토픽)
 	- **Message**: `Amazon S3 bucket public access compliance violation detected`
 
@@ -386,9 +391,9 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 >
 > 역할 없이 저장하면 Remediation 실행 시 AccessDenied 오류가 발생합니다.
 
-93. **Auto remediation**을 활성화합니다.
-94. **Retry attempts**: `5`를 입력합니다.
-95. [[Save changes]] 버튼을 클릭합니다.
+88. **Auto remediation**을 활성화합니다.
+89. **Retry attempts**: `5`를 입력합니다.
+90. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > **AWS-PublishSNSNotification 제약사항**:
@@ -399,33 +404,33 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 ### 태스크 6.2: 자동 알림 테스트
 
-96. Amazon S3 콘솔로 이동합니다.
-97. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
-98. **Permissions** 탭을 선택합니다.
-99. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-100. **Block all public access**를 체크 해제합니다.
-101. [[Save changes]] 버튼을 클릭합니다.
-102. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
+91. Amazon S3 콘솔로 이동합니다.
+92. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
+93. **Permissions** 탭을 선택합니다.
+94. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+95. **Block all public access**를 체크 해제합니다.
+96. [[Save changes]] 버튼을 클릭합니다.
+97. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 테스트를 위해 퍼블릭 액세스를 다시 허용합니다. AWS Config가 위반을 감지하면 자동으로 Remediation이 트리거됩니다.
 
-103. AWS Config 콘솔로 이동합니다.
-104. **Rules** 메뉴에서 `s3-bucket-public-read-prohibited` 규칙을 선택합니다.
-105. 페이지를 새로고침하여 위반 리소스를 확인합니다.
-106. **Resources in scope**에서 위반 리소스(`config-test-bucket-{계정ID}`)를 확인합니다.
-107. Amazon SNS 이메일 알림이 수신되었는지 확인합니다.
+98. AWS Config 콘솔로 이동합니다.
+99. **Rules** 메뉴에서 `s3-bucket-public-read-prohibited` 규칙을 선택합니다.
+100. 페이지를 새로고침하여 위반 리소스를 확인합니다.
+101. **Resources in scope**에서 위반 리소스(`config-test-bucket-{계정ID}`)를 확인합니다.
+102. Amazon SNS 이메일 알림이 수신되었는지 확인합니다.
 
 > [!NOTE]
 > 퍼블릭 액세스를 다시 해제한 후 AWS Config가 변경을 감지 → 규칙 재평가 → Noncompliant 판정 → Remediation 트리거 → Amazon SNS 알림 전송까지의 전체 흐름에 5-10분이 소요될 수 있습니다. 페이지를 여러 번 새로고침하여 상태 변경을 확인합니다.
 
-108. Amazon S3 콘솔로 이동합니다.
-109. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
-110. **Permissions** 탭을 선택합니다.
-111. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-112. **Block all public access**를 체크합니다.
-113. [[Save changes]] 버튼을 클릭합니다.
-114. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
+103. Amazon S3 콘솔로 이동합니다.
+104. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
+105. **Permissions** 탭을 선택합니다.
+106. **Block public access (bucket settings)** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+107. **Block all public access**를 체크합니다.
+108. [[Save changes]] 버튼을 클릭합니다.
+109. 확인 창에서 `confirm`을 입력하고 [[Confirm]] 버튼을 클릭합니다.
 
 테스트 후 퍼블릭 액세스를 다시 차단하여 보안을 유지합니다.
 
@@ -443,21 +448,21 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 > [!NOTE]
 > Conformance Pack에 포함된 규칙 중 일부는 이미 태스크 3에서 개별적으로 생성한 규칙과 중복될 수 있습니다. 이는 정상적인 동작이며, Conformance Pack은 여러 규칙을 패키지로 관리하기 위한 것입니다. 중복된 규칙은 동일한 리소스를 평가하지만, 각각 독립적으로 관리됩니다.
 
-115. AWS Config 콘솔에서 **Conformance packs** 메뉴를 선택합니다.
-116. [[Deploy conformance pack]] 버튼을 클릭합니다.
-117. **Select template**에서 샘플 템플릿을 선택합니다:
+110. AWS Config 콘솔에서 **Conformance packs** 메뉴를 선택합니다.
+111. [[Deploy conformance pack]] 버튼을 클릭합니다.
+112. **Select template**에서 샘플 템플릿을 선택합니다:
 	- `Operational Best Practices for Amazon S3`
 	- 또는 `Operational Best Practices for Security`
-118. **Conformance pack name**에 `demo-s3-best-practices`를 입력합니다.
-119. **Parameters** 섹션에서 필요한 파라미터를 입력합니다 (선택사항).
-120. [[Deploy conformance pack]] 버튼을 클릭합니다.
-121. 배포 상태를 확인합니다.
+113. **Conformance pack name**에 `demo-s3-best-practices`를 입력합니다.
+114. **Parameters** 섹션에서 필요한 파라미터를 입력합니다 (선택사항).
+115. [[Deploy conformance pack]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 배포에 수 분이 소요됩니다.
-122. 배포 완료 후 **Conformance pack details**를 확인합니다.
-123. **Rules** 탭에서 포함된 규칙 목록을 확인합니다.
-124. **Compliance** 탭에서 전체 준수 상태를 확인합니다.
+> 배포에 수 분이 소요됩니다. 배포 상태가 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
+
+116. 배포 완료 후 **Conformance pack details**를 확인합니다.
+117. **Rules** 탭에서 포함된 규칙 목록을 확인합니다.
+118. **Compliance** 탭에서 전체 준수 상태를 확인합니다.
 
 > [!NOTE]
 > Conformance Pack 활용
@@ -494,7 +499,9 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 	- **Tag key**: `Week`
 	- **Tag value**: `12-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 태그를 추가한 리소스(테스트 버킷, AWS Config Rules 5개)가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 태그를 추가한 리소스(테스트 버킷, AWS Config Rules 5개)가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -505,29 +512,29 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 #### Conformance Pack 삭제
 
-8. AWS Config 콘솔로 이동합니다.
-9. 왼쪽 메뉴에서 **Conformance packs**를 선택합니다.
-10. `demo-s3-best-practices` Conformance Pack을 선택합니다.
-11. [[Delete]] 버튼을 클릭합니다.
-12. 확인 창에서 `delete`를 입력합니다.
-13. [[Delete]] 버튼을 클릭합니다.
+7. AWS Config 콘솔로 이동합니다.
+8. 왼쪽 메뉴에서 **Conformance packs**를 선택합니다.
+9. `demo-s3-best-practices` Conformance Pack을 선택합니다.
+10. [[Delete]] 버튼을 클릭합니다.
+11. 확인 창에서 `delete`를 입력합니다.
+12. [[Delete]] 버튼을 클릭합니다.
 
 #### AWS Config Rules 삭제
 
 > [!IMPORTANT]
 > Remediation 설정이 활성화된 상태에서 AWS Config Rule을 삭제하면 오류가 발생할 수 있습니다. 반드시 Remediation을 먼저 제거한 후 Rule을 삭제해야 합니다.
 
-14. AWS Config 콘솔로 이동합니다.
-15. 왼쪽 메뉴에서 **Rules**를 선택합니다.
-16. Remediation이 설정된 규칙(`s3-bucket-public-read-prohibited`)을 선택합니다.
-17. **Actions** 드롭다운에서 `Manage remediation`을 선택합니다.
-18. [[Delete]] 버튼을 클릭하여 Remediation 설정을 제거합니다.
-19. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+13. AWS Config 콘솔로 이동합니다.
+14. 왼쪽 메뉴에서 **Rules**를 선택합니다.
+15. Remediation이 설정된 규칙(`s3-bucket-public-read-prohibited`)을 선택합니다.
+16. **Actions** 드롭다운에서 `Manage remediation`을 선택합니다.
+17. [[Delete]] 버튼을 클릭하여 Remediation 설정을 제거합니다.
+18. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
-20. 생성한 규칙을 하나씩 선택합니다.
-21. [[Delete rule]] 버튼을 클릭합니다.
-22. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-23. 모든 규칙에 대해 반복합니다:
+19. 생성한 규칙을 하나씩 선택합니다.
+20. [[Delete rule]] 버튼을 클릭합니다.
+21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+22. 모든 규칙에 대해 반복합니다:
     - `s3-bucket-public-read-prohibited`
     - `s3-bucket-server-side-encryption-enabled`
     - `ec2-instance-managed-by-systems-manager`
@@ -536,16 +543,16 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 
 #### Configuration Recorder 중지 및 삭제
 
-24. 왼쪽 메뉴에서 **Settings**를 선택합니다.
-25. **Recorder** 섹션에서 [[Edit]] 버튼을 클릭합니다.
-26. **Recording is on** 토글을 끕니다.
-27. [[Save]] 버튼을 클릭합니다.
+23. 왼쪽 메뉴에서 **Settings**를 선택합니다.
+24. **Recorder** 섹션에서 [[Edit]] 버튼을 클릭합니다.
+25. **Recording is on** 토글을 끕니다.
+26. [[Save]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Configuration Recorder를 중지하면 리소스 변경 추적이 중단되지만, 기존 데이터는 Amazon S3에 유지됩니다.
 
-28. AWS Management Console 상단 오른쪽의 CloudShell 아이콘을 클릭합니다.
-29. CloudShell이 열리면 다음 명령어를 실행하여 Configuration Recorder를 삭제합니다:
+27. AWS Management Console 상단 오른쪽의 CloudShell 아이콘을 클릭합니다.
+28. CloudShell이 열리면 다음 명령어를 실행하여 Configuration Recorder를 삭제합니다:
 
 ```bash
 aws configservice delete-configuration-recorder --configuration-recorder-name default
@@ -557,7 +564,7 @@ aws configservice delete-configuration-recorder --configuration-recorder-name de
 > [!NOTE]
 > Configuration Recorder를 삭제해야 Delivery Channel 삭제가 가능합니다.
 
-30. 다음 명령어를 실행하여 Delivery Channel을 삭제합니다:
+29. 다음 명령어를 실행하여 Delivery Channel을 삭제합니다:
 
 ```bash
 aws configservice delete-delivery-channel --delivery-channel-name default
@@ -568,36 +575,36 @@ aws configservice delete-delivery-channel --delivery-channel-name default
 
 ### 테스트 버킷 삭제
 
-31. Amazon S3 콘솔로 이동합니다.
-32. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
-33. [[Empty]] 버튼을 클릭합니다.
-34. 확인 창에서 `permanently delete`를 입력합니다.
-35. [[Empty]] 버튼을 클릭합니다.
-36. 버킷을 다시 선택합니다.
-37. [[Delete]] 버튼을 클릭합니다.
-38. 확인 창에서 버킷 이름을 입력합니다.
-39. [[Delete bucket]] 버튼을 클릭합니다.
+30. Amazon S3 콘솔로 이동합니다.
+31. `config-test-bucket-{계정ID}` 버킷을 선택합니다.
+32. [[Empty]] 버튼을 클릭합니다.
+33. 확인 창에서 `permanently delete`를 입력합니다.
+34. [[Empty]] 버튼을 클릭합니다.
+35. 버킷을 다시 선택합니다.
+36. [[Delete]] 버튼을 클릭합니다.
+37. 확인 창에서 버킷 이름을 입력합니다.
+38. [[Delete bucket]] 버튼을 클릭합니다.
 
 ### Amazon S3 버킷 삭제 (AWS Config 데이터)
 
-40. AWS Config가 생성한 버킷을 찾습니다 (이름: `config-bucket-{계정ID}`).
-41. 버킷을 선택합니다.
-42. [[Empty]] 버튼을 클릭합니다.
-43. 확인 창에서 `permanently delete`를 입력합니다.
-44. [[Empty]] 버튼을 클릭합니다.
-45. 버킷을 다시 선택합니다.
-46. [[Delete]] 버튼을 클릭합니다.
-47. 확인 창에서 버킷 이름을 입력합니다.
-48. [[Delete bucket]] 버튼을 클릭합니다.
+39. AWS Config가 생성한 버킷을 찾습니다 (이름: `config-bucket-{계정ID}`).
+40. 버킷을 선택합니다.
+41. [[Empty]] 버튼을 클릭합니다.
+42. 확인 창에서 `permanently delete`를 입력합니다.
+43. [[Empty]] 버튼을 클릭합니다.
+44. 버킷을 다시 선택합니다.
+45. [[Delete]] 버튼을 클릭합니다.
+46. 확인 창에서 버킷 이름을 입력합니다.
+47. [[Delete bucket]] 버튼을 클릭합니다.
 
 ### Amazon SNS 토픽 및 구독 삭제
 
-49. Amazon SNS 콘솔로 이동합니다.
-50. 왼쪽 메뉴에서 **Topics**를 선택합니다.
-51. AWS Config가 생성한 토픽을 선택합니다 (이름: `config-topic-{계정ID}`).
-52. [[Delete]] 버튼을 클릭합니다.
-53. 확인 창에서 `delete me`를 입력합니다.
-54. [[Delete]] 버튼을 클릭합니다.
+48. Amazon SNS 콘솔로 이동합니다.
+49. 왼쪽 메뉴에서 **Topics**를 선택합니다.
+50. AWS Config가 생성한 토픽을 선택합니다 (이름: `config-topic-{계정ID}`).
+51. [[Delete]] 버튼을 클릭합니다.
+52. 확인 창에서 `delete me`를 입력합니다.
+53. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon SNS 토픽을 삭제하면 연결된 모든 구독도 자동으로 삭제됩니다.
@@ -607,12 +614,12 @@ aws configservice delete-delivery-channel --delivery-channel-name default
 > [!NOTE]
 > 태스크 6.1에서 기존 AWS IAM 역할을 선택한 경우 이 단계를 건너뜁니다. 새 역할을 생성한 경우에만 삭제가 필요합니다.
 
-55. AWS IAM 콘솔로 이동합니다.
-56. 왼쪽 메뉴에서 **Roles**를 선택합니다.
-57. 태스크 6.1에서 생성한 Remediation 역할을 선택합니다.
-58. [[Delete]] 버튼을 클릭합니다.
-59. 확인 창에서 역할 이름을 입력합니다.
-60. [[Delete]] 버튼을 클릭합니다.
+54. AWS IAM 콘솔로 이동합니다.
+55. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+56. 태스크 6.1에서 생성한 Remediation 역할을 선택합니다.
+57. [[Delete]] 버튼을 클릭합니다.
+58. 확인 창에서 역할 이름을 입력합니다.
+59. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 태스크 6.1에서 [[Create a role]] 버튼으로 생성한 경우, 역할 이름은 생성 시 직접 지정했거나 자동 생성된 이름입니다. AWS IAM 콘솔에서 생성 날짜를 기준으로 해당 역할을 찾을 수 있습니다.
@@ -622,12 +629,12 @@ aws configservice delete-delivery-channel --delivery-channel-name default
 > [!NOTE]
 > AWS Config는 기본적으로 Amazon CloudWatch Logs에 로그를 전송하지 않습니다. 이 단계는 Delivery Channel 설정 시 Amazon CloudWatch Logs를 활성화한 경우에만 필요합니다. 로그 그룹이 존재하지 않으면 이 단계를 건너뜁니다.
 
-61. Amazon CloudWatch 콘솔로 이동합니다.
-62. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-63. `/aws/config/` 접두사로 시작하는 로그 그룹이 있는지 확인합니다.
-64. 로그 그룹이 존재하는 경우, 해당 로그 그룹을 선택합니다.
-65. **Actions** > `Delete log group(s)`를 선택합니다.
-66. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+60. Amazon CloudWatch 콘솔로 이동합니다.
+61. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+62. `/aws/config/` 접두사로 시작하는 로그 그룹이 있는지 확인합니다.
+63. 로그 그룹이 존재하는 경우, 해당 로그 그룹을 선택합니다.
+64. **Actions** > `Delete log group(s)`를 선택합니다.
+65. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

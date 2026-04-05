@@ -28,7 +28,6 @@ prerequisites:
 > - `week12-1-secrets-manager-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon RDS, Amazon VPC, AWS Lambda 함수 자동 생성)
 > - `lambda_function.py` - AWS Lambda 함수 코드 (참고용)
 > - `lambda-iam-policy.json` - AWS Lambda 실행 역할 IAM 정책 (참고용)
-> - `README.txt` - 실습 안내 파일
 >
 > **관련 태스크:**
 >

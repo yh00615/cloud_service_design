@@ -1,0 +1,274 @@
+{
+    "QuickTableReservations": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user001"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-001"
+                    },
+                    "date": {
+                        "S": "2024-03-15"
+                    },
+                    "restaurantName": {
+                        "S": "Seoul Garden"
+                    },
+                    "partySize": {
+                        "N": "4"
+                    },
+                    "time": {
+                        "S": "18:30"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user001"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-002"
+                    },
+                    "date": {
+                        "S": "2024-03-20"
+                    },
+                    "restaurantName": {
+                        "S": "Busan Seafood"
+                    },
+                    "partySize": {
+                        "N": "2"
+                    },
+                    "time": {
+                        "S": "19:00"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user002"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-003"
+                    },
+                    "date": {
+                        "S": "2024-03-15"
+                    },
+                    "restaurantName": {
+                        "S": "Seoul Garden"
+                    },
+                    "partySize": {
+                        "N": "6"
+                    },
+                    "time": {
+                        "S": "12:00"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user002"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-004"
+                    },
+                    "date": {
+                        "S": "2024-04-01"
+                    },
+                    "restaurantName": {
+                        "S": "Gangnam BBQ"
+                    },
+                    "partySize": {
+                        "N": "3"
+                    },
+                    "time": {
+                        "S": "20:00"
+                    },
+                    "status": {
+                        "S": "pending"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user003"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-005"
+                    },
+                    "date": {
+                        "S": "2024-03-18"
+                    },
+                    "restaurantName": {
+                        "S": "Itaewon Pasta"
+                    },
+                    "partySize": {
+                        "N": "2"
+                    },
+                    "time": {
+                        "S": "18:00"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user003"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-006"
+                    },
+                    "date": {
+                        "S": "2024-03-25"
+                    },
+                    "restaurantName": {
+                        "S": "Hongdae Sushi"
+                    },
+                    "partySize": {
+                        "N": "4"
+                    },
+                    "time": {
+                        "S": "19:30"
+                    },
+                    "status": {
+                        "S": "cancelled"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user001"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-007"
+                    },
+                    "date": {
+                        "S": "2024-04-05"
+                    },
+                    "restaurantName": {
+                        "S": "Gangnam BBQ"
+                    },
+                    "partySize": {
+                        "N": "5"
+                    },
+                    "time": {
+                        "S": "18:30"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user004"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-008"
+                    },
+                    "date": {
+                        "S": "2024-03-22"
+                    },
+                    "restaurantName": {
+                        "S": "Seoul Garden"
+                    },
+                    "partySize": {
+                        "N": "8"
+                    },
+                    "time": {
+                        "S": "12:30"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user004"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-009"
+                    },
+                    "date": {
+                        "S": "2024-04-10"
+                    },
+                    "restaurantName": {
+                        "S": "Busan Seafood"
+                    },
+                    "partySize": {
+                        "N": "2"
+                    },
+                    "time": {
+                        "S": "19:00"
+                    },
+                    "status": {
+                        "S": "pending"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "userId": {
+                        "S": "user005"
+                    },
+                    "reservationId": {
+                        "S": "RSV-2024-010"
+                    },
+                    "date": {
+                        "S": "2024-03-30"
+                    },
+                    "restaurantName": {
+                        "S": "Itaewon Pasta"
+                    },
+                    "partySize": {
+                        "N": "3"
+                    },
+                    "time": {
+                        "S": "20:00"
+                    },
+                    "status": {
+                        "S": "confirmed"
+                    }
+                }
+            }
+        }
+    ]
+}
