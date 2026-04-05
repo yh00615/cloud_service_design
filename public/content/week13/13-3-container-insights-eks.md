@@ -42,20 +42,17 @@ prerequisites:
 이 태스크에서는 eksctl을 사용하여 Amazon EKS 클러스터를 생성하고 Amazon CloudWatch Container Insights를 위한 Amazon CloudWatch 로깅을 활성화합니다.
 
 1. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-2. AWS CloudShell 환경이 로드될 때까지 기다립니다.
-
-CloudShell 초기화를 기다립니다.
 
 > [!NOTE]
-> AWS CloudShell 초기 로딩에 30초-1분이 소요될 수 있습니다.
+> AWS CloudShell 초기 로딩에 30초-1분이 소요될 수 있습니다. 환경이 로드될 때까지 기다립니다.
 
-3. eksctl 버전을 확인합니다:
+2. eksctl 버전을 확인합니다:
 
 ```bash
 eksctl version
 ```
 
-4. 클러스터 설정 파일을 생성합니다:
+3. 클러스터 설정 파일을 생성합니다:
 
 ```bash
 cat > cluster-config.yaml << 'EOF'
@@ -104,13 +101,13 @@ EOF
 > Amazon EKS 버전 1.32를 사용합니다. 사용 가능한 최신 버전은 [Amazon EKS 문서](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)에서 확인할 수 있습니다.
 > CloudWatchAgentServerPolicy를 노드 그룹에 추가하여 Amazon CloudWatch Container Insights 메트릭 수집 권한을 부여합니다.
 
-5. 파일 내용을 확인합니다:
+4. 파일 내용을 확인합니다:
 
 ```bash
 cat cluster-config.yaml
 ```
 
-6. Amazon EKS 클러스터를 생성합니다:
+5. Amazon EKS 클러스터를 생성합니다:
 
 ```bash
 nohup eksctl create cluster -f cluster-config.yaml > cluster-creation.log 2>&1 &
@@ -127,7 +124,7 @@ nohup eksctl create cluster -f cluster-config.yaml > cluster-creation.log 2>&1 &
 >
 > Ctrl+C를 눌러 로그 확인을 종료합니다 (클러스터 생성은 계속 진행됩니다).
 
-7. 클러스터 생성 완료를 확인합니다:
+6. 클러스터 생성 완료를 확인합니다:
 
 ```bash
 tail -f cluster-creation.log
@@ -136,7 +133,7 @@ tail -f cluster-creation.log
 > [!NOTE]
 > "Amazon EKS cluster "container-insights-cluster" in "ap-northeast-2" region is ready" 메시지가 표시되면 Ctrl+C를 눌러 로그 확인을 종료합니다.
 
-8. 클러스터 상태를 확인합니다:
+7. 클러스터 상태를 확인합니다:
 
 ```bash
 eksctl get cluster --name container-insights-cluster --region ap-northeast-2
@@ -149,7 +146,7 @@ eksctl get cluster --name container-insights-cluster --region ap-northeast-2
 > container-insights-cluster  ap-northeast-2  True
 > ```
 
-9. kubectl 설정을 확인합니다:
+8. kubectl 설정을 확인합니다:
 
 ```bash
 kubectl get nodes
@@ -183,7 +180,7 @@ Amazon EKS Add-on 방식을 사용합니다.
 > [!NOTE]
 > 2024년 이후 Amazon EKS Add-on 방식이 권장됩니다. 이 방식은 설치와 업데이트가 간편하며, AWS가 자동으로 관리합니다.
 
-10. CloudShell에서 Amazon EKS Add-on으로 Amazon CloudWatch Container Insights를 활성화합니다:
+9. CloudShell에서 Amazon EKS Add-on으로 Amazon CloudWatch Container Insights를 활성화합니다:
 
 ```bash
 aws eks create-addon \
@@ -192,7 +189,7 @@ aws eks create-addon \
   --region ap-northeast-2
 ```
 
-11. Add-on 설치 상태를 확인합니다:
+10. Add-on 설치 상태를 확인합니다:
 
 ```bash
 aws eks describe-addon \
@@ -214,7 +211,7 @@ aws eks describe-addon \
 >
 > Ctrl+C를 눌러 watch 모드를 종료합니다.
 
-12. 배포된 Pod 상태를 확인합니다:
+11. 배포된 Pod 상태를 확인합니다:
 
 ```bash
 kubectl get pods -n amazon-cloudwatch
@@ -231,10 +228,8 @@ kubectl get pods -n amazon-cloudwatch
 > fluent-bit-zzzzz                                             1/1     Running   0          2m
 > ```
 
-13. 모든 Pod가 "Running" 상태가 될 때까지 기다립니다.
-
 > [!NOTE]
-> Pod 시작에 1-2분이 소요될 수 있습니다. 다음 명령어로 상태를 확인합니다:
+> 모든 Pod가 "Running" 상태가 될 때까지 기다립니다. Pod 시작에 1-2분이 소요될 수 있습니다. 다음 명령어로 상태를 확인합니다:
 >
 > ```bash
 > kubectl get pods -n amazon-cloudwatch --watch
@@ -248,7 +243,7 @@ kubectl get pods -n amazon-cloudwatch
 
 이 태스크에서는 모니터링할 샘플 애플리케이션을 배포합니다.
 
-14. 샘플 애플리케이션 Deployment를 생성합니다:
+12. 샘플 애플리케이션 Deployment를 생성합니다:
 
 ```bash
 cat > sample-app.yaml << 'EOF'
@@ -308,13 +303,13 @@ spec:
 EOF
 ```
 
-15. 애플리케이션을 배포합니다:
+13. 애플리케이션을 배포합니다:
 
 ```bash
 kubectl apply -f sample-app.yaml
 ```
 
-16. 배포 상태를 확인합니다:
+14. 배포 상태를 확인합니다:
 
 ```bash
 kubectl get deployments
@@ -327,19 +322,19 @@ kubectl get deployments
 > sample-app   3/3     3            3           30s
 > ```
 
-17. Pod 상태를 확인합니다:
+15. Pod 상태를 확인합니다:
 
 ```bash
 kubectl get pods -l app=sample-app
 ```
 
-18. Service 정보를 확인합니다:
+16. Service 정보를 확인합니다:
 
 ```bash
 kubectl get service sample-app-service
 ```
 
-19. LoadBalancer의 External IP가 할당될 때까지 기다립니다:
+17. LoadBalancer의 External IP 할당을 확인합니다:
 
 ```bash
 kubectl get service sample-app-service --watch
@@ -353,9 +348,9 @@ kubectl get service sample-app-service --watch
 > [!WARNING]
 > Classic Load Balancer는 시간당 약 $0.025가 부과됩니다. 실습 종료 후 반드시 삭제합니다.
 
-20. External IP를 메모장에 복사합니다.
+18. External IP를 메모장에 복사합니다.
 
-21. 웹 브라우저에서 External IP로 접속하여 nginx 기본 페이지를 확인합니다.
+19. 웹 브라우저에서 External IP로 접속하여 nginx 기본 페이지를 확인합니다.
 
 ✅ **태스크 완료**: 샘플 애플리케이션이 배포되었습니다.
 
@@ -375,12 +370,11 @@ kubectl get service sample-app-service --watch
 >
 > 이러한 계층적 구조를 통해 성능 문제를 빠르게 식별하고 원인을 추적할 수 있습니다.
 
-22. AWS Management Console에서 상단 검색창에 `CloudWatch`를 입력한 후 선택합니다.
-23. 왼쪽 메뉴에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
-24. **Performance monitoring** 섹션이 표시됩니다.
-25. 상단의 드롭다운에서 `Amazon EKS Clusters`를 선택합니다.
-26. **container-insights-cluster** 클러스터를 선택합니다.
-27. 대시보드에서 다음 메트릭을 확인합니다:
+20. AWS Management Console에서 상단 검색창에 `CloudWatch`를 입력한 후 선택합니다.
+21. 왼쪽 메뉴에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
+22. 상단의 드롭다운에서 `Amazon EKS Clusters`를 선택합니다.
+23. **container-insights-cluster** 클러스터를 선택합니다.
+24. 대시보드에서 다음 메트릭을 확인합니다:
 	- **CPU Utilization**: 클러스터 전체 CPU 사용률
 	- **Memory Utilization**: 클러스터 전체 메모리 사용률
 	- **Network**: 네트워크 송수신 바이트
@@ -389,20 +383,20 @@ kubectl get service sample-app-service --watch
 > [!NOTE]
 > 메트릭이 표시되기까지 5-10분이 소요될 수 있습니다. 페이지를 새로고침하여 최신 데이터를 확인합니다.
 
-28. 상단의 드롭다운을 `Amazon EKS Nodes`로 변경합니다.
-29. 개별 노드의 성능 메트릭을 확인합니다.
-30. 노드 이름을 클릭하여 상세 정보를 확인합니다.
-31. 상단의 드롭다운을 `Amazon EKS Pods`로 변경합니다.
-32. **sample-app** Pod들을 찾습니다.
-33. Pod 이름을 클릭하여 상세 메트릭을 확인합니다:
+25. 상단의 드롭다운을 `Amazon EKS Nodes`로 변경합니다.
+26. 개별 노드의 성능 메트릭을 확인합니다.
+27. 노드 이름을 클릭하여 상세 정보를 확인합니다.
+28. 상단의 드롭다운을 `Amazon EKS Pods`로 변경합니다.
+29. **sample-app** Pod들을 찾습니다.
+30. Pod 이름을 클릭하여 상세 메트릭을 확인합니다:
 	- CPU 사용률
 	- 메모리 사용률
 	- 네트워크 트래픽
 	- 디스크 I/O
 
-34. 상단의 드롭다운을 `Amazon EKS Namespaces`로 변경합니다.
-35. **default** 네임스페이스를 선택합니다.
-36. 네임스페이스 수준의 리소스 사용량을 확인합니다.
+31. 상단의 드롭다운을 `Amazon EKS Namespaces`로 변경합니다.
+32. **default** 네임스페이스를 선택합니다.
+33. 네임스페이스 수준의 리소스 사용량을 확인합니다.
 
 ✅ **태스크 완료**: Amazon CloudWatch Container Insights 대시보드를 확인했습니다.
 
@@ -422,15 +416,15 @@ kubectl get service sample-app-service --watch
 >
 > 쿼리는 초당 수백만 개의 로그 이벤트를 스캔할 수 있으며, 결과는 실시간으로 시각화됩니다.
 
-37. Amazon CloudWatch 콘솔로 이동합니다.
-38. 왼쪽 메뉴에서 **Logs** > **Logs Insights**를 선택합니다.
-39. **Select log group(s)** 드롭다운을 클릭합니다.
-40. 다음 로그 그룹들을 선택합니다:
+34. Amazon CloudWatch 콘솔로 이동합니다.
+35. 왼쪽 메뉴에서 **Logs** > **Logs Insights**를 선택합니다.
+36. **Select log group(s)** 드롭다운을 클릭합니다.
+37. 다음 로그 그룹들을 선택합니다:
 	- `/aws/containerinsights/container-insights-cluster/application`
 	- `/aws/containerinsights/container-insights-cluster/dataplane`
 	- `/aws/containerinsights/container-insights-cluster/host`
 
-41. 쿼리 에디터에 다음 쿼리를 입력합니다:
+38. 쿼리 에디터에 다음 쿼리를 입력합니다:
 
 ```text
 fields @timestamp, @message
@@ -440,14 +434,14 @@ fields @timestamp, @message
 | limit 20
 ```
 
-42. 시간 범위를 `Last 1 hour`로 설정합니다.
-43. [[Run query]] 버튼을 클릭합니다.
-44. 쿼리 결과에서 sample-app Pod의 로그를 확인합니다.
+39. 시간 범위를 `Last 1 hour`로 설정합니다.
+40. [[Run query]] 버튼을 클릭합니다.
+41. 쿼리 결과에서 sample-app Pod의 로그를 확인합니다.
 
 > [!NOTE]
 > 로그가 표시되지 않으면 시간 범위를 `Last 3 hours`로 확장한 후 페이지를 새로고침합니다.
 
-45. 다음 쿼리로 에러 로그만 필터링합니다:
+42. 다음 쿼리로 에러 로그만 필터링합니다:
 
 ```text
 fields @timestamp, @message, kubernetes.pod_name
@@ -457,9 +451,9 @@ fields @timestamp, @message, kubernetes.pod_name
 | limit 50
 ```
 
-46. [[Run query]] 버튼을 클릭합니다.
+43. [[Run query]] 버튼을 클릭합니다.
 
-47. Pod별 로그 개수를 집계하는 쿼리를 실행합니다:
+44. Pod별 로그 개수를 집계하는 쿼리를 실행합니다:
 
 ```text
 fields kubernetes.pod_name
@@ -468,11 +462,11 @@ fields kubernetes.pod_name
 | sort count() desc
 ```
 
-48. [[Run query]] 버튼을 클릭합니다.
-49. 결과를 **Visualization** 탭에서 확인합니다.
-50. **Bar** 차트를 선택하여 시각화합니다.
+45. [[Run query]] 버튼을 클릭합니다.
+46. 결과를 **Visualization** 탭에서 확인합니다.
+47. **Bar** 차트를 선택하여 시각화합니다.
 
-51. HTTP 요청 로그를 분석하는 쿼리를 실행합니다:
+48. HTTP 요청 로그를 분석하는 쿼리를 실행합니다:
 
 ```text
 fields @timestamp, @message
@@ -483,12 +477,12 @@ fields @timestamp, @message
 | sort count() desc
 ```
 
-52. [[Run query]] 버튼을 클릭합니다.
-53. HTTP 메서드별 요청 수를 확인합니다.
+49. [[Run query]] 버튼을 클릭합니다.
+50. HTTP 메서드별 요청 수를 확인합니다.
 
-54. 쿼리를 저장하려면 [[Save]] 버튼을 클릭합니다.
-55. **Query name**에 `Sample App HTTP Requests`를 입력합니다.
-56. [[Save]] 버튼을 클릭합니다.
+51. 쿼리를 저장하려면 [[Save]] 버튼을 클릭합니다.
+52. **Query name**에 `Sample App HTTP Requests`를 입력합니다.
+53. [[Save]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: Amazon CloudWatch Logs Insights로 로그를 분석했습니다.
 
@@ -508,50 +502,49 @@ fields @timestamp, @message
 >
 > 대시보드는 자동 새로고침을 지원하며, 여러 리전의 메트릭을 하나의 대시보드에 통합할 수 있습니다.
 
-57. Amazon CloudWatch 콘솔로 이동합니다.
-58. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
-59. [[Create dashboard]] 버튼을 클릭합니다.
-60. **Dashboard name**에 `Amazon EKS-Container-Insights-Dashboard`를 입력합니다.
+54. Amazon CloudWatch 콘솔로 이동합니다.
+55. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
+56. [[Create dashboard]] 버튼을 클릭합니다.
+57. **Dashboard name**에 `Amazon EKS-Container-Insights-Dashboard`를 입력합니다.
 
 > [!NOTE]
 > 대시보드 이름에 공백을 사용하지 않는 것이 권장됩니다. URL 인코딩 문제를 방지할 수 있습니다.
 
-61. [[Create dashboard]] 버튼을 클릭합니다.
-62. **Add widget** 대화상자가 표시됩니다.
-63. **Line** 위젯을 선택합니다.
-64. [[Next]] 버튼을 클릭합니다.
-65. **Metrics** 탭에서 다음을 선택합니다:
+58. [[Create dashboard]] 버튼을 클릭합니다.
+59. **Line** 위젯을 선택합니다.
+60. [[Next]] 버튼을 클릭합니다.
+61. **Metrics** 탭에서 다음을 선택합니다:
 	- **ContainerInsights** 네임스페이스를 선택합니다.
 	- **ClusterName** 차원을 선택합니다.
 	- `container-insights-cluster`를 선택합니다.
 	- `cluster_cpu_utilization` 메트릭을 체크합니다.
 	- `cluster_memory_utilization` 메트릭을 체크합니다.
 
-66. **Graphed metrics** 탭을 선택합니다.
-67. **Statistic**을 `Average`로 설정합니다.
-68. **Period**를 `5 minutes`로 설정합니다.
-69. [[Create widget]] 버튼을 클릭합니다.
+62. **Graphed metrics** 탭을 선택합니다.
+63. **Statistic**을 `Average`로 설정합니다.
+64. **Period**를 `5 minutes`로 설정합니다.
+65. [[Create widget]] 버튼을 클릭합니다.
 
-70. [[Add widget]] 버튼을 클릭하여 두 번째 위젯을 추가합니다.
-71. **Number** 위젯을 선택합니다.
-72. [[Next]] 버튼을 클릭합니다.
-73. **ContainerInsights** > **ClusterName**을 선택합니다.
-74. `cluster_number_of_running_pods` 메트릭을 선택합니다.
-75. [[Create widget]] 버튼을 클릭합니다.
+66. [[Add widget]] 버튼을 클릭하여 두 번째 위젯을 추가합니다.
+67. **Number** 위젯을 선택합니다.
+68. [[Next]] 버튼을 클릭합니다.
+69. **ContainerInsights** > **ClusterName**을 선택합니다.
+70. `cluster_number_of_running_pods` 메트릭을 선택합니다.
+71. [[Create widget]] 버튼을 클릭합니다.
 
-76. [[Add widget]] 버튼을 클릭하여 세 번째 위젯을 추가합니다.
-77. **Line** 위젯을 선택합니다.
-78. [[Next]] 버튼을 클릭합니다.
-79. **ContainerInsights** > **ClusterName, Namespace**를 선택합니다.
-80. `namespace_number_of_running_pods` 메트릭을 선택합니다.
-81. **default** 네임스페이스를 선택합니다.
-82. [[Create widget]] 버튼을 클릭합니다.
+72. [[Add widget]] 버튼을 클릭하여 세 번째 위젯을 추가합니다.
+73. **Line** 위젯을 선택합니다.
+74. [[Next]] 버튼을 클릭합니다.
+75. **ContainerInsights** > **ClusterName, Namespace**를 선택합니다.
+76. `namespace_number_of_running_pods` 메트릭을 선택합니다.
+77. **default** 네임스페이스를 선택합니다.
+78. [[Create widget]] 버튼을 클릭합니다.
 
-83. [[Add widget]] 버튼을 클릭하여 네 번째 위젯을 추가합니다.
-84. **Logs table** 위젯을 선택합니다.
-85. [[Next]] 버튼을 클릭합니다.
-86. **Log groups**에서 `/aws/containerinsights/container-insights-cluster/application`을 선택합니다.
-87. 다음 쿼리를 입력합니다:
+79. [[Add widget]] 버튼을 클릭하여 네 번째 위젯을 추가합니다.
+80. **Logs table** 위젯을 선택합니다.
+81. [[Next]] 버튼을 클릭합니다.
+82. **Log groups**에서 `/aws/containerinsights/container-insights-cluster/application`을 선택합니다.
+83. 다음 쿼리를 입력합니다:
 
 ```text
 fields @timestamp, kubernetes.pod_name, @message
@@ -560,10 +553,10 @@ fields @timestamp, kubernetes.pod_name, @message
 | limit 10
 ```
 
-88. [[Create widget]] 버튼을 클릭합니다.
+84. [[Create widget]] 버튼을 클릭합니다.
 
-89. 위젯들을 드래그하여 원하는 레이아웃으로 배치합니다.
-90. [[Save dashboard]] 버튼을 클릭합니다.
+85. 위젯들을 드래그하여 원하는 레이아웃으로 배치합니다.
+86. [[Save dashboard]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: 커스텀 대시보드가 생성되었습니다.
 
@@ -583,26 +576,26 @@ fields @timestamp, kubernetes.pod_name, @message
 >
 > **Amazon SNS 통합**: 알람 상태 변경 시 Amazon SNS 토픽으로 알림을 전송하여 이메일, SMS, AWS Lambda 함수 등 다양한 채널로 통지할 수 있습니다.
 
-91. Amazon CloudWatch 콘솔로 이동합니다.
-92. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
-93. [[Create alarm]] 버튼을 클릭합니다.
+87. Amazon CloudWatch 콘솔로 이동합니다.
+88. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
+89. [[Create alarm]] 버튼을 클릭합니다.
+90. [[Select metric]] 버튼을 클릭합니다.
+91. **ContainerInsights** 네임스페이스를 선택합니다.
+92. **ClusterName** 차원을 선택합니다.
+93. `cluster_cpu_utilization` 메트릭을 찾아 체크합니다.
 94. [[Select metric]] 버튼을 클릭합니다.
-95. **ContainerInsights** 네임스페이스를 선택합니다.
-96. **ClusterName** 차원을 선택합니다.
-97. `cluster_cpu_utilization` 메트릭을 찾아 체크합니다.
-98. [[Select metric]] 버튼을 클릭합니다.
-99. **Metric** 섹션에서 다음을 설정합니다:
+95. **Metric** 섹션에서 다음을 설정합니다:
 	- **Statistic**: `Average`
 	- **Period**: `5 minutes`
 
-100. **Conditions** 섹션에서 다음을 설정합니다:
+96. **Conditions** 섹션에서 다음을 설정합니다:
 	- **Threshold type**: `Static`
 	- **Whenever cluster_cpu_utilization is...**: `Greater`
 	- **than...**: `70`
 
-101. [[Next]] 버튼을 클릭합니다.
+97. [[Next]] 버튼을 클릭합니다.
 
-102. **Notification** 섹션에서 다음을 설정합니다:
+98. **Notification** 섹션에서 다음을 설정합니다:
 	- **Alarm state trigger**: `In alarm`
 	- **Select an Amazon SNS topic**: `Create new topic`
 	- **Create a new topic...**: `Amazon EKS-High-CPU-Alert`
@@ -611,55 +604,55 @@ fields @timestamp, kubernetes.pod_name, @message
 > [!NOTE]
 > Amazon SNS 토픽 이름에 공백을 사용하지 않는 것이 권장됩니다. ARN 참조 시 문제를 방지할 수 있습니다.
 
-103. [[Create topic]] 버튼을 클릭합니다.
+99. [[Create topic]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 입력한 이메일 주소로 확인 메일이 발송됩니다. 이메일을 열고 **Confirm subscription** 링크를 클릭하여 구독을 확인합니다.
 
-104. [[Next]] 버튼을 클릭합니다.
-105. **Alarm name**에 `Amazon EKS-Cluster-High-CPU`를 입력합니다.
-106. **Alarm description**에 `Alert when Amazon EKS cluster CPU utilization exceeds 70%`를 입력합니다.
-107. [[Next]] 버튼을 클릭합니다.
-108. 설정을 검토합니다.
-109. [[Create alarm]] 버튼을 클릭합니다.
+100. [[Next]] 버튼을 클릭합니다.
+101. **Alarm name**에 `Amazon EKS-Cluster-High-CPU`를 입력합니다.
+102. **Alarm description**에 `Alert when Amazon EKS cluster CPU utilization exceeds 70%`를 입력합니다.
+103. [[Next]] 버튼을 클릭합니다.
+104. 설정을 검토합니다.
+105. [[Create alarm]] 버튼을 클릭합니다.
 
-110. 두 번째 알람을 생성하기 위해 [[Create alarm]] 버튼을 다시 클릭합니다.
-111. [[Select metric]] 버튼을 클릭합니다.
-112. **ContainerInsights** > **ClusterName**을 선택합니다.
-113. `cluster_memory_utilization` 메트릭을 선택합니다.
-114. [[Select metric]] 버튼을 클릭합니다.
-115. **Conditions** 섹션에서 다음을 설정합니다:
+106. 두 번째 알람을 생성하기 위해 [[Create alarm]] 버튼을 다시 클릭합니다.
+107. [[Select metric]] 버튼을 클릭합니다.
+108. **ContainerInsights** > **ClusterName**을 선택합니다.
+109. `cluster_memory_utilization` 메트릭을 선택합니다.
+110. [[Select metric]] 버튼을 클릭합니다.
+111. **Conditions** 섹션에서 다음을 설정합니다:
 	- **Threshold type**: `Static`
 	- **Whenever cluster_memory_utilization is...**: `Greater`
 	- **than...**: `80`
 
-116. [[Next]] 버튼을 클릭합니다.
-117. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
-118. [[Next]] 버튼을 클릭합니다.
-119. **Alarm name**에 `Amazon EKS-Cluster-High-Memory`를 입력합니다.
-120. **Alarm description**에 `Alert when Amazon EKS cluster memory utilization exceeds 80%`를 입력합니다.
-121. [[Next]] 버튼을 클릭합니다.
-122. [[Create alarm]] 버튼을 클릭합니다.
+112. [[Next]] 버튼을 클릭합니다.
+113. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
+114. [[Next]] 버튼을 클릭합니다.
+115. **Alarm name**에 `Amazon EKS-Cluster-High-Memory`를 입력합니다.
+116. **Alarm description**에 `Alert when Amazon EKS cluster memory utilization exceeds 80%`를 입력합니다.
+117. [[Next]] 버튼을 클릭합니다.
+118. [[Create alarm]] 버튼을 클릭합니다.
 
-123. 세 번째 알람을 생성하기 위해 [[Create alarm]] 버튼을 다시 클릭합니다.
-124. [[Select metric]] 버튼을 클릭합니다.
-125. **ContainerInsights** > **ClusterName**을 선택합니다.
-126. `cluster_failed_node_count` 메트릭을 선택합니다.
-127. [[Select metric]] 버튼을 클릭합니다.
-128. **Conditions** 섹션에서 다음을 설정합니다:
+119. 세 번째 알람을 생성하기 위해 [[Create alarm]] 버튼을 다시 클릭합니다.
+120. [[Select metric]] 버튼을 클릭합니다.
+121. **ContainerInsights** > **ClusterName**을 선택합니다.
+122. `cluster_failed_node_count` 메트릭을 선택합니다.
+123. [[Select metric]] 버튼을 클릭합니다.
+124. **Conditions** 섹션에서 다음을 설정합니다:
 	- **Threshold type**: `Static`
 	- **Whenever cluster_failed_node_count is...**: `Greater`
 	- **than...**: `0`
 
-129. [[Next]] 버튼을 클릭합니다.
-130. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
-131. [[Next]] 버튼을 클릭합니다.
-132. **Alarm name**에 `Amazon EKS-Cluster-Failed-Nodes`를 입력합니다.
-133. **Alarm description**에 `Alert when any node in the cluster fails`를 입력합니다.
-134. [[Next]] 버튼을 클릭합니다.
-135. [[Create alarm]] 버튼을 클릭합니다.
+125. [[Next]] 버튼을 클릭합니다.
+126. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
+127. [[Next]] 버튼을 클릭합니다.
+128. **Alarm name**에 `Amazon EKS-Cluster-Failed-Nodes`를 입력합니다.
+129. **Alarm description**에 `Alert when any node in the cluster fails`를 입력합니다.
+130. [[Next]] 버튼을 클릭합니다.
+131. [[Create alarm]] 버튼을 클릭합니다.
 
-136. **All alarms** 페이지에서 생성된 3개의 알람을 확인합니다.
+132. **All alarms** 페이지에서 생성된 3개의 알람을 확인합니다.
 
 ✅ **태스크 완료**: Amazon CloudWatch 알람이 설정되었습니다.
 
@@ -685,18 +678,18 @@ fields @timestamp, kubernetes.pod_name, @message
 >
 > HPA는 트래픽 변화에 빠르게 대응하고, VPA는 리소스 낭비를 최소화하며, 두 가지를 함께 사용하면 최적의 성능과 비용 효율을 달성할 수 있습니다.
 
-137. Amazon CloudWatch 콘솔에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
-138. 드롭다운에서 `Amazon EKS Pods`를 선택합니다.
-139. **sample-app** Pod들을 확인합니다.
-140. CPU 사용률이 가장 높은 Pod를 찾습니다.
-141. Pod 이름을 클릭하여 상세 메트릭을 확인합니다.
-142. **Performance** 탭에서 다음을 분석합니다:
+133. Amazon CloudWatch 콘솔에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
+134. 드롭다운에서 `Amazon EKS Pods`를 선택합니다.
+135. **sample-app** Pod들을 확인합니다.
+136. CPU 사용률이 가장 높은 Pod를 찾습니다.
+137. Pod 이름을 클릭하여 상세 메트릭을 확인합니다.
+138. **Performance** 탭에서 다음을 분석합니다:
 	- CPU 사용 패턴
 	- 메모리 사용 패턴
 	- 네트워크 트래픽 패턴
 
-143. CloudShell로 이동합니다.
-144. Pod의 리소스 사용량을 실시간으로 확인합니다:
+139. CloudShell로 이동합니다.
+140. Pod의 리소스 사용량을 실시간으로 확인합니다:
 
 ```bash
 kubectl top pods -l app=sample-app
@@ -711,19 +704,19 @@ kubectl top pods -l app=sample-app
 > sample-app-xxxxx-wwwww        52m          34Mi
 > ```
 
-145. 노드의 리소스 사용량을 확인합니다:
+141. 노드의 리소스 사용량을 확인합니다:
 
 ```bash
 kubectl top nodes
 ```
 
-146. Pod의 리소스 제한을 확인합니다:
+142. Pod의 리소스 제한을 확인합니다:
 
 ```bash
 kubectl describe pod -l app=sample-app | grep -A 5 "Limits:"
 ```
 
-147. 리소스 사용량이 제한에 가까운 경우 Deployment를 업데이트합니다:
+143. 리소스 사용량이 제한에 가까운 경우 Deployment를 업데이트합니다:
 
 ```bash
 kubectl set resources deployment sample-app \
@@ -731,7 +724,7 @@ kubectl set resources deployment sample-app \
   --requests=cpu=500m,memory=128Mi
 ```
 
-148. 업데이트된 Pod를 확인합니다:
+144. 업데이트된 Pod를 확인합니다:
 
 ```bash
 kubectl get pods -l app=sample-app --watch
@@ -751,7 +744,7 @@ kubectl get pods -l app=sample-app --watch
 > - **모니터링 기간**: 최소 1주일 이상의 데이터를 수집하여 패턴 분석
 > - **여유 공간**: 피크 시간대를 고려하여 20-30% 여유 확보
 
-149. Horizontal Pod Autoscaler를 생성합니다:
+145. Horizontal Pod Autoscaler를 생성합니다:
 
 ```bash
 kubectl autoscale deployment sample-app \
@@ -760,7 +753,7 @@ kubectl autoscale deployment sample-app \
   --max=10
 ```
 
-150. HPA 상태를 확인합니다:
+146. HPA 상태를 확인합니다:
 
 ```bash
 kubectl get hpa
@@ -773,8 +766,8 @@ kubectl get hpa
 > sample-app   Deployment/sample-app   25%/50%   2         10        3          30s
 > ```
 
-151. Amazon CloudWatch Container Insights로 이동합니다.
-152. 5-10분 후 메트릭 변화를 확인합니다.
+147. Amazon CloudWatch Container Insights로 이동합니다.
+148. 5-10분 후 메트릭 변화를 확인합니다.
 
 > [!NOTE]
 > HPA는 CPU 사용률이 목표값(50%)을 초과할 때 Pod 수를 자동으로 증가시킵니다.
@@ -814,14 +807,16 @@ kubectl get hpa
 	- **Tag key**: `Week`
 	- **Tag value**: `13-3`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. Amazon EKS 클러스터는 eksctl로 삭제하는 것이 권장됩니다.
 
 ### 방법 2: eksctl로 클러스터 삭제 (권장)
 
-8. CloudShell에서 샘플 애플리케이션을 삭제합니다:
+7. CloudShell에서 샘플 애플리케이션을 삭제합니다:
 
 ```bash
 kubectl delete -f sample-app.yaml
@@ -830,13 +825,13 @@ kubectl delete -f sample-app.yaml
 > [!NOTE]
 > LoadBalancer 서비스가 삭제되면서 Classic Load Balancer도 자동으로 삭제됩니다. 2-3분이 소요될 수 있습니다.
 
-9. HPA를 삭제합니다:
+8. HPA를 삭제합니다:
 
 ```bash
 kubectl delete hpa sample-app
 ```
 
-10. Amazon EKS 클러스터를 삭제합니다:
+9. Amazon EKS 클러스터를 삭제합니다:
 
 ```bash
 eksctl delete cluster --name container-insights-cluster --region ap-northeast-2
@@ -859,7 +854,7 @@ eksctl delete cluster --name container-insights-cluster --region ap-northeast-2
 >
 > 삭제가 완료되지 않은 상태에서 CloudShell을 종료하면 리소스가 남아 비용이 계속 발생할 수 있습니다.
 
-11. 삭제 완료를 확인합니다:
+10. 삭제 완료를 확인합니다:
 
 ```bash
 eksctl get cluster --name container-insights-cluster --region ap-northeast-2
@@ -875,63 +870,62 @@ eksctl get cluster --name container-insights-cluster --region ap-northeast-2
 
 eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 
-12. Amazon EC2 콘솔로 이동합니다.
-13. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
-14. `sample-app-service`와 연결된 Load Balancer를 선택합니다.
-15. **Actions** > `Delete load balancer`를 선택합니다.
-16. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+11. Amazon EC2 콘솔로 이동합니다.
+12. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
+13. `sample-app-service`와 연결된 Load Balancer를 선택합니다.
+14. **Actions** > `Delete load balancer`를 선택합니다.
+15. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
-17. Amazon EKS 콘솔로 이동합니다.
-18. `container-insights-cluster` 클러스터를 선택합니다.
-19. [[Delete cluster]] 버튼을 클릭합니다.
-20. 확인 창에서 클러스터 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
-21. 클러스터 삭제가 완료될 때까지 기다립니다.
+16. Amazon EKS 콘솔로 이동합니다.
+17. `container-insights-cluster` 클러스터를 선택합니다.
+18. [[Delete cluster]] 버튼을 클릭합니다.
+19. 확인 창에서 클러스터 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 클러스터 삭제에 10-15분이 소요됩니다.
+> 클러스터 삭제에 10-15분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 
-22. Amazon VPC 콘솔로 이동합니다.
-23. 왼쪽 메뉴에서 **NAT Gateways**를 선택합니다.
-24. `eksctl-container-insights-cluster`로 시작하는 NAT Gateway를 선택합니다.
-25. **Actions** > `Delete NAT gateway`를 선택합니다.
-26. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+20. Amazon VPC 콘솔로 이동합니다.
+21. 왼쪽 메뉴에서 **NAT Gateways**를 선택합니다.
+22. `eksctl-container-insights-cluster`로 시작하는 NAT Gateway를 선택합니다.
+23. **Actions** > `Delete NAT gateway`를 선택합니다.
+24. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
-27. 왼쪽 메뉴에서 **Elastic IPs**를 선택합니다.
-28. NAT Gateway와 연결되었던 Elastic IP를 선택합니다.
-29. **Actions** > `Release Elastic IP addresses`를 선택합니다.
-30. 확인 창에서 [[Release]] 버튼을 클릭합니다.
+25. 왼쪽 메뉴에서 **Elastic IPs**를 선택합니다.
+26. NAT Gateway와 연결되었던 Elastic IP를 선택합니다.
+27. **Actions** > `Release Elastic IP addresses`를 선택합니다.
+28. 확인 창에서 [[Release]] 버튼을 클릭합니다.
 
-31. Amazon AWS CloudFormation 콘솔로 이동합니다.
-32. `eksctl-container-insights-cluster-cluster` 스택을 선택합니다.
-33. [[Delete]] 버튼을 클릭합니다.
-34. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+29. Amazon AWS CloudFormation 콘솔로 이동합니다.
+30. `eksctl-container-insights-cluster-cluster` 스택을 선택합니다.
+31. [[Delete]] 버튼을 클릭합니다.
+32. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ### Amazon CloudWatch 리소스 정리
 
-35. Amazon CloudWatch 콘솔로 이동합니다.
-36. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
-37. 생성한 3개의 알람을 선택합니다:
+33. Amazon CloudWatch 콘솔로 이동합니다.
+34. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
+35. 생성한 3개의 알람을 선택합니다:
 	- `Amazon EKS-Cluster-High-CPU`
 	- `Amazon EKS-Cluster-High-Memory`
 	- `Amazon EKS-Cluster-Failed-Nodes`
-38. **Actions** > `Delete`를 선택합니다.
-39. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+36. **Actions** > `Delete`를 선택합니다.
+37. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
-40. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
-41. `Amazon EKS-Container-Insights-Dashboard`를 선택합니다.
-42. [[Delete]] 버튼을 클릭합니다.
-43. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+38. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
+39. `Amazon EKS-Container-Insights-Dashboard`를 선택합니다.
+40. [[Delete]] 버튼을 클릭합니다.
+41. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
-44. AWS Management Console 상단 검색창에 `SNS`을 입력하고 선택합니다.
-45. 왼쪽 메뉴에서 **Topics**를 선택합니다.
-46. `Amazon EKS-High-CPU-Alert` 토픽을 선택합니다.
+42. AWS Management Console 상단 검색창에 `SNS`을 입력하고 선택합니다.
+43. 왼쪽 메뉴에서 **Topics**를 선택합니다.
+44. `Amazon EKS-High-CPU-Alert` 토픽을 선택합니다.
+45. [[Delete]] 버튼을 클릭합니다.
+46. 확인 창에서 `delete me`를 입력합니다.
 47. [[Delete]] 버튼을 클릭합니다.
-48. 확인 창에서 `delete me`를 입력합니다.
-49. [[Delete]] 버튼을 클릭합니다.
 
-50. Amazon CloudWatch 콘솔로 이동합니다.
-51. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-52. 다음 로그 그룹들을 선택합니다:
+48. Amazon CloudWatch 콘솔로 이동합니다.
+49. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+50. 다음 로그 그룹들을 선택합니다:
 	- `/aws/containerinsights/container-insights-cluster/application`
 	- `/aws/containerinsights/container-insights-cluster/dataplane`
 	- `/aws/containerinsights/container-insights-cluster/host`
@@ -941,8 +935,8 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 > [!NOTE]
 > 로그 그룹이 표시되지 않으면 이미 클러스터 삭제 시 자동으로 삭제된 것입니다.
 
-53. **Actions** > `Delete log group(s)`를 선택합니다.
-54. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+51. **Actions** > `Delete log group(s)`를 선택합니다.
+52. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
 > Amazon CloudWatch Logs는 스토리지 비용(GB당 월 $0.50)이 부과됩니다. 로그 그룹을 삭제하지 않으면 계속 비용이 발생합니다.

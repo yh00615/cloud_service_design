@@ -850,6 +850,19 @@ AWS CloudFormation 스택 삭제 전에 반드시 수행해야 합니다:
 47. `quicktable-processed-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 48. `quicktable-query-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 
+#### 5단계: Amazon CloudWatch Log Group 삭제
+
+49. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+50. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+51. 검색창에 `week11-2-SampleDataUploader`를 입력합니다.
+52. `/aws/lambda/week11-2-SampleDataUploader-{StudentId}` 로그 그룹을 선택합니다.
+53. **Actions** > `Delete log group(s)`를 선택합니다.
+54. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+> [!WARNING]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+> 로그 그룹을 삭제하지 않으면 스토리지 비용(GB당 월 $0.50)이 계속 부과됩니다.
+
 > [!TROUBLESHOOTING]
 > **문제**: AWS CloudFormation 스택 삭제가 실패합니다
 >

@@ -710,6 +710,21 @@ DROP TABLE IF EXISTS processed_transactions;
 47. `week11-scripts-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 48. `week11-temp-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 
+#### 8단계: Amazon CloudWatch Log Group 삭제
+
+49. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+50. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+51. 검색창에 `week11-pipeline-trigger`를 입력합니다.
+52. `/aws/lambda/week11-pipeline-trigger-{StudentId}` 로그 그룹을 선택합니다.
+53. **Actions** > `Delete log group(s)`를 선택합니다.
+54. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+55. 검색창에 `week11-3-data-pipeline-lab-SampleDataUploader`를 입력합니다.
+56. 해당 로그 그룹이 존재하면 선택하고 동일하게 삭제합니다.
+
+> [!WARNING]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+> 로그 그룹을 삭제하지 않으면 스토리지 비용(GB당 월 $0.50)이 계속 부과됩니다.
+
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
