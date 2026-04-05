@@ -50,7 +50,11 @@ prerequisites:
 	- `AWS EC2 SecurityGroup`
 	- `AWS IAM User`
 	- `AWS IAM Role`
+	- `AWS Config ResourceCompliance`
 6. **Recording frequency**에서 `Continuous recording`을 선택합니다.
+
+> [!NOTE]
+> `AWS::Config::ResourceCompliance`는 리소스의 규정 준수 상태 변화를 기록하는 리소스 타입입니다. 이 타입을 추가하지 않으면 태스크 5에서 리소스 Timeline의 Compliance 이벤트가 기록되지 않아 "Stopped recording changes to compliance events" 메시지가 표시됩니다. 규정 준수 상태 변화(Compliant ↔ Noncompliant)를 Timeline에서 추적하려면 반드시 포함해야 합니다.
 
 > [!NOTE]
 > `Continuous recording`은 리소스 설정이 변경될 때마다 즉시 기록합니다. `Daily recording`은 하루에 한 번만 기록하므로 비용은 절감되지만 변경 감지가 지연됩니다.
@@ -290,7 +294,7 @@ AWS Config는 선택한 규칙에 따라 적절한 Trigger type을 자동으로 
 63. `Noncompliant` 상태인 규칙을 클릭합니다.
 64. **Resources in scope** 섹션에서 위반 리소스를 확인합니다.
 65. 위반 리소스를 클릭하여 상세 정보를 확인합니다.
-66. **Compliance timeline**에서 언제부터 위반되었는지 확인합니다.
+66. **Compliance timeline**에서 언제부터 위반되었는지 확인합니다. Noncompliant로 변경된 시점의 이벤트가 표시되며, 어떤 규칙에 의해 위반이 감지되었는지 확인할 수 있습니다.
 67. **Configuration** 탭에서 현재 설정을 확인합니다.
 
 ### 태스크 5.2: 위반 리소스 수정
