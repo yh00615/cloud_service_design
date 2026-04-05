@@ -15,12 +15,12 @@ declare global {
 if (typeof window !== 'undefined') {
     window.Buffer = BufferPolyfill
     window.global = window
-        ; (globalThis as any).Buffer = BufferPolyfill
+        ; (globalThis as unknown as Record<string, unknown>).Buffer = BufferPolyfill
 }
 
 // Node.js 스타일 global 객체 설정
-if (typeof (globalThis as any)['global'] === 'undefined') {
-    (globalThis as any)['global'] = globalThis
+if (typeof (globalThis as unknown as Record<string, unknown>)['global'] === 'undefined') {
+    (globalThis as unknown as Record<string, unknown>)['global'] = globalThis
 }
 
 export { BufferPolyfill as Buffer }

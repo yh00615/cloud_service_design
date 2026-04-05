@@ -2,13 +2,15 @@ import * as React from "react";
 import Button from "@cloudscape-design/components/button";
 import './AWSButton.css'
 
+type ButtonIconName = React.ComponentProps<typeof Button>['iconName'];
+
 interface AWSButtonProps {
     children: React.ReactNode;
     variant?: 'primary' | 'normal' | 'link';
     size?: 'small' | 'normal' | 'large';
     disabled?: boolean;
     onClick?: () => void;
-    iconName?: 'external' | 'status-positive' | 'status-negative';
+    iconName?: ButtonIconName;
     href?: string;
     download?: string;
 }
@@ -44,7 +46,7 @@ export const AWSButton: React.FC<AWSButtonProps> = ({
             variant={variant}
             disabled={disabled}
             onClick={onClick}
-            iconName={iconName as any}
+            iconName={iconName}
             href={href}
             download={download}
             className={buttonClass}

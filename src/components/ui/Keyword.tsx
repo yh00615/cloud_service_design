@@ -17,10 +17,13 @@ export const Keyword: React.FC<KeywordProps> = ({
     ...props
 }) => {
     // children에서 실제 텍스트 추출
-    const extractText = (node: any): string => {
+    const extractText = (node: React.ReactNode): string => {
         if (typeof node === 'string') return node
         if (Array.isArray(node)) return node.map(extractText).join('')
-        if (node?.props?.children) return extractText(node.props.children)
+        if (node != null && typeof node === 'object' && 'props' in node) {
+            const el = node as React.ReactElement<{ children?: React.ReactNode }>
+            if (el.props?.children) return extractText(el.props.children)
+        }
         return ''
     }
 

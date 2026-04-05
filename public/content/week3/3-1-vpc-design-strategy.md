@@ -126,13 +126,12 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 27. 페이지를 새로고침하여 최신 상태를 확인합니다.
 28. 페이지 상단의 **Status** 필드를 확인합니다.
-29. **Status**가 "**CREATE_COMPLETE**"로 변경될 때까지 27-28단계를 반복합니다.
 
 > [!NOTE]
-> 페이지 상단의 **Status** 필드는 전체 스택의 상태를 보여줍니다. "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경되면 모든 리소스가 성공적으로 생성된 것입니다. 만약 "CREATE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인합니다.
+> 페이지 상단의 **Status** 필드는 전체 스택의 상태를 보여줍니다. **Status**가 "**CREATE_COMPLETE**"로 변경될 때까지 페이지를 새로고침하며 27-28단계를 반복합니다. "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경되면 모든 리소스가 성공적으로 생성된 것입니다. 만약 "CREATE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인합니다.
 
-30. **Outputs** 탭을 선택합니다.
-31. 다음 5개의 출력값을 복사하여 메모장에 저장합니다:
+29. **Outputs** 탭을 선택합니다.
+30. 다음 5개의 출력값을 복사하여 메모장에 저장합니다:
 	- `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0) - 태스크 1-2에서 사용
 	- `PrivateSubnetAId`: 프라이빗 서브넷 A ID (예: subnet-0123456789abcdef0) - 태스크 1에서 사용
 	- `PrivateRouteTableAId`: 프라이빗 라우팅 테이블 A ID (예: rtb-0123456789abcdef0) - 태스크 2에서 사용
@@ -153,37 +152,37 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 ### 태스크 1.1: SSM Interface Endpoint 생성
 
-32. AWS Management Console에 로그인한 후 상단 검색창에 `VPC`을 입력하고 선택합니다.
-33. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
-34. [[Create endpoint]] 버튼을 클릭합니다.
-35. **Name tag**에 `week3-1-ssm-endpoint`를 입력합니다.
-36. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
-37. **Services** 검색창에 `ssm`을 입력합니다.
-38. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.ssm`이고 **Type**이 `Interface`인 항목을 선택합니다.
+31. AWS Management Console에 로그인한 후 상단 검색창에 `VPC`을 입력하고 선택합니다.
+32. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
+33. [[Create endpoint]] 버튼을 클릭합니다.
+34. **Name tag**에 `week3-1-ssm-endpoint`를 입력합니다.
+35. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
+36. **Services** 검색창에 `ssm`을 입력합니다.
+37. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.ssm`이고 **Type**이 `Interface`인 항목을 선택합니다.
 
 > [!NOTE]
 > SSM Interface Endpoint는 AWS Systems Manager 서비스에 접근하기 위한 엔드포인트입니다. Session Manager를 사용하려면 이 엔드포인트가 필수입니다.
 
-39. **Amazon VPC**에서 메모장에 저장한 VpcId를 선택합니다.
-40. **Subnets** 섹션으로 스크롤합니다.
-41. **Availability Zone**에서 `ap-northeast-2a`를 선택합니다.
-42. **Subnet ID**에서 메모장에 저장한 `PrivateSubnetAId`를 선택합니다.
+38. **Amazon VPC**에서 메모장에 저장한 VpcId를 선택합니다.
+39. **Subnets** 섹션으로 스크롤합니다.
+40. **Availability Zone**에서 `ap-northeast-2a`를 선택합니다.
+41. **Subnet ID**에서 메모장에 저장한 `PrivateSubnetAId`를 선택합니다.
 
 > [!NOTE]
 > Interface Endpoint는 선택한 서브넷에 ENI(Elastic Network Interface)를 생성합니다. 프라이빗 서브넷에 생성하여 인터넷을 거치지 않고 AWS 서비스에 접근합니다.
 
-43. **Security groups** 섹션으로 스크롤합니다.
-44. 기본 보안 그룹을 제거합니다.
-45. 보안 그룹 검색창에 `week3-1`을 입력합니다.
-46. `week3-1-endpoint-sg`를 선택합니다.
+42. **Security groups** 섹션으로 스크롤합니다.
+43. 기본 보안 그룹을 제거합니다.
+44. 보안 그룹 검색창에 `week3-1`을 입력합니다.
+45. `week3-1-endpoint-sg`를 선택합니다.
 
 > [!NOTE]
 > AWS CloudFormation이 생성한 보안 그룹은 HTTPS(443 포트) 인바운드 트래픽을 허용합니다. Interface Endpoint는 HTTPS를 통해 통신합니다.
 
-47. **Policy** 섹션으로 스크롤합니다.
-48. **Full access**를 선택한 상태로 유지합니다.
-49. **Tags** 섹션으로 스크롤합니다.
-50. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+46. **Policy** 섹션으로 스크롤합니다.
+47. **Full access**를 선택한 상태로 유지합니다.
+48. **Tags** 섹션으로 스크롤합니다.
+49. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -191,12 +190,11 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 | `Week`      | `3-1`     |
 | `CreatedBy` | `Student` |
 
-51. [[Create endpoint]] 버튼을 클릭합니다.
-52. Endpoint 목록 페이지로 이동합니다.
-53. 생성한 `week3-1-ssm-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다.
+50. [[Create endpoint]] 버튼을 클릭합니다.
+51. Endpoint 목록 페이지로 이동합니다.
 
 > [!NOTE]
-> Interface Endpoint 생성은 일반적으로 2-3분이 소요됩니다. 페이지를 새로고침하여 상태를 확인합니다.
+> 생성한 `week3-1-ssm-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다. Interface Endpoint 생성은 일반적으로 2-3분이 소요됩니다. 페이지를 새로고침하여 상태를 확인합니다.
 
 ✅ **하위 태스크 완료**: SSM Interface Endpoint가 생성되었습니다.
 
@@ -243,36 +241,36 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 > [!NOTE]
 > Gateway Endpoint는 무료이며, 라우팅 테이블을 통해 트래픽을 라우팅합니다. Interface Endpoint와 달리 시간당 요금이 부과되지 않습니다.
 
-54. AWS Management Console에 로그인한 후 상단 검색창에 `VPC`을 입력하고 선택합니다.
-55. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
-56. [[Create endpoint]] 버튼을 클릭합니다.
-57. **Name tag**에 `week3-1-s3-endpoint`를 입력합니다.
-58. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
-59. **Services** 검색창에 `s3`를 입력합니다.
-60. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.s3`이고 **Type**이 `Gateway`인 항목을 선택합니다.
+52. AWS Management Console에 로그인한 후 상단 검색창에 `VPC`을 입력하고 선택합니다.
+53. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
+54. [[Create endpoint]] 버튼을 클릭합니다.
+55. **Name tag**에 `week3-1-s3-endpoint`를 입력합니다.
+56. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
+57. **Services** 검색창에 `s3`를 입력합니다.
+58. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.s3`이고 **Type**이 `Gateway`인 항목을 선택합니다.
 
 > [!NOTE]
 > Amazon S3는 Gateway Endpoint와 Interface Endpoint를 모두 지원합니다. Gateway Endpoint는 무료이므로 비용 효율적입니다.
 
-61. **Amazon VPC**에서 메모장에 저장한 VpcId를 선택합니다.
+59. **Amazon VPC**에서 메모장에 저장한 VpcId를 선택합니다.
 
 > [!NOTE]
 > Amazon VPC 드롭다운에서 Amazon VPC ID로 검색하면 쉽게 찾을 수 있습니다.
 
-62. **Route tables** 섹션으로 스크롤합니다.
-63. 메모장에 저장한 `PrivateRouteTableAId`에 해당하는 라우팅 테이블을 체크합니다.
+60. **Route tables** 섹션으로 스크롤합니다.
+61. 메모장에 저장한 `PrivateRouteTableAId`에 해당하는 라우팅 테이블을 체크합니다.
 
 > [!NOTE]
 > 라우팅 테이블 이름에 "Private"가 포함되어 있는지 확인합니다. Gateway Endpoint는 선택한 라우팅 테이블에 자동으로 라우팅 규칙을 추가합니다.
 
-64. **Policy** 섹션으로 스크롤합니다.
-65. **Full access**를 선택한 상태로 유지합니다.
+62. **Policy** 섹션으로 스크롤합니다.
+63. **Full access**를 선택한 상태로 유지합니다.
 
 > [!NOTE]
 > Full access 정책은 모든 Amazon S3 작업을 허용합니다. 프로덕션 환경에서는 특정 버킷만 접근하도록 제한하는 것이 좋습니다.
 
-66. **Tags** 섹션으로 스크롤합니다.
-67. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+64. **Tags** 섹션으로 스크롤합니다.
+65. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -280,12 +278,11 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 | `Week`      | `3-1`     |
 | `CreatedBy` | `Student` |
 
-68. [[Create endpoint]] 버튼을 클릭합니다.
-69. Endpoint 목록 페이지로 이동합니다.
-70. 생성한 `week3-1-s3-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다.
+66. [[Create endpoint]] 버튼을 클릭합니다.
+67. Endpoint 목록 페이지로 이동합니다.
 
 > [!NOTE]
-> Gateway Endpoint 생성은 일반적으로 1-2분 내에 완료됩니다. 페이지를 새로고침하여 상태를 확인합니다.
+> 생성한 `week3-1-s3-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다. Gateway Endpoint 생성은 일반적으로 1-2분 내에 완료됩니다. 페이지를 새로고침하여 상태를 확인합니다.
 
 ✅ **태스크 완료**: Amazon S3 Gateway Endpoint가 생성되었습니다.
 
@@ -293,9 +290,9 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 이 태스크에서는 AWS 콘솔에서 Interface Endpoint와 Gateway Endpoint의 차이점을 직접 확인합니다.
 
-71. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
-72. Endpoint 목록에서 `week3-1-ssm-endpoint` (Interface Endpoint)를 클릭합니다.
-73. **Details** 탭에서 다음 정보를 확인합니다:
+68. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
+69. Endpoint 목록에서 `week3-1-ssm-endpoint` (Interface Endpoint)를 클릭합니다.
+70. **Details** 탭에서 다음 정보를 확인합니다:
 	- **Type**: Interface
 	- **Subnets**: 선택한 서브넷 표시
 	- **Network interfaces**: ENI ID 표시 (eni-로 시작)
@@ -304,9 +301,9 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 > [!NOTE]
 > Interface Endpoint는 ENI(Elastic Network Interface)를 생성하여 프라이빗 IP 주소를 할당받습니다. 이 IP 주소를 통해 AWS 서비스에 접근합니다.
 
-74. 왼쪽 메뉴에서 **Endpoints**를 선택하여 목록으로 이동합니다.
-75. `week3-1-s3-endpoint` (Gateway Endpoint)를 클릭합니다.
-76. **Details** 탭에서 다음 정보를 확인합니다:
+71. 왼쪽 메뉴에서 **Endpoints**를 선택하여 목록으로 이동합니다.
+72. `week3-1-s3-endpoint` (Gateway Endpoint)를 클릭합니다.
+73. **Details** 탭에서 다음 정보를 확인합니다:
 	- **Type**: Gateway
 	- **Route tables**: 연결된 라우팅 테이블 표시
 	- **Network interfaces**: 표시 안 됨 (ENI 사용 안 함)
@@ -315,7 +312,7 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 > [!NOTE]
 > Gateway Endpoint는 ENI를 생성하지 않고 라우팅 테이블에 경로를 추가하는 방식으로 동작합니다. 따라서 Network interfaces와 DNS names 정보가 없습니다.
 
-77. 두 Endpoint의 **Details** 탭을 비교하여 다음 차이점을 확인합니다:
+74. 두 Endpoint의 **Details** 탭을 비교하여 다음 차이점을 확인합니다:
 
 | 항목                   | Interface Endpoint      | Gateway Endpoint      |
 | ---------------------- | ----------------------- | --------------------- |
@@ -337,20 +334,20 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 이 태스크에서는 Amazon VPC Endpoint가 라우팅 테이블에 자동으로 추가되었는지 확인합니다.
 
-78. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Route tables**를 선택합니다.
-79. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 서브넷 라우팅 테이블을 찾습니다.
-80. 해당 라우팅 테이블을 클릭합니다.
-81. 하단의 **Routes** 탭을 선택합니다.
-82. 라우팅 규칙 목록에서 Amazon S3 Gateway Endpoint가 자동으로 추가한 규칙을 찾습니다.
-83. **Destination** 열에서 `pl-`로 시작하는 항목을 찾습니다.
-84. 해당 항목의 **Target** 열에서 `vpce-`로 시작하는 항목을 확인합니다.
+75. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Route tables**를 선택합니다.
+76. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 서브넷 라우팅 테이블을 찾습니다.
+77. 해당 라우팅 테이블을 클릭합니다.
+78. 하단의 **Routes** 탭을 선택합니다.
+79. 라우팅 규칙 목록에서 Amazon S3 Gateway Endpoint가 자동으로 추가한 규칙을 찾습니다.
+80. **Destination** 열에서 `pl-`로 시작하는 항목을 찾습니다.
+81. 해당 항목의 **Target** 열에서 `vpce-`로 시작하는 항목을 확인합니다.
 
 > [!NOTE]
 > Gateway Endpoint는 라우팅 테이블에 자동으로 라우팅 규칙을 추가합니다. **Destination**의 Prefix List (pl-로 시작)는 Amazon S3 서비스의 IP 주소 범위를 나타냅니다. 이 Prefix List로 향하는 트래픽은 Amazon VPC Endpoint를 통해 라우팅됩니다.
 
-85. 다른 라우팅 규칙들도 확인합니다.
-86. **Destination**이 `10.0.0.0/16`인 항목의 **Target**이 `local`인지 확인합니다.
-87. **Destination**이 `0.0.0.0/0`인 항목의 **Target**이 NAT Gateway(`nat-`로 시작)인지 확인합니다.
+82. 다른 라우팅 규칙들도 확인합니다.
+83. **Destination**이 `10.0.0.0/16`인 항목의 **Target**이 `local`인지 확인합니다.
+84. **Destination**이 `0.0.0.0/0`인 항목의 **Target**이 NAT Gateway(`nat-`로 시작)인지 확인합니다.
 
 > [!NOTE]
 > 라우팅 규칙의 의미:
@@ -369,38 +366,38 @@ Amazon VPC Endpoint는 Amazon VPC와 AWS 서비스 간의 프라이빗 연결을
 
 먼저 NAT Gateway와 Amazon VPC Endpoint가 모두 있는 현재 상태에서 Amazon S3 접근과 인터넷 접근을 확인합니다.
 
-88. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
-89. 왼쪽 메뉴에서 **Instances**를 선택합니다.
-90. 메모장에 저장한 EC2InstanceId를 확인합니다.
-91. 검색창에 EC2InstanceId를 입력하여 인스턴스를 찾습니다.
-92. 해당 인스턴스의 체크박스를 선택합니다.
+85. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
+86. 왼쪽 메뉴에서 **Instances**를 선택합니다.
+87. 메모장에 저장한 EC2InstanceId를 확인합니다.
+88. 검색창에 EC2InstanceId를 입력하여 인스턴스를 찾습니다.
+89. 해당 인스턴스의 체크박스를 선택합니다.
 
 > [!NOTE]
 > 인스턴스 이름에 "week3-1"이 포함되어 있고, **Instance state**가 "Running"으로 표시되어야 합니다.
 
-93. **Instance state**가 "Running"이고 **Status check**가 "2/2 checks passed"인지 확인합니다.
+90. **Instance state**가 "Running"이고 **Status check**가 "2/2 checks passed"인지 확인합니다.
 
 > [!NOTE]
 > **Status check**는 인스턴스의 시스템 상태와 인스턴스 상태를 확인합니다. AWS CloudFormation 스택이 "CREATE_COMPLETE"로 완료되어도 인스턴스의 Status check가 아직 진행 중일 수 있습니다. "2/2 checks passed"가 표시될 때까지 기다립니다. 일반적으로 1-2분이 소요됩니다.
 
-94. [[Connect]] 버튼을 클릭합니다.
-95. **Session Manager** 탭을 선택합니다.
+91. [[Connect]] 버튼을 클릭합니다.
+92. **Session Manager** 탭을 선택합니다.
 
 > [!NOTE]
 > Session Manager를 사용하면 SSH 키 없이도 Amazon EC2 인스턴스에 안전하게 접속할 수 있습니다. AWS IAM 역할을 통해 인증되며, 모든 세션이 CloudTrail에 기록됩니다.
 
-96. [[Connect]] 버튼을 클릭합니다.
+93. [[Connect]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 새 브라우저 탭이 열리고 터미널 화면이 표시됩니다. 터미널 연결에 10-20초가 소요될 수 있습니다. `bash-5.2$` 또는 `ssm-user@ip-10-0-x-x:~$` 형식의 프롬프트가 표시되면 준비된 것입니다.
 
-97. 다음 명령어를 실행하여 Amazon S3 버킷 목록을 확인합니다:
+94. 다음 명령어를 실행하여 Amazon S3 버킷 목록을 확인합니다:
 
 ```bash
 aws s3 ls
 ```
 
-98. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
+95. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
 
 > [!OUTPUT]
 >
@@ -413,13 +410,13 @@ aws s3 ls
 > # 명령어가 오류 없이 실행되면 Amazon S3 접근이 가능한 것입니다
 > ```
 
-99. 다음 명령어를 실행하여 인터넷 연결을 확인합니다:
+96. 다음 명령어를 실행하여 인터넷 연결을 확인합니다:
 
 ```bash
 curl -I https://www.google.com
 ```
 
-100. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
+97. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
 
 > [!OUTPUT]
 >
@@ -432,7 +429,7 @@ curl -I https://www.google.com
 > [!NOTE]
 > 현재 상태에서는 NAT Gateway를 통해 인터넷에 접근할 수 있고, Amazon S3에도 접근할 수 있습니다. 하지만 Amazon S3 접근이 Amazon VPC Endpoint를 통하는지 NAT Gateway를 통하는지 명확하지 않습니다.
 
-101. Session Manager 창은 닫지 말고 그대로 유지합니다.
+98. Session Manager 창은 닫지 말고 그대로 유지합니다.
 
 ✅ **하위 태스크 완료**: 현재 상태에서 Amazon S3와 인터넷 접근이 모두 가능함을 확인했습니다.
 
@@ -443,27 +440,27 @@ NAT Gateway 경로를 제거하여 Amazon VPC Endpoint만으로 Amazon S3에 접
 > [!NOTE]
 > **Session Manager 세션 유지**: SSM Interface Endpoints가 미리 생성되어 있으므로 NAT Gateway 경로를 제거해도 Session Manager 세션은 유지됩니다. 만약 세션이 끊긴 경우, Amazon EC2 콘솔에서 다시 Connect > Session Manager로 접속합니다. SSM Interface Endpoints가 있으므로 NAT Gateway 없이도 새 세션을 시작할 수 있습니다.
 
-102. Amazon VPC 콘솔로 이동합니다.
-103. 왼쪽 메뉴에서 **Route tables**를 선택합니다.
-104. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 라우팅 테이블을 찾습니다.
-105. 해당 라우팅 테이블을 선택합니다.
-106. 하단의 **Routes** 탭을 선택합니다.
-107. **Destination**이 `0.0.0.0/0`이고 **Target**이 NAT Gateway(`nat-`로 시작)인 라우팅 규칙을 찾습니다.
-108. [[Edit routes]] 버튼을 클릭합니다.
-109. **Destination**이 `0.0.0.0/0`인 라우팅 규칙 오른쪽의 [[Remove]] 버튼을 클릭합니다.
+99. Amazon VPC 콘솔로 이동합니다.
+100. 왼쪽 메뉴에서 **Route tables**를 선택합니다.
+101. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 라우팅 테이블을 찾습니다.
+102. 해당 라우팅 테이블을 선택합니다.
+103. 하단의 **Routes** 탭을 선택합니다.
+104. **Destination**이 `0.0.0.0/0`이고 **Target**이 NAT Gateway(`nat-`로 시작)인 라우팅 규칙을 찾습니다.
+105. [[Edit routes]] 버튼을 클릭합니다.
+106. **Destination**이 `0.0.0.0/0`인 라우팅 규칙 오른쪽의 [[Remove]] 버튼을 클릭합니다.
 
 > [!IMPORTANT]
 > NAT Gateway 경로를 제거하면 인터넷 접근이 차단됩니다. 하지만 Amazon VPC Endpoint 경로(pl-xxx → vpce-xxx)는 그대로 유지되므로 Amazon S3 접근은 가능해야 합니다.
 
-110. [[Save changes]] 버튼을 클릭합니다.
-111. Session Manager 창으로 이동합니다.
-112. 다음 명령어를 실행하여 인터넷 연결이 차단되었는지 확인합니다:
+107. [[Save changes]] 버튼을 클릭합니다.
+108. Session Manager 창으로 이동합니다.
+109. 다음 명령어를 실행하여 인터넷 연결이 차단되었는지 확인합니다:
 
 ```bash
 curl -I --max-time 5 https://www.google.com
 ```
 
-113. 연결 타임아웃 오류가 발생하는지 확인합니다.
+110. 연결 타임아웃 오류가 발생하는지 확인합니다.
 
 > [!OUTPUT]
 >
@@ -474,13 +471,13 @@ curl -I --max-time 5 https://www.google.com
 > [!NOTE]
 > NAT Gateway 경로가 제거되었으므로 인터넷 접근이 차단되었습니다. 이제 Amazon VPC Endpoint만으로 Amazon S3에 접근할 수 있는지 확인합니다.
 
-114. 다음 명령어를 실행하여 Amazon S3 버킷 목록을 확인합니다:
+111. 다음 명령어를 실행하여 Amazon S3 버킷 목록을 확인합니다:
 
 ```bash
 aws s3 ls
 ```
 
-115. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
+112. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
 
 > [!OUTPUT]
 >
@@ -502,28 +499,28 @@ aws s3 ls
 
 실습 환경을 원래 상태로 복원합니다.
 
-116. Amazon VPC 콘솔로 이동합니다.
-117. 왼쪽 메뉴에서 **Route tables**를 선택합니다.
-118. 프라이빗 라우팅 테이블을 선택합니다.
-119. 하단의 **Routes** 탭을 선택합니다.
-120. [[Edit routes]] 버튼을 클릭합니다.
-121. [[Add route]] 버튼을 클릭합니다.
-122. **Destination**에 `0.0.0.0/0`을 입력합니다.
-123. **Target**에서 `NAT Gateway`를 선택합니다.
-124. 드롭다운에서 메모장에 저장한 NatGatewayId를 선택합니다.
+113. Amazon VPC 콘솔로 이동합니다.
+114. 왼쪽 메뉴에서 **Route tables**를 선택합니다.
+115. 프라이빗 라우팅 테이블을 선택합니다.
+116. 하단의 **Routes** 탭을 선택합니다.
+117. [[Edit routes]] 버튼을 클릭합니다.
+118. [[Add route]] 버튼을 클릭합니다.
+119. **Destination**에 `0.0.0.0/0`을 입력합니다.
+120. **Target**에서 `NAT Gateway`를 선택합니다.
+121. 드롭다운에서 메모장에 저장한 NatGatewayId를 선택합니다.
 
 > [!NOTE]
 > NAT Gateway ID는 `nat-`로 시작합니다. 메모장에 저장한 값을 참고하여 선택합니다.
 
-125. [[Save changes]] 버튼을 클릭합니다.
-126. Session Manager 창으로 이동합니다.
-127. 다음 명령어를 실행하여 인터넷 연결이 복원되었는지 확인합니다:
+122. [[Save changes]] 버튼을 클릭합니다.
+123. Session Manager 창으로 이동합니다.
+124. 다음 명령어를 실행하여 인터넷 연결이 복원되었는지 확인합니다:
 
 ```bash
 curl -I https://www.google.com
 ```
 
-128. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
+125. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
 
 > [!OUTPUT]
 >
@@ -533,7 +530,7 @@ curl -I https://www.google.com
 > ...
 > ```
 
-129. Session Manager 창을 닫습니다.
+126. Session Manager 창을 닫습니다.
 
 ✅ **하위 태스크 완료**: 실습 환경이 원래 상태로 복원되었습니다.
 
@@ -683,12 +680,11 @@ fi
 > [!NOTE]
 > **Events** 탭에는 리소스 삭제 과정이 실시간으로 표시됩니다. Amazon EC2 인스턴스, NAT Gateway, 서브넷, Amazon VPC 등이 순차적으로 삭제됩니다. 삭제에 5-7분이 소요됩니다.
 
-24. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
-> 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인하고, 수동으로 리소스를 삭제한 후 스택 삭제를 다시 시도합니다.
+> 스택 삭제가 완료될 때까지 기다립니다. 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인하고, 수동으로 리소스를 삭제한 후 스택 삭제를 다시 시도합니다.
 
-25. 스택 목록 페이지로 돌아가서 `week3-1-vpc-stack` 스택이 목록에서 사라졌는지 확인합니다.
+24. 스택 목록 페이지로 돌아가서 `week3-1-vpc-stack` 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > 스택이 목록에 표시되지 않으면 성공적으로 삭제된 것입니다. 삭제 완료까지 5-7분이 소요됩니다.
@@ -699,14 +695,14 @@ fi
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-26. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-27. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-28. **Regions**에서 `ap-northeast-2`를 선택합니다.
-29. **Resource types**에서 `All supported resource types`를 선택합니다.
-30. **Tags** 섹션에서 다음을 입력합니다:
+25. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+26. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+27. **Regions**에서 `ap-northeast-2`를 선택합니다.
+28. **Resource types**에서 `All supported resource types`를 선택합니다.
+29. **Tags** 섹션에서 다음을 입력합니다:
 	- **Tag key**: `Week`
 	- **Tag value**: `3-1`
-31. [[Search resources]] 버튼을 클릭합니다.
+30. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다. AWS CloudFormation 스택 삭제로 NAT Gateway, Elastic IP, Amazon EC2 인스턴스, Amazon VPC 등 모든 리소스가 자동으로 정리되었습니다.

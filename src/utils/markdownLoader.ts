@@ -10,8 +10,13 @@ export interface MarkdownMetadata {
   session: number;
   awsServices: string[];
   learningObjectives: string[];
-  // prerequisites 제거 (의미 없음)
   downloadFiles?: DownloadFile[];
+  resources?: string[];
+  estimatedCost?: string;
+  freeTier?: boolean;
+  keyConcepts?: string[];
+  bestPractices?: string[];
+  warnings?: string[];
 }
 
 export interface MarkdownContent {
@@ -22,7 +27,7 @@ export interface MarkdownContent {
 /**
  * Front matter를 직접 파싱하는 함수 (gray-matter 대체)
  */
-const parseFrontMatter = (text: string): { data: any; content: string } => {
+const parseFrontMatter = (text: string): { data: Record<string, unknown>; content: string } => {
   const frontMatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   const match = text.match(frontMatterRegex);
 
@@ -31,7 +36,7 @@ const parseFrontMatter = (text: string): { data: any; content: string } => {
   }
 
   const [, frontMatter, content] = match;
-  const data: any = {};
+  const data: Record<string, unknown> = {};
 
   // YAML 파싱 (간단한 버전)
   const lines = frontMatter.split('\n');
@@ -116,7 +121,7 @@ export const loadMarkdownFile = async (
     }
 
     return {
-      metadata: data as MarkdownMetadata,
+      metadata: data as unknown as MarkdownMetadata,
       content,
     };
   } catch (error) {
