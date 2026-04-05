@@ -126,19 +126,17 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
-18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> 스택 생성에 20-30분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 20-30분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 > [!WARNING]
 > **AWS CloudShell 세션 타임아웃 주의**: CloudShell은 약 20분 비활성 시 세션이 자동 종료됩니다.
 > 스택 생성 중 AWS CloudShell 세션이 끊어지면 다음 태스크에서 다시 CloudShell을 열고 `aws eks update-kubeconfig` 명령을 재실행합니다.
 
-19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-20. **Outputs** 탭을 선택합니다.
-21. 출력값들을 확인하고 메모장에 복사합니다:
+18. **Outputs** 탭을 선택합니다.
+19. 출력값들을 확인하고 메모장에 복사합니다:
     - `ClusterName`: Amazon EKS 클러스터 이름 (예: my-eks-cluster)
     - `ClusterEndpoint`: Amazon EKS 클러스터 엔드포인트 URL
     - `NodeGroupName`: 노드 그룹 이름 (예: my-node-group)
@@ -160,8 +158,11 @@ Kubernetes 버전 호환성을 확인하는 것도 중요합니다.
 > **kubectl 버전 호환성**: 버전이 호환 범위를 벗어나면 📚 참고 섹션의 "kubectl 수동 설치 방법"을 참조합니다.
 
 22. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-23. CloudShell이 시작될 때까지 기다립니다.
-24. kubectl 버전을 확인합니다:
+
+> [!NOTE]
+> CloudShell이 시작될 때까지 기다립니다.
+
+23. kubectl 버전을 확인합니다:
 
 ```bash
 kubectl version --client
@@ -923,7 +924,9 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 	- **Tag key**: `Week`
 	- **Tag value**: `7-3`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -932,7 +935,7 @@ kubectl get service nginx-app -o jsonpath='{.status.loadBalancer.ingress[0].host
 
 #### Kubernetes 리소스 삭제
 
-8. Service 삭제 전에 Load Balancer 정보를 확인합니다:
+7. Service 삭제 전에 Load Balancer 정보를 확인합니다:
 
 ```bash
 kubectl describe service nginx-app | grep "LoadBalancer Ingress"
@@ -1001,13 +1004,11 @@ kubectl delete deployment nginx-app
 22. `week7-3-eks-lab-stack` 스택을 선택합니다.
 23. [[Delete]] 버튼을 클릭합니다.
 24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-25. 스택 삭제가 시작됩니다. 상태가 "DELETE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
+> 스택 삭제에 10-15분이 소요됩니다. 상태가 "DELETE_IN_PROGRESS"에서 "DELETE_COMPLETE"로 변경될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 노드 그룹, Amazon EKS 클러스터, AWS IAM 역할, Amazon VPC 등 모든 리소스가 자동으로 삭제됩니다.
-> 스택 삭제에 10-15분이 소요됩니다. 페이지를 새로고침하여 최신 상태를 확인할 수 있습니다.
-
-26. 상태가 "DELETE_COMPLETE"로 변경될 때까지 기다립니다.
+> 페이지를 새로고침하여 최신 상태를 확인할 수 있습니다.
 
 > [!TROUBLESHOOTING]
 > **문제**: AWS CloudFormation 스택 삭제 시 "DELETE_FAILED" 상태가 되고 Amazon VPC 삭제가 실패합니다.

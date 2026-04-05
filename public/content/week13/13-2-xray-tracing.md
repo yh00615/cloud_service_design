@@ -164,15 +164,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 25. AWS Lambda 콘솔에서 `CreateReservation` 함수를 선택합니다.
 26. **Configuration** 탭을 선택합니다.
 27. 왼쪽 메뉴에서 **Monitoring and operations tools**를 선택합니다.
-28. **AWS X-Ray** 섹션에서 **Active tracing**이 활성화되어 있는지 확인합니다.
+28. **CloudWatch Application Signals and AWS X-Ray** 섹션에서 **Lambda service traces**가 활성화되어 있는지 확인합니다.
 
 AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 
 > [!NOTE]
-> AWS CloudFormation 템플릿에서 Active tracing이 자동으로 활성화되었습니다.
+> AWS CloudFormation 템플릿에서 Lambda service traces(Active tracing)가 자동으로 활성화되었습니다.
 > 이 설정으로 AWS Lambda 함수의 모든 호출이 AWS X-Ray에 자동으로 추적됩니다.
->
-> AWS Lambda 콘솔 UI에 따라 이 섹션이 "CloudWatch Application Signals and AWS X-Ray"로 표시될 수 있습니다.
 
 29. `GetReservations` 함수도 동일하게 확인합니다.
 
@@ -291,9 +289,9 @@ curl -X GET ${API_URL}/reservations
 
 > [!NOTE]
 > AWS X-Ray는 Amazon CloudWatch 콘솔에 통합되어 있습니다.
-> 왼쪽 메뉴의 **X-Ray traces** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
+> 왼쪽 메뉴의 **Application Signals (APM)** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
 
-38. 왼쪽 메뉴에서 **X-Ray traces** > **Trace Map**을 선택합니다.
+38. 왼쪽 메뉴에서 **Application Signals (APM)** > **Trace Map**을 선택합니다.
 39. 서비스 맵에서 다음 구성 요소를 확인합니다:
 	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
 	- **Amazon API Gateway**: QuickTableXRayAPI
@@ -318,7 +316,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인합니다.
 
-42. 왼쪽 메뉴에서 **X-Ray traces** > **Traces**를 선택합니다.
+42. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
 43. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
 44. 트레이스 타임라인에서 다음 정보를 확인합니다:
 	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
@@ -347,7 +345,7 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray Insights와 Analytics를 사용하여 자동 이상 탐지 및 트레이스 분석 기능을 확인합니다.
 
-49. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **X-Ray traces** > **Insights**를 선택합니다.
+49. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **Application Signals (APM)** > **Application Insights**를 선택합니다.
 50. Insights 대시보드에서 다음 정보를 확인합니다:
 	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
 	- **오류율 이상**: 오류율이 증가한 경우
@@ -364,7 +362,7 @@ curl -X GET ${API_URL}/reservations
 > - 자동으로 이상을 탐지하고 알림을 받고 싶은 경우
 > - 특정 시간대에 성능 저하가 발생했는지 확인하고 싶은 경우
 
-51. **X-Ray traces** > **Traces** 페이지로 이동합니다.
+51. **Application Signals (APM)** > **Traces** 페이지로 이동합니다.
 
 > [!NOTE]
 > 이전에는 별도의 Analytics 메뉴가 있었으나, 현재는 Traces 페이지에서 필터링 및 그룹화 기능을 사용하여 동일한 분석을 수행할 수 있습니다.

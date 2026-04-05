@@ -76,18 +76,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. [[Next]] 버튼을 클릭합니다.
 14. **Review** 페이지에서 설정을 확인합니다.
 15. [[Submit]] 버튼을 클릭합니다.
-16. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> 스택 생성에 5-7분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 5-7분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-17. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-> Amazon VPC, 서브넷, NAT Gateway, 보안 그룹, Amazon ElastiCache Subnet Group, Amazon DynamoDB 테이블이 순차적으로 생성됩니다.
-> 대기하는 동안 이전 차시 내용을 복습하거나 다음 태스크를 미리 읽어봅니다.
-
-18. **Outputs** 탭을 선택합니다.
-19. 출력값들을 확인하고 메모장에 복사합니다:
+16. **Outputs** 탭을 선택합니다.
+17. 출력값들을 확인하고 메모장에 복사합니다:
     - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
     - `PrivateSubnetAId`: 프라이빗 서브넷 A ID (예: subnet-0a1b2c3d4e5f6g7h8)
     - `PrivateSubnetCId`: 프라이빗 서브넷 C ID (예: subnet-9i8h7g6f5e4d3c2b1)
@@ -120,46 +115,49 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 ### 상세 단계
 
-20. AWS Management Console에 로그인한 후 상단 검색창에 `ElastiCache`을 입력하고 선택합니다.
-21. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
-22. [[Create Valkey cache]] 버튼을 클릭합니다.
+18. AWS Management Console에 로그인한 후 상단 검색창에 `ElastiCache`을 입력하고 선택합니다.
+19. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
+20. [[Create cache]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 왼쪽 메뉴에 Redis OSS caches도 있지만, AWS는 Valkey를 권장 엔진으로 제공합니다. Valkey는 Redis OSS와 완전 호환되므로 기존 Redis 명령어와 클라이언트를 그대로 사용할 수 있습니다.
 
-23. **Engine**에서 `Valkey - recommended`가 선택되어 있는지 확인합니다.
-24. **Deployment option**에서 `Node-based cluster`를 선택합니다.
+21. **Engine**에서 `Valkey - recommended`가 선택되어 있는지 확인합니다.
+22. **Deployment option**에서 `Node-based cluster`를 선택합니다.
 
 > [!NOTE]
 > **Serverless**는 자동 스케일링을 제공하지만, 이 실습에서는 캐시 구성을 직접 설정하는 학습 목적으로 **Node-based cluster**를 선택합니다.
 
-25. **Creation method**에서 `New cache`를 선택합니다.
-26. **Settings** 섹션에서 다음을 입력합니다:
+23. **Creation method**에서 `New cache`를 선택합니다.
+24. **Settings** 섹션에서 다음을 입력합니다:
 	- **Name**: `quicktable-cache`
 	- **Description**: `QuickTable reservation cache`
-27. **Engine version**에서 `8`을 선택합니다.
+25. **Engine version**에서 `8`을 선택합니다.
 
 > [!NOTE]
 > ElastiCache 콘솔에서 Valkey 엔진 버전 `8`, `8.1`, `8.2` 등이 표시될 수 있습니다. 이 실습에서는 `8` (= 8.0)을 선택합니다. 8.1이나 8.2를 선택해도 실습 진행에는 문제 없습니다.
-28. **Default settings**를 체크 해제하고 다음을 설정합니다:
+26. **Default settings**를 체크 해제하고 다음을 설정합니다:
 	- **Port**: `6379` (기본값)
 	- **Parameter group**: `default.valkey8` (기본값)
 	- **Node type**: `cache.t3.micro`
 	- **Number of replicas**: `0`
-29. **Connectivity** 섹션에서 다음을 설정합니다:
+27. **Connectivity** 섹션에서 다음을 설정합니다:
 	- **Network type**: `IPv4`
 	- **Amazon VPC**: 태스크 0에서 생성한 Amazon VPC 선택
 	- **Subnet group**: 태스크 0에서 생성한 서브넷 그룹 선택
    - **Selected subnets**: 프라이빗 서브넷 2개가 자동 선택됨
-30. **Availability zone placements**에서 `No preference`를 선택합니다.
-31. **Security** 섹션에서 다음을 설정합니다:
+28. **Availability zone placements**에서 `No preference`를 선택합니다.
+29. **Security** 섹션에서 다음을 설정합니다:
     - **Security groups**: 태스크 0에서 생성한 `week10-2-elasticache-lab-ElastiCache-SG` 보안 그룹 선택
     - **Encryption at rest**: 체크 해제 (실습 환경)
     - **Encryption in-transit**: 체크 해제 (실습 환경)
-32. **Logs** 섹션에서 모두 체크 해제합니다.
-33. **Backup** 섹션에서 `Enable automatic backups`를 체크 해제합니다.
-34. **Maintenance** 섹션에서 기본값을 유지합니다.
-35. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+30. **Logs** 섹션에서 모두 체크 해제합니다.
+31. **Backup** 섹션에서 `Enable automatic backups`를 체크 해제합니다.
+
+> [!NOTE]
+> **Maintenance** 섹션은 기본값을 유지합니다.
+
+32. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key | Value |
 |-----|-------|
@@ -167,14 +165,12 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 | `Week` | `10-2` |
 | `CreatedBy` | `Student` |
 
-36. [[Create]] 버튼을 클릭합니다.
-37. **Review and create** 페이지에서 설정을 확인합니다.
-38. [[Create]] 버튼을 클릭합니다.
-39. 캐시 생성이 시작됩니다.
-40. 상태가 "Available"로 변경될 때까지 기다립니다.
+33. [[Create]] 버튼을 클릭합니다.
+34. **Review and create** 페이지에서 설정을 확인합니다.
+35. [[Create]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 캐시 생성에 5-10분이 소요됩니다. 페이지를 새로고침하여 상태를 확인합니다.
+> 캐시 생성에 5-10분이 소요됩니다. 상태가 "Available"로 변경될 때까지 기다립니다. 페이지를 새로고침하여 상태를 확인합니다.
 
 > [!TIP]
 > 프로덕션 환경에서는 다음을 권장합니다:
@@ -196,9 +192,9 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 ### 상세 단계
 
-41. Amazon ElastiCache 콘솔에서 `quicktable-cache` 캐시를 선택합니다.
-42. **Cluster details** 섹션에서 **Primary endpoint**를 확인합니다.
-43. Primary endpoint 값을 복사하여 메모장에 저장합니다.
+36. Amazon ElastiCache 콘솔에서 `quicktable-cache` 캐시를 선택합니다.
+37. **Cluster details** 섹션에서 **Primary endpoint**를 확인합니다.
+38. Primary endpoint 값을 복사하여 메모장에 저장합니다.
 
 > [!NOTE]
 > Primary endpoint 형식은 `quicktable-cache.xxxxx.ng.0001.apne2.cache.amazonaws.com:6379`입니다.
@@ -222,22 +218,22 @@ Valkey CLI를 사용하여 기본 명령어를 실습하고 캐싱 동작을 이
 
 ### 상세 단계
 
-44. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
-45. 왼쪽 메뉴에서 **Instances**를 선택합니다.
-46. [[Launch instances]] 버튼을 클릭합니다.
-47. **Name**에 `quicktable-cache-client`를 입력합니다.
-48. **Application and OS Images**에서 `Amazon Linux 2023 AMI`를 선택합니다.
-49. **Instance type**에서 `t3.micro`를 선택합니다.
-50. **Key pair**에서 `Proceed without a key pair`를 선택합니다.
-51. **Network settings**에서 Edit 버튼을 클릭한 후 다음을 설정합니다:
+39. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
+40. 왼쪽 메뉴에서 **Instances**를 선택합니다.
+41. [[Launch instances]] 버튼을 클릭합니다.
+42. **Name**에 `quicktable-cache-client`를 입력합니다.
+43. **Application and OS Images**에서 `Amazon Linux 2023 AMI`를 선택합니다.
+44. **Instance type**에서 `t3.micro`를 선택합니다.
+45. **Key pair**에서 `Proceed without a key pair`를 선택합니다.
+46. **Network settings**에서 Edit 버튼을 클릭한 후 다음을 설정합니다:
 	- **Amazon VPC**: 태스크 0에서 생성한 Amazon VPC 선택
 	- **Subnet**: 프라이빗 서브넷 중 하나 선택
 	- **Auto-assign public IP**: Disable
    - **Firewall (security groups)**: Select existing security group
    - **Security groups**: 태스크 0에서 생성한 `week10-2-elasticache-lab-EC2-SG` 보안 그룹 선택
-52. **Advanced details** 섹션을 확장합니다.
-53. **AWS IAM instance profile**에서 태스크 0에서 생성한 `week10-2-elasticache-lab-SSMInstanceProfile`을 선택합니다.
-54. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+47. **Advanced details** 섹션을 확장합니다.
+48. **AWS IAM instance profile**에서 태스크 0에서 생성한 `week10-2-elasticache-lab-SSMInstanceProfile`을 선택합니다.
+49. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key | Value |
 |-----|-------|
@@ -245,18 +241,21 @@ Valkey CLI를 사용하여 기본 명령어를 실습하고 캐싱 동작을 이
 | `Week` | `10-2` |
 | `CreatedBy` | `Student` |
 
-55. [[Launch instance]] 버튼을 클릭합니다.
-56. 인스턴스 생성이 완료될 때까지 기다립니다.
-57. 상태가 "Running"으로 변경되면 인스턴스를 선택합니다.
-58. [[Connect]] 버튼을 클릭합니다.
-59. **Session Manager** 탭을 선택합니다.
-60. [[Connect]] 버튼을 클릭합니다.
+50. [[Launch instance]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 인스턴스 생성이 완료될 때까지 기다립니다. 상태가 "Running"으로 변경되면 다음 단계를 진행합니다.
+
+51. 인스턴스를 선택합니다.
+52. [[Connect]] 버튼을 클릭합니다.
+53. **Session Manager** 탭을 선택합니다.
+54. [[Connect]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Session Manager는 SSH 키 없이 안전하게 Amazon EC2 인스턴스에 접속할 수 있는 AWS Systems Manager 기능입니다.
 > AWS IAM 역할을 통해 인증되므로 별도의 키 관리가 필요 없습니다.
 
-61. Session Manager 터미널이 열리면 다음 명령어를 실행하여 Valkey CLI를 설치합니다:
+55. Session Manager 터미널이 열리면 다음 명령어를 실행하여 Valkey CLI를 설치합니다:
 
 ```bash
 sudo yum install -y gcc make
@@ -272,7 +271,7 @@ sudo cp src/valkey-cli /usr/local/bin/
 > Valkey 8.0.7은 8.0.x 시리즈의 최신 안정 버전입니다 (2026년 2월 릴리스). Valkey 9.0.x 시리즈도 출시되었으나, ElastiCache에서 사용하는 엔진 버전과 맞추기 위해 8.0.x를 사용합니다.
 > 최신 버전은 [Valkey Releases](https://github.com/valkey-io/valkey/releases) 페이지에서 확인할 수 있으며, 위 명령어의 버전 번호(`8.0.7`)를 변경하여 사용합니다.
 
-62. Valkey CLI 설치를 확인합니다:
+56. Valkey CLI 설치를 확인합니다:
 
 ```bash
 valkey-cli --version
@@ -283,7 +282,7 @@ valkey-cli --version
 > valkey-cli 8.0.7
 > ```
 
-63. Valkey 캐시에 연결합니다:
+57. Valkey 캐시에 연결합니다:
 
 ```bash
 valkey-cli -h <Primary-Endpoint> -p 6379
@@ -293,14 +292,14 @@ valkey-cli -h <Primary-Endpoint> -p 6379
 > `<Primary-Endpoint>`를 태스크 2에서 복사한 엔드포인트로 대체합니다.
 > 예: `valkey-cli -h quicktable-cache.xxxxx.ng.0001.apne2.cache.amazonaws.com -p 6379`
 
-64. 연결이 성공하면 Valkey CLI 프롬프트가 표시됩니다:
+58. 연결이 성공하면 Valkey CLI 프롬프트가 표시됩니다:
 
 > [!OUTPUT]
 > ```
 > quicktable-cache.xxxxx.ng.0001.apne2.cache.amazonaws.com:6379>
 > ```
 
-65. PING 명령어로 연결을 테스트합니다:
+59. PING 명령어로 연결을 테스트합니다:
 
 ```bash
 PING
@@ -326,18 +325,18 @@ String, Hash, List 데이터 타입과 TTL 설정 방법을 학습합니다.
 
 ### 상세 단계
 
-66. Valkey CLI 프롬프트에서 다음 명령어들을 실행합니다.
+60. Valkey CLI 프롬프트에서 다음 명령어들을 실행합니다.
 
 #### String 타입 (SET/GET)
 
-67. 키-값 쌍을 저장합니다:
+61. 키-값 쌍을 저장합니다:
 
 ```bash
 SET user:1:name "John Doe"
 SET user:1:email "john@example.com"
 ```
 
-68. 저장된 값을 조회합니다:
+62. 저장된 값을 조회합니다:
 
 ```bash
 GET user:1:name
@@ -352,13 +351,13 @@ GET user:1:email
 
 #### TTL 설정 (SETEX)
 
-69. TTL(Time To Live)을 설정하여 30분 후 자동 삭제되는 데이터를 저장합니다:
+63. TTL(Time To Live)을 설정하여 30분 후 자동 삭제되는 데이터를 저장합니다:
 
 ```bash
 SETEX session:abc123 1800 "user_session_data"
 ```
 
-70. 남은 TTL을 확인합니다:
+64. 남은 TTL을 확인합니다:
 
 ```bash
 TTL session:abc123
@@ -375,13 +374,13 @@ TTL session:abc123
 
 #### Hash 타입 (HSET/HGETALL)
 
-71. Hash 데이터 구조로 사용자 정보를 저장합니다:
+65. Hash 데이터 구조로 사용자 정보를 저장합니다:
 
 ```bash
 HSET user:2 name "Jane Smith" email "jane@example.com" age "28"
 ```
 
-72. Hash의 모든 필드를 조회합니다:
+66. Hash의 모든 필드를 조회합니다:
 
 ```bash
 HGETALL user:2
@@ -399,13 +398,13 @@ HGETALL user:2
 
 #### List 타입 (LPUSH/LRANGE)
 
-73. List에 예약 ID를 추가합니다:
+67. List에 예약 ID를 추가합니다:
 
 ```bash
 LPUSH reservations:recent "res001" "res002" "res003"
 ```
 
-74. List의 모든 요소를 조회합니다:
+68. List의 모든 요소를 조회합니다:
 
 ```bash
 LRANGE reservations:recent 0 -1
@@ -423,13 +422,13 @@ LRANGE reservations:recent 0 -1
 
 #### 키 삭제 및 존재 확인 (DEL/EXISTS)
 
-75. 키를 삭제합니다:
+69. 키를 삭제합니다:
 
 ```bash
 DEL user:1:name
 ```
 
-76. 키가 존재하는지 확인합니다:
+70. 키가 존재하는지 확인합니다:
 
 ```bash
 EXISTS user:1:name
@@ -444,7 +443,7 @@ EXISTS user:1:email
 
 EXISTS는 키가 존재하면 1, 존재하지 않으면 0을 반환합니다.
 
-77. Valkey CLI를 종료합니다:
+71. Valkey CLI를 종료합니다:
 
 ```bash
 exit
@@ -462,7 +461,7 @@ exit
 
 ### 상세 단계
 
-78. Session Manager 터미널에서 다음 명령어를 실행하여 실습 파일을 다운로드합니다:
+72. Session Manager 터미널에서 다음 명령어를 실행하여 실습 파일을 다운로드합니다:
 
 ```bash
 cd /home/ec2-user
@@ -474,19 +473,19 @@ cd elasticache-lab
 > [!NOTE]
 > 실제 환경에서는 Amazon S3 버킷 URL을 사용하거나, CloudShell을 통해 파일을 전송할 수 있습니다.
 
-79. Python 3와 pip를 설치합니다:
+73. Python 3와 pip를 설치합니다:
 
 ```bash
 sudo yum install -y python3 python3-pip
 ```
 
-80. 필요한 Python 패키지를 설치합니다:
+74. 필요한 Python 패키지를 설치합니다:
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-81. 환경 변수를 설정합니다:
+75. 환경 변수를 설정합니다:
 
 ```bash
 export REDIS_HOST=<Primary-Endpoint>
@@ -499,7 +498,7 @@ export AWS_DEFAULT_REGION=ap-northeast-2
 > `<Primary-Endpoint>`를 태스크 2에서 복사한 엔드포인트로 대체합니다.
 > 환경 변수명이 `REDIS_HOST`인 이유는 Valkey가 Redis OSS와 호환되어 기존 Redis 클라이언트 라이브러리를 그대로 사용하기 때문입니다.
 
-82. DynamoDB 테이블을 초기화합니다:
+76. DynamoDB 테이블을 초기화합니다:
 
 ```bash
 python3 init_dynamodb.py
@@ -511,7 +510,7 @@ python3 init_dynamodb.py
 > 10개의 사용자 데이터가 추가되었습니다.
 > ```
 
-83. FastAPI 애플리케이션을 백그라운드로 실행합니다:
+77. FastAPI 애플리케이션을 백그라운드로 실행합니다:
 
 ```bash
 nohup uvicorn app:app --host 0.0.0.0 --port 5000 > app.log 2>&1 &
@@ -522,7 +521,7 @@ nohup uvicorn app:app --host 0.0.0.0 --port 5000 > app.log 2>&1 &
 > - Swagger UI: `http://<Amazon EC2-IP>:5000/docs`
 > - ReDoc: `http://<Amazon EC2-IP>:5000/redoc`
 
-84. 애플리케이션이 정상적으로 실행되는지 확인합니다:
+78. 애플리케이션이 정상적으로 실행되는지 확인합니다:
 
 ```bash
 curl http://localhost:5000/health
@@ -536,7 +535,7 @@ curl http://localhost:5000/health
 > }
 > ```
 
-85. 캐시 없이 사용자 정보를 조회합니다 (첫 번째 요청):
+79. 캐시 없이 사용자 정보를 조회합니다 (첫 번째 요청):
 
 ```bash
 curl http://localhost:5000/user/1/nocache
@@ -557,7 +556,7 @@ curl http://localhost:5000/user/1/nocache
 > }
 > ```
 
-86. 캐시를 사용하여 동일한 사용자 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
+80. 캐시를 사용하여 동일한 사용자 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
 
 ```bash
 curl http://localhost:5000/user/1
@@ -578,7 +577,7 @@ curl http://localhost:5000/user/1
 > }
 > ```
 
-87. 동일한 요청을 다시 실행합니다 (두 번째 요청 - 캐시 히트):
+81. 동일한 요청을 다시 실행합니다 (두 번째 요청 - 캐시 히트):
 
 ```bash
 curl http://localhost:5000/user/1
@@ -603,7 +602,7 @@ curl http://localhost:5000/user/1
 > 캐시를 사용하면 응답 시간이 약 20배 빨라집니다 (43.87ms → 2.15ms).
 > 실제 프로덕션 환경에서는 10-50배의 성능 향상을 기대할 수 있습니다.
 
-88. 캐시 통계를 확인합니다:
+82. 캐시 통계를 확인합니다:
 
 ```bash
 curl http://localhost:5000/cache/stats
@@ -620,7 +619,7 @@ curl http://localhost:5000/cache/stats
 > }
 > ```
 
-89. 성능 벤치마크를 실행합니다:
+83. 성능 벤치마크를 실행합니다:
 
 ```bash
 python3 benchmark.py
@@ -666,7 +665,9 @@ python3 benchmark.py
 	- **Tag key**: `Week`
 	- **Tag value**: `10-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -675,35 +676,32 @@ python3 benchmark.py
 
 #### Amazon EC2 인스턴스 삭제
 
-8. Amazon EC2 콘솔로 이동합니다.
-9. 왼쪽 메뉴에서 **Instances**를 선택합니다.
-10. `quicktable-cache-client` 인스턴스를 선택합니다.
-11. **Instance state** > `Terminate instance`를 선택합니다.
-12. 확인 창에서 [[Terminate]] 버튼을 클릭합니다.
+7. Amazon EC2 콘솔로 이동합니다.
+8. 왼쪽 메뉴에서 **Instances**를 선택합니다.
+9. `quicktable-cache-client` 인스턴스를 선택합니다.
+10. **Instance state** > `Terminate instance`를 선택합니다.
+11. 확인 창에서 [[Terminate]] 버튼을 클릭합니다.
 
 #### Amazon ElastiCache Valkey 캐시 삭제
 
-13. Amazon ElastiCache 콘솔로 이동합니다.
-14. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
-15. `quicktable-cache` 캐시를 선택합니다.
-16. **Actions** > `Delete`를 선택합니다.
-17. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+12. Amazon ElastiCache 콘솔로 이동합니다.
+13. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
+14. `quicktable-cache` 캐시를 선택합니다.
+15. **Actions** > `Delete`를 선택합니다.
+16. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon ElastiCache 캐시 삭제에 5-10분이 소요됩니다.
 
 #### AWS CloudFormation 스택 삭제
 
-18. AWS CloudFormation 콘솔로 이동합니다.
-19. `week10-2-quicktable-cache-stack` 스택을 선택합니다.
-20. [[Delete]] 버튼을 클릭합니다.
-21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-22. 스택 삭제가 완료될 때까지 기다립니다.
+17. AWS CloudFormation 콘솔로 이동합니다.
+18. `week10-2-quicktable-cache-stack` 스택을 선택합니다.
+19. [[Delete]] 버튼을 클릭합니다.
+20. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 삭제에 3-5분이 소요됩니다.
-
-> [!NOTE]
+> 스택 삭제에 3-5분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 Amazon VPC, 서브넷, 보안 그룹, NAT Gateway, DynamoDB 테이블, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.

@@ -112,10 +112,10 @@ prerequisites:
 20. AWS Lambda Function 리소스를 클릭합니다.
 21. 오른쪽 **Resource properties panel**에서 **Logical ID**를 `ItemsFunction`로 변경합니다.
 22. **Properties** 섹션을 확장합니다.
-23. **Runtime**에서 `python3.12`를 선택합니다.
+23. **Runtime**에서 `python3.13`를 선택합니다.
 
 > [!NOTE]
-> 2026년 시점에서 `python3.12` 런타임이 지원되지 않을 경우, 콘솔에 표시되는 최신 Python 3.x 버전을 선택합니다.
+> 2026년 시점에서 `python3.13` 런타임이 지원되지 않을 경우, 콘솔에 표시되는 최신 Python 3.x 버전을 선택합니다.
 
 24. **Handler**에 `index.lambda_handler`를 입력합니다.
 25. 오른쪽 패널에서 **Template** 탭을 선택합니다.

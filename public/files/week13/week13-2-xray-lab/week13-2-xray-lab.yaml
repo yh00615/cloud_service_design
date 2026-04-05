@@ -88,7 +88,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-CreateReservation'
-      Runtime: python3.12
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -190,7 +190,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-GetReservations'
-      Runtime: python3.12
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30

@@ -320,11 +320,10 @@ Temperature는 응답의 창의성과 무작위성을 제어하는 파라미터�
 > Temperature 비교 실험에서는 시스템 프롬프트를 제거하고 진행하는 것을 권장합니다.
 > 시스템 프롬프트 입력 영역을 비워서 제거할 수 있습니다.
 
-34. 오른쪽 패널에서 **Inference configurations** 섹션을 찾습니다.
+34. 오른쪽 패널에서 **Configurations** 섹션을 찾습니다.
 
 > [!NOTE]
-> AWS Console UI는 시점에 따라 변경될 수 있습니다.
-> "Inference configurations" 대신 "Inference parameters"로 표시될 수 있습니다.
+> **Randomness and diversity** 섹션에서 **Control by**를 통해 Temperature 또는 Top P를 선택할 수 있습니다.
 
 35. **Temperature** 슬라이더를 `0.1`로 설정합니다.
 

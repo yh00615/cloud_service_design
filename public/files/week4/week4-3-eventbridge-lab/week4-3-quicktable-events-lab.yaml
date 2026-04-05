@@ -86,7 +86,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-InitializeAvailability'
-      Runtime: python3.14
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 60
@@ -221,7 +221,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-ReservationProcessor'
-      Runtime: python3.14
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -330,7 +330,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-TableAvailabilityChecker'
-      Runtime: python3.14
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -425,7 +425,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-NotificationSender'
-      Runtime: python3.14
+      Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30

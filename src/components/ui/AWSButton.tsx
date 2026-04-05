@@ -29,10 +29,11 @@ export const AWSButton: React.FC<AWSButtonProps> = ({
     download,
     ...props
 }) => {
-    // large 크기일 때 커스텀 클래스 추가
+    // variant에 따라 클래스 결정
+    const baseClass = variant === 'normal' ? 'aws-button-blue' : 'aws-button-orange';
     const buttonClass = size === 'large'
-        ? 'aws-button-orange aws-button-large'
-        : 'aws-button-orange';
+        ? `${baseClass} aws-button-large`
+        : baseClass;
 
     // 접근성을 위한 aria-label 생성
     const buttonText = typeof children === 'string' ? children : String(children);

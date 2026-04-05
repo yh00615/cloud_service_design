@@ -209,7 +209,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub 'week11-pipeline-trigger-${StudentId}'
-      Runtime: python3.12
+      Runtime: python3.13
       Handler: index.handler
       Role: !GetAtt PipelineTriggerRole.Arn
       Timeout: 60
@@ -361,7 +361,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-SampleDataUploader-${StudentId}'
-      Runtime: python3.12
+      Runtime: python3.13
       Handler: index.handler
       Role: !GetAtt SampleDataUploaderRole.Arn
       Timeout: 60

@@ -40,11 +40,20 @@ export const Keyword: React.FC<KeywordProps> = ({
         fullText.toLowerCase().includes(keyword)
     )
 
-    // 버튼인 경우 AWSButton으로 렌더링 (모두 오렌지색, small 크기)
+    // 오렌지 버튼 키워드 (생성/실행 계열)
+    const primaryKeywords = [
+        'create', 'launch', 'deploy', 'run', 'start', 'submit',
+        'publish', 'enable', 'activate', 'confirm'
+    ]
+    const isPrimary = primaryKeywords.some(keyword =>
+        fullText.toLowerCase().includes(keyword)
+    )
+
+    // 버튼인 경우 AWSButton으로 렌더링
     if (isButton) {
         return (
             <span className="keyword-button-wrapper">
-                <AWSButton variant="primary">
+                <AWSButton variant={isPrimary ? 'primary' : 'normal'}>
                     {children}
                 </AWSButton>
             </span>

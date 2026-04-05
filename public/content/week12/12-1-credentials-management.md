@@ -89,14 +89,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. [[Next]] 버튼을 클릭합니다.
 14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create IAM resources`를 체크합니다.
 15. [[Submit]] 버튼을 클릭합니다.
-16. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> Amazon RDS 인스턴스 생성에 10-15분이 소요됩니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 10-15분이 소요됩니다 (Amazon RDS 인스턴스 포함). 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-17. 상태가 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
-18. **Outputs** 탭을 선택합니다.
-19. 출력값들을 메모장에 복사합니다:
+16. **Outputs** 탭을 선택합니다.
+17. 출력값들을 메모장에 복사합니다:
     - `DBEndpoint`: Amazon RDS 엔드포인트
     - `DBPort`: Amazon RDS 포트 (3306)
     - `DBUsername`: 데이터베이스 사용자 이름 (admin)
@@ -108,15 +106,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 Secrets Manager와 Parameter Store에서 사용할 암호화 키를 생성합니다.
 
-20. 상단 검색창에 `KMS`을 입력하고 선택합니다.
-21. 왼쪽 메뉴에서 **Customer managed keys**를 선택합니다.
-22. [[Create key]] 버튼을 클릭합니다.
-23. **Key type**에서 `Symmetric`을 선택합니다.
-24. **Key usage**에서 `Encrypt and decrypt`를 선택합니다.
-25. [[Next]] 버튼을 클릭합니다.
-26. **Alias**에 `secrets-encryption-key`를 입력합니다.
-27. **Description**에 `Encryption key for Secrets Manager and Parameter Store`를 입력합니다.
-28. **Tags** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+18. 상단 검색창에 `KMS`을 입력하고 선택합니다.
+19. 왼쪽 메뉴에서 **Customer managed keys**를 선택합니다.
+20. [[Create key]] 버튼을 클릭합니다.
+21. **Key type**에서 `Symmetric`을 선택합니다.
+22. **Key usage**에서 `Encrypt and decrypt`를 선택합니다.
+23. [[Next]] 버튼을 클릭합니다.
+24. **Alias**에 `secrets-encryption-key`를 입력합니다.
+25. **Description**에 `Encryption key for Secrets Manager and Parameter Store`를 입력합니다.
+26. **Tags** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -124,13 +122,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `12-1`    |
 | `CreatedBy` | `Student` |
 
+27. [[Next]] 버튼을 클릭합니다.
+28. **Key administrators** 섹션에서 본인의 AWS IAM 사용자를 선택합니다.
 29. [[Next]] 버튼을 클릭합니다.
-30. **Key administrators** 섹션에서 본인의 AWS IAM 사용자를 선택합니다.
-31. [[Next]] 버튼을 클릭합니다.
-32. **Key users** 섹션에서 AWS CloudFormation이 생성한 AWS Lambda 실행 역할을 선택합니다.
+30. **Key users** 섹션에서 AWS CloudFormation이 생성한 AWS Lambda 실행 역할을 선택합니다.
     - 역할 이름: `week12-1-lambda-secrets-role`
-33. [[Next]] 버튼을 클릭합니다.
-34. 설정을 검토하고 [[Finish]] 버튼을 클릭합니다.
+31. [[Next]] 버튼을 클릭합니다.
+32. 설정을 검토하고 [[Finish]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: AWS KMS 키가 생성되었습니다.
 
@@ -139,18 +137,18 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS Secrets Manager에 Amazon RDS 데이터베이스 자격증명을 저장합니다.
 
-35. 상단 검색창에 `Secrets Manager`을 입력하고 선택합니다.
-36. [[Store a new secret]] 버튼을 클릭합니다.
-37. **Secret type**에서 `Credentials for Amazon RDS database`를 선택합니다.
-38. **User name**에 `admin`을 입력합니다.
-39. **Password**에 `TempPassword123!`을 입력합니다.
-40. **Encryption key**에서 `secrets-encryption-key`를 선택합니다.
-41. **Database**에서 AWS CloudFormation이 생성한 Amazon RDS 인스턴스를 선택합니다.
+33. 상단 검색창에 `Secrets Manager`을 입력하고 선택합니다.
+34. [[Store a new secret]] 버튼을 클릭합니다.
+35. **Secret type**에서 `Credentials for Amazon RDS database`를 선택합니다.
+36. **User name**에 `admin`을 입력합니다.
+37. **Password**에 `TempPassword123!`을 입력합니다.
+38. **Encryption key**에서 `secrets-encryption-key`를 선택합니다.
+39. **Database**에서 AWS CloudFormation이 생성한 Amazon RDS 인스턴스를 선택합니다.
 	- 인스턴스 ID: `week12-1-mysql-db`
-42. [[Next]] 버튼을 클릭합니다.
-43. **Secret name**에 `prod/db/mysql/credentials`를 입력합니다.
-44. **Description**에 `Production MySQL database credentials`를 입력합니다.
-45. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+40. [[Next]] 버튼을 클릭합니다.
+41. **Secret name**에 `prod/db/mysql/credentials`를 입력합니다.
+42. **Description**에 `Production MySQL database credentials`를 입력합니다.
+43. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -158,23 +156,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `12-1`    |
 | `CreatedBy` | `Student` |
 
-46. [[Next]] 버튼을 클릭합니다.
-47. **Automatic rotation**에서 `Enable automatic rotation`을 선택합니다.
+44. [[Next]] 버튼을 클릭합니다.
+45. **Automatic rotation**에서 `Enable automatic rotation`을 선택합니다.
 
 > [!IMPORTANT]
 > 자동 로테이션은 AWS Secrets Manager의 핵심 기능입니다. 비밀번호를 주기적으로 자동 변경하여 보안을 강화합니다.
 
-48. **Rotation schedule**에서 `Days`를 선택하고 `30`을 입력합니다.
-49. **Rotation function**에서 `Create a new Lambda function`을 선택합니다.
-50. **Lambda function name**에 `SecretsManagerRotation-mysql`을 입력합니다.
-51. [[Next]] 버튼을 클릭합니다.
-52. 설정을 검토합니다.
-53. [[Store]] 버튼을 클릭합니다.
+46. **Rotation schedule**에서 `Days`를 선택하고 `30`을 입력합니다.
+47. **Rotation function**에서 `Create a new Lambda function`을 선택합니다.
+48. **Lambda function name**에 `SecretsManagerRotation-mysql`을 입력합니다.
+49. [[Next]] 버튼을 클릭합니다.
+50. 설정을 검토합니다.
+51. [[Store]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> AWS Secrets Manager가 자동으로 로테이션 AWS Lambda 함수를 생성합니다. 이 함수는 Amazon RDS 비밀번호를 변경하고 Secrets Manager를 업데이트합니다.
-
-54. 시크릿 생성이 완료될 때까지 기다립니다.
+> AWS Secrets Manager가 자동으로 로테이션 AWS Lambda 함수를 생성합니다. 이 함수는 Amazon RDS 비밀번호를 변경하고 Secrets Manager를 업데이트합니다. 시크릿 생성이 완료될 때까지 기다립니다.
 
 ✅ **태스크 완료**: Amazon RDS 자격증명이 저장되고 자동 로테이션이 설정되었습니다.
 
@@ -182,10 +178,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 자동 로테이션을 즉시 실행하여 비밀번호가 변경되는 과정을 확인합니다.
 
-55. AWS Secrets Manager 콘솔에서 `prod/db/mysql/credentials` 시크릿을 선택합니다.
-56. **Rotation configuration** 섹션으로 스크롤합니다.
-57. [[Rotate secret immediately]] 버튼을 클릭합니다.
-58. 확인 창에서 [[Rotate]] 버튼을 클릭합니다.
+52. AWS Secrets Manager 콘솔에서 `prod/db/mysql/credentials` 시크릿을 선택합니다.
+53. **Rotation configuration** 섹션으로 스크롤합니다.
+54. [[Rotate secret immediately]] 버튼을 클릭합니다.
+55. 확인 창에서 [[Rotate]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 로테이션 프로세스:
@@ -194,11 +190,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 3. Secrets Manager에 새 비밀번호를 저장합니다
 > 4. 애플리케이션은 Secrets Manager에서 항상 최신 비밀번호를 조회합니다
 
-59. 로테이션 상태가 "Rotation in progress"로 표시됩니다.
-60. 1-2분 후 페이지를 새로고침합니다.
-61. 로테이션 상태가 "Rotation successful"로 변경되었는지 확인합니다.
-62. **Secret value** 섹션에서 [[Retrieve secret value]] 버튼을 클릭합니다.
-63. 비밀번호가 `TempPassword123!`에서 새로운 값으로 변경되었는지 확인합니다.
+> [!OUTPUT]
+> 로테이션 상태가 "Rotation in progress"로 표시됩니다.
+
+56. 1-2분 후 페이지를 새로고침합니다.
+57. 로테이션 상태가 "Rotation successful"로 변경되었는지 확인합니다.
+58. **Secret value** 섹션에서 [[Retrieve secret value]] 버튼을 클릭합니다.
+59. 비밀번호가 `TempPassword123!`에서 새로운 값으로 변경되었는지 확인합니다.
 
 > [!SUCCESS]
 > 자동 로테이션이 성공적으로 완료되었습니다! Amazon RDS 비밀번호가 자동으로 변경되었습니다.
@@ -210,16 +208,16 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS Systems Manager Parameter Store에 데이터베이스 연결 문자열을 저장합니다.
 
-64. 상단 검색창에 `Systems Manager`을 입력하고 선택합니다.
-65. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
-66. [[Create parameter]] 버튼을 클릭합니다.
-67. **Name**에 `/prod/app/config/db-connection-string`을 입력합니다.
-68. **Description**에 `Database connection string`을 입력합니다.
-69. **Tier**에서 `Standard`를 선택합니다.
-70. **Type**에서 `SecureString`을 선택합니다.
-71. **KMS key source**에서 `My current account`를 선택합니다.
-72. **KMS Key ID**에서 `alias/secrets-encryption-key`를 선택합니다.
-73. **Value**에 다음을 입력합니다 (태스크 0의 DBEndpoint로 대체):
+60. 상단 검색창에 `Systems Manager`을 입력하고 선택합니다.
+61. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
+62. [[Create parameter]] 버튼을 클릭합니다.
+63. **Name**에 `/prod/app/config/db-connection-string`을 입력합니다.
+64. **Description**에 `Database connection string`을 입력합니다.
+65. **Tier**에서 `Standard`를 선택합니다.
+66. **Type**에서 `SecureString`을 선택합니다.
+67. **KMS key source**에서 `My current account`를 선택합니다.
+68. **KMS Key ID**에서 `alias/secrets-encryption-key`를 선택합니다.
+69. **Value**에 다음을 입력합니다 (태스크 0의 DBEndpoint로 대체):
 
 ```
 mysql://admin:password@{DBEndpoint}:3306/mydb
@@ -230,7 +228,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > [!NOTE]
 > 이 연결 문자열은 예시입니다. 실제 환경에서는 비밀번호를 하드코딩하지 말고 AWS Secrets Manager에서 가져와야 합니다.
 
-74. **Tags — optional** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+70. **Tags — optional** 섹션에서 [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -238,7 +236,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 | `Week`      | `12-1`    |
 | `CreatedBy` | `Student` |
 
-75. [[Create parameter]] 버튼을 클릭합니다.
+71. [[Create parameter]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: 데이터베이스 연결 문자열이 Parameter Store에 저장되었습니다.
 
@@ -246,10 +244,10 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 
 이 태스크에서는 AWS CloudFormation이 생성한 AWS Lambda 함수를 테스트하여 Secrets Manager와 Parameter Store에서 자격증명을 조회하고 Amazon RDS에 연결합니다.
 
-76. 상단 검색창에 `Lambda`을 입력하고 선택합니다.
-77. `access-secrets-demo` 함수를 선택합니다.
-78. **Code** 탭을 선택합니다.
-79. 코드를 확인합니다:
+72. 상단 검색창에 `Lambda`을 입력하고 선택합니다.
+73. `access-secrets-demo` 함수를 선택합니다.
+74. **Code** 탭을 선택합니다.
+75. 코드를 확인합니다:
 	- Secrets Manager에서 자격증명 조회
 	- Parameter Store에서 파라미터 조회
 	- Amazon RDS MySQL 연결
@@ -257,18 +255,16 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > [!NOTE]
 > 이 AWS Lambda 함수는 AWS CloudFormation이 자동으로 생성했습니다. 코드는 다운로드한 `lambda_function.py` 파일과 동일합니다.
 
-80. **Test** 탭을 선택합니다.
-81. [[Create new event]] 버튼을 클릭합니다.
-82. **Event name**에 `TestEvent`를 입력합니다.
-83. **Event JSON**은 기본값을 유지합니다:
+76. **Test** 탭을 선택합니다.
+77. [[Create new event]] 버튼을 클릭합니다.
+78. **Event name**에 `TestEvent`를 입력합니다.
 
-```json
-{}
-```
+> [!NOTE]
+> **Event JSON**은 기본값(`{}`)을 유지합니다.
 
-84. [[Save]] 버튼을 클릭합니다.
-85. [[Test]] 버튼을 클릭합니다.
-86. 실행 결과를 확인합니다.
+79. [[Save]] 버튼을 클릭합니다.
+80. [[Test]] 버튼을 클릭합니다.
+81. 실행 결과를 확인합니다.
 
 > [!OUTPUT]
 > ```json
@@ -305,7 +301,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > - Parameter Store에서 파라미터를 조회했습니다
 > - Amazon RDS MySQL에 연결했습니다
 
-87. **Logs** 섹션에서 Amazon CloudWatch Logs 링크를 클릭하여 상세 로그를 확인합니다.
+82. **Logs** 섹션에서 Amazon CloudWatch Logs 링크를 클릭하여 상세 로그를 확인합니다.
 
 ✅ **태스크 완료**: AWS Lambda 함수가 테스트되었습니다.
 
@@ -325,7 +321,9 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 	- **Tag key**: `Week`
 	- **Tag value**: `12-1`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -337,8 +335,8 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > [!TIP]
 > AWS CloudShell을 사용하면 7일 대기 기간 없이 즉시 삭제할 수 있습니다.
 
-8. AWS Management Console 상단 오른쪽의 CloudShell 아이콘을 클릭합니다.
-9. CloudShell이 열리면 다음 명령어를 실행합니다:
+7. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
+8. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 aws secretsmanager delete-secret \
@@ -358,54 +356,51 @@ aws secretsmanager delete-secret \
 
 #### 2단계: Parameter Store 파라미터 삭제
 
-10. AWS Systems Manager 콘솔로 이동합니다.
-11. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
-12. `/prod/app/config/db-connection-string` 파라미터를 선택합니다.
-13. [[Delete]] 버튼을 클릭합니다.
-14. 확인 창에서 [[Delete parameters]] 버튼을 클릭합니다.
+9. AWS Systems Manager 콘솔로 이동합니다.
+10. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
+11. `/prod/app/config/db-connection-string` 파라미터를 선택합니다.
+12. [[Delete]] 버튼을 클릭합니다.
+13. 확인 창에서 [[Delete parameters]] 버튼을 클릭합니다.
 
 #### 3단계: AWS KMS 키 삭제 예약
 
-15. AWS KMS 콘솔로 이동합니다.
-16. `secrets-encryption-key`를 선택합니다.
-17. **Key actions** > `Schedule key deletion`을 선택합니다.
-18. **Waiting period**에 `7`일을 입력합니다 (최소값).
-19. [[Schedule deletion]] 버튼을 클릭합니다.
+14. AWS KMS 콘솔로 이동합니다.
+15. `secrets-encryption-key`를 선택합니다.
+16. **Key actions** > `Schedule key deletion`을 선택합니다.
+17. **Waiting period**에 `7`일을 입력합니다 (최소값).
+18. [[Schedule deletion]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS KMS 키는 삭제 예약 시 즉시 비용 청구가 중단됩니다.
 
 #### 4단계: 로테이션 AWS Lambda 함수 삭제
 
-20. AWS Lambda 콘솔로 이동합니다.
-21. `SecretsManagerRotation-mysql` 함수를 선택합니다.
-22. **Actions** > `Delete`를 선택합니다.
-23. 확인 창에서 `delete`를 입력합니다.
-24. [[Delete]] 버튼을 클릭합니다.
+19. AWS Lambda 콘솔로 이동합니다.
+20. `SecretsManagerRotation-mysql` 함수를 선택합니다.
+21. **Actions** > `Delete`를 선택합니다.
+22. 확인 창에서 `delete`를 입력합니다.
+23. [[Delete]] 버튼을 클릭합니다.
 
 #### 5단계: AWS CloudFormation 스택 삭제
 
-25. AWS CloudFormation 콘솔로 이동합니다.
-26. `week12-1-secrets-lab-stack` 스택을 선택합니다.
-27. [[Delete]] 버튼을 클릭합니다.
-28. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-29. 스택 삭제가 완료될 때까지 기다립니다.
+24. AWS CloudFormation 콘솔로 이동합니다.
+25. `week12-1-secrets-lab-stack` 스택을 선택합니다.
+26. [[Delete]] 버튼을 클릭합니다.
+27. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 삭제에 10-15분이 소요됩니다.
-
-> [!NOTE]
+> 스택 삭제에 10-15분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 Amazon RDS, Amazon VPC, AWS Lambda 함수, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 #### 6단계: Amazon CloudWatch Log Group 삭제
 
-30. Amazon CloudWatch 콘솔로 이동합니다.
-31. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-32. 다음 로그 그룹들을 선택합니다:
+28. Amazon CloudWatch 콘솔로 이동합니다.
+29. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+30. 다음 로그 그룹들을 선택합니다:
 	- `/aws/lambda/access-secrets-demo`
 	- `/aws/lambda/SecretsManagerRotation-mysql`
-33. **Actions** > `Delete log group(s)`를 선택합니다.
-34. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+31. **Actions** > `Delete log group(s)`를 선택합니다.
+32. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

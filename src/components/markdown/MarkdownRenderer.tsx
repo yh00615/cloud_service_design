@@ -69,10 +69,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       // 버튼 컴포넌트 추가
       if (match[2]) {
-        // [[버튼]] - Primary
+        // [[버튼]] - 키워드 기반 자동 판별
+        const primaryKeywords = [
+          'create', 'launch', 'deploy', 'run', 'start', 'submit',
+          'publish', 'enable', 'activate', 'confirm'
+        ];
+        const isPrimary = primaryKeywords.some(k =>
+          match[2].toLowerCase().includes(k)
+        );
         parts.push(
           <span key={match.index} className="markdown-button-wrapper">
-            <AWSButton variant="primary" size="small">
+            <AWSButton variant={isPrimary ? 'primary' : 'normal'} size="small">
               {match[2]}
             </AWSButton>
           </span>,

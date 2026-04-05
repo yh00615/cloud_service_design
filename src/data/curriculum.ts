@@ -617,13 +617,7 @@ export const curriculum: WeekCurriculum[] = [
         markdownPath: '/content/week11/11-3-data-pipeline.md',
         description:
           'AWS Glue Visual ETL 기반 데이터 파이프라인, Amazon Athena 쿼리 분석, EventBridge와 Lambda를 활용한 이벤트 기반 자동화',
-        awsServices: [
-          'AWS Glue',
-          'Amazon Athena',
-          'Amazon S3',
-          'AWS Lambda',
-          'Amazon EventBridge',
-        ],
+        awsServices: ['AWS Glue', 'Amazon Athena', 'Amazon S3', 'AWS Lambda', 'Amazon EventBridge'],
         learningObjectives: [
           'AWS Glue Database를 생성하고 Crawler를 구성하여 Amazon S3 데이터의 스키마를 자동으로 추론하고 Data Catalog 테이블을 생성할 수 있습니다.',
           'AWS Glue Visual ETL Job을 생성하여 CSV 데이터를 Parquet 형식으로 변환하는 ETL 파이프라인을 구성할 수 있습니다.',
@@ -654,7 +648,7 @@ export const curriculum: WeekCurriculum[] = [
         markdownPath: '/content/week12/12-1-credentials-management.md',
         description:
           '자격증명 관리 아키텍처 설계, AWS Systems Manager Parameter Store 구성, AWS Secrets Manager 구성',
-        awsServices: ['AWS Systems Manager', 'AWS Secrets Manager'],
+        awsServices: ['AWS Secrets Manager', 'AWS Systems Manager', 'AWS KMS', 'Amazon RDS', 'AWS Lambda'],
         learningObjectives: [
           'AWS Secrets Manager에 Amazon RDS 자격증명을 저장하고 자동 로테이션을 설정할 수 있습니다.',
           'AWS Systems Manager Parameter Store와 AWS Secrets Manager의 차이점을 이해할 수 있습니다.',
