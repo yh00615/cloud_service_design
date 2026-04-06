@@ -43,6 +43,14 @@ prerequisites:
 
 이 태스크에서는 eksctl을 사용하여 Amazon EKS 클러스터를 생성하고 Amazon CloudWatch Container Insights를 위한 Amazon CloudWatch 로깅을 활성화합니다.
 
+> [!NOTE]
+> **콘솔 vs eksctl 비교**:
+>
+> - **콘솔 방식** (Week 7-3): VPC, IAM 역할을 사전에 별도 생성한 후 콘솔에서 클러스터를 수동 구성
+> - **eksctl 방식** (이번 실습): YAML 파일 하나로 VPC, IAM 역할, 노드 그룹, CloudWatch 로깅까지 한 번에 자동 생성
+>
+> eksctl은 프로덕션 환경에서 IaC(Infrastructure as Code) 방식으로 클러스터를 관리할 때 주로 사용됩니다.
+
 1. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
 
 > [!NOTE]
