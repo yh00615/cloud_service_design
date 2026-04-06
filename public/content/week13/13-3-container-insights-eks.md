@@ -33,9 +33,11 @@ prerequisites:
 > [!DOWNLOAD]
 > [week13-3-container-insights-lab.zip](/files/week13/week13-3-container-insights-lab.zip)
 >
-> - `cloudwatch-agent-config.json` - CloudWatch 에이전트 설정 파일
-> - `lambda_function.py` - 모니터링 관련 Lambda 함수 코드
-> - `lambda-iam-policy.json` - Lambda 실행 역할 IAM 정책
+> - `cloudwatch-agent-config.json` - CloudWatch 에이전트 설정 파일 (참고용)
+> - `lambda_function.py` - 모니터링 관련 Lambda 함수 코드 (참고용)
+> - `lambda-iam-policy.json` - Lambda 실행 역할 IAM 정책 (참고용)
+>
+> 이 실습에서는 Amazon EKS Add-on 방식을 사용하므로 위 파일을 직접 사용하지 않습니다. 수동 설치 방식의 참고 자료로 제공됩니다.
 
 ## 태스크 1: Amazon EKS 클러스터 생성
 
@@ -505,7 +507,7 @@ fields @timestamp, @message
 54. Amazon CloudWatch 콘솔로 이동합니다.
 55. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
 56. [[Create dashboard]] 버튼을 클릭합니다.
-57. **Dashboard name**에 `Amazon EKS-Container-Insights-Dashboard`를 입력합니다.
+57. **Dashboard name**에 `EKS-Container-Insights-Dashboard`를 입력합니다.
 
 > [!NOTE]
 > 대시보드 이름에 공백을 사용하지 않는 것이 권장됩니다. URL 인코딩 문제를 방지할 수 있습니다.
@@ -598,7 +600,7 @@ fields @timestamp, kubernetes.pod_name, @message
 98. **Notification** 섹션에서 다음을 설정합니다:
 	- **Alarm state trigger**: `In alarm`
 	- **Select an Amazon SNS topic**: `Create new topic`
-	- **Create a new topic...**: `Amazon EKS-High-CPU-Alert`
+	- **Create a new topic...**: `EKS-High-CPU-Alert`
 	- **Email endpoints that will receive the notification**: 본인의 이메일 주소 입력
 
 > [!NOTE]
@@ -610,7 +612,7 @@ fields @timestamp, kubernetes.pod_name, @message
 > 입력한 이메일 주소로 확인 메일이 발송됩니다. 이메일을 열고 **Confirm subscription** 링크를 클릭하여 구독을 확인합니다.
 
 100. [[Next]] 버튼을 클릭합니다.
-101. **Alarm name**에 `Amazon EKS-Cluster-High-CPU`를 입력합니다.
+101. **Alarm name**에 `EKS-Cluster-High-CPU`를 입력합니다.
 102. **Alarm description**에 `Alert when Amazon EKS cluster CPU utilization exceeds 70%`를 입력합니다.
 103. [[Next]] 버튼을 클릭합니다.
 104. 설정을 검토합니다.
@@ -627,9 +629,9 @@ fields @timestamp, kubernetes.pod_name, @message
 	- **than...**: `80`
 
 112. [[Next]] 버튼을 클릭합니다.
-113. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
+113. **Select an Amazon SNS topic**에서 `EKS-High-CPU-Alert`를 선택합니다.
 114. [[Next]] 버튼을 클릭합니다.
-115. **Alarm name**에 `Amazon EKS-Cluster-High-Memory`를 입력합니다.
+115. **Alarm name**에 `EKS-Cluster-High-Memory`를 입력합니다.
 116. **Alarm description**에 `Alert when Amazon EKS cluster memory utilization exceeds 80%`를 입력합니다.
 117. [[Next]] 버튼을 클릭합니다.
 118. [[Create alarm]] 버튼을 클릭합니다.
@@ -645,9 +647,9 @@ fields @timestamp, kubernetes.pod_name, @message
 	- **than...**: `0`
 
 125. [[Next]] 버튼을 클릭합니다.
-126. **Select an Amazon SNS topic**에서 `Amazon EKS-High-CPU-Alert`를 선택합니다.
+126. **Select an Amazon SNS topic**에서 `EKS-High-CPU-Alert`를 선택합니다.
 127. [[Next]] 버튼을 클릭합니다.
-128. **Alarm name**에 `Amazon EKS-Cluster-Failed-Nodes`를 입력합니다.
+128. **Alarm name**에 `EKS-Cluster-Failed-Nodes`를 입력합니다.
 129. **Alarm description**에 `Alert when any node in the cluster fails`를 입력합니다.
 130. [[Next]] 버튼을 클릭합니다.
 131. [[Create alarm]] 버튼을 클릭합니다.
@@ -659,6 +661,34 @@ fields @timestamp, kubernetes.pod_name, @message
 ## 태스크 8: 성능 메트릭 분석 및 최적화
 
 이 태스크에서는 수집된 메트릭을 분석하고 클러스터 성능을 최적화합니다.
+
+### 태스크 8.1: Metrics Server 설치
+
+`kubectl top` 명령어와 Horizontal Pod Autoscaler(HPA)를 사용하려면 Kubernetes Metrics Server가 필요합니다. Amazon EKS에는 기본 설치되어 있지 않으므로 직접 설치합니다.
+
+133. Metrics Server를 설치합니다:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+134. Metrics Server Pod가 정상 실행되는지 확인합니다:
+
+```bash
+kubectl get pods -n kube-system -l k8s-app=metrics-server
+```
+
+> [!OUTPUT]
+>
+> ```text
+> NAME                              READY   STATUS    RESTARTS   AGE
+> metrics-server-xxxxx-yyyyy        1/1     Running   0          30s
+> ```
+
+> [!NOTE]
+> Metrics Server가 메트릭을 수집하기까지 1-2분이 소요됩니다. Pod가 "Running" 상태가 된 후 잠시 기다린 다음 진행합니다.
+
+### 태스크 8.2: 리소스 사용량 분석
 
 > [!CONCEPT] Kubernetes 리소스 관리 및 오토스케일링
 > Kubernetes는 리소스 requests/limits와 오토스케일링을 통해 애플리케이션 성능과 비용을 최적화합니다.
@@ -678,18 +708,18 @@ fields @timestamp, kubernetes.pod_name, @message
 >
 > HPA는 트래픽 변화에 빠르게 대응하고, VPA는 리소스 낭비를 최소화하며, 두 가지를 함께 사용하면 최적의 성능과 비용 효율을 달성할 수 있습니다.
 
-133. Amazon CloudWatch 콘솔에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
-134. 드롭다운에서 `Amazon EKS Pods`를 선택합니다.
-135. **sample-app** Pod들을 확인합니다.
-136. CPU 사용률이 가장 높은 Pod를 찾습니다.
-137. Pod 이름을 클릭하여 상세 메트릭을 확인합니다.
-138. **Performance** 탭에서 다음을 분석합니다:
+135. Amazon CloudWatch 콘솔에서 **Infrastructure Monitoring** > **Container Insights**를 선택합니다.
+136. 드롭다운에서 `Amazon EKS Pods`를 선택합니다.
+137. **sample-app** Pod들을 확인합니다.
+138. CPU 사용률이 가장 높은 Pod를 찾습니다.
+139. Pod 이름을 클릭하여 상세 메트릭을 확인합니다.
+140. **Performance** 탭에서 다음을 분석합니다:
 	- CPU 사용 패턴
 	- 메모리 사용 패턴
 	- 네트워크 트래픽 패턴
 
-139. CloudShell로 이동합니다.
-140. Pod의 리소스 사용량을 실시간으로 확인합니다:
+141. CloudShell로 이동합니다.
+142. Pod의 리소스 사용량을 실시간으로 확인합니다:
 
 ```bash
 kubectl top pods -l app=sample-app
@@ -704,19 +734,19 @@ kubectl top pods -l app=sample-app
 > sample-app-xxxxx-wwwww        52m          34Mi
 > ```
 
-141. 노드의 리소스 사용량을 확인합니다:
+143. 노드의 리소스 사용량을 확인합니다:
 
 ```bash
 kubectl top nodes
 ```
 
-142. Pod의 리소스 제한을 확인합니다:
+144. Pod의 리소스 제한을 확인합니다:
 
 ```bash
 kubectl describe pod -l app=sample-app | grep -A 5 "Limits:"
 ```
 
-143. 리소스 사용량이 제한에 가까운 경우 Deployment를 업데이트합니다:
+145. 리소스 사용량이 제한에 가까운 경우 Deployment를 업데이트합니다:
 
 ```bash
 kubectl set resources deployment sample-app \
@@ -724,7 +754,7 @@ kubectl set resources deployment sample-app \
   --requests=cpu=500m,memory=128Mi
 ```
 
-144. 업데이트된 Pod를 확인합니다:
+146. 업데이트된 Pod를 확인합니다:
 
 ```bash
 kubectl get pods -l app=sample-app --watch
@@ -744,7 +774,7 @@ kubectl get pods -l app=sample-app --watch
 > - **모니터링 기간**: 최소 1주일 이상의 데이터를 수집하여 패턴 분석
 > - **여유 공간**: 피크 시간대를 고려하여 20-30% 여유 확보
 
-145. Horizontal Pod Autoscaler를 생성합니다:
+147. Horizontal Pod Autoscaler를 생성합니다:
 
 ```bash
 kubectl autoscale deployment sample-app \
@@ -753,7 +783,7 @@ kubectl autoscale deployment sample-app \
   --max=10
 ```
 
-146. HPA 상태를 확인합니다:
+148. HPA 상태를 확인합니다:
 
 ```bash
 kubectl get hpa
@@ -766,8 +796,8 @@ kubectl get hpa
 > sample-app   Deployment/sample-app   25%/50%   2         10        3          30s
 > ```
 
-147. Amazon CloudWatch Container Insights로 이동합니다.
-148. 5-10분 후 메트릭 변화를 확인합니다.
+149. Amazon CloudWatch Container Insights로 이동합니다.
+150. 5-10분 후 메트릭 변화를 확인합니다.
 
 > [!NOTE]
 > HPA는 CPU 사용률이 목표값(50%)을 초과할 때 Pod 수를 자동으로 증가시킵니다.
@@ -905,20 +935,20 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 33. Amazon CloudWatch 콘솔로 이동합니다.
 34. 왼쪽 메뉴에서 **Alarms** > **All alarms**를 선택합니다.
 35. 생성한 3개의 알람을 선택합니다:
-	- `Amazon EKS-Cluster-High-CPU`
-	- `Amazon EKS-Cluster-High-Memory`
-	- `Amazon EKS-Cluster-Failed-Nodes`
+	- `EKS-Cluster-High-CPU`
+	- `EKS-Cluster-High-Memory`
+	- `EKS-Cluster-Failed-Nodes`
 36. **Actions** > `Delete`를 선택합니다.
 37. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 38. 왼쪽 메뉴에서 **Dashboards**를 선택합니다.
-39. `Amazon EKS-Container-Insights-Dashboard`를 선택합니다.
+39. `EKS-Container-Insights-Dashboard`를 선택합니다.
 40. [[Delete]] 버튼을 클릭합니다.
 41. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 42. AWS Management Console 상단 검색창에 `SNS`을 입력하고 선택합니다.
 43. 왼쪽 메뉴에서 **Topics**를 선택합니다.
-44. `Amazon EKS-High-CPU-Alert` 토픽을 선택합니다.
+44. `EKS-High-CPU-Alert` 토픽을 선택합니다.
 45. [[Delete]] 버튼을 클릭합니다.
 46. 확인 창에서 `delete me`를 입력합니다.
 47. [[Delete]] 버튼을 클릭합니다.
