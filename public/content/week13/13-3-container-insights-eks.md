@@ -649,16 +649,20 @@ fields @timestamp, kubernetes.pod_name, @message
 97. [[Create alarm]] 버튼을 클릭합니다.
 98. [[Select metric]] 버튼을 클릭합니다.
 99. **ContainerInsights** 네임스페이스를 선택합니다.
-100. **ClusterName** 차원을 선택합니다.
-101. 검색창에 `cpu`를 입력하고 `node_cpu_utilization` 메트릭을 찾아 체크합니다.
-102. [[Select metric]] 버튼을 클릭합니다.
-103. **Metric** 섹션에서 다음을 설정합니다:
+100.  **ClusterName** 차원을 선택합니다.
+101.  검색창에 `cpu`를 입력하고 `node_cpu_utilization` 메트릭을 찾아 체크합니다.
+102.  [[Select metric]] 버튼을 클릭합니다.
+103.  **Metric** 섹션에서 다음을 설정합니다:
+
+
     - **Statistic**: `Average`
     - **Period**: `5 minutes`
 
 104. **Conditions** 섹션에서 **Threshold type**을 `Static`, **Whenever...**를 `Greater`, **than...**을 `70`으로 설정합니다.
 105. [[Next]] 버튼을 클릭합니다.
 106. **Notification** 섹션에서 다음을 설정합니다:
+
+
     - **Alarm state trigger**: `In alarm`
     - **Select an Amazon SNS topic**: `Create new topic`
     - **Create a new topic...**: `EKS_High_CPU_Alert`
@@ -872,7 +876,7 @@ kubectl get hpa
 >
 > **Amazon EKS 클러스터 삭제에 10-15분이 소요**되므로, 삭제 명령어 실행 후 반드시 완료를 확인한 후 퇴실합니다.
 
-### 방법 1: Tag Editor로 리소스 찾기 (참고)
+### Tag Editor로 리소스 찾기 (참고)
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -889,7 +893,7 @@ kubectl get hpa
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. Amazon EKS 클러스터는 eksctl로 삭제하는 것이 권장됩니다.
 
-### 방법 2: eksctl로 클러스터 삭제 (권장)
+### 방법 1: eksctl로 클러스터 삭제 (권장)
 
 7. CloudShell에서 샘플 애플리케이션을 삭제합니다:
 
@@ -907,6 +911,16 @@ kubectl delete hpa sample-app
 ```
 
 9. Amazon EKS 클러스터를 삭제합니다:
+
+> [!TIP]
+> CloudShell 세션이 만료되어 eksctl 명령어가 없는 경우, 다음 명령어로 다시 설치합니다:
+>
+> ```bash
+> curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz"
+> tar -xzf eksctl_Linux_amd64.tar.gz
+> sudo mv eksctl /usr/local/bin
+> rm eksctl_Linux_amd64.tar.gz
+> ```
 
 ```bash
 eksctl delete cluster --name container-insights-cluster --region ap-northeast-2
@@ -941,9 +955,9 @@ eksctl get cluster --name container-insights-cluster --region ap-northeast-2
 > No clusters found
 > ```
 
-### 방법 2: 수동 삭제
+### 방법 2: 수동 삭제 (또는 방법1 삭제 확인 참고용)
 
-eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
+eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다. eksctl로 정상 삭제된 경우에도 리소스가 남아있지 않은지 확인하는 용도로 한 번 검토하는 것을 권장합니다.
 
 11. Amazon EC2 콘솔로 이동합니다.
 12. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
@@ -991,16 +1005,8 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 40. [[Delete]] 버튼을 클릭합니다.
 41. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
-42. AWS Management Console 상단 검색창에 `SNS`을 입력하고 선택합니다.
-43. 왼쪽 메뉴에서 **Topics**를 선택합니다.
-44. `EKS_High_CPU_Alert` 토픽을 선택합니다.
-45. [[Delete]] 버튼을 클릭합니다.
-46. 확인 창에서 `delete me`를 입력합니다.
-47. [[Delete]] 버튼을 클릭합니다.
-
-48. Amazon CloudWatch 콘솔로 이동합니다.
-49. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-50. 다음 로그 그룹들을 선택합니다:
+42. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+43. 다음 로그 그룹들을 선택합니다:
     - `/aws/containerinsights/container-insights-cluster/application`
     - `/aws/containerinsights/container-insights-cluster/dataplane`
     - `/aws/containerinsights/container-insights-cluster/host`
@@ -1010,11 +1016,20 @@ eksctl 삭제가 실패한 경우 다음 순서로 수동 삭제합니다:
 > [!NOTE]
 > 로그 그룹이 표시되지 않으면 이미 클러스터 삭제 시 자동으로 삭제된 것입니다.
 
-51. **Actions** > `Delete log group(s)`를 선택합니다.
-52. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+44. **Actions** > `Delete log group(s)`를 선택합니다.
+45. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
-> Amazon CloudWatch Logs는 스토리지 비용(GB당 월 $0.50)이 부과됩니다. 로그 그룹을 삭제하지 않으면 계속 비용이 발생합니다.
+> 로그 그룹을 삭제하지 않으면 스토리지 비용이 계속 발생합니다.
+
+### Amazon SNS 토픽 삭제
+
+46. AWS Management Console 상단 검색창에 `SNS`을 입력하고 선택합니다.
+47. 왼쪽 메뉴에서 **Topics**를 선택합니다.
+48. `EKS_High_CPU_Alert` 토픽을 선택합니다.
+49. [[Delete]] 버튼을 클릭합니다.
+50. 확인 창에서 `delete me`를 입력합니다.
+51. [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
