@@ -1,5 +1,5 @@
 ---
-title: 'AWS Secrets Manager와 RDS 자동 로테이션'
+title: 'AWS Secrets Manager와 AWS Systems Manager를 활용한 자격증명 관리'
 week: 12
 session: 1
 awsServices:
