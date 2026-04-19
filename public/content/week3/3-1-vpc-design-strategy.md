@@ -98,11 +98,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
 15. [[Next]] 버튼을 클릭합니다.
-
-> [!NOTE]
-> **Review and create** 페이지가 열립니다. 이 페이지에서는 스택 생성 전 모든 설정을 최종 확인할 수 있습니다.
-
-16. 페이지를 아래로 스크롤하여 설정을 검토합니다.
+16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
