@@ -355,6 +355,15 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: EC2DescribeInstances
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                Resource: '*'
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-EC2-SSM-Role'
@@ -506,26 +515,10 @@ Resources:
           yum update -y
           yum install -y nc python3
           # Simple app server on port 8080
-          cat > /tmp/app_server.py << 'EOF'
-          #!/usr/bin/env python3
-          import socket
-          import subprocess
-          
-          server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-          server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-          server.bind(('0.0.0.0', 8080))
-          server.listen(5)
-          
-          hostname = subprocess.check_output(['hostname', '-f']).decode().strip()
-          
-          while True:
-              client, addr = server.accept()
-              response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nApp Tier - {hostname}\n"
-              client.send(response.encode())
-              client.close()
-          EOF
-          chmod +x /tmp/app_server.py
-          nohup python3 /tmp/app_server.py > /var/log/app_server.log 2>&1 &
+          HOSTNAME=$(hostname -f)
+          mkdir -p /tmp/www
+          echo "App Tier - $HOSTNAME" > /tmp/www/index.html
+          nohup python3 -m http.server 8080 --directory /tmp/www > /var/log/app_server.log 2>&1 &
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-App-Instance'
@@ -555,18 +548,19 @@ Resources:
           #!/usr/bin/env python3
           import socket
           import subprocess
-          
+
           server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
           server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
           server.bind(('0.0.0.0', 3306))
           server.listen(5)
-          
+
           hostname = subprocess.check_output(['hostname', '-f']).decode().strip()
-          
+
           while True:
               client, addr = server.accept()
               response = f"MySQL simulation - {hostname}\n"
-              client.send(response.encode())
+              client.sendall(response.encode())
+              client.shutdown(socket.SHUT_WR)
               client.close()
           EOF
           chmod +x /tmp/db_server.py
@@ -611,78 +605,3 @@ Outputs:
     Value: !Ref PrivateWebSubnetC
     Export:
       Name: !Sub '${EnvironmentName}-PrivateWebSubnetC'
-
-  PrivateAppSubnetAId:
-    Description: Private App Subnet A ID (ap-northeast-2a)
-    Value: !Ref PrivateAppSubnetA
-    Export:
-      Name: !Sub '${EnvironmentName}-PrivateAppSubnetA'
-
-  PrivateAppSubnetCId:
-    Description: Private App Subnet C ID (ap-northeast-2c)
-    Value: !Ref PrivateAppSubnetC
-    Export:
-      Name: !Sub '${EnvironmentName}-PrivateAppSubnetC'
-
-  PrivateDBSubnetAId:
-    Description: Private DB Subnet A ID (ap-northeast-2a)
-    Value: !Ref PrivateDBSubnetA
-    Export:
-      Name: !Sub '${EnvironmentName}-PrivateDBSubnetA'
-
-  PrivateDBSubnetCId:
-    Description: Private DB Subnet C ID (ap-northeast-2c)
-    Value: !Ref PrivateDBSubnetC
-    Export:
-      Name: !Sub '${EnvironmentName}-PrivateDBSubnetC'
-
-  BastionSGId:
-    Description: Bastion Host Security Group ID
-    Value: !Ref BastionSecurityGroup
-
-  ALBSGId:
-    Description: ALB Security Group ID (students need to add rules)
-    Value: !Ref ALBSecurityGroup
-
-  WebTierSGId:
-    Description: Web Tier Security Group ID (students need to add rules)
-    Value: !Ref WebTierSecurityGroup
-
-  AppTierSGId:
-    Description: App Tier Security Group ID (students need to add rules)
-    Value: !Ref AppTierSecurityGroup
-
-  DBTierSGId:
-    Description: DB Tier Security Group ID (students need to add rules)
-    Value: !Ref DBTierSecurityGroup
-
-  # EC2 인스턴스 Outputs
-  WebInstanceId:
-    Description: Web Tier EC2 Instance ID
-    Value: !Ref WebInstance
-    Export:
-      Name: !Sub '${EnvironmentName}-WebInstance'
-
-  AppInstanceId:
-    Description: App Tier EC2 Instance ID
-    Value: !Ref AppInstance
-    Export:
-      Name: !Sub '${EnvironmentName}-AppInstance'
-
-  DBInstanceId:
-    Description: DB Tier EC2 Instance ID
-    Value: !Ref DBInstance
-    Export:
-      Name: !Sub '${EnvironmentName}-DBInstance'
-
-  InternetGatewayId:
-    Description: Internet Gateway ID
-    Value: !Ref InternetGateway
-
-  NATGatewayAId:
-    Description: NAT Gateway A ID
-    Value: !Ref NATGatewayA
-
-  NATGatewayAEIP:
-    Description: NAT Gateway A Elastic IP
-    Value: !Ref NATGatewayEIPA
