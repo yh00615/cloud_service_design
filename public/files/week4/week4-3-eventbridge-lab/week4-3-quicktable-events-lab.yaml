@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'QuickTable 레스토랑 예약 시스템 - EventBridge 기반 이벤트 처리 인프라'
+Description: 'QuickTable Reservation System - EventBridge Event Processing Infrastructure'
 
 Parameters:
   ProjectTag:
@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Default: 'CloudFormation'
     Description: CreatedBy tag value
-    
+
   EnvironmentName:
     Type: String
     Default: week4-3-quicktable-events-lab
@@ -86,7 +86,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-InitializeAvailability'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 60
@@ -104,9 +104,9 @@ Resources:
         ZipFile: |
           import boto3
           import cfnresponse
-          
+
           dynamodb = boto3.resource('dynamodb')
-          
+
           def lambda_handler(event, context):
               try:
                   if event['RequestType'] == 'Delete':
@@ -221,7 +221,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-ReservationProcessor'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -235,15 +235,15 @@ Resources:
           import boto3
           import os
           from datetime import datetime
-          
+
           dynamodb = boto3.resource('dynamodb')
           eventbridge = boto3.client('events')
-          
+
           RESERVATIONS_TABLE = os.environ['RESERVATIONS_TABLE']
           EVENT_BUS_NAME = os.environ['EVENT_BUS_NAME']
-          
+
           reservations_table = dynamodb.Table(RESERVATIONS_TABLE)
-          
+
           def lambda_handler(event, context):
               print(f"Received event: {json.dumps(event)}")
               
@@ -330,7 +330,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-TableAvailabilityChecker'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -344,15 +344,15 @@ Resources:
           import boto3
           import os
           from datetime import datetime
-          
+
           dynamodb = boto3.resource('dynamodb')
           eventbridge = boto3.client('events')
-          
+
           RESTAURANT_AVAILABILITY_TABLE = os.environ['RESTAURANT_AVAILABILITY_TABLE']
           EVENT_BUS_NAME = os.environ['EVENT_BUS_NAME']
-          
+
           availability_table = dynamodb.Table(RESTAURANT_AVAILABILITY_TABLE)
-          
+
           def lambda_handler(event, context):
               print(f"Received event: {json.dumps(event)}")
               
@@ -387,7 +387,7 @@ Resources:
               except Exception as e:
                   print(f"Error: {str(e)}")
                   return {'statusCode': 500, 'body': json.dumps({'error': str(e)})}
-          
+
           def publish_unavailable_event(restaurant_id, reservation_id, time_slot, party_size, available_slots):
               try:
                   event_detail = {
@@ -425,7 +425,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub '${EnvironmentName}-NotificationSender'
-      Runtime: python3.13
+      Runtime: python3.14
       Handler: index.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 30
@@ -438,10 +438,10 @@ Resources:
           import boto3
           import os
           from datetime import datetime
-          
+
           sns = boto3.client('sns')
           SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
-          
+
           def lambda_handler(event, context):
               print(f"Received event: {json.dumps(event)}")
               
