@@ -37,6 +37,8 @@ prerequisites:
 
 이 태스크에서는 AWS CloudFormation을 사용하여 실습에 필요한 기본 인프라를 자동으로 생성합니다.
 
+이 실습을 시작하기 전에 AWS 콘솔 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**로 설정되어 있는지 확인합니다.
+
 ### 환경 구성 요소
 
 AWS CloudFormation 스택은 다음 리소스를 생성합니다:
@@ -54,12 +56,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 >
 > AWS CloudFormation 스택은 RestaurantAvailability 테이블에 다음 초기 데이터를 자동으로 삽입합니다. timeSlot 형식은 `날짜#시간` (예: `2026-03-20#19:00`)입니다.
 >
-> - restaurant-001 (이탈리안 레스토랑): 2026-03-20#18:00, 2026-03-20#19:00, 2026-03-20#20:00 시간대 각 5개 테이블
-> - restaurant-002 (한식당): 2026-03-20#18:00, 2026-03-20#19:00, 2026-03-20#20:00 시간대 각 8개 테이블
-> - restaurant-003 (일식당): 2026-03-20#18:00, 2026-03-20#19:00, 2026-03-20#20:00 시간대 각 3개 테이블 (예약 가능 슬롯 부족 테스트용)
-> - restaurant-004 (중식당): 2026-03-20#18:00, 2026-03-20#19:00, 2026-03-20#20:00 시간대 각 10개 테이블
+> | Restaurant ID  | 이름              | 날짜       | 시간대              | 테이블 수 | 비고               |
+> | -------------- | ----------------- | ---------- | ------------------- | --------- | ------------------ |
+> | restaurant-001 | 이탈리안 레스토랑 | 2026-03-20 | 18:00, 19:00, 20:00 | 각 5개    |                    |
+> | restaurant-002 | 한식당            | 2026-03-20 | 18:00, 19:00, 20:00 | 각 8개    |                    |
+> | restaurant-003 | 일식당            | 2026-03-20 | 18:00, 19:00, 20:00 | 각 3개    | 슬롯 부족 테스트용 |
+> | restaurant-004 | 중식당            | 2026-03-20 | 18:00, 19:00, 20:00 | 각 10개   |                    |
 >
-> **날짜 변경 방법**: 실습 시점이 2026-03-20 이후라면 AWS CloudFormation 템플릿의 `InitializeRestaurantAvailability` 함수 코드에서 날짜를 수정할 수 있습니다. 템플릿 파일을 텍스트 에디터로 열어 `2026-03-20`을 원하는 날짜로 변경한 후 스택을 생성합니다. 태스크 3-4의 테스트 이벤트 JSON에서도 동일한 날짜를 사용해야 합니다.
+> **날짜 안내**: 테스트 이벤트의 날짜는 초기 데이터와 동일한 `2026-03-20`을 사용합니다. 과거 날짜여도 동작에 문제 없습니다.
 >
 > **partySize와 availableSlots 비교 로직**: TableAvailabilityChecker 함수는 `partySize`(예약 인원 수)와 `availableSlots`(예약 가능한 슬롯 수)를 비교합니다. 이 실습에서는 availableSlots를 "동시에 수용 가능한 예약 건수"로 단순화합니다.
 >
@@ -92,24 +96,30 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > EventBusName 파라미터는 태스크 1에서 생성할 Event Bus의 이름입니다. 기본값을 사용하거나 원하는 이름으로 변경할 수 있습니다. 단, 태스크 1에서 Event Bus를 생성할 때 동일한 이름을 사용해야 합니다.
 
 11. [[Next]] 버튼을 클릭합니다.
-12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-13. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+12. **Configure stack options** 페이지가 열립니다.
 
-| Key         | Value            |
-| ----------- | ---------------- |
-| `Project`   | `AWS-Lab`        |
-| `Week`      | `4-3`            |
-| `CreatedBy` | `CloudFormation` |
+> [!NOTE]
+> 태그는 Parameters에서 설정한 값이 리소스와 스택 태그에 자동으로 적용됩니다. 필요에 따라 Tags 섹션에서 추가 태그를 넣을 수도 있습니다.
 
-14. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
+14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
+
+> [!NOTE]
+> 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
+
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
 18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> **Status** 열은 스택의 현재 상태를 보여줍니다:
+>
+> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다
+> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다
+> - **CREATE_FAILED** (빨간색): 생성 중 오류가 발생했습니다 (Events 탭에서 원인 확인 필요)
+>
+> 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
@@ -121,13 +131,6 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 > [!IMPORTANT]
 > **출력값 메모**: 이 실습에서는 출력값을 직접 사용하지 않습니다. 모든 리소스는 AWS Lambda 함수 환경 변수로 자동 설정되어 있습니다.
->
-> **날짜 변경 방법 (중요)**: 실습 시점이 2026-03-20 이후라면 다음 두 가지를 모두 수정해야 합니다:
->
-> 1. **AWS CloudFormation 템플릿**: `week4-3-quicktable-events-lab.yaml` 파일을 텍스트 에디터로 열어 `InitializeAvailabilityFunction` 함수 코드에서 `2026-03-20`을 원하는 날짜로 변경한 후 스택을 생성합니다.
-> 2. **테스트 이벤트 JSON**: 태스크 3-4의 테스트 이벤트 JSON에서 `"date": "2026-03-20"`을 동일한 날짜로 변경합니다.
->
-> 두 날짜가 일치하지 않으면 RestaurantAvailability 테이블에 해당 날짜의 데이터가 없어 실습이 정상 동작하지 않습니다.
 
 ✅ **태스크 완료**: 실습 환경이 준비되었습니다.
 
@@ -139,6 +142,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > Event Bus는 이벤트를 수신하고 규칙에 따라 대상으로 라우팅하는 중앙 허브입니다. AWS는 기본적으로 Default Event Bus를 제공하지만, 애플리케이션별로 Custom Event Bus를 생성하여 이벤트를 격리하고 관리할 수 있습니다.
 >
 > **Event Bus 유형:**
+>
 > - **Default Event Bus**: AWS 서비스 이벤트 수신 (예: EC2 상태 변경, S3 객체 생성)
 > - **Custom Event Bus**: 사용자 정의 애플리케이션 이벤트 수신 (이 실습에서 사용)
 > - **Partner Event Bus**: SaaS 파트너 이벤트 수신
@@ -152,7 +156,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Name**: `QuickTableReservationEventBus`
 
 > [!IMPORTANT]
-> Event Bus 이름은 태스크 0에서 CloudFormation 스택 생성 시 입력한 **EventBusName** 파라미터 값과 정확히 일치해야 합니다. 기본값을 사용했다면 `QuickTableReservationEventBus`를 입력합니다.
+> Event Bus 이름은 태스크 0에서 AWS CloudFormation 스택 생성 시 입력한 **EventBusName** 파라미터 값과 정확히 일치해야 합니다. 기본값을 사용했다면 `QuickTableReservationEventBus`를 입력합니다.
 
 26. **Description** (선택 사항)에 `QuickTable reservation system event bus`를 입력합니다.
 27. **Encryption** 섹션은 기본값(`Use AWS owned key`)을 유지합니다.
@@ -176,7 +180,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `CreatedBy` | `Student` |
 
 32. [[Create]] 버튼을 클릭합니다.
-33. Event Bus 생성이 완료되면 Event buses 목록에 `QuickTableReservationEventBus`가 표시됩니다.
+33. Event Bus 생성이 완료되면 `QuickTableReservationEventBus` 상세 페이지로 이동합니다.
 
 ✅ **태스크 완료**: Event Bus가 생성되었습니다.
 
@@ -202,11 +206,19 @@ Amazon EventBridge 규칙은 이벤트 패턴을 정의하여 특정 이벤트�
 34. 왼쪽 메뉴에서 **Rules**를 선택합니다.
 35. **Event bus** 드롭다운에서 태스크 1에서 생성한 Event Bus(`QuickTableReservationEventBus`)를 선택합니다.
 36. [[Create rule]] 버튼을 클릭합니다.
-37. **Define rule detail** 페이지에서 다음을 입력합니다:
-	- **Name**: `ReservationCreatedRule`
-	- **Description**: `Route ReservationCreated events to TableAvailabilityChecker`
-	- **Event bus**: 태스크 1에서 생성한 Event Bus 선택 (이미 선택되어 있음)
-38. **Rule type**에서 `Rule with an event pattern`을 선택합니다.
+
+> [!NOTE]
+> Enhanced builder (드래그 앤 드롭 방식)가 기본으로 표시됩니다. 이 실습에서는 **Advanced builder** (Step-by-step 방식)를 사용합니다.
+
+37. **Builder mode**에서 `Advanced builder`를 선택합니다.
+38. **Define rule detail** 페이지에서 다음을 입력합니다:
+    - **Name**: `ReservationCreatedRule`
+    - **Description**: `Route ReservationCreated events to TableAvailabilityChecker`
+    - **Event bus**: 태스크 1에서 생성한 Event Bus 선택 (이미 선택되어 있음)
+
+> [!NOTE]
+> Custom Event Bus를 선택하면 Schedule rule은 지원되지 않으므로 Rule type 선택 없이 자동으로 이벤트 패턴 방식이 적용됩니다.
+
 39. [[Next]] 버튼을 클릭합니다.
 40. **Build event pattern** 페이지에서 **Event source**는 `Other`를 선택합니다.
 41. **Creation method**에서 `Custom pattern (JSON editor)` 또는 `Edit pattern`을 선택합니다.
@@ -241,7 +253,7 @@ Amazon EventBridge 규칙은 이벤트 패턴을 정의하여 특정 이벤트�
 
 43. [[Next]] 버튼을 클릭합니다.
 44. **Select target(s)** 페이지에서 **Target types**는 `AWS service`를 선택합니다.
-45. **Select a target**에서 `AWS Lambda function`을 선택합니다.
+45. **Select a target**에서 `Lambda function`을 선택합니다.
 46. **Function** 드롭다운에서 `TableAvailabilityChecker`를 선택합니다.
 
 > [!NOTE]
@@ -292,11 +304,11 @@ TableAvailabilityChecker AWS Lambda 함수가 예약 가능한 슬롯이 부족�
 52. 왼쪽 메뉴에서 **Rules**를 선택합니다.
 53. **Event bus** 드롭다운에서 태스크 1에서 생성한 Event Bus(`QuickTableReservationEventBus`)를 선택합니다.
 54. [[Create rule]] 버튼을 클릭합니다.
-55. **Define rule detail** 페이지에서 다음을 입력합니다:
-	- **Name**: `TableUnavailableRule`
-	- **Description**: `Route TableUnavailable events to NotificationSender`
-	- **Event bus**: 태스크 1에서 생성한 Event Bus 선택 (이미 선택되어 있음)
-56. **Rule type**에서 `Rule with an event pattern`을 선택합니다.
+55. **Builder mode**에서 `Advanced builder`를 선택합니다.
+56. **Define rule detail** 페이지에서 다음을 입력합니다:
+    - **Name**: `TableUnavailableRule`
+    - **Description**: `Route TableUnavailable events to NotificationSender`
+    - **Event bus**: 태스크 1에서 생성한 Event Bus 선택 (이미 선택되어 있음)
 57. [[Next]] 버튼을 클릭합니다.
 58. **Build event pattern** 페이지에서 **Event source**는 `Other`를 선택합니다.
 59. **Creation method**에서 `Custom pattern (JSON editor)` 또는 `Edit pattern`을 선택합니다.
@@ -311,7 +323,7 @@ TableAvailabilityChecker AWS Lambda 함수가 예약 가능한 슬롯이 부족�
 
 61. [[Next]] 버튼을 클릭합니다.
 62. **Select target(s)** 페이지에서 **Target types**는 `AWS service`를 선택합니다.
-63. **Select a target**에서 `AWS Lambda function`을 선택합니다.
+63. **Select a target**에서 `Lambda function`을 선택합니다.
 64. **Function** 드롭다운에서 `NotificationSender`를 선택합니다.
 65. [[Next]] 버튼을 클릭합니다.
 66. **Configure tags** 페이지에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
@@ -394,7 +406,7 @@ eventbridge.put_events(
 
 72. **Test** 탭을 선택합니다.
 73. **Test event action**에서 `Create new event`를 선택합니다.
-74. **Event name**에 `TestReservationAvailableEvent`를 입력합니다.
+74. **Event name**에 `TestResAvailableEvent`를 입력합니다.
 75. **Event JSON**에 다음 내용을 입력합니다:
 
 ```json
@@ -409,10 +421,8 @@ eventbridge.put_events(
 }
 ```
 
-> [!IMPORTANT]
-> **날짜 변경 필수**: 실습 시점이 2026-03-20 이후라면 `date` 필드를 실습 시점 기준 미래 날짜로 변경합니다. 단, AWS CloudFormation 템플릿의 초기 데이터 날짜도 동일하게 수정해야 합니다 (태스크 0 출력값 확인 섹션의 IMPORTANT Alert 참조).
->
-> restaurant-001은 19:00 시간대에 5개의 예약 가능 슬롯이 있으므로, partySize=2인 예약은 성공합니다.
+> [!NOTE]
+> restaurant-001은 19:00 시간대에 5개의 예약 가능 슬롯이 있으므로, partySize=2인 예약은 성공합니다. 테스트 이벤트의 날짜는 초기 데이터와 동일한 `2026-03-20`을 사용합니다.
 
 76. [[Save]] 버튼을 클릭합니다.
 77. [[Test]] 버튼을 클릭합니다.
@@ -469,7 +479,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 만약 로그가 표시되지 않는다면 다음 문제 해결 방법을 시도합니다.
 
 > [!TROUBLESHOOTING]
-> **문제**: TableAvailabilityChecker 함수의 Amazon CloudWatch Logs가 생성되지 않습니다
+> **문제**: TableAvailabilityChecker 함수의 Amazon CloudWatch Logs가 생성되지 않습니다.
 >
 > **증상**: Monitor 탭에서 "View Amazon CloudWatch Logs" 링크를 클릭해도 로그 스트림이 표시되지 않습니다.
 >
@@ -498,23 +508,40 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 97. AWS Lambda 콘솔로 이동합니다.
 98. `ReservationProcessor` 함수를 선택합니다.
 99. **Code** 탭을 선택합니다.
-100. 함수 코드에서 다른 AWS Lambda 함수를 직접 호출하는 코드가 없음을 확인합니다.
+100.  함수 코드에서 다른 AWS Lambda 함수를 직접 호출하는 코드가 없음을 확인합니다.
+
+> [!TIP]
+> ReservationProcessor 함수는 EventBridge에 이벤트만 발행하고, 다른 Lambda 함수를 직접 호출하지 않습니다:
+>
+> ```python
+> # EventBridge에 ReservationCreated 이벤트 발행
+> response = eventbridge.put_events(
+>     Entries=[{
+>         'Source': 'reservation.service',
+>         'DetailType': 'ReservationCreated',
+>         'Detail': json.dumps(event_detail),
+>         'EventBusName': EVENT_BUS_NAME
+>     }]
+> )
+> ```
+>
+> TableAvailabilityChecker나 NotificationSender를 직접 호출하는 코드가 없습니다. EventBridge 규칙이 이벤트를 라우팅하는 방식으로 느슨하게 결합되어 있습니다.
 
 > [!CONCEPT] 느슨한 결합 (Loose Coupling)
 > 이 실습에서 구현한 아키텍처는 느슨한 결합의 좋은 예시입니다:
 >
 > **확인 사항**:
 >
-> - ReservationProcessor 함수는 TableAvailabilityChecker 함수를 직접 호출하지 않습니다
-> - TableAvailabilityChecker 함수는 NotificationSender 함수를 직접 호출하지 않습니다
-> - 각 함수는 Amazon EventBridge에 이벤트를 발행하기만 하고, Amazon EventBridge가 규칙에 따라 적절한 대상 함수를 트리거합니다
+> - ReservationProcessor 함수는 TableAvailabilityChecker 함수를 직접 호출하지 않습니다.
+> - TableAvailabilityChecker 함수는 NotificationSender 함수를 직접 호출하지 않습니다.
+> - 각 함수는 Amazon EventBridge에 이벤트를 발행하기만 하고, Amazon EventBridge가 규칙에 따라 적절한 대상 함수를 트리거합니다.
 >
 > **장점**:
 >
-> - 한 함수가 실패해도 다른 함수는 정상 동작합니다
-> - 새로운 함수를 추가할 때 기존 함수 코드를 수정할 필요가 없습니다
-> - 각 함수를 독립적으로 테스트하고 배포할 수 있습니다
-> - 함수 간 의존성이 없어 유지보수가 쉽습니다
+> - 한 함수가 실패해도 다른 함수는 정상 동작합니다.
+> - 새로운 함수를 추가할 때 기존 함수 코드를 수정할 필요가 없습니다.
+> - 각 함수를 독립적으로 테스트하고 배포할 수 있습니다.
+> - 함수 간 의존성이 없어 유지보수가 쉽습니다.
 >
 > 이것이 실습 목표 3 "AWS Lambda 함수 간 느슨한 결합을 구현할 수 있습니다"의 핵심입니다.
 
@@ -542,9 +569,9 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 >
 > 이 실습의 아키텍처는 비동기 이벤트 기반으로 설계되었습니다. ReservationProcessor 함수는 다음 순서로 동작합니다:
 >
-> 1. 예약 데이터를 Amazon DynamoDB에 먼저 저장합니다
-> 2. ReservationCreated 이벤트를 Amazon EventBridge에 발행합니다
-> 3. 즉시 성공 응답(200)을 반환합니다
+> 1. 예약 데이터를 Amazon DynamoDB에 먼저 저장합니다.
+> 2. ReservationCreated 이벤트를 Amazon EventBridge에 발행합니다.
+> 3. 즉시 성공 응답(200)을 반환합니다.
 >
 > 이후 TableAvailabilityChecker 함수가 **비동기적으로** 가용성을 확인하고, 예약이 불가능한 경우 TableUnavailable 이벤트를 발행하여 NotificationSender 함수가 고객에게 알림을 발송합니다.
 >
@@ -556,7 +583,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 107. `ReservationProcessor` 함수를 선택합니다.
 108. **Test** 탭을 선택합니다.
 109. **Test event action**에서 `Create new event`를 선택합니다.
-110. **Event name**에 `TestReservationUnavailableEvent`를 입력합니다.
+110. **Event name**에 `TestResUnavailEvent`를 입력합니다.
 111. **Event JSON**에 다음 내용을 입력합니다:
 
 ```json
@@ -571,10 +598,8 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 }
 ```
 
-> [!IMPORTANT]
-> **날짜 변경 필수**: 실습 시점이 2026-03-20 이후라면 `date` 필드를 실습 시점 기준 미래 날짜로 변경합니다. 단, AWS CloudFormation 템플릿의 초기 데이터 날짜도 동일하게 수정해야 합니다 (태스크 0 출력값 확인 섹션의 IMPORTANT Alert 참조).
->
-> restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있으므로, partySize=4인 예약은 실패합니다.
+> [!NOTE]
+> restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있으므로, partySize=4인 예약은 실패합니다. 테스트 이벤트의 날짜는 초기 데이터와 동일한 `2026-03-20`을 사용합니다.
 
 112. [[Save]] 버튼을 클릭합니다.
 113. [[Test]] 버튼을 클릭합니다.
@@ -596,7 +621,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 116. **Monitor** 탭을 선택합니다.
 117. **View Amazon CloudWatch Logs** 링크를 클릭합니다.
 118. 최신 로그 스트림을 선택합니다.
-119. 로그에서 "Reservation created successfully" 메시지를 확인합니다.
+119. 로그에서 `Reservation saved to DynamoDB: res-002`와 `ReservationCreated event published: res-002` 메시지를 확인합니다.
 
 > [!NOTE]
 > ReservationProcessor 함수가 정상적으로 실행되었습니다. 이제 Amazon DynamoDB에 예약 데이터가 저장되었는지 확인합니다.
@@ -669,11 +694,11 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon EventBridge 규칙을 생성하여 이벤트 기반 아키텍처를 구축했습니다
-- ReservationCreated 이벤트 규칙을 생성하고 이벤트 패턴을 정의했습니다
-- TableUnavailable 이벤트 규칙을 생성하고 타겟을 연결했습니다
-- 이벤트 기반 워크플로우를 테스트하여 느슨한 결합을 확인했습니다
-- AWS Lambda 함수 간 직접 호출 없이 이벤트를 통한 통신을 구현했습니다
+- Amazon EventBridge 규칙을 생성하여 이벤트 기반 아키텍처를 구축했습니다.
+- ReservationCreated 이벤트 규칙을 생성하고 이벤트 패턴을 정의했습니다.
+- TableUnavailable 이벤트 규칙을 생성하고 타겟을 연결했습니다.
+- 이벤트 기반 워크플로우를 테스트하여 느슨한 결합을 확인했습니다.
+- AWS Lambda 함수 간 직접 호출 없이 이벤트를 통한 통신을 구현했습니다.
 
 # 🗑️ 리소스 정리
 
@@ -691,8 +716,8 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 3. **Regions**에서 `All regions`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `4-3`
+   - **Tag key**: `Week`
+   - **Tag value**: `4-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
@@ -703,7 +728,9 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 ---
 
-## 2단계: 리소스 삭제
+## 2단계: Amazon EventBridge 리소스 삭제
+
+수동으로 생성한 Amazon EventBridge 규칙과 Event Bus를 먼저 삭제합니다. 이 리소스들은 AWS CloudFormation 스택에 포함되지 않으므로 별도로 삭제해야 합니다.
 
 다음 두 가지 방법 중 하나를 선택하여 리소스를 삭제할 수 있습니다.
 
@@ -716,19 +743,29 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 **Amazon EventBridge 규칙 삭제**
 
-1. Amazon EventBridge 콘솔로 이동합니다.
-2. 왼쪽 메뉴에서 **Rules**를 선택합니다.
-3. **Event bus** 드롭다운에서 `QuickTableReservationEventBus`를 선택합니다.
-4. `ReservationCreatedRule` 규칙을 선택합니다.
-5. [[Delete]] 버튼을 클릭합니다.
-6. 확인 창에 `delete`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
+8. Amazon EventBridge 콘솔로 이동합니다.
+9. 왼쪽 메뉴에서 **Rules**를 선택합니다.
+10. **Event bus** 드롭다운에서 `QuickTableReservationEventBus`를 선택합니다.
+11. `ReservationCreatedRule` 규칙을 선택합니다.
+12. [[Delete]] 버튼을 클릭합니다.
+13. 확인 창에 `delete`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon EventBridge 규칙 삭제 시 확인 창에 `delete`를 입력해야 합니다. 규칙 이름을 입력하는 것이 아닙니다.
 
-7. 동일한 방법으로 `TableUnavailableRule` 규칙을 선택합니다.
-8. [[Delete]] 버튼을 클릭합니다.
-9. 확인 창에 `delete`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
+14. 동일한 방법으로 `TableUnavailableRule` 규칙을 선택합니다.
+15. [[Delete]] 버튼을 클릭합니다.
+16. 확인 창에 `delete`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
+
+**Amazon EventBridge Event Bus 삭제**
+
+> [!NOTE]
+> Event Bus는 학생이 태스크 1에서 직접 생성한 리소스이므로 AWS CloudFormation 스택 삭제로는 삭제되지 않습니다. 규칙을 모두 삭제한 후 Event Bus를 삭제해야 합니다.
+
+17. 왼쪽 메뉴에서 **Event buses**를 선택합니다.
+18. **Custom event bus** 섹션에서 `QuickTableReservationEventBus`를 선택합니다.
+19. [[Delete]] 버튼을 클릭합니다.
+20. 확인 창에 Event Bus 이름 `QuickTableReservationEventBus`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
 
 ### 옵션 2: AWS CloudShell 스크립트로 일괄 삭제
 
@@ -737,8 +774,8 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 >
 > 콘솔 방식이 더 편하다면 위 [옵션 1](#option-1)을 참고합니다.
 
-10. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
-11. CloudShell이 열리면 다음 명령어를 실행합니다:
+21. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
+22. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 # Amazon EventBridge 규칙 삭제
@@ -792,28 +829,19 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 > [!NOTE]
 > 스크립트는 Amazon EventBridge 규칙의 타겟을 먼저 제거한 후 규칙을 삭제하고, 마지막으로 Event Bus를 삭제합니다. 규칙이 남아있는 상태에서는 Event Bus를 삭제할 수 없으므로 반드시 규칙을 먼저 삭제해야 합니다.
 
-**Amazon EventBridge Event Bus 삭제**
-
-> [!NOTE]
-> Event Bus는 학생이 태스크 1에서 직접 생성한 리소스이므로 AWS CloudFormation 스택 삭제로는 삭제되지 않습니다. 규칙을 모두 삭제한 후 Event Bus를 삭제해야 합니다.
-
-12. Amazon EventBridge 콘솔의 왼쪽 메뉴에서 **Event buses**를 선택합니다.
-13. **Custom event bus** 섹션에서 `QuickTableReservationEventBus`를 선택합니다.
-14. [[Delete]] 버튼을 클릭합니다.
-15. 확인 창에 Event Bus 이름 `QuickTableReservationEventBus`를 입력한 후 [[Delete]] 버튼을 클릭합니다.
-
 ---
 
 ## 3단계: AWS CloudFormation 스택 삭제
 
-16. AWS CloudFormation 콘솔로 이동합니다.
-17. `week4-3-quicktable-events-lab-stack` 스택을 선택합니다.
-18. [[Delete]] 버튼을 클릭합니다.
-19. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-20. 스택 삭제가 완료될 때까지 기다립니다.
+23. AWS CloudFormation 콘솔로 이동합니다.
+24. `week4-3-quicktable-events-lab-stack` 스택을 선택합니다.
+25. [[Delete stack]] 버튼을 클릭합니다.
+26. 확인 창에서 스택 이름 `week4-3-quicktable-events-lab-stack`을 입력합니다.
+27. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
+28. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
-> 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 AWS Lambda 함수 3개, Amazon DynamoDB 테이블 2개, AWS Lambda 역할, Amazon SNS Topic, Amazon CloudWatch Log Groups 등 모든 리소스가 자동으로 삭제됩니다.
+> 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 AWS Lambda 함수 3개, Amazon DynamoDB 테이블 2개, AWS Lambda 역할, Amazon SNS Topic 등이 자동으로 삭제됩니다. Amazon CloudWatch Log Groups는 스택에 포함되어 있어 함께 삭제되지만, 실습 중 추가 생성된 Log Groups가 남아있을 수 있으므로 4단계에서 확인합니다.
 
 ---
 
@@ -823,19 +851,20 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 
 ### 옵션 1: AWS 콘솔에서 수동 삭제
 
-21. Amazon CloudWatch 콘솔로 이동합니다.
-22. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-23. 다음 Log Group들을 찾아 삭제합니다:
-	- `/aws/lambda/week4-3-quicktable-events-lab-ReservationProcessor`
-	- `/aws/lambda/week4-3-quicktable-events-lab-TableAvailabilityChecker`
-	- `/aws/lambda/week4-3-quicktable-events-lab-NotificationSender`
-24. 각 Log Group을 선택한 후 **Actions** > `Delete log group(s)`를 선택합니다.
-25. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+29. Amazon CloudWatch 콘솔로 이동합니다.
+30. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+31. 다음 Log Group들을 찾아 삭제합니다:
+    - `/aws/lambda/week4-3-quicktable-events-lab-ReservationProcessor`
+    - `/aws/lambda/week4-3-quicktable-events-lab-TableAvailabilityChecker`
+    - `/aws/lambda/week4-3-quicktable-events-lab-NotificationSender`
+    - `/aws/lambda/week4-3-quicktable-events-lab-InitializeAvailability`
+32. 각 Log Group을 선택한 후 **Actions** > `Delete log group(s)`를 선택합니다.
+33. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ### 옵션 2: AWS CloudShell 스크립트로 일괄 삭제
 
-26. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
-27. CloudShell이 열리면 다음 명령어를 실행합니다:
+34. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
+35. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 # Amazon CloudWatch Log Groups 삭제
@@ -867,17 +896,18 @@ fi
 
 모든 리소스가 삭제되었는지 확인합니다.
 
-28. Tag Editor로 이동합니다.
-29. **Regions**에서 `All regions`를 선택합니다.
-30. **Resource types**에서 `All supported resource types`를 선택합니다.
-31. **Tags** 섹션에서 다음 태그를 입력합니다:
+36. Tag Editor로 이동합니다.
+37. **Regions**에서 `All regions`를 선택합니다.
+38. **Resource types**에서 `All supported resource types`를 선택합니다.
+39. **Tags** 섹션에서 다음 태그를 입력합니다:
     - **Tag key**: `Week`
     - **Optional tag value**: `4-3`
-32. [[Search resources]] 버튼을 클릭합니다.
-33. 검색 결과가 비어있는지 확인합니다.
+40. [[Search resources]] 버튼을 클릭합니다.
+41. 검색 결과가 비어있는지 확인합니다.
 
 > [!NOTE]
 > 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
+> 스택 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 > Amazon EventBridge 규칙과 Event Bus는 Tag Editor에서 검색되지 않을 수 있으므로, Amazon EventBridge 콘솔에서 직접 삭제 여부를 확인합니다.
 
 > [!SUCCESS]
@@ -890,7 +920,7 @@ fi
 - [Amazon EventBridge 개발자 가이드](https://docs.aws.amazon.com/ko_kr/eventbridge/latest/userguide/what-is-amazon-eventbridge.html)
 - [이벤트 기반 아키텍처 패턴](https://aws.amazon.com/ko/event-driven-architecture/)
 - [Amazon EventBridge 이벤트 패턴](https://docs.aws.amazon.com/ko_kr/eventbridge/latest/userguide/eb-event-patterns.html)
-- [AWS Lambda와 Amazon EventBridge 통합](https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/with-eventbridge.html)
+- [Amazon EventBridge 대상으로 AWS Lambda 사용](https://docs.aws.amazon.com/ko_kr/eventbridge/latest/userguide/eb-targets.html)
 
 ---
 
