@@ -1,274 +1,164 @@
 {
-    "QuickTableReservations": [
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user001"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-001"
-                    },
-                    "date": {
-                        "S": "2024-03-15"
-                    },
-                    "restaurantName": {
-                        "S": "Seoul Garden"
-                    },
-                    "partySize": {
-                        "N": "4"
-                    },
-                    "time": {
-                        "S": "18:30"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user001"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-002"
-                    },
-                    "date": {
-                        "S": "2024-03-20"
-                    },
-                    "restaurantName": {
-                        "S": "Busan Seafood"
-                    },
-                    "partySize": {
-                        "N": "2"
-                    },
-                    "time": {
-                        "S": "19:00"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user002"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-003"
-                    },
-                    "date": {
-                        "S": "2024-03-15"
-                    },
-                    "restaurantName": {
-                        "S": "Seoul Garden"
-                    },
-                    "partySize": {
-                        "N": "6"
-                    },
-                    "time": {
-                        "S": "12:00"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user002"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-004"
-                    },
-                    "date": {
-                        "S": "2024-04-01"
-                    },
-                    "restaurantName": {
-                        "S": "Gangnam BBQ"
-                    },
-                    "partySize": {
-                        "N": "3"
-                    },
-                    "time": {
-                        "S": "20:00"
-                    },
-                    "status": {
-                        "S": "pending"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user003"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-005"
-                    },
-                    "date": {
-                        "S": "2024-03-18"
-                    },
-                    "restaurantName": {
-                        "S": "Itaewon Pasta"
-                    },
-                    "partySize": {
-                        "N": "2"
-                    },
-                    "time": {
-                        "S": "18:00"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user003"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-006"
-                    },
-                    "date": {
-                        "S": "2024-03-25"
-                    },
-                    "restaurantName": {
-                        "S": "Hongdae Sushi"
-                    },
-                    "partySize": {
-                        "N": "4"
-                    },
-                    "time": {
-                        "S": "19:30"
-                    },
-                    "status": {
-                        "S": "cancelled"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user001"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-007"
-                    },
-                    "date": {
-                        "S": "2024-04-05"
-                    },
-                    "restaurantName": {
-                        "S": "Gangnam BBQ"
-                    },
-                    "partySize": {
-                        "N": "5"
-                    },
-                    "time": {
-                        "S": "18:30"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user004"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-008"
-                    },
-                    "date": {
-                        "S": "2024-03-22"
-                    },
-                    "restaurantName": {
-                        "S": "Seoul Garden"
-                    },
-                    "partySize": {
-                        "N": "8"
-                    },
-                    "time": {
-                        "S": "12:30"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user004"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-009"
-                    },
-                    "date": {
-                        "S": "2024-04-10"
-                    },
-                    "restaurantName": {
-                        "S": "Busan Seafood"
-                    },
-                    "partySize": {
-                        "N": "2"
-                    },
-                    "time": {
-                        "S": "19:00"
-                    },
-                    "status": {
-                        "S": "pending"
-                    }
-                }
-            }
-        },
-        {
-            "PutRequest": {
-                "Item": {
-                    "userId": {
-                        "S": "user005"
-                    },
-                    "reservationId": {
-                        "S": "RSV-2024-010"
-                    },
-                    "date": {
-                        "S": "2024-03-30"
-                    },
-                    "restaurantName": {
-                        "S": "Itaewon Pasta"
-                    },
-                    "partySize": {
-                        "N": "3"
-                    },
-                    "time": {
-                        "S": "20:00"
-                    },
-                    "status": {
-                        "S": "confirmed"
-                    }
-                }
-            }
+  "QuickTableReservations": [
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-001" },
+          "reservationId": { "S": "res-20260315-001" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-03-15" },
+          "time": { "S": "18:00" },
+          "partySize": { "N": "4" },
+          "phoneNumber": { "S": "010-1234-5678" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-02-15T10:30:00Z" }
         }
-    ]
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-001" },
+          "reservationId": { "S": "res-20260320-002" },
+          "restaurantId": { "S": "restaurant-002" },
+          "restaurantName": { "S": "홍대 스시" },
+          "date": { "S": "2026-03-20" },
+          "time": { "S": "19:00" },
+          "partySize": { "N": "2" },
+          "phoneNumber": { "S": "010-1234-5678" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-02-16T14:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-001" },
+          "reservationId": { "S": "res-20260405-003" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-04-05" },
+          "time": { "S": "18:30" },
+          "partySize": { "N": "5" },
+          "phoneNumber": { "S": "010-1234-5678" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-03-01T09:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-002" },
+          "reservationId": { "S": "res-20260318-001" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-03-18" },
+          "time": { "S": "12:00" },
+          "partySize": { "N": "6" },
+          "phoneNumber": { "S": "010-9876-5432" },
+          "status": { "S": "pending" },
+          "createdAt": { "S": "2026-02-18T08:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-002" },
+          "reservationId": { "S": "res-20260401-002" },
+          "restaurantId": { "S": "restaurant-002" },
+          "restaurantName": { "S": "홍대 스시" },
+          "date": { "S": "2026-04-01" },
+          "time": { "S": "20:00" },
+          "partySize": { "N": "3" },
+          "phoneNumber": { "S": "010-9876-5432" },
+          "status": { "S": "pending" },
+          "createdAt": { "S": "2026-03-05T11:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-003" },
+          "reservationId": { "S": "res-20260318-001" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-03-18" },
+          "time": { "S": "18:00" },
+          "partySize": { "N": "2" },
+          "phoneNumber": { "S": "010-5555-1234" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-02-20T15:30:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-003" },
+          "reservationId": { "S": "res-20260325-002" },
+          "restaurantId": { "S": "restaurant-002" },
+          "restaurantName": { "S": "홍대 스시" },
+          "date": { "S": "2026-03-25" },
+          "time": { "S": "19:30" },
+          "partySize": { "N": "4" },
+          "phoneNumber": { "S": "010-5555-1234" },
+          "status": { "S": "cancelled" },
+          "createdAt": { "S": "2026-02-22T10:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-004" },
+          "reservationId": { "S": "res-20260322-001" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-03-22" },
+          "time": { "S": "12:30" },
+          "partySize": { "N": "8" },
+          "phoneNumber": { "S": "010-7777-8888" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-02-25T16:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-004" },
+          "reservationId": { "S": "res-20260410-002" },
+          "restaurantId": { "S": "restaurant-002" },
+          "restaurantName": { "S": "홍대 스시" },
+          "date": { "S": "2026-04-10" },
+          "time": { "S": "19:00" },
+          "partySize": { "N": "2" },
+          "phoneNumber": { "S": "010-7777-8888" },
+          "status": { "S": "pending" },
+          "createdAt": { "S": "2026-03-10T13:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": { "S": "user-005" },
+          "reservationId": { "S": "res-20260330-001" },
+          "restaurantId": { "S": "restaurant-001" },
+          "restaurantName": { "S": "강남 맛집" },
+          "date": { "S": "2026-03-30" },
+          "time": { "S": "20:00" },
+          "partySize": { "N": "3" },
+          "phoneNumber": { "S": "010-3333-4444" },
+          "status": { "S": "confirmed" },
+          "createdAt": { "S": "2026-03-15T09:30:00Z" }
+        }
+      }
+    }
+  ]
 }

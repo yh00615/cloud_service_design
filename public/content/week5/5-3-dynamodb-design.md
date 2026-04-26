@@ -49,6 +49,8 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 
 이 태스크에서는 설계한 스키마를 바탕으로 Amazon DynamoDB 테이블을 생성합니다. 파티션 키와 정렬 키를 설정하고, LSI(Local Secondary Index)를 추가하여 날짜 기반 쿼리를 지원합니다. On-demand 모드는 사용량에 따라 자동으로 확장되어 예측 불가능한 워크로드에 적합하며, Provisioned 모드는 읽기/쓰기 용량을 미리 지정하여 비용을 예측할 수 있습니다. 암호화는 기본적으로 활성화되어 저장 데이터를 보호합니다.
 
+이 실습을 시작하기 전에 AWS 콘솔 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**로 설정되어 있는지 확인합니다.
+
 1. AWS Management Console에 로그인한 후 상단 검색창에 `DynamoDB`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tables**를 선택합니다.
 3. [[Create table]] 버튼을 클릭합니다.
@@ -60,30 +62,34 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 > 2025년 기준 Amazon DynamoDB 콘솔에서는 Sort key 입력 필드가 기본적으로 표시됩니다.
 > 이전 버전의 콘솔에서는 "Sort key" 체크박스를 선택해야 입력 필드가 나타날 수 있습니다.
 
-7. 아래로 스크롤하여 **Secondary indexes** 섹션을 확인합니다.
-8. **Secondary indexes** 섹션을 확장합니다.
-9. [[Create local index]] 버튼을 클릭합니다.
+7. **Table settings**에서 `Customize settings`를 선택합니다.
+
+> [!NOTE]
+> Default settings를 선택하면 LSI를 추가할 수 없습니다. LSI는 테이블 생성 시에만 추가 가능하므로 반드시 Customize settings를 선택합니다.
+
+8. **Table class**에서 `DynamoDB Standard`를 선택합니다 (기본값).
+9. **Read/write capacity settings**에서 **Capacity mode**를 `On-demand`로 선택합니다.
+10. **Secondary indexes** 섹션에서 [[Create local index]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > LSI(Local Secondary Index)는 테이블 생성 시에만 추가할 수 있습니다. 테이블 생성 후에는 LSI를 추가하거나 삭제할 수 없습니다.
 
-10. **Sort key**에 `date`를 입력한 후 타입에서 `String`을 선택합니다.
-11. **Index name**이 `userId-date-index`로 자동 생성되었는지 확인합니다.
+11. **Sort key**에 `date`를 입력한 후 타입에서 `String`을 선택합니다.
+12. **Index name**이 `userId-date-index`로 자동 생성되었는지 확인합니다.
 
 > [!NOTE]
 > Index name은 파티션 키와 정렬 키를 조합하여 자동으로 생성됩니다.
 > 필요시 다른 이름으로 변경할 수 있지만, 이 실습에서는 자동 생성된 이름을 그대로 사용합니다.
 
-12. **Attribute projections**에서 `All`을 선택합니다.
+13. **Attribute projections**에서 `All`을 선택합니다.
+14. [[Create index]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Attribute projections의 `All`은 모든 속성을 인덱스에 포함합니다. 이렇게 하면 인덱스 쿼리 시 추가 읽기 없이 모든 데이터를 가져올 수 있습니다.
 
-13. 아래로 스크롤하여 **Table class**에서 `Amazon DynamoDB Standard`를 선택합니다.
-14. **Capacity mode**에서 `On-demand`를 선택합니다.
-15. **Encryption type**에서 `Owned by Amazon DynamoDB`를 선택합니다 (기본값).
-16. 아래로 스크롤하여 **Tags - optional** 섹션을 확인합니다.
-17. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+15. **Encryption at rest**에서 `AWS owned key`를 선택합니다 (기본값).
+16. **Deletion protection**은 체크하지 않습니다 (기본값).
+17. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -119,7 +125,7 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 ### 태스크 2.1: AWS CLI로 샘플 데이터 일괄 입력 (권장)
 
 19. 다운로드한 `week5-3-dynamodb-lab.zip` 파일의 압축을 해제합니다.
-20. AWS CloudShell 아이콘을 클릭합니다.
+20. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
 21. AWS CloudShell 우측 상단의 **Actions** > **Upload file**을 선택합니다.
 22. `sample_reservations.json` 파일을 선택하여 업로드합니다.
 
@@ -159,11 +165,26 @@ aws dynamodb batch-write-item --request-items file://sample_reservations.json
 > `UnprocessedItems`가 비어있으면 모든 항목이 성공적으로 입력되었습니다.
 > 10개의 예약 데이터(3명의 사용자, 2개의 레스토랑)가 테이블에 추가되었습니다.
 
-24. Amazon DynamoDB 콘솔로 이동합니다.
-25. `QuickTableReservations` 테이블을 선택합니다.
-26. **Explore table items** 탭을 선택합니다.
-27. **Scan or query items** 섹션에서 `Scan`을 선택합니다.
-28. [[Run]] 버튼을 클릭하여 모든 항목을 확인합니다.
+24. 다음 명령어로 입력된 항목 수를 확인합니다:
+
+```bash
+aws dynamodb scan --table-name QuickTableReservations --select COUNT --region ap-northeast-2
+```
+
+> [!OUTPUT]
+>
+> ```json
+> {
+>   "Count": 10,
+>   "ScannedCount": 10
+> }
+> ```
+
+25. Amazon DynamoDB 콘솔로 이동합니다.
+26. `QuickTableReservations` 테이블을 선택합니다.
+27. **Explore table items** 탭을 선택합니다.
+28. **Scan or query items** 섹션에서 `Scan`을 선택합니다.
+29. [[Run]] 버튼을 클릭하여 모든 항목을 확인합니다.
 
 > [!NOTE]
 > 10개의 예약 항목이 표시됩니다. 이 데이터는 다음 태스크에서 쿼리 및 GSI 테스트에 사용됩니다.
@@ -183,28 +204,67 @@ Scan 작업은 테이블의 모든 항목을 읽어오므로 주의가 필요합
 
 AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 있습니다. 다음은 첫 번째 항목 입력 방법입니다:
 
-29. 생성된 `QuickTableReservations` 테이블을 클릭합니다.
-30. **Explore table items** 탭을 선택합니다.
-31. [[Create item]] 버튼을 클릭합니다.
-32. **userId** (String)에 `user-001`을 입력합니다.
-33. **reservationId** (String)에 `res-20260315-001`을 입력합니다.
-34. [[Add new attribute]] 버튼을 클릭합니다.
-35. **String**을 선택한 후 속성 이름에 `restaurantId`, 값에 `restaurant-001`을 입력합니다.
-36. [[Add new attribute]] 버튼을 클릭합니다.
-37. **String**을 선택한 후 속성 이름에 `restaurantName`, 값에 `강남 맛집`을 입력합니다.
-38. [[Add new attribute]] 버튼을 클릭합니다.
-39. **String**을 선택한 후 속성 이름에 `date`, 값에 `2026-03-20`을 입력합니다.
-40. [[Add new attribute]] 버튼을 클릭합니다.
-41. **String**을 선택한 후 속성 이름에 `time`, 값에 `18:00`을 입력합니다.
-42. [[Add new attribute]] 버튼을 클릭합니다.
-43. **Number**를 선택한 후 속성 이름에 `partySize`, 값에 `4`를 입력합니다.
-44. [[Add new attribute]] 버튼을 클릭합니다.
-45. **String**을 선택한 후 속성 이름에 `phoneNumber`, 값에 `010-1234-5678`을 입력합니다.
-46. [[Add new attribute]] 버튼을 클릭합니다.
-47. **String**을 선택한 후 속성 이름에 `status`, 값에 `confirmed`를 입력합니다.
-48. [[Add new attribute]] 버튼을 클릭합니다.
-49. **String**을 선택한 후 속성 이름에 `createdAt`, 값에 `2026-02-15T10:30:00.123456`을 입력합니다.
-50. [[Create item]] 버튼을 클릭합니다.
+30. 생성된 `QuickTableReservations` 테이블을 클릭합니다.
+31. **Explore table items** 탭을 선택합니다.
+32. [[Create item]] 버튼을 클릭합니다.
+33. **userId** (String)에 `user-001`을 입력합니다.
+34. **reservationId** (String)에 `res-20260315-001`을 입력합니다.
+35. [[Add new attribute]] 버튼을 클릭합니다.
+36. **String**을 선택한 후 속성 이름에 `restaurantId`, 값에 `restaurant-001`을 입력합니다.
+37. [[Add new attribute]] 버튼을 클릭합니다.
+38. **String**을 선택한 후 속성 이름에 `restaurantName`, 값에 `강남 맛집`을 입력합니다.
+39. [[Add new attribute]] 버튼을 클릭합니다.
+40. **String**을 선택한 후 속성 이름에 `date`, 값에 `2026-03-20`을 입력합니다.
+41. [[Add new attribute]] 버튼을 클릭합니다.
+42. **String**을 선택한 후 속성 이름에 `time`, 값에 `18:00`을 입력합니다.
+43. [[Add new attribute]] 버튼을 클릭합니다.
+44. **Number**를 선택한 후 속성 이름에 `partySize`, 값에 `4`를 입력합니다.
+45. [[Add new attribute]] 버튼을 클릭합니다.
+46. **String**을 선택한 후 속성 이름에 `phoneNumber`, 값에 `010-1234-5678`을 입력합니다.
+47. [[Add new attribute]] 버튼을 클릭합니다.
+48. **String**을 선택한 후 속성 이름에 `status`, 값에 `confirmed`를 입력합니다.
+49. [[Add new attribute]] 버튼을 클릭합니다.
+50. **String**을 선택한 후 속성 이름에 `createdAt`, 값에 `2026-02-15T10:30:00.123456`을 입력합니다.
+51. [[Create item]] 버튼을 클릭합니다.
+
+> [!TIP]
+> 콘솔에서 항목을 입력할 때 우측 상단의 **JSON view** 버튼을 클릭하면 JSON 형식으로 직접 입력할 수 있습니다.
+>
+> **일반 JSON** (`View DynamoDB JSON` 토글 OFF):
+>
+> ```json
+> {
+>   "userId": "user-001",
+>   "reservationId": "res-20260315-001",
+>   "restaurantId": "restaurant-001",
+>   "restaurantName": "강남 맛집",
+>   "date": "2026-03-20",
+>   "time": "18:00",
+>   "partySize": 4,
+>   "phoneNumber": "010-1234-5678",
+>   "status": "confirmed",
+>   "createdAt": "2026-02-15T10:30:00.123456"
+> }
+> ```
+>
+> **DynamoDB JSON** (`View DynamoDB JSON` 토글 ON):
+>
+> ```json
+> {
+>   "userId": { "S": "user-001" },
+>   "reservationId": { "S": "res-20260315-001" },
+>   "restaurantId": { "S": "restaurant-001" },
+>   "restaurantName": { "S": "강남 맛집" },
+>   "date": { "S": "2026-03-20" },
+>   "time": { "S": "18:00" },
+>   "partySize": { "N": "4" },
+>   "phoneNumber": { "S": "010-1234-5678" },
+>   "status": { "S": "confirmed" },
+>   "createdAt": { "S": "2026-02-15T10:30:00.123456" }
+> }
+> ```
+>
+> `sample_reservations.json` 파일에서 항목의 JSON을 복사하여 붙여넣으면 더 빠르게 입력할 수 있습니다.
 
 > [!NOTE]
 > 나머지 9개 항목도 같은 방법으로 추가할 수 있습니다.
@@ -216,23 +276,17 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 
 이 태스크에서는 Amazon DynamoDB 테이블에서 데이터를 쿼리합니다. Partition Key를 사용하여 특정 사용자의 예약을 조회합니다.
 
-51. **Explore table items** 탭을 선택합니다.
-52. **Scan or query items** 섹션에서 `Query`를 선택합니다.
-53. **Partition key**에 `user-001`을 입력합니다.
-54. [[Run]] 버튼을 클릭합니다.
+52. **Explore table items** 탭을 선택합니다.
+53. **Scan or query items** 섹션에서 `Query`를 선택합니다.
+54. **Partition key**에 `user-001`을 입력합니다.
+55. [[Run]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
-> user-001 사용자의 모든 예약(2개)이 표시됩니다.
+> user-001 사용자의 모든 예약(3개)이 표시됩니다.
 
 이제 Sort key 조건을 추가하여 특정 예약만 조회합니다:
 
-55. **Sort key** 오른쪽의 [[Add condition]] 버튼을 클릭합니다.
-
-> [!NOTE]
-> Sort key 조건은 Partition key 입력 필드 바로 아래에 있습니다.
-> [[Add condition]] 버튼을 클릭하면 조건 선택 드롭다운이 나타납니다.
-
-56. 조건 드롭다운에서 `=` (equals)를 선택합니다.
+56. **Sort key** 섹션의 조건 드롭다운에서 `Equal to`를 선택합니다 (기본값).
 57. 값 입력 필드에 `res-20260315-001`을 입력합니다.
 58. [[Run]] 버튼을 클릭합니다.
 
@@ -251,18 +305,21 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 
 59. **Explore table items** 탭을 선택합니다.
 60. **Scan or query items** 섹션에서 `Query`를 선택합니다.
-61. **Index** 드롭다운에서 `userId-date-index`를 선택합니다.
+61. **Select a table or index** 드롭다운을 클릭하고 **Index** 섹션에서 `userId-date-index`를 선택합니다.
+
+> [!NOTE]
+> 인덱스를 선택하면 Partition key가 `userId`, Sort key가 `date`로 자동 변경됩니다. LSI는 동일한 파티션 키(userId)를 사용하되, 정렬 키만 `reservationId`에서 `date`로 바뀝니다.
+
 62. **Partition key** (userId)에 `user-001`을 입력합니다.
 63. [[Run]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
 > user-001 사용자의 모든 예약이 날짜 순서로 정렬되어 표시됩니다.
 
-64. **Sort key** 오른쪽의 [[Add condition]] 버튼을 클릭합니다.
-65. 조건 드롭다운에서 `between`을 선택합니다.
-66. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
-67. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
-68. [[Run]] 버튼을 클릭합니다.
+64. **Sort key** 섹션의 조건 드롭다운에서 `Between`을 선택합니다.
+65. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
+66. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
+67. [[Run]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
 > user-001 사용자의 2026년 3월 예약만 날짜 순서로 표시됩니다.
@@ -279,23 +336,17 @@ LSI는 동일한 파티션 키를 사용하므로 특정 사용자의 데이터�
 
 이 태스크에서는 GSI(Global Secondary Index)를 생성하여 레스토랑별 예약 조회 패턴을 지원합니다. GSI는 기본 테이블과 다른 파티션 키를 사용할 수 있어, 완전히 다른 쿼리 패턴을 지원합니다.
 
-69. **Indexes** 탭을 선택합니다.
-70. [[Create index]] 버튼을 클릭합니다.
+68. `QuickTableReservations` 테이블 상세 페이지에서 **Indexes** 탭을 선택합니다.
+69. **Global secondary indexes** 섹션에서 [[Create index]] 버튼을 클릭합니다.
+70. **Index name**에 `restaurantId-date-index`를 입력합니다.
 71. **Partition key**에 `restaurantId`를 입력한 후 타입에서 `String`을 선택합니다.
 72. **Sort key**에 `date`를 입력한 후 타입에서 `String`을 선택합니다.
-73. **Index name**이 `restaurantId-date-index`로 자동 생성되었는지 확인합니다.
+73. **Attribute projections**에서 `All`을 선택합니다 (기본값).
 
 > [!NOTE]
-> Index name은 파티션 키와 정렬 키를 조합하여 자동으로 생성됩니다.
-> 필요시 다른 이름으로 변경할 수 있지만, 이 실습에서는 자동 생성된 이름을 그대로 사용합니다.
+> Index capacity는 테이블의 On-demand 모드를 따르므로 별도 설정이 필요 없습니다.
 
-74. **Attribute projections**에서 `All`을 선택합니다.
-
-> [!NOTE]
-> On-Demand 모드 테이블에서는 GSI 생성 시 읽기/쓰기 용량을 별도로 설정할 필요가 없습니다.
-> GSI도 테이블과 동일하게 On-Demand 모드로 자동 설정됩니다.
-
-75. [[Create index]] 버튼을 클릭합니다.
+74. [[Create index]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > GSI 생성에 1-2분이 소요됩니다. 상태가 "Active"로 변경될 때까지 기다립니다.
@@ -311,25 +362,23 @@ GSI는 테이블 생성 후에도 유연하게 관리할 수 있습니다.
 
 이 태스크에서는 생성한 GSI를 사용하여 레스토랑별로 데이터를 쿼리합니다. GSI를 통해 다양한 쿼리 패턴을 지원할 수 있습니다.
 
-76. **Explore table items** 탭을 선택합니다.
-77. **Scan or query items** 섹션에서 `Query`를 선택합니다.
-78. **Index** 드롭다운에서 `restaurantId-date-index`를 선택합니다.
-79. **Partition key** (restaurantId)에 `restaurant-001`을 입력합니다.
-80. [[Run]] 버튼을 클릭합니다.
+75. **Explore table items** 탭을 선택합니다.
+76. **Scan or query items** 섹션에서 `Query`를 선택합니다.
+77. **Select a table or index** 드롭다운을 클릭하고 **Index** 섹션에서 `restaurantId-date-index`를 선택합니다.
+
+> [!NOTE]
+> GSI를 선택하면 Partition key가 `restaurantId`, Sort key가 `date`로 자동 변경됩니다.
+
+78. **Partition key** (restaurantId)에 `restaurant-001`을 입력합니다.
+79. [[Run]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
 > restaurant-001 레스토랑의 모든 예약이 표시됩니다.
 
-81. **Sort key** 오른쪽의 [[Add condition]] 버튼을 클릭합니다.
-
-> [!NOTE]
-> Sort key 조건은 Partition key 입력 필드 바로 아래에 있습니다.
-> [[Add condition]] 버튼을 클릭하면 조건 선택 드롭다운이 나타납니다.
-
-82. 조건 드롭다운에서 `between`을 선택합니다.
-83. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
-84. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
-85. [[Run]] 버튼을 클릭합니다.
+80. **Sort key** 섹션의 조건 드롭다운에서 `Between`을 선택합니다.
+81. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
+82. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
+83. [[Run]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
 > 2026년 3월의 restaurant-001 예약만 표시됩니다.
@@ -346,22 +395,25 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 
 이 태스크에서는 Amazon DynamoDB 테이블의 항목을 업데이트합니다. 예약 상태를 변경하여 데이터 수정 방법을 학습합니다.
 
-86. **Explore table items** 탭을 선택합니다.
-87. **Scan or query items** 섹션에서 `Query`를 선택합니다.
-88. **Partition key**에 `user-002`를 입력합니다.
-89. **Sort key** 오른쪽의 [[Add condition]] 버튼을 클릭합니다.
-90. 조건 드롭다운에서 `=` (equals)를 선택합니다.
-91. 값 입력 필드에 `res-20260318-001`을 입력합니다.
-92. [[Run]] 버튼을 클릭합니다.
-93. 조회된 항목의 체크박스를 선택합니다.
-94. [[Actions]] 드롭다운에서 `Edit item`을 선택합니다.
+84. **Explore table items** 탭을 선택합니다.
+85. **Scan or query items** 섹션에서 `Query`를 선택합니다.
+
+> [!TIP]
+> 이전 태스크에서 인덱스를 선택한 상태라면 **Select a table or index** 드롭다운에서 **Table** 섹션의 `QuickTableReservations`를 선택하여 기본 테이블로 변경합니다.
+
+86. **Partition key**에 `user-002`를 입력합니다.
+87. **Sort key** 섹션의 조건 드롭다운에서 `Equal to`를 선택합니다 (기본값).
+88. 값 입력 필드에 `res-20260318-001`을 입력합니다.
+89. [[Run]] 버튼을 클릭합니다.
+90. 조회된 항목의 체크박스를 선택합니다.
+91. [[Actions]] 드롭다운에서 `Edit item`을 선택합니다.
 
 > [!NOTE]
 > 항목 편집 화면이 열립니다. 여기서 속성 값을 직접 수정할 수 있습니다.
 
-95. **status** 속성의 값 필드를 클릭합니다.
-96. 값을 `pending`에서 `confirmed`로 변경합니다.
-97. [[Save changes]] 버튼을 클릭합니다.
+92. **status** 속성의 값 필드를 클릭합니다.
+93. 값을 `pending`에서 `confirmed`로 변경합니다.
+94. [[Save and close]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > user-002 사용자의 res-20260318-001 예약 상태를 pending에서 confirmed로 변경했습니다.
@@ -372,13 +424,13 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon DynamoDB 테이블을 설계하고 생성했습니다
-- 파티션 키와 정렬 키를 활용한 효율적인 데이터 모델링을 학습했습니다
-- LSI(Local Secondary Index)를 생성하여 날짜 기반 쿼리를 지원했습니다
-- GSI(Global Secondary Index)를 생성하여 레스토랑별 쿼리 패턴을 지원했습니다
-- LSI와 GSI의 차이를 실습을 통해 이해했습니다
-- 항목을 추가, 조회, 수정하는 방법을 익혔습니다
-- Amazon DynamoDB 설계 모범 사례를 이해했습니다
+- Amazon DynamoDB 테이블을 설계하고 생성했습니다.
+- 파티션 키와 정렬 키를 활용한 효율적인 데이터 모델링을 학습했습니다.
+- LSI(Local Secondary Index)를 생성하여 날짜 기반 쿼리를 지원했습니다.
+- GSI(Global Secondary Index)를 생성하여 레스토랑별 쿼리 패턴을 지원했습니다.
+- LSI와 GSI의 차이를 실습을 통해 이해했습니다.
+- 항목을 추가, 조회, 수정하는 방법을 익혔습니다.
+- Amazon DynamoDB 설계 모범 사례를 이해했습니다.
 
 # 🗑️ 리소스 정리
 
@@ -396,8 +448,8 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `5-3`
+   - **Tag key**: `Week`
+   - **Tag value**: `5-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -425,8 +477,9 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 8. 왼쪽 메뉴에서 **Tables**를 선택합니다.
 9. `QuickTableReservations` 테이블을 선택합니다.
 10. **Actions** > `Delete table`을 선택합니다.
-11. 확인 창에서 `QuickTableReservations`를 입력합니다.
-12. [[Delete]] 버튼을 클릭합니다.
+11. `Delete all CloudWatch alarms for QuickTableReservations` 체크박스가 선택되어 있는지 확인합니다.
+12. 확인 입력 필드에 `confirm`을 입력합니다.
+13. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon DynamoDB 테이블 삭제는 즉시 완료됩니다. 모든 GSI와 LSI도 함께 삭제됩니다.
@@ -438,21 +491,18 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 >
 > 콘솔 방식이 더 편하다면 위 [옵션 1](#option-1)을 참고합니다.
 
-13. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
-14. CloudShell이 열리면 다음 명령어를 실행합니다:
+14. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
+15. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 # Amazon DynamoDB 테이블 삭제
-echo "Amazon DynamoDB 테이블 삭제 중..."
 aws dynamodb delete-table \
   --region ap-northeast-2 \
   --table-name QuickTableReservations
-
-echo "Amazon DynamoDB 테이블 삭제 완료"
 ```
 
 > [!NOTE]
-> Amazon DynamoDB 테이블 삭제는 즉시 완료됩니다. 모든 GSI와 LSI도 함께 삭제됩니다.
+> 성공하면 테이블 정보가 JSON으로 출력됩니다. "ResourceNotFoundException" 오류가 나오면 이미 삭제된 것입니다.
 
 ---
 
@@ -460,25 +510,26 @@ echo "Amazon DynamoDB 테이블 삭제 완료"
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-15. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-16. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-17. **Regions**에서 `ap-northeast-2`를 선택합니다.
-18. **Resource types**에서 `All supported resource types`를 선택합니다.
-19. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `5-3`
-20. [[Search resources]] 버튼을 클릭합니다.
+16. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+17. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+18. **Regions**에서 `ap-northeast-2`를 선택합니다.
+19. **Resource types**에서 `All supported resource types`를 선택합니다.
+20. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `5-3`
+21. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+> 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
 
-- [Amazon DynamoDB 데이터 모델링](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/bp-general-nosql-design.html)
-- [Amazon DynamoDB GSI 모범 사례](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/bp-indexes.html)
-- [Amazon DynamoDB 용량 모드](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)
+- [DynamoDB를 위한 NoSQL 설계](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/bp-general-nosql-design.html)
+- [DynamoDB의 보조 인덱스 사용에 대한 모범 사례](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/bp-indexes.html)
+- [DynamoDB 처리량 용량](https://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html)
 
 ## 📚 참고: Amazon DynamoDB 테이블 설계 개요
 
