@@ -116,7 +116,7 @@ prerequisites:
 23. [[Create function]] 버튼을 클릭합니다.
 24. **Author from scratch**를 선택합니다.
 25. **Function name**에 `BedrockAgentReservationHandler`를 입력합니다.
-26. **Runtime**에서 `Python 3.12`를 선택합니다.
+26. **Runtime**에서 `Python 3.13`를 선택합니다.
 27. **Architecture**는 `x86_64`를 선택합니다.
 28. [[Create function]] 버튼을 클릭합니다.
 29. **Code** 탭에서 기본 코드를 모두 삭제합니다.
@@ -949,7 +949,7 @@ def cancel_reservation(params):
 109. AWS Lambda 콘솔로 이동합니다.
 110. [[Create function]] 버튼을 클릭합니다.
 111. **Function name**에 `BedrockAgentInvoker`를 입력합니다.
-112. **Runtime**에서 `Python 3.12`를 선택합니다.
+112. **Runtime**에서 `Python 3.13`를 선택합니다.
 113. [[Create function]] 버튼을 클릭합니다.
 114. 함수 생성이 완료되면 **Configuration** 탭을 선택합니다.
 115. 왼쪽 메뉴에서 **General configuration**을 선택합니다.

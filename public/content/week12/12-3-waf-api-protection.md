@@ -83,26 +83,27 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 7. [[Choose file]] 버튼을 클릭한 후 `week12-3-waf-api-protection.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 9. **Stack name**에 `week12-3-waf-api-protection-stack`을 입력합니다.
-10. **Parameters** 섹션에서 기본값을 유지합니다.
-11. [[Next]] 버튼을 클릭합니다.
-12. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
+
+> [!NOTE]
+> **Parameters** 섹션의 기본값을 유지합니다.
+
+10. [[Next]] 버튼을 클릭합니다.
+11. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
 
 > [!NOTE]
 > AWS CloudFormation 템플릿에 이미 태그가 정의되어 있으므로 추가 태그 설정은 불필요합니다.
 
-13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
-14. [[Next]] 버튼을 클릭합니다.
-15. **Review and create** 페이지에서 설정을 확인합니다.
-16. [[Submit]] 버튼을 클릭합니다.
-17. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+12. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+13. [[Next]] 버튼을 클릭합니다.
+14. **Review and create** 페이지에서 설정을 확인합니다.
+15. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 2-3분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-18. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-19. **Outputs** 탭을 선택합니다.
-20. 출력값들을 확인하고 메모장에 복사합니다:
+16. **Outputs** 탭을 선택합니다.
+17. 출력값들을 확인하고 메모장에 복사합니다:
     - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
     - `ApiGatewayStageArn`: API Gateway Stage ARN (WAF 연결에 사용)
 
@@ -125,9 +126,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 1.1: 정상 요청 테스트
 
-21. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
-22. CloudShell이 시작될 때까지 기다립니다.
-23. 다음 명령어로 환경 변수를 설정합니다:
+18. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
+
+> [!NOTE]
+> CloudShell이 시작될 때까지 기다립니다.
+
+19. 다음 명령어로 환경 변수를 설정합니다:
 
 ```bash
 # API URL 설정 (태스크 0에서 복사한 Invoke URL로 변경)
@@ -137,7 +141,7 @@ export API_URL="https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod"
 > [!IMPORTANT]
 > `API_URL`을 태스크 0에서 복사한 실제 Invoke URL로 변경합니다.
 
-24. 정상적인 예약 생성 요청을 보냅니다:
+20. 정상적인 예약 생성 요청을 보냅니다:
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -164,7 +168,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 1.2: SQL Injection 공격 시뮬레이션
 
-25. SQL Injection 패턴이 포함된 요청을 보냅니다:
+21. SQL Injection 패턴이 포함된 요청을 보냅니다:
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -177,7 +181,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 1.3: XSS 공격 시뮬레이션
 
-26. XSS 패턴이 포함된 요청을 보냅니다:
+22. XSS 패턴이 포함된 요청을 보냅니다:
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -206,44 +210,46 @@ curl -s -X POST $API_URL/reservations \
 >
 > **요청 처리 순서**: Web ACL에 추가된 규칙은 우선순위(Priority)에 따라 순서대로 평가됩니다. 첫 번째로 매칭되는 규칙의 동작이 적용되며, 어떤 규칙에도 매칭되지 않으면 기본 동작(Default Action)이 적용됩니다.
 
-27. AWS Management Console 상단 검색창에 `WAF`를 입력하고 **WAF & Shield**를 선택합니다.
+23. AWS Management Console 상단 검색창에 `WAF`를 입력하고 **WAF & Shield**를 선택합니다.
 
 > [!NOTE]
 > AWS WAF와 AWS Shield는 동일한 콘솔에서 관리됩니다.
 
 > [!WARNING]
-> 2025년 이후 AWS WAF 콘솔이 새 버전(Protection packs)으로 변경되었습니다. 이 실습은 기존 콘솔 기준으로 진행합니다. 새 콘솔("Protection packs (web ACLs)")이 표시되면 왼쪽 메뉴에서 **Switch to the old WAF console**을 클릭하여 기존 콘솔로 전환합니다.
+> AWS WAF 콘솔은 기존 콘솔과 새 콘솔(Protection packs) 두 가지 버전이 있습니다. 이 실습은 기존 콘솔 기준으로 진행합니다.
+> 기존 콘솔에서는 왼쪽 메뉴에 **Web ACLs** 메뉴가 표시되고, "Switch to the new WAF console" 배너가 나타납니다.
+> 새 콘솔이 표시되는 경우 왼쪽 메뉴에서 **Switch to AWS WAF Classic** 또는 기존 콘솔 전환 링크를 클릭합니다.
 
-28. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
-29. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
+24. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
+25. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
 
 > [!IMPORTANT]
 > Amazon API Gateway (REST API)에 WAF를 연결하려면 Web ACL을 해당 API Gateway와 동일한 리전에 생성해야 합니다. Amazon CloudFront에 연결하는 경우에는 `Global (CloudFront)` 리전을 선택합니다.
 
-30. [[Create web ACL]] 버튼을 클릭합니다.
+26. [[Create web ACL]] 버튼을 클릭합니다.
 
 ### 태스크 2.1: Web ACL 기본 설정
 
-31. **Resource type**에서 `Regional resources (Application Load Balancers, Amazon API Gateway REST APIs, Amazon App Runner services, AWS AppSync APIs, Amazon Cognito user pools and AWS Verified Access Instances)`를 선택합니다.
-32. **Region**에서 `Asia Pacific (Seoul)`을 확인합니다.
-33. **Name**에 `QuickTable-WAF-WebACL`을 입력합니다.
+27. **Resource type**에서 `Regional resources (Application Load Balancers, Amazon API Gateway REST APIs, Amazon App Runner services, AWS AppSync APIs, Amazon Cognito user pools and AWS Verified Access Instances)`를 선택합니다.
+28. **Region**에서 `Asia Pacific (Seoul)`을 확인합니다.
+29. **Name**에 `QuickTable-WAF-WebACL`을 입력합니다.
 
 > [!NOTE]
 > **CloudWatch metric name**은 자동으로 입력됩니다.
 
-34. **Description**에 `WAF Web ACL for QuickTable API protection`을 입력합니다.
+30. **Description**에 `WAF Web ACL for QuickTable API protection`을 입력합니다.
 
 ### 태스크 2.2: 연결할 AWS 리소스 추가
 
-35. **Associated AWS resources** 섹션에서 [[Add AWS resources]] 버튼을 클릭합니다.
-36. **Resource type**에서 `Amazon API Gateway REST API`를 선택합니다.
-37. 목록에서 `Week12-3-QuickTableAPI` 옆의 체크박스를 선택합니다.
+31. **Associated AWS resources** 섹션에서 [[Add AWS resources]] 버튼을 클릭합니다.
+32. **Resource type**에서 `Amazon API Gateway REST API`를 선택합니다.
+33. 목록에서 `Week12-3-QuickTableAPI` 옆의 체크박스를 선택합니다.
 
 > [!NOTE]
 > 태스크 0에서 생성한 API Gateway가 표시됩니다. 표시되지 않으면 리전이 `Asia Pacific (Seoul)`인지 확인합니다.
 
-38. [[Add]] 버튼을 클릭합니다.
-39. [[Next]] 버튼을 클릭합니다.
+34. [[Add]] 버튼을 클릭합니다.
+35. [[Next]] 버튼을 클릭합니다.
 
 ✅ **태스크 완료**: Web ACL 기본 설정이 완료되었습니다. 다음 태스크에서 규칙을 추가합니다.
 
@@ -271,32 +277,32 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 3.1: SQL Injection 방어 규칙 추가
 
-40. **Add rules and rule groups** 페이지(Step 2)에서 [[Add rules]] 드롭다운을 클릭합니다.
-41. **Add managed rule groups**를 선택합니다.
-42. **AWS managed rule groups** 섹션을 확장합니다.
-43. **Free rule groups** 목록에서 `SQL database`를 찾습니다.
-44. `SQL database` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+36. **Add rules and rule groups** 페이지(Step 2)에서 [[Add rules]] 드롭다운을 클릭합니다.
+37. **Add managed rule groups**를 선택합니다.
+38. **AWS managed rule groups** 섹션을 확장합니다.
+39. **Free rule groups** 목록에서 `SQL database`를 찾습니다.
+40. `SQL database` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **SQL database** 규칙 그룹은 SQL Injection 공격 패턴을 탐지합니다. 요청 본문, 쿼리 문자열, URI, 헤더에서 SQL 구문을 검사합니다.
 
 ### 태스크 3.2: Core Rule Set (CRS) 추가
 
-45. **Free rule groups** 목록에서 `Core rule set`을 찾습니다.
-46. `Core rule set` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+41. **Free rule groups** 목록에서 `Core rule set`을 찾습니다.
+42. `Core rule set` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **Core rule set (CRS)**는 OWASP Top 10에 포함된 일반적인 웹 취약점을 방어합니다. XSS, 파일 포함(File Inclusion), 경로 탐색(Path Traversal) 등의 공격 패턴을 탐지합니다.
 
 ### 태스크 3.3: Known Bad Inputs 추가
 
-47. **Free rule groups** 목록에서 `Known bad inputs`를 찾습니다.
-48. `Known bad inputs` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
+43. **Free rule groups** 목록에서 `Known bad inputs`를 찾습니다.
+44. `Known bad inputs` 오른쪽의 **Add to web ACL** 토글을 활성화합니다.
 
 > [!NOTE]
 > **Known bad inputs**는 Log4j/Log4Shell 취약점 등 알려진 악성 입력 패턴을 차단합니다.
 
-49. [[Add rules]] 버튼을 클릭합니다.
+45. [[Add rules]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 3개의 관리형 규칙 그룹이 추가되었습니다. 각 규칙 그룹의 WCU(Web ACL Capacity Unit)가 표시됩니다:
@@ -310,7 +316,7 @@ curl -s -X POST $API_URL/reservations \
 >
 > Web ACL의 최대 WCU는 5,000입니다. 현재 1,100 WCU를 사용하므로 여유가 충분합니다.
 
-50. 페이지 하단의 **Default web ACL action for requests that don't match any rules**에서 `Allow`가 선택되어 있는지 확인합니다.
+46. 페이지 하단의 **Default web ACL action for requests that don't match any rules**에서 `Allow`가 선택되어 있는지 확인합니다.
 
 > [!NOTE]
 > 기본 동작을 Allow로 설정하면, 규칙에 매칭되지 않는 정상 요청은 모두 허용됩니다. 규칙에 매칭되는 악성 요청만 차단(Block)합니다.
@@ -331,24 +337,24 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 4.1: Rate-based 규칙 추가
 
-51. **Add rules and rule groups** 페이지에서 [[Add rules]] 드롭다운을 클릭합니다.
-52. **Add my own rules and rule groups**를 선택합니다.
-53. **Rule type**에서 `Rate-based rule`을 선택합니다.
-54. **Name**에 `QuickTable-RateLimit-Rule`을 입력합니다.
-55. **Rate limit**에 `100`을 입력합니다.
+47. **Add rules and rule groups** 페이지에서 [[Add rules]] 드롭다운을 클릭합니다.
+48. **Add my own rules and rule groups**를 선택합니다.
+49. **Rule type**에서 `Rate-based rule`을 선택합니다.
+50. **Name**에 `QuickTable-RateLimit-Rule`을 입력합니다.
+51. **Rate limit**에 `100`을 입력합니다.
 
 > [!NOTE]
 > Rate limit 100은 동일 IP에서 5분 동안 100개 이상의 요청이 오면 차단한다는 의미입니다. 2024년 8월부터 최소 10까지 설정 가능합니다. 프로덕션 환경에서는 서비스 특성에 맞게 조정합니다 (예: 일반 웹사이트 2,000, API 서비스 1,000).
 >
 > 이 실습에서는 테스트 편의를 위해 낮은 값(100)을 설정합니다.
 
-56. **IP address to use for rate limiting**에서 `Source IP address`를 선택합니다.
-57. **Action**에서 `Block`을 선택합니다.
-58. [[Add rule]] 버튼을 클릭합니다.
+52. **IP address to use for rate limiting**에서 `Source IP address`를 선택합니다.
+53. **Action**에서 `Block`을 선택합니다.
+54. [[Add rule]] 버튼을 클릭합니다.
 
 ### 태스크 4.2: 규칙 우선순위 설정
 
-59. 규칙 목록에서 우선순위를 확인합니다.
+55. 규칙 목록에서 우선순위를 확인합니다.
 
 > [!NOTE]
 > 규칙은 우선순위(Priority) 순서대로 평가됩니다. 숫자가 낮을수록 먼저 평가됩니다.
@@ -364,26 +370,24 @@ curl -s -X POST $API_URL/reservations \
 >
 > Rate-based 규칙을 가장 먼저 평가하면 대량 요청을 조기에 차단하여 후속 규칙의 처리 부하를 줄일 수 있습니다.
 
-60. 필요시 [[Move up]] / [[Move down]] 버튼을 사용하여 우선순위를 조정합니다.
-61. [[Next]] 버튼을 클릭합니다.
+56. 필요시 [[Move up]] / [[Move down]] 버튼을 사용하여 우선순위를 조정합니다.
+57. [[Next]] 버튼을 클릭합니다.
 
 ### 태스크 4.3: 메트릭 설정 및 Web ACL 생성
 
-62. **Set rule priority** 페이지에서 우선순위를 확인합니다.
-63. [[Next]] 버튼을 클릭합니다.
-64. **Configure metrics** 페이지에서 기본 Amazon CloudWatch 메트릭 설정을 확인합니다.
+58. **Set rule priority** 페이지에서 우선순위를 확인합니다.
+59. [[Next]] 버튼을 클릭합니다.
+60. **Configure metrics** 페이지에서 기본 Amazon CloudWatch 메트릭 설정을 확인합니다.
 
 > [!NOTE]
 > 각 규칙 그룹별로 Amazon CloudWatch 메트릭이 자동 생성됩니다. 이 메트릭으로 차단된 요청 수, 허용된 요청 수 등을 모니터링할 수 있습니다.
 
-65. [[Next]] 버튼을 클릭합니다.
-66. **Review and create web ACL** 페이지에서 설정을 검토합니다.
-67. [[Create web ACL]] 버튼을 클릭합니다.
+61. [[Next]] 버튼을 클릭합니다.
+62. **Review and create web ACL** 페이지에서 설정을 검토합니다.
+63. [[Create web ACL]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Web ACL 생성에 1-2분이 소요됩니다. 생성이 완료되면 Web ACL 상세 페이지로 이동합니다.
-
-> [!NOTE]
 > 태스크 2에서 이미 API Gateway를 연결했으므로, Web ACL 생성과 동시에 API Gateway에 자동으로 적용됩니다.
 
 ✅ **태스크 완료**: Rate-based 규칙이 추가되고 Web ACL이 생성되었습니다.
@@ -394,7 +398,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 5.1: 정상 요청 확인
 
-68. CloudShell에서 정상적인 예약 생성 요청을 보냅니다:
+64. CloudShell에서 정상적인 예약 생성 요청을 보냅니다:
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -424,7 +428,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 5.2: SQL Injection 차단 확인
 
-69. SQL Injection 패턴이 포함된 요청을 보냅니다:
+65. SQL Injection 패턴이 포함된 요청을 보냅니다:
 
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservations \
@@ -441,7 +445,7 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservati
 > [!SUCCESS]
 > HTTP 403 (Forbidden) 응답이 반환되면 AWS WAF가 SQL Injection 공격을 성공적으로 차단한 것입니다.
 
-70. 응답 본문을 확인합니다:
+66. 응답 본문을 확인합니다:
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -457,7 +461,7 @@ curl -s -X POST $API_URL/reservations \
 
 ### 태스크 5.3: XSS 차단 확인
 
-71. XSS 패턴이 포함된 요청을 보냅니다:
+67. XSS 패턴이 포함된 요청을 보냅니다:
 
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservations \
@@ -476,7 +480,7 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservati
 
 ### 태스크 5.4: 추가 공격 패턴 테스트
 
-72. 경로 탐색(Path Traversal) 공격을 테스트합니다:
+68. 경로 탐색(Path Traversal) 공격을 테스트합니다:
 
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
@@ -489,7 +493,7 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
 > HTTP Status: 403
 > ```
 
-73. 정상 조회 요청이 여전히 동작하는지 확인합니다:
+69. 정상 조회 요청이 여전히 동작하는지 확인합니다:
 
 ```bash
 curl -s -X GET $API_URL/reservations | python3 -m json.tool
@@ -519,11 +523,11 @@ curl -s -X GET $API_URL/reservations | python3 -m json.tool
 
 ### 태스크 6.1: Web ACL 대시보드 확인
 
-74. AWS WAF 콘솔로 이동합니다.
-75. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
-76. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
-77. `QuickTable-WAF-WebACL`을 클릭합니다.
-78. **Overview** 탭에서 다음 정보를 확인합니다:
+70. AWS WAF 콘솔로 이동합니다.
+71. 왼쪽 메뉴에서 **Web ACLs**를 선택합니다.
+72. **Region**에서 `Asia Pacific (Seoul)`을 선택합니다.
+73. `QuickTable-WAF-WebACL`을 클릭합니다.
+74. **Overview** 탭에서 다음 정보를 확인합니다:
     - **AllowedRequests**: 허용된 요청 수
     - **BlockedRequests**: 차단된 요청 수
 
@@ -532,7 +536,7 @@ curl -s -X GET $API_URL/reservations | python3 -m json.tool
 
 ### 태스크 6.2: 규칙별 메트릭 확인
 
-79. **Overview** 탭에서 아래로 스크롤하여 규칙별 메트릭을 확인합니다.
+75. **Overview** 탭에서 아래로 스크롤하여 규칙별 메트릭을 확인합니다.
 
 > [!NOTE]
 > 각 규칙 그룹별로 차단된 요청 수가 표시됩니다:
@@ -544,7 +548,7 @@ curl -s -X GET $API_URL/reservations | python3 -m json.tool
 
 ### 태스크 6.3: Sampled requests 확인
 
-80. **Overview** 탭에서 **Sampled requests** 섹션을 확인합니다.
+76. **Overview** 탭에서 **Sampled requests** 섹션을 확인합니다.
 
 > [!NOTE]
 > Sampled requests에서는 최근 요청의 샘플을 확인할 수 있습니다. 각 요청에 대해 다음 정보가 표시됩니다:
@@ -555,7 +559,7 @@ curl -s -X GET $API_URL/reservations | python3 -m json.tool
 > - **Action**: 수행된 동작 (Allow/Block)
 > - **Time**: 요청 시간
 
-81. 차단된 요청(Block)을 클릭하여 상세 정보를 확인합니다.
+77. 차단된 요청(Block)을 클릭하여 상세 정보를 확인합니다.
 
 > [!TIP]
 > Sampled requests는 최대 3시간 동안의 요청 샘플을 보여줍니다. 전체 로그가 필요한 경우 WAF 로깅을 활성화하여 Amazon S3, Amazon CloudWatch Logs, 또는 Amazon Kinesis Data Firehose로 전송할 수 있습니다.

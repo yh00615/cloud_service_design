@@ -194,7 +194,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub 'week11-2-SampleDataUploader-${StudentId}'
-      Runtime: python3.12
+      Runtime: python3.13
       Handler: index.handler
       Role: !GetAtt SampleDataUploaderRole.Arn
       Timeout: 60

@@ -27,6 +27,40 @@ import '@/styles/guide-images.css';
 // SQL 하이라이터 생성
 const sqlHighlight = createHighlight(new SqlHighlightRules());
 
+// react-markdown 컴포넌트 props 타입
+interface CodeComponentProps {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+interface ChildrenProps {
+  children?: React.ReactNode;
+}
+
+interface LinkProps {
+  href?: string;
+  children?: React.ReactNode;
+}
+
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src?: string;
+  alt?: string;
+}
+
+// ReactElement의 props 타입
+interface ElementWithChildren {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
+// Markdown AST node 타입 (react-markdown이 전달하는 내부 노드)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MdNode = any; // react-markdown 내부 노드는 런타임에 다양한 형태를 가짐
+
+// Cloudscape Icon name 타입
+type IconName = React.ComponentProps<typeof Icon>['name'];
+
 interface MarkdownRendererProps {
   content: string;
 }
@@ -59,7 +93,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     const pattern = /(\[\[([^\]]+)\]\]|\{\{([^}]+)\}\}|\(\(([^)]+)\)\))/g;
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
-    let match;
+    let match: RegExpExecArray | null = null;
 
     while ((match = pattern.exec(text)) !== null) {
       // 패턴 이전의 텍스트 추가
@@ -69,10 +103,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       // 버튼 컴포넌트 추가
       if (match[2]) {
-        // [[버튼]] - Primary
+        // [[버튼]] - 키워드 기반 자동 판별
+        const primaryKeywords = [
+          'create', 'launch', 'deploy', 'run', 'start', 'submit',
+          'publish', 'enable', 'activate', 'confirm'
+        ];
+        const isPrimary = primaryKeywords.some(k =>
+          match![2].toLowerCase().includes(k)
+        );
         parts.push(
           <span key={match.index} className="markdown-button-wrapper">
-            <AWSButton variant="primary" size="small">
+            <AWSButton variant={isPrimary ? 'primary' : 'normal'} size="small">
               {match[2]}
             </AWSButton>
           </span>,
@@ -109,7 +150,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   };
 
   // children을 재귀적으로 처리하여 버튼 패턴 변환
-  const processChildren = (children: any): any => {
+  const processChildren = (children: React.ReactNode): React.ReactNode => {
     if (typeof children === 'string') {
       if (
         children.includes('[[') ||
@@ -127,7 +168,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
     // React 엘리먼트인 경우 (strong, em 등)
     if (React.isValidElement(children)) {
-      const element = children as React.ReactElement<any>;
+      const element = children as React.ReactElement<ElementWithChildren>;
       // props.children을 재귀적으로 처리
       if (element.props && element.props.children) {
         return React.cloneElement(element, {
@@ -138,8 +179,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     return children;
   };
 
-  // 변환되지 않은 **텍스트** 패턴을 <strong>으로 변환하는 후처리 함수
-  const processUnconvertedBold = (children: any): any => {
+  // 변換되지 않은 **텍스트** 패턴을 <strong>으로 변환하는 후처리 함수
+  const processUnconvertedBold = (children: React.ReactNode): React.ReactNode => {
     if (typeof children === 'string') {
       // **텍스트** 패턴 찾기
       const pattern = /\*\*([^*]+)\*\*/g;
@@ -188,14 +229,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
     // React 요소인 경우 children을 재귀적으로 처리
     if (React.isValidElement(children)) {
-      const element = children as React.ReactElement<{
-        children?: React.ReactNode;
-      }>;
+      const element = children as React.ReactElement<ElementWithChildren>;
       if (element.props?.children) {
         return React.cloneElement(element, {
           ...element.props,
           children: processUnconvertedBold(element.props.children),
-        } as any);
+        } as ElementWithChildren);
       }
     }
 
@@ -205,7 +244,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   // 커스텀 컴포넌트 매핑
   const components = {
     // 인라인 코드 → UserValue 컴포넌트
-    code: ({ inline, className, children }: any) => {
+    code: ({ inline, className, children }: CodeComponentProps) => {
       const text = String(children).replace(/\s+/g, ' ').trim();
       const rawText = String(children);
       const codeContent = String(children).replace(/\n$/, '');
@@ -322,9 +361,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 블록쿼트 → 세련된 정보 박스 또는 파일 다운로드
-    blockquote: ({ children }: any) => {
+    blockquote: ({ children }: ChildrenProps) => {
       // extractText 함수를 여기서 정의 (모든 Alert에서 사용)
-      const extractText = (node: any): string => {
+      const extractText = (node: MdNode): string => {
         if (typeof node === 'string') return node;
         if (Array.isArray(node)) {
           return node.map(extractText).filter(Boolean).join('\n');
@@ -477,7 +516,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           let key = 0;
           let isFirstLine = true;
 
-          const processNode = (node: any): void => {
+          const processNode = (node: MdNode): void => {
             if (!node) return;
 
             if (Array.isArray(node)) {
@@ -494,7 +533,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                 isFirstLine = false;
                 // 첫 번째 문자열에서 [!CONCEPT] 제목 부분 제거
                 const processedChildren = children
-                  .map((child: any, index: number) => {
+                  .map((child: MdNode, index: number) => {
                     if (typeof child === 'string' && index === 0) {
                       // [!CONCEPT] 제목 전체 줄 제거
                       return child
@@ -503,7 +542,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                     }
                     return child;
                   })
-                  .filter((child: any) => child !== '');
+                  .filter((child: MdNode) => child !== '');
 
                 if (processedChildren.length > 0) {
                   result.push(
@@ -552,7 +591,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                 : [node.props?.children];
               const listItems: JSX.Element[] = [];
 
-              items.forEach((item: any, idx: number) => {
+              items.forEach((item: MdNode, idx: number) => {
                 if (
                   item?.type === 'li' ||
                   item?.props?.node?.tagName === 'li'
@@ -627,7 +666,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       // [!NOTE], [!WARNING], [!TIP], [!OUTPUT], [!SUCCESS], [!ERROR], [!COST], [!IMPORTANT], [!TROUBLESHOOTING], [!ARCHITECTURE] 감지
       let boxType = 'note';
-      let iconName: string = 'status-info';
+      let iconName: IconName = 'status-info';
       let label = '참고';
       let isOutputBlock = false;
       let isArchitectureBlock = false;
@@ -743,7 +782,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           return (
             <div className={`info-box info-box--${boxType}`} role="note">
               <div className="info-box-icon">
-                <Icon name={iconName as any} />
+                <Icon name={iconName} />
               </div>
               <div className="info-box-content">
                 <strong>{label}</strong>
@@ -772,7 +811,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         return (
           <div className={`info-box info-box--${boxType}`} role="note">
             <div className="info-box-icon">
-              <Icon name={iconName as any} />
+              <Icon name={iconName} />
             </div>
             <div className="info-box-content">
               <strong>{label}</strong>
@@ -787,7 +826,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       }
 
       // Alert 마커 제거 함수 (먼저 선언)
-      const removeAlertMarker = (node: any): any => {
+      const removeAlertMarker = (node: MdNode): MdNode => {
         if (typeof node === 'string') {
           return node.replace(
             /\[!(NOTE|WARNING|TIP|ERROR|SUCCESS|COST|IMPORTANT|TROUBLESHOOTING|CONCEPT|DOWNLOAD|OUTPUT|ARCHITECTURE)\]\s*/g,
@@ -810,7 +849,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       };
 
       // 이미지에 클릭 이벤트 추가 함수
-      const addImageClickHandler = (node: any): any => {
+      const addImageClickHandler = (node: MdNode): MdNode => {
         if (typeof node === 'string') {
           return node;
         }
@@ -887,7 +926,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       return (
         <div className={`info-box info-box--${boxType}`} role={roleAttr}>
           <div className="info-box-icon">
-            <Icon name={iconName as any} />
+            <Icon name={iconName} />
           </div>
           <div className="info-box-content">
             <strong>{label}</strong>
@@ -898,7 +937,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 링크 → AWS 버튼 또는 일반 링크
-    a: ({ href, children }: any) => {
+    a: ({ href, children }: LinkProps) => {
       // aws: 프로토콜 감지
       if (href?.startsWith('aws:')) {
         const parts = href.replace('aws:', '').split(':');
@@ -950,14 +989,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 강조 (굵게) → 버튼 패턴은 처리하지 않고 일반 굵은 텍스트로만 처리
-    strong: ({ children }: any) => {
+    strong: ({ children }: ChildrenProps) => {
       // 일반 굵은 텍스트 (필드명, 메뉴명)
       // children을 그대로 렌더링하여 괄호 안 텍스트도 볼드로 표시
       return <strong className="markdown-strong">{children}</strong>;
     },
 
     // 순서 있는 리스트 - 전체 문서에서 연속된 번호
-    ol: ({ children }: any) => {
+    ol: ({ children }: ChildrenProps) => {
       return (
         <Box margin={{ vertical: 'm' }}>
           <ol className="markdown-ordered-list">{children}</ol>
@@ -966,7 +1005,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 순서 없는 리스트
-    ul: ({ children }: any) => {
+    ul: ({ children }: ChildrenProps) => {
       return (
         <Box margin={{ vertical: 'm' }}>
           <ul className="markdown-unordered-list">{children}</ul>
@@ -975,7 +1014,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 리스트 아이템
-    li: ({ children }: any) => {
+    li: ({ children }: ChildrenProps) => {
       // 버튼 패턴 처리 후 변환되지 않은 **텍스트** 패턴도 처리
       const processedChildren = processChildren(children);
       const finalChildren = processUnconvertedBold(processedChildren);
@@ -984,14 +1023,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 정의 목록 (Definition List) - 완전히 일반 단락으로 변환
-    dl: ({ children }: any) => {
+    dl: ({ children }: ChildrenProps) => {
       // dt와 dd를 하나의 문장으로 합치기
       const items: React.ReactNode[] = [];
       let currentTerm: React.ReactNode = null;
 
       React.Children.forEach(children, (child) => {
         if (React.isValidElement(child)) {
-          const childElement = child as React.ReactElement<any>;
+          const childElement = child as React.ReactElement<ElementWithChildren>;
           if (childElement.type === 'dt') {
             currentTerm = childElement.props.children;
           } else if (childElement.type === 'dd' && currentTerm) {
@@ -1009,13 +1048,13 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // dt와 dd는 dl에서 처리하므로 그대로 반환
-    dt: ({ children }: any) => children,
-    dd: ({ children }: any) => children,
+    dt: ({ children }: ChildrenProps) => children,
+    dd: ({ children }: ChildrenProps) => children,
 
     // 단락 - [[버튼명]] 감지 및 StatusIndicator 패턴 감지
-    p: ({ children }: any) => {
+    p: ({ children }: ChildrenProps) => {
       // children을 문자열로 변환하여 패턴 확인
-      const extractText = (node: any): string => {
+      const extractText = (node: MdNode): string => {
         if (typeof node === 'string') return node;
         if (Array.isArray(node)) return node.map(extractText).join('');
         if (node?.props?.children) return extractText(node.props.children);
@@ -1069,7 +1108,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 제목
-    h1: ({ children }: any) => {
+    h1: ({ children }: ChildrenProps) => {
       const text = String(children);
       // ID 생성: 리소스 정리는 'cleanup', 참고는 'reference'
       let id = '';
@@ -1089,7 +1128,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         </Box>
       );
     },
-    h2: ({ children }: any) => {
+    h2: ({ children }: ChildrenProps) => {
       const text = String(children);
       // "태스크" 또는 "데모"로 시작하는 h2는 h3로 렌더링 (계층 구조 명확화)
       const isTask = text.includes('태스크') || text.includes('Task');
@@ -1173,7 +1212,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         </Box>
       );
     },
-    h3: ({ children }: any) => {
+    h3: ({ children }: ChildrenProps) => {
       const text = String(children);
 
       // ID 생성: 리소스 정리 하위 섹션 또는 옵션
@@ -1203,7 +1242,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         </Box>
       );
     },
-    h4: ({ children }: any) => {
+    h4: ({ children }: ChildrenProps) => {
       const text = String(children);
 
       // ID 생성: 리소스 정리 하위 섹션 또는 옵션
@@ -1235,7 +1274,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 이미지 - base path 자동 처리 + 클릭 확대
-    img: ({ src, alt, ...props }: any) => {
+    img: ({ src, alt, ...props }: ImageProps) => {
       // base path 가져오기 (vite.config.ts에서 설정한 값)
       const base = import.meta.env.BASE_URL || '/';
 
@@ -1257,12 +1296,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
 
     // 테이블 컴포넌트
-    table: ({ children }: any) => <table>{children}</table>,
-    thead: ({ children }: any) => <thead>{children}</thead>,
-    tbody: ({ children }: any) => <tbody>{children}</tbody>,
-    tr: ({ children }: any) => <tr>{children}</tr>,
-    th: ({ children }: any) => <th>{children}</th>,
-    td: ({ children }: any) => <td>{children}</td>,
+    table: ({ children }: ChildrenProps) => <table>{children}</table>,
+    thead: ({ children }: ChildrenProps) => <thead>{children}</thead>,
+    tbody: ({ children }: ChildrenProps) => <tbody>{children}</tbody>,
+    tr: ({ children }: ChildrenProps) => <tr>{children}</tr>,
+    th: ({ children }: ChildrenProps) => <th>{children}</th>,
+    td: ({ children }: ChildrenProps) => <td>{children}</td>,
   };
 
   return (

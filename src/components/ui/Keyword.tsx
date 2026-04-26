@@ -17,10 +17,13 @@ export const Keyword: React.FC<KeywordProps> = ({
     ...props
 }) => {
     // children에서 실제 텍스트 추출
-    const extractText = (node: any): string => {
+    const extractText = (node: React.ReactNode): string => {
         if (typeof node === 'string') return node
         if (Array.isArray(node)) return node.map(extractText).join('')
-        if (node?.props?.children) return extractText(node.props.children)
+        if (node != null && typeof node === 'object' && 'props' in node) {
+            const el = node as React.ReactElement<{ children?: React.ReactNode }>
+            if (el.props?.children) return extractText(el.props.children)
+        }
         return ''
     }
 
@@ -40,11 +43,20 @@ export const Keyword: React.FC<KeywordProps> = ({
         fullText.toLowerCase().includes(keyword)
     )
 
-    // 버튼인 경우 AWSButton으로 렌더링 (모두 오렌지색, small 크기)
+    // 오렌지 버튼 키워드 (생성/실행 계열)
+    const primaryKeywords = [
+        'create', 'launch', 'deploy', 'run', 'start', 'submit',
+        'publish', 'enable', 'activate', 'confirm'
+    ]
+    const isPrimary = primaryKeywords.some(keyword =>
+        fullText.toLowerCase().includes(keyword)
+    )
+
+    // 버튼인 경우 AWSButton으로 렌더링
     if (isButton) {
         return (
             <span className="keyword-button-wrapper">
-                <AWSButton variant="primary">
+                <AWSButton variant={isPrimary ? 'primary' : 'normal'}>
                     {children}
                 </AWSButton>
             </span>

@@ -13,7 +13,7 @@ dist-ssr
 *.local
 
 # Lock files
-package-lock.json
+# package-lock.json는 의존성 버전 고정을 위해 커밋합니다
 
 # Editor directories and files
 .vscode/*

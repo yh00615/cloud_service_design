@@ -390,7 +390,7 @@ function handler(event) {
 > [!NOTE]
 > Time 열이 보이지 않으면 Network 탭의 열 헤더를 우클릭하여 **Time**을 활성화합니다.
 
-98. `/about.html` 요청의 **Time** 열과 비교합니다.
+98. `/about.html` 요청의 **Time** 열을 확인하고 `/old` 요청과의 차이를 확인합니다.
 
 > [!CONCEPT] CloudFront Functions 성능 이점
 > `/old` 요청은 CloudFront Functions가 엣지 로케이션에서 직접 302 응답을 생성합니다. 오리진(Amazon S3)에 요청을 보내지 않으므로 응답 시간이 매우 짧습니다.

@@ -15,10 +15,12 @@ import {
 } from '@cloudscape-design/components';
 import { curriculum, sessionTypeConfig } from '@/data/curriculum';
 import { MarkdownRenderer } from '@/components/markdown/MarkdownRenderer';
-import { loadMarkdownFile } from '@/utils/markdownLoader';
+import { loadMarkdownFile, MarkdownMetadata, DownloadFile } from '@/utils/markdownLoader';
 import '@/styles/badges.css';
 import '@/styles/download-files.css';
 import '@/styles/session-guide.css';
+
+type BadgeColor = React.ComponentProps<typeof Badge>['color'];
 
 // AWS 서비스명을 CSS 클래스명으로 변환
 const getServiceBadgeClass = (service: string): string => {
@@ -148,7 +150,7 @@ export const SessionGuide: React.FC = () => {
   const [referenceContent, setReferenceContent] = useState<string>('');
   const [additionalResourcesContent, setAdditionalResourcesContent] =
     useState<string>('');
-  const [metadata, setMetadata] = useState<any>(null);
+  const [metadata, setMetadata] = useState<MarkdownMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -239,7 +241,7 @@ export const SessionGuide: React.FC = () => {
             variant="h1"
             description={weekData.title}
             actions={
-              <Badge color={config.color as any}>
+              <Badge color={config.color as BadgeColor}>
                 {config.emoji} {config.label}
               </Badge>
             }
@@ -265,7 +267,7 @@ export const SessionGuide: React.FC = () => {
               variant="h1"
               description={sessionData.description || weekData.title}
               actions={
-                <Badge color={config.color as any}>
+                <Badge color={config.color as BadgeColor}>
                   {config.emoji} {config.label}
                 </Badge>
               }
@@ -468,7 +470,7 @@ export const SessionGuide: React.FC = () => {
                       : ''
                   }
                 >
-                  {metadata.downloadFiles.map((file: any, index: number) => (
+                  {metadata.downloadFiles.map((file: DownloadFile, index: number) => (
                     <div key={index} className="download-file-card">
                       <div className="download-file-header">
                         <div className="download-file-name download-file-name-wrapper">

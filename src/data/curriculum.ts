@@ -34,7 +34,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 1,
         type: 'demo',
-        title: 'AWS 클라우드 아키텍처 개요',
+        title: 'AWS Resource Groups & Tag Editor를 활용한 리소스 관리',
         hasContent: true,
         markdownPath: '/content/week1/1-1-tag-editor-lab.md',
         description:
@@ -50,7 +50,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 2,
         type: 'lab',
-        title: 'AWS Well-Architected Framework',
+        title: 'AWS Well-Architected Tool 워크로드 평가',
         hasContent: true,
         markdownPath: '/content/week1/1-2-well-architected-tool-lab.md',
         description:
@@ -66,7 +66,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: 'AWS 클라우드 아키텍처 패턴',
+        title: 'draw.io로 HA 아키텍처 다이어그램 작성',
         hasContent: true,
         markdownPath: '/content/week1/1-3-drawio-architecture.md',
         description:
@@ -264,7 +264,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 1,
         type: 'demo',
-        title: 'Amazon RDS Multi-AZ 고가용성 구성 및 운영',
+        title: 'Amazon RDS Multi-AZ 장애 조치 시뮬레이션',
         hasContent: true,
         markdownPath: '/content/week5/5-1-rds-multi-az.md',
         description:
@@ -294,7 +294,7 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: 'Amazon DynamoDB 테이블 생성 및 보조 인덱스 활용',
+        title: 'Amazon DynamoDB 테이블 생성 및 보조인덱스 활용',
         hasContent: true,
         markdownPath: '/content/week5/5-3-dynamodb-design.md',
         description:
@@ -378,8 +378,7 @@ export const curriculum: WeekCurriculum[] = [
   {
     week: 7,
     title: '컨테이너 기반 서비스 설계',
-    description:
-      'Kubernetes 아키텍처, Amazon EKS 개요 및 운영을 학습합니다',
+    description: 'Kubernetes 아키텍처, Amazon EKS 개요 및 운영을 학습합니다',
     sessions: [
       {
         session: 1,
@@ -456,8 +455,7 @@ export const curriculum: WeekCurriculum[] = [
         type: 'theory',
         title: 'DevOps와 CI/CD 개요',
         hasContent: false,
-        description:
-          'DevOps 개요, CI/CD 개요, DevSecOps 개요',
+        description: 'DevOps 개요, CI/CD 개요, DevSecOps 개요',
         awsServices: [],
         learningObjectives: [
           'DevOps의 개념과 핵심 원칙을 이해하고 생명주기를 설명할 수 있습니다.',
@@ -473,7 +471,12 @@ export const curriculum: WeekCurriculum[] = [
         markdownPath: '/content/week9/9-2-codebuild-container.md',
         description:
           'Git 개요, AWS CodeCommit 저장소 관리, AWS CodeBuild 빌드 자동화',
-        awsServices: ['AWS CodeBuild', 'AWS CodeCommit', 'Amazon ECR', 'Amazon CloudWatch Logs'],
+        awsServices: [
+          'AWS CodeBuild',
+          'AWS CodeCommit',
+          'Amazon ECR',
+          'Amazon CloudWatch Logs',
+        ],
         learningObjectives: [
           'CI/CD의 개념과 AWS CodeBuild의 빌드 프로세스를 이해할 수 있습니다.',
           'buildspec.yml 파일을 분석하고 빌드 단계를 이해할 수 있습니다.',
@@ -489,7 +492,13 @@ export const curriculum: WeekCurriculum[] = [
         markdownPath: '/content/week9/9-3-s3-static-website.md',
         description:
           'AWS CodeDeploy 배포 전략, AWS CodePipeline 파이프라인 구성, Kiro를 활용한 AI 주도 개발(AI-DLC)',
-        awsServices: ['AWS CodePipeline', 'AWS CodeBuild', 'AWS CodeCommit', 'Amazon S3', 'AWS CloudFormation'],
+        awsServices: [
+          'AWS CodePipeline',
+          'AWS CodeBuild',
+          'AWS CodeCommit',
+          'Amazon S3',
+          'AWS CloudFormation',
+        ],
         learningObjectives: [
           'AWS CodePipeline의 파이프라인 단계(Source, Build)를 이해할 수 있습니다.',
           '정적 웹사이트 파일을 AWS CodeCommit에 푸시하고 파이프라인을 트리거할 수 있습니다.',
@@ -517,8 +526,7 @@ export const curriculum: WeekCurriculum[] = [
         type: 'theory',
         title: '캐싱 개요와 전략',
         hasContent: false,
-        description:
-          '캐시 개념 및 동작 방식, 캐시 관리, 캐시 계층 구조',
+        description: '캐시 개념 및 동작 방식, 캐시 관리, 캐시 계층 구조',
         awsServices: ['Amazon ElastiCache'],
         learningObjectives: [
           '캐시의 개념과 캐시 히트/미스의 동작 방식을 이해하고 설명할 수 있습니다.',
@@ -649,12 +657,19 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 1,
         type: 'lab',
-        title: 'AWS Secrets Manager와 AWS Systems Manager를 활용한 자격증명 관리',
+        title:
+          'AWS Secrets Manager와 AWS Systems Manager를 활용한 자격증명 관리',
         hasContent: true,
         markdownPath: '/content/week12/12-1-credentials-management.md',
         description:
           '자격증명 관리 아키텍처 설계, AWS Systems Manager Parameter Store 구성, AWS Secrets Manager 구성',
-        awsServices: ['AWS Systems Manager', 'AWS Secrets Manager'],
+        awsServices: [
+          'AWS Secrets Manager',
+          'AWS Systems Manager',
+          'AWS KMS',
+          'Amazon RDS',
+          'AWS Lambda',
+        ],
         learningObjectives: [
           'AWS Secrets Manager에 Amazon RDS 자격증명을 저장하고 자동 로테이션을 설정할 수 있습니다.',
           'AWS Systems Manager Parameter Store와 AWS Secrets Manager의 차이점을 이해할 수 있습니다.',
@@ -664,7 +679,7 @@ export const curriculum: WeekCurriculum[] = [
       },
       {
         session: 2,
-        type: 'lab',
+        type: 'demo',
         title: 'AWS Config 규칙 생성 및 모니터링',
         hasContent: true,
         markdownPath: '/content/week12/12-2-aws-config-demo.md',
@@ -681,12 +696,17 @@ export const curriculum: WeekCurriculum[] = [
       {
         session: 3,
         type: 'lab',
-        title: '웹 애플리케이션 보안 및 위협 탐지',
+        title: 'AWS WAF와 AWS Shield를 활용한 웹 애플리케이션 보안',
         hasContent: true,
         markdownPath: '/content/week12/12-3-waf-api-protection.md',
         description:
           'AWS WAF 개요 및 동작 원리, WAF 규칙 유형과 관리형 규칙, AWS Shield 및 DDoS 방어 아키텍처',
-        awsServices: ['AWS WAF', 'AWS Shield', 'Amazon GuardDuty', 'AWS Security Hub'],
+        awsServices: [
+          'AWS WAF',
+          'AWS Shield',
+          'Amazon GuardDuty',
+          'AWS Security Hub',
+        ],
         learningObjectives: [
           'AWS WAF의 구성 요소와 동작 방식을 이해하고 Web ACL과 규칙을 구성할 수 있습니다.',
           'AWS Shield Standard와 Advanced의 차이를 이해하고 DDoS 방어 아키텍처를 설명할 수 있습니다.',
@@ -724,8 +744,8 @@ export const curriculum: WeekCurriculum[] = [
       },
       {
         session: 2,
-        type: 'demo',
-        title: 'AWS X-Ray 분산 추적',
+        type: 'lab',
+        title: 'AWS X-Ray를 활용한 서버리스 애플리케이션 추적',
         hasContent: true,
         markdownPath: '/content/week13/13-2-xray-tracing.md',
         description:
@@ -740,8 +760,8 @@ export const curriculum: WeekCurriculum[] = [
       },
       {
         session: 3,
-        type: 'lab',
-        title: '컨테이너 관찰 가능성',
+        type: 'demo',
+        title: 'Amazon CloudWatch Container Insights로 Amazon EKS 모니터링',
         hasContent: true,
         markdownPath: '/content/week13/13-3-container-insights-eks.md',
         description:
@@ -793,7 +813,11 @@ export const curriculum: WeekCurriculum[] = [
         markdownPath: '/content/week14/14-2-bedrock-knowledge-bases-rag.md',
         description:
           '프롬프트 엔지니어링, 검색 증강 생성(RAG), Amazon Bedrock Knowledge Bases 구성',
-        awsServices: ['Amazon Bedrock', 'Amazon S3', 'Amazon OpenSearch Serverless'],
+        awsServices: [
+          'Amazon Bedrock',
+          'Amazon S3',
+          'Amazon OpenSearch Serverless',
+        ],
         learningObjectives: [
           'RAG(Retrieval-Augmented Generation)의 개념과 벡터 임베딩 원리를 이해할 수 있습니다.',
           'Amazon S3에 문서를 업로드하고 Amazon Bedrock Knowledge Base를 생성할 수 있습니다.',

@@ -87,15 +87,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 16. [[Next]] 버튼을 클릭합니다.
 17. **Review** 페이지에서 설정을 확인합니다.
 18. [[Submit]] 버튼을 클릭합니다.
-19. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 3-5분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-20. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-21. **Outputs** 탭을 선택합니다.
-22. 출력값들을 확인하고 메모장에 복사합니다:
+19. **Outputs** 탭을 선택합니다.
+20. 출력값들을 확인하고 메모장에 복사합니다:
     - `RawDataBucketName`: Raw Data Amazon S3 버킷 이름 (예: quicktable-raw-20240001-ap-northeast-2)
     - `ProcessedDataBucketName`: Processed Data Amazon S3 버킷 이름 (예: quicktable-processed-20240001-ap-northeast-2)
     - `QueryResultsBucketName`: Query Results Amazon S3 버킷 이름 (예: quicktable-query-20240001-ap-northeast-2)
@@ -112,18 +110,18 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS CloudFormation이 자동으로 생성한 **Amazon S3 버킷**과 QuickTable 예약 샘플 데이터를 확인합니다.
 
-23. AWS Management Console에 로그인한 후 상단 검색창에 `S3`을 입력하고 선택합니다.
-24. 버킷 목록에서 태스크 0에서 생성된 3개의 버킷을 확인합니다:
+21. AWS Management Console에 로그인한 후 상단 검색창에 `S3`을 입력하고 선택합니다.
+22. 버킷 목록에서 태스크 0에서 생성된 3개의 버킷을 확인합니다:
     - `quicktable-raw-{StudentId}-ap-northeast-2` (Raw Data 버킷 - QuickTable 예약 원본)
     - `quicktable-processed-{StudentId}-ap-northeast-2` (Processed Data 버킷 - 집계 데이터)
     - `quicktable-query-{StudentId}-ap-northeast-2` (Query Results 버킷 - Amazon Athena 결과)
-25. Raw Data 버킷 (`quicktable-raw-{StudentId}-ap-northeast-2`)을 선택합니다.
-26. 다음 폴더 구조가 자동으로 생성되었는지 확인합니다:
+23. Raw Data 버킷 (`quicktable-raw-{StudentId}-ap-northeast-2`)을 선택합니다.
+24. 다음 폴더 구조가 자동으로 생성되었는지 확인합니다:
     - `reservation-data/` - QuickTable 예약 데이터 폴더
     - `restaurant-data/` - QuickTable 레스토랑 정보 폴더
-27. `reservation-data/` 폴더를 클릭합니다.
-28. `reservations.csv` 파일이 자동으로 업로드되었는지 확인합니다.
-29. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
+25. `reservation-data/` 폴더를 클릭합니다.
+26. `reservations.csv` 파일이 자동으로 업로드되었는지 확인합니다.
+27. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -136,9 +134,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > RES005,user456,REST002,서울 한식당,2024-01-22,20:00,5,confirmed,150000,2024-01-20T16:30:00.567890
 > ```
 
-30. 상위 폴더로 돌아가서 `restaurant-data/` 폴더를 클릭합니다.
-31. `restaurants.json` 파일이 자동으로 업로드되었는지 확인합니다.
-32. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
+28. 상위 폴더로 돌아가서 `restaurant-data/` 폴더를 클릭합니다.
+29. `restaurants.json` 파일이 자동으로 업로드되었는지 확인합니다.
+30. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -215,19 +213,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 2.1: AWS Glue Database 생성
 
-33. AWS Management Console에 로그인한 후 상단 검색창에 `Glue`를 입력하고 선택합니다.
-34. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
-35. [[Add database]] 버튼을 클릭합니다.
-36. **Name**에 `quicktable_db_{StudentId}`를 입력합니다.
+31. AWS Management Console에 로그인한 후 상단 검색창에 `Glue`를 입력하고 선택합니다.
+32. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
+33. [[Add database]] 버튼을 클릭합니다.
+34. **Name**에 `quicktable_db_{StudentId}`를 입력합니다.
 
 > [!NOTE]
 > `{StudentId}`를 실제 학번으로 교체합니다 (예: `quicktable_db_20240001`).
 > Database 이름에는 영문 소문자, 숫자, 언더스코어만 사용할 수 있습니다.
 
-37. **Location - optional**에 `s3://quicktable-raw-{StudentId}-ap-northeast-2/`를 입력합니다.
-38. **Description - optional**에 `QuickTable data lake database for Week 11-2 lab`을 입력합니다.
-39. [[Create database]] 버튼을 클릭합니다.
-40. 데이터베이스 목록에서 `quicktable_db_{StudentId}`가 생성되었는지 확인합니다.
+35. **Location - optional**에 `s3://quicktable-raw-{StudentId}-ap-northeast-2/`를 입력합니다.
+36. **Description - optional**에 `QuickTable data lake database for Week 11-2 lab`을 입력합니다.
+37. [[Create database]] 버튼을 클릭합니다.
+38. 데이터베이스 목록에서 `quicktable_db_{StudentId}`가 생성되었는지 확인합니다.
 
 > [!NOTE]
 > AWS Glue Database는 테이블 메타데이터를 논리적으로 그룹화하는 컨테이너입니다.
@@ -236,14 +234,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 2.2: AWS Glue Crawler 생성
 
-41. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-42. [[Create crawler]] 버튼을 클릭합니다.
-43. **Crawler name**에 `quicktable-crawler-{StudentId}`를 입력합니다.
+39. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+40. [[Create crawler]] 버튼을 클릭합니다.
+41. **Crawler name**에 `quicktable-crawler-{StudentId}`를 입력합니다.
 
 > [!NOTE]
 > **Description** 필드는 선택사항입니다. 비워두어도 됩니다.
 
-44. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+42. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value            |
 | ----------- | ---------------- |
@@ -251,39 +249,39 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `11-2`           |
 | `CreatedBy` | `Student`        |
 
-45. [[Next]] 버튼을 클릭합니다.
-46. **Data source configuration**에서 다음을 설정합니다:
+43. [[Next]] 버튼을 클릭합니다.
+44. **Data source configuration**에서 다음을 설정합니다:
     - **Data source**: `Amazon S3`를 선택합니다.
     - **Amazon S3 path**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`를 입력합니다.
-47. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
-48. [[Next]] 버튼을 클릭합니다.
-49. **Security configuration**에서 **Existing IAM role**을 선택합니다.
-50. 태스크 0에서 AWS CloudFormation이 생성한 역할을 선택합니다.
+45. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
+46. [[Next]] 버튼을 클릭합니다.
+47. **Security configuration**에서 **Existing IAM role**을 선택합니다.
+48. 태스크 0에서 AWS CloudFormation이 생성한 역할을 선택합니다.
 
 > [!NOTE]
 > AWS IAM 역할명은 AWS CloudFormation 스택명 + 리소스 논리 ID + 랜덤 접미사 형태로 자동 생성됩니다.
 > 역할 목록에서 `week11-2-quicktable-datalake-stack-GlueCrawlerRole`로 시작하는 역할을 선택합니다.
 > 정확한 역할명은 AWS CloudFormation 스택의 **Outputs** 탭에서 `GlueCrawlerRoleArn`을 확인합니다.
 
-51. [[Next]] 버튼을 클릭합니다.
-52. **Set output and scheduling**에서 다음을 설정합니다:
+49. [[Next]] 버튼을 클릭합니다.
+50. **Set output and scheduling**에서 다음을 설정합니다:
     - **Target database**: `quicktable_db_{StudentId}`를 선택합니다.
     - **Crawler schedule**: `On demand`를 선택합니다.
-53. [[Next]] 버튼을 클릭합니다.
-54. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
+51. [[Next]] 버튼을 클릭합니다.
+52. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
 
 ### 태스크 2.3: Crawler 실행
 
-55. 생성된 Crawler `quicktable-crawler-{StudentId}`를 선택합니다.
-56. [[Run]] 버튼을 클릭합니다.
+53. 생성된 Crawler `quicktable-crawler-{StudentId}`를 선택합니다.
+54. [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Crawler 실행에 1-2분이 소요됩니다. 페이지를 새로고침하여 상태를 확인합니다.
 > Crawler는 `reservation-data/` 폴더의 CSV 파일을 스캔하여 자동으로 테이블을 생성합니다.
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-57. **State**가 "Ready" → "Running" → "Stopping" → "Ready"로 변경되는 것을 확인합니다.
-58. 실행이 완료되면 **Last run** 정보를 확인합니다.
+55. **State**가 "Ready" → "Running" → "Stopping" → "Ready"로 변경되는 것을 확인합니다.
+56. 실행이 완료되면 **Last run** 정보를 확인합니다.
 
 > [!OUTPUT]
 >
@@ -313,9 +311,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 AWS Glue Crawler가 자동으로 생성한 **테이블의 스키마**를 확인합니다.
 
-59. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
-60. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
-61. 생성된 테이블 `reservation_data`를 클릭합니다.
+57. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
+58. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
+59. 생성된 테이블 `reservation_data`를 클릭합니다.
 
 > [!NOTE]
 > **Crawler 실행 후 테이블명 확인 방법**:
@@ -331,7 +329,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > SHOW TABLES IN quicktable_db_{StudentId};
 > ```
 
-62. **Schema** 탭에서 컬럼 정보를 확인합니다:
+60. **Schema** 탭에서 컬럼 정보를 확인합니다:
 
 - reservationid: string
 - userid: string
@@ -344,12 +342,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 - totalamount: double
 - createdat: string
 
-63. **Table properties**에서 다음을 확인합니다:
+61. **Table properties**에서 다음을 확인합니다:
     - **Location**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/reservation-data/`
     - **Input format**: org.apache.hadoop.mapred.TextInputFormat
     - **Output format**: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
     - **SerDe**: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-64. 필요시 스키마를 수정합니다:
+62. 필요시 스키마를 수정합니다:
     - {{Edit schema}} 버튼을 클릭합니다.
     - 데이터 타입을 변경합니다.
     - [[Save]] 버튼을 클릭합니다.
@@ -366,9 +364,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 4.1: Amazon Athena Workgroup 생성
 
-65. AWS Management Console에 로그인한 후 상단 검색창에 `Athena`를 입력하고 선택합니다.
-66. Amazon Athena 시작 페이지가 표시됩니다.
-67. 왼쪽 메뉴에서 **Query editor**를 클릭합니다.
+63. AWS Management Console에 로그인한 후 상단 검색창에 `Athena`를 입력하고 선택합니다.
+64. 왼쪽 메뉴에서 **Query editor**를 클릭합니다.
 
 > [!NOTE]
 > Amazon Athena 시작 페이지에는 두 가지 옵션이 표시됩니다:
@@ -379,15 +376,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 왼쪽 메뉴에서 **Query editor**를 직접 클릭하면 바로 쿼리 편집기로 이동합니다.
 > 이미 Athena 콘솔을 사용한 적이 있으면 시작 페이지가 표시되지 않고 바로 Query editor가 열릴 수 있습니다.
 
-68. 왼쪽 메뉴에서 **Administration** > **Workgroups**를 선택합니다.
-69. [[Create workgroup]] 버튼을 클릭합니다.
-70. **Workgroup details** 섹션에서 다음을 입력합니다:
+65. 왼쪽 메뉴에서 **Administration** > **Workgroups**를 선택합니다.
+66. [[Create workgroup]] 버튼을 클릭합니다.
+67. **Workgroup details** 섹션에서 다음을 입력합니다:
     - **Workgroup name**: `quicktable-workgroup-{StudentId}`
     - **Description - Optional**: `QuickTable data lake workgroup for Week 11-2 lab`
-71. **Analytics engine** 섹션에서 `Athena SQL`이 선택되어 있는지 확인합니다.
-72. **Upgrade query engine**은 `Automatic`을 유지합니다.
-73. **Authentication** 섹션에서 `AWS Identity and Access Management (IAM)`이 선택되어 있는지 확인합니다.
-74. **Query result configuration** 섹션에서 다음을 설정합니다:
+68. **Analytics engine** 섹션에서 `Athena SQL`이 선택되어 있는지 확인합니다.
+69. **Upgrade query engine**은 `Automatic`을 유지합니다.
+70. **Authentication** 섹션에서 `AWS Identity and Access Management (IAM)`이 선택되어 있는지 확인합니다.
+71. **Query result configuration** 섹션에서 다음을 설정합니다:
     - **Management of query results**: `Customer-managed`를 선택합니다.
     - **Location of query result**: [[Browse S3]] 버튼을 클릭하여 `quicktable-query-{StudentId}-ap-northeast-2` 버킷을 선택합니다.
     - 경로 끝에 `athena-results/`를 추가합니다.
@@ -399,8 +396,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > `Athena-managed`를 선택하면 Athena가 쿼리 결과를 자동 관리하고 24시간 후 삭제합니다.
 > 이 실습에서는 결과를 직접 확인하기 위해 `Customer-managed`를 선택합니다.
 
-75. **Additional configurations** 섹션에서 **Use defaults**를 끕니다.
-76. **Tags - Optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+72. **Additional configurations** 섹션에서 **Use defaults**를 끕니다.
+73. **Tags - Optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -408,7 +405,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `11-2`    |
 | `CreatedBy` | `Student` |
 
-77. [[Create workgroup]] 버튼을 클릭합니다.
+74. [[Create workgroup]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon Athena Workgroup은 쿼리 실행 환경을 격리하고 쿼리 결과 저장 위치를 지정하는 단위입니다.
@@ -416,7 +413,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 4.2: 기본 쿼리 실행
 
-78. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
+75. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
 
 > [!WARNING]
 > **Workgroup 변경 전 주의사항**:
@@ -429,11 +426,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 2. Database 선택
 > 3. 쿼리 작성 및 실행
 
-79. 상단의 **Workgroup** 드롭다운에서 `quicktable-workgroup-{StudentId}`를 선택합니다.
-80. 왼쪽 패널의 **Data source**가 `AwsDataCatalog`인지 확인합니다.
-81. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
-82. 왼쪽 패널의 **Tables** 목록에서 `reservation_data` 테이블이 표시되는지 확인합니다.
-83. 첫 번째 쿼리를 실행합니다:
+76. 상단의 **Workgroup** 드롭다운에서 `quicktable-workgroup-{StudentId}`를 선택합니다.
+77. 왼쪽 패널의 **Data source**가 `AwsDataCatalog`인지 확인합니다.
+78. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
+79. 왼쪽 패널의 **Tables** 목록에서 `reservation_data` 테이블이 표시되는지 확인합니다.
+80. 첫 번째 쿼리를 실행합니다:
 
 ```sql
 -- 전체 데이터 조회
@@ -441,15 +438,15 @@ SELECT * FROM reservation_data
 LIMIT 10;
 ```
 
-84. [[Run]] 버튼을 클릭합니다.
-85. 결과를 확인합니다.
+81. [[Run]] 버튼을 클릭합니다.
+82. 결과를 확인합니다.
 
 > [!NOTE]
 > Athena는 표준 SQL을 지원하며 스캔한 데이터량에 따라 과금됩니다 ($5/TB). 쿼리 실행 정보에서 Run time과 Data scanned를 확인할 수 있습니다.
 
 ### 태스크 4.3: 집계 및 분석 쿼리
 
-86. 레스토랑별 예약 수 및 평균 금액을 조회합니다:
+83. 레스토랑별 예약 수 및 평균 금액을 조회합니다:
 
 ```sql
 -- 레스토랑별 예약 수 및 평균 금액
@@ -463,8 +460,8 @@ GROUP BY restaurantname
 ORDER BY reservation_count DESC;
 ```
 
-87. [[Run]] 버튼을 클릭하고 결과를 확인합니다.
-88. 예약 상태별 분석을 조회합니다:
+84. [[Run]] 버튼을 클릭하고 결과를 확인합니다.
+85. 예약 상태별 분석을 조회합니다:
 
 ```sql
 -- 예약 상태별 분석
@@ -477,7 +474,7 @@ FROM reservation_data
 GROUP BY status;
 ```
 
-89. 시간대별 예약 패턴을 조회합니다:
+86. 시간대별 예약 패턴을 조회합니다:
 
 ```sql
 -- 시간대별 예약 패턴
@@ -526,15 +523,15 @@ ORDER BY reservation_count DESC;
 
 ### 태스크 5.1: 레스토랑 데이터용 Crawler 생성
 
-90. AWS Glue 콘솔로 이동합니다.
-91. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-92. [[Create crawler]] 버튼을 클릭합니다.
-93. **Crawler name**에 `quicktable-restaurants-crawler-{StudentId}`를 입력합니다.
+87. AWS Glue 콘솔로 이동합니다.
+88. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+89. [[Create crawler]] 버튼을 클릭합니다.
+90. **Crawler name**에 `quicktable-restaurants-crawler-{StudentId}`를 입력합니다.
 
 > [!NOTE]
 > **Description** 필드는 선택사항입니다. 비워두어도 됩니다.
 
-94. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+91. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -542,37 +539,37 @@ ORDER BY reservation_count DESC;
 | `Week`      | `11-2`    |
 | `CreatedBy` | `Student` |
 
-95. [[Next]] 버튼을 클릭합니다.
-96. **Data source configuration**에서 다음을 설정합니다:
+92. [[Next]] 버튼을 클릭합니다.
+93. **Data source configuration**에서 다음을 설정합니다:
     - **Data source**: `Amazon S3`를 선택합니다.
     - **Amazon S3 path**: `s3://quicktable-raw-{StudentId}-ap-northeast-2/restaurant-data/`를 입력합니다.
-97. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
-98. [[Next]] 버튼을 클릭합니다.
-99. **Security configuration**에서 **Existing IAM role**을 선택합니다.
-100. 태스크 2에서 사용한 동일한 역할을 선택합니다.
+94. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
+95. [[Next]] 버튼을 클릭합니다.
+96. **Security configuration**에서 **Existing IAM role**을 선택합니다.
+97. 태스크 2에서 사용한 동일한 역할을 선택합니다.
 
 > [!NOTE]
 > 역할 목록에서 `week11-2-quicktable-datalake-stack-GlueCrawlerRole`로 시작하는 역할을 선택합니다.
 
-101. [[Next]] 버튼을 클릭합니다.
-102. **Set output and scheduling**에서 다음을 설정합니다:
+98. [[Next]] 버튼을 클릭합니다.
+99. **Set output and scheduling**에서 다음을 설정합니다:
     - **Target database**: `quicktable_db_{StudentId}`를 선택합니다.
     - **Crawler schedule**: `On demand`를 선택합니다.
-103. [[Next]] 버튼을 클릭합니다.
-104. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
+100. [[Next]] 버튼을 클릭합니다.
+101. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
 
 ### 태스크 5.2: Crawler 실행 및 테이블 확인
 
-105. 생성된 Crawler `quicktable-restaurants-crawler-{StudentId}`를 선택합니다.
-106. [[Run]] 버튼을 클릭합니다.
+102. 생성된 Crawler `quicktable-restaurants-crawler-{StudentId}`를 선택합니다.
+103. [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Crawler 실행에 1-2분이 소요됩니다. JSON Lines 형식의 파일을 스캔하여 자동으로 테이블을 생성합니다.
 
-107. 실행이 완료되면 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
-108. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
-109. 새로 생성된 테이블 `restaurant_data`를 클릭합니다.
-110. **Schema** 탭에서 컬럼 정보를 확인합니다:
+104. 실행이 완료되면 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
+105. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
+106. 새로 생성된 테이블 `restaurant_data`를 클릭합니다.
+107. **Schema** 탭에서 컬럼 정보를 확인합니다:
     - restaurantid: string
     - name: string
     - cuisine: string
@@ -586,8 +583,8 @@ ORDER BY reservation_count DESC;
 
 ### 태스크 5.3: 레스토랑 데이터 쿼리
 
-111. Amazon Athena 콘솔로 이동합니다.
-112. 다음 쿼리를 실행합니다:
+108. Amazon Athena 콘솔로 이동합니다.
+109. 다음 쿼리를 실행합니다:
 
 ```sql
 -- 레스토랑 데이터 조회
@@ -595,7 +592,7 @@ SELECT * FROM restaurant_data
 ORDER BY rating DESC;
 ```
 
-113. 지역별 레스토랑 수를 조회합니다:
+110. 지역별 레스토랑 수를 조회합니다:
 
 ```sql
 -- 지역별 레스토랑 수
@@ -608,7 +605,7 @@ GROUP BY location
 ORDER BY restaurant_count DESC;
 ```
 
-114. 요리 종류별 평균 평점을 조회합니다:
+111. 요리 종류별 평균 평점을 조회합니다:
 
 ```sql
 -- 요리 종류별 평균 평점
@@ -634,7 +631,7 @@ ORDER BY avg_rating DESC;
 
 ### 태스크 6.1: CTAS로 Parquet 테이블 생성
 
-115. Athena에서 CTAS 쿼리를 실행합니다:
+112. Athena에서 CTAS 쿼리를 실행합니다:
 
 ```sql
 -- 예약 분석 결과를 Parquet로 저장
@@ -688,12 +685,12 @@ GROUP BY restaurantname, status;
 > - CTAS 재실행 시 Amazon S3 경로가 이미 존재하면 오류가 발생합니다
 > - 따라서 메타데이터 삭제 + Amazon S3 파일 삭제를 모두 수행해야 합니다
 
-116. [[Run]] 버튼을 클릭합니다.
+113. [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 쿼리가 완료될 때까지 기다립니다. CTAS는 쿼리 결과를 새 테이블로 저장하면서 동시에 데이터 형식을 변환합니다.
 
-117. 새로 생성된 테이블을 쿼리합니다:
+114. 새로 생성된 테이블을 쿼리합니다:
 
 ```sql
 -- 주의: {StudentId}를 실제 학번으로 교체합니다 (예: 20240001)
@@ -726,17 +723,16 @@ ORDER BY reservation_count DESC;
 
 ### 태스크 6.2: 생성된 테이블 쿼리 및 성능 확인
 
-118. Amazon S3 콘솔로 이동합니다.
-119. Processed Data 버킷 (`quicktable-processed-{StudentId}-ap-northeast-2`)을 선택합니다.
-120. `reservation-analysis-{StudentId}/` 폴더로 이동합니다.
-121. 파티션 구조를 확인합니다:
+115. Amazon S3 콘솔로 이동합니다.
+116. Processed Data 버킷 (`quicktable-processed-{StudentId}-ap-northeast-2`)을 선택합니다.
+117. `reservation-analysis-{StudentId}/` 폴더로 이동합니다.
+118. 파티션 구조를 확인합니다:
     - `status=confirmed/` 폴더
     - `status=cancelled/` 폴더
-122. 각 폴더 내의 Parquet 파일을 확인합니다.
-123. 원본 CSV 파일과 Parquet 파일의 크기를 비교합니다.
+119. 각 폴더 내의 Parquet 파일을 확인합니다.
 
 > [!TIP]
-> Parquet 파일은 컬럼형 저장 방식으로 스토리지 비용과 쿼리 비용을 모두 절감합니다. 데이터 레이크에서는 Parquet 형식 사용을 권장합니다.
+> 원본 CSV 파일과 Parquet 파일의 크기를 비교해봅니다. Parquet 파일은 컬럼형 저장 방식으로 스토리지 비용과 쿼리 비용을 모두 절감합니다. 데이터 레이크에서는 Parquet 형식 사용을 권장합니다.
 
 ✅ **태스크 완료**: CTAS로 최적화된 테이블을 생성했습니다.
 
@@ -770,7 +766,9 @@ ORDER BY reservation_count DESC;
     - **Tag key**: `Week`
     - **Tag value**: `11-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -781,12 +779,12 @@ ORDER BY reservation_count DESC;
 
 AWS CloudFormation 스택 삭제 전에 반드시 수행해야 합니다:
 
-8. Amazon S3 콘솔로 이동합니다.
-9. `quicktable-raw-{StudentId}-ap-northeast-2` 버킷을 선택합니다.
-10. [[Empty]] 버튼을 클릭합니다.
-11. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-12. `quicktable-processed-{StudentId}-ap-northeast-2` 버킷에 대해 9-11단계를 반복합니다.
-13. `quicktable-query-{StudentId}-ap-northeast-2` 버킷에 대해 9-11단계를 반복합니다.
+7. Amazon S3 콘솔로 이동합니다.
+8. `quicktable-raw-{StudentId}-ap-northeast-2` 버킷을 선택합니다.
+9. [[Empty]] 버튼을 클릭합니다.
+10. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+11. `quicktable-processed-{StudentId}-ap-northeast-2` 버킷에 대해 9-11단계를 반복합니다.
+12. `quicktable-query-{StudentId}-ap-northeast-2` 버킷에 대해 9-11단계를 반복합니다.
 
 > [!NOTE]
 > 태스크 6에서 CTAS로 Processed Data 버킷에 Parquet 파일을 생성했고, Athena 쿼리 결과가 Query Results 버킷에 저장되었습니다.
@@ -796,30 +794,30 @@ AWS CloudFormation 스택 삭제 전에 반드시 수행해야 합니다:
 
 태스크 2-5에서 수동으로 생성한 리소스를 삭제합니다:
 
-14. Amazon Athena 콘솔로 이동합니다.
-15. 왼쪽 메뉴에서 **Administration** > **Workgroups**를 선택합니다.
-16. `quicktable-workgroup-{StudentId}`를 선택합니다.
-17. [[Delete]] 버튼을 클릭합니다.
-18. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
-19. AWS Glue 콘솔로 이동합니다.
-20. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-21. `quicktable-crawler-{StudentId}`를 선택합니다.
-22. **Actions** > `Delete`를 선택합니다.
-23. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-24. `quicktable-restaurants-crawler-{StudentId}`를 선택합니다.
-25. **Actions** > `Delete`를 선택합니다.
-26. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-27. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
-28. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
-29. `reservation_data` 테이블을 선택합니다.
-30. **Actions** > `Delete table`을 선택합니다.
-31. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-32. `restaurant_data` 테이블에 대해 29-31단계를 반복합니다.
-33. `reservation_analysis_{StudentId}` 테이블에 대해 29-31단계를 반복합니다.
-34. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
-35. `quicktable_db_{StudentId}`를 선택합니다.
-36. [[Delete]] 버튼을 클릭합니다.
-37. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+13. Amazon Athena 콘솔로 이동합니다.
+14. 왼쪽 메뉴에서 **Administration** > **Workgroups**를 선택합니다.
+15. `quicktable-workgroup-{StudentId}`를 선택합니다.
+16. [[Delete]] 버튼을 클릭합니다.
+17. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+18. AWS Glue 콘솔로 이동합니다.
+19. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+20. `quicktable-crawler-{StudentId}`를 선택합니다.
+21. **Actions** > `Delete`를 선택합니다.
+22. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+23. `quicktable-restaurants-crawler-{StudentId}`를 선택합니다.
+24. **Actions** > `Delete`를 선택합니다.
+25. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+26. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
+27. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
+28. `reservation_data` 테이블을 선택합니다.
+29. **Actions** > `Delete table`을 선택합니다.
+30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+31. `restaurant_data` 테이블에 대해 29-31단계를 반복합니다.
+32. `reservation_analysis_{StudentId}` 테이블에 대해 29-31단계를 반복합니다.
+33. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
+34. `quicktable_db_{StudentId}`를 선택합니다.
+35. [[Delete]] 버튼을 클릭합니다.
+36. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 태스크 2에서 직접 생성한 Database, Crawler와 태스크 5에서 생성한 Crawler, 태스크 4에서 생성한 Athena Workgroup은 AWS CloudFormation이 관리하지 않으므로 수동으로 삭제해야 합니다.
@@ -827,14 +825,13 @@ AWS CloudFormation 스택 삭제 전에 반드시 수행해야 합니다:
 
 #### 3단계: AWS CloudFormation 스택 삭제
 
-38. AWS CloudFormation 콘솔로 이동합니다.
-39. `week11-2-quicktable-datalake-stack` 스택을 선택합니다.
-40. [[Delete]] 버튼을 클릭합니다.
-41. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-42. 스택 삭제가 완료될 때까지 기다립니다.
+37. AWS CloudFormation 콘솔로 이동합니다.
+38. `week11-2-quicktable-datalake-stack` 스택을 선택합니다.
+39. [[Delete]] 버튼을 클릭합니다.
+40. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 삭제에 3-5분이 소요됩니다.
+> 스택 삭제에 3-5분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 AWS IAM 역할이 자동으로 삭제됩니다.
 > Amazon S3 버킷은 1단계에서 비웠으므로 함께 삭제됩니다.
 
@@ -843,21 +840,21 @@ AWS CloudFormation 스택 삭제 전에 반드시 수행해야 합니다:
 > [!NOTE]
 > AWS CloudFormation 템플릿에서 `DeletionPolicy: Retain`을 설정한 경우, 버킷이 남아있을 수 있습니다.
 
-43. Amazon S3 콘솔로 이동합니다.
-44. `quicktable-raw-{StudentId}-ap-northeast-2` 버킷이 남아있는 경우 선택합니다.
-45. [[Delete]] 버튼을 클릭합니다.
-46. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
-47. `quicktable-processed-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
-48. `quicktable-query-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
+41. Amazon S3 콘솔로 이동합니다.
+42. `quicktable-raw-{StudentId}-ap-northeast-2` 버킷이 남아있는 경우 선택합니다.
+43. [[Delete]] 버튼을 클릭합니다.
+44. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+45. `quicktable-processed-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
+46. `quicktable-query-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 
 #### 5단계: Amazon CloudWatch Log Group 삭제
 
-49. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-50. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-51. 검색창에 `week11-2-SampleDataUploader`를 입력합니다.
-52. `/aws/lambda/week11-2-SampleDataUploader-{StudentId}` 로그 그룹을 선택합니다.
-53. **Actions** > `Delete log group(s)`를 선택합니다.
-54. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+47. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+48. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+49. 검색창에 `week11-2-SampleDataUploader`를 입력합니다.
+50. `/aws/lambda/week11-2-SampleDataUploader-{StudentId}` 로그 그룹을 선택합니다.
+51. **Actions** > `Delete log group(s)`를 선택합니다.
+52. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.

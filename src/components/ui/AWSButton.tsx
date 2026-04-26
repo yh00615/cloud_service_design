@@ -2,13 +2,15 @@ import * as React from "react";
 import Button from "@cloudscape-design/components/button";
 import './AWSButton.css'
 
+type ButtonIconName = React.ComponentProps<typeof Button>['iconName'];
+
 interface AWSButtonProps {
     children: React.ReactNode;
     variant?: 'primary' | 'normal' | 'link';
     size?: 'small' | 'normal' | 'large';
     disabled?: boolean;
     onClick?: () => void;
-    iconName?: 'external' | 'status-positive' | 'status-negative';
+    iconName?: ButtonIconName;
     href?: string;
     download?: string;
 }
@@ -29,10 +31,11 @@ export const AWSButton: React.FC<AWSButtonProps> = ({
     download,
     ...props
 }) => {
-    // large 크기일 때 커스텀 클래스 추가
+    // variant에 따라 클래스 결정
+    const baseClass = variant === 'normal' ? 'aws-button-blue' : 'aws-button-orange';
     const buttonClass = size === 'large'
-        ? 'aws-button-orange aws-button-large'
-        : 'aws-button-orange';
+        ? `${baseClass} aws-button-large`
+        : baseClass;
 
     // 접근성을 위한 aria-label 생성
     const buttonText = typeof children === 'string' ? children : String(children);
@@ -43,7 +46,7 @@ export const AWSButton: React.FC<AWSButtonProps> = ({
             variant={variant}
             disabled={disabled}
             onClick={onClick}
-            iconName={iconName as any}
+            iconName={iconName}
             href={href}
             download={download}
             className={buttonClass}

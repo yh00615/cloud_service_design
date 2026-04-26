@@ -77,7 +77,7 @@ export const Week11QuickJump: React.FC<Week11QuickJumpProps> = ({
         }
     }
 
-    const getButtonVariant = (link: any) => {
+    const getButtonVariant = (link: typeof quickLinks[number]) => {
         if (!link.available) return 'normal'
         if (link.id === 'pipeline' && environmentReady) return 'primary'
         if (link.id === 'model-registry' && completedSteps.length >= 5) return 'primary'

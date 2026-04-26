@@ -118,15 +118,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 14. [[Next]] 버튼을 클릭합니다.
 15. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources with custom names`를 선택합니다.
 16. [[Submit]] 버튼을 클릭합니다.
-17. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
-> 스택 생성에 3-5분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
-> 대기하는 동안 다음 태스크를 미리 읽어봅니다.
+> 스택 생성에 3-5분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
-18. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
-19. **Outputs** 탭을 선택합니다.
-20. 출력값들을 확인하고 메모장에 복사합니다:
+17. **Outputs** 탭을 선택합니다.
+18. 출력값들을 확인하고 메모장에 복사합니다:
     - `DataBucketName`: 데이터 버킷 이름 (예: `week11-data-{StudentId}-ap-northeast-2`)
     - `ScriptsBucketName`: 스크립트 버킷 이름 (예: `week11-scripts-{StudentId}-ap-northeast-2`)
     - `TempBucketName`: 임시 버킷 이름 (예: `week11-temp-{StudentId}-ap-northeast-2`)
@@ -137,18 +135,18 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### Amazon S3 버킷 확인
 
-21. 상단 검색창에 `S3`를 입력하고 선택합니다.
-22. 다음 3개의 버킷이 생성되었는지 확인합니다:
+19. 상단 검색창에 `S3`를 입력하고 선택합니다.
+20. 다음 3개의 버킷이 생성되었는지 확인합니다:
     - `week11-data-{StudentId}-ap-northeast-2` (데이터 버킷)
     - `week11-scripts-{StudentId}-ap-northeast-2` (스크립트 버킷)
     - `week11-temp-{StudentId}-ap-northeast-2` (임시 버킷)
-23. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
-24. 다음 폴더들이 자동으로 생성되었는지 확인합니다:
+21. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
+22. 다음 폴더들이 자동으로 생성되었는지 확인합니다:
     - `raw/` - 원본 데이터 저장
     - `processed/` - 처리된 데이터 저장
-25. `raw/` 폴더를 클릭합니다.
-26. `transactions.csv` 파일이 자동으로 업로드되었는지 확인합니다.
-27. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
+23. `raw/` 폴더를 클릭합니다.
+24. `transactions.csv` 파일이 자동으로 업로드되었는지 확인합니다.
+25. 파일을 선택하고 [[Download]] 버튼을 클릭하여 내용을 확인합니다.
 
 > [!NOTE]
 > `transactions.csv`는 전자상거래 거래 데이터로, `transaction_id`, `customer_id`, `product_id`, `amount`, `transaction_date`, `region` 컬럼을 포함합니다.
@@ -159,20 +157,20 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 이 태스크에서는 **AWS Glue Data Catalog**에 데이터베이스를 직접 생성합니다. 데이터베이스는 테이블의 논리적 그룹으로, Crawler가 생성하는 테이블이 저장되는 컨테이너입니다.
 
-28. 상단 검색창에 `Glue`를 입력하고 선택합니다.
-29. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
-30. [[Add database]] 버튼을 클릭합니다.
-31. **Name**에 `week11_pipeline_{StudentId}`를 입력합니다.
+26. 상단 검색창에 `Glue`를 입력하고 선택합니다.
+27. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
+28. [[Add database]] 버튼을 클릭합니다.
+29. **Name**에 `week11_pipeline_{StudentId}`를 입력합니다.
 
 > [!IMPORTANT]
 > `{StudentId}`를 본인의 학번 또는 고유 식별자로 변경합니다. 예: `week11_pipeline_20240001`
 >
 > AWS Glue Database 이름에는 하이픈(-)을 사용할 수 없습니다. 언더스코어(_)를 사용합니다.
 
-32. **Location - optional**에 `s3://week11-data-{StudentId}-ap-northeast-2/`를 입력합니다.
-33. **Description - optional**에 `Week 11-3 data pipeline lab database`를 입력합니다.
-34. [[Create database]] 버튼을 클릭합니다.
-35. 데이터베이스 목록에서 `week11_pipeline_{StudentId}`가 생성되었는지 확인합니다.
+30. **Location - optional**에 `s3://week11-data-{StudentId}-ap-northeast-2/`를 입력합니다.
+31. **Description - optional**에 `Week 11-3 data pipeline lab database`를 입력합니다.
+32. [[Create database]] 버튼을 클릭합니다.
+33. 데이터베이스 목록에서 `week11_pipeline_{StudentId}`가 생성되었는지 확인합니다.
 
 ✅ **태스크 완료**: AWS Glue Database를 직접 생성했습니다.
 
@@ -182,14 +180,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 2.1: Crawler 생성
 
-36. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-37. [[Create crawler]] 버튼을 클릭합니다.
-38. **Crawler name**에 `week11-pipeline-crawler-{StudentId}`를 입력합니다.
+34. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+35. [[Create crawler]] 버튼을 클릭합니다.
+36. **Crawler name**에 `week11-pipeline-crawler-{StudentId}`를 입력합니다.
 
 > [!IMPORTANT]
 > `{StudentId}`를 본인의 학번 또는 고유 식별자로 변경합니다.
 
-39. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+37. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -197,50 +195,49 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `11-3`    |
 | `CreatedBy` | `Student` |
 
-40. [[Next]] 버튼을 클릭합니다.
-41. **Data source configuration**에서 다음을 설정합니다:
+38. [[Next]] 버튼을 클릭합니다.
+39. **Data source configuration**에서 다음을 설정합니다:
     - **Is your data already mapped to Glue tables?**: `Not yet` 선택
     - **Data sources**: [[Add a data source]] 버튼을 클릭합니다.
-42. **Add a data source** 대화상자에서 다음을 설정합니다:
+40. **Add a data source** 대화상자에서 다음을 설정합니다:
     - **Data source**: `S3` 선택
     - **S3 path**: `s3://week11-data-{StudentId}-ap-northeast-2/raw/` 입력 (또는 Browse S3로 선택)
-43. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
-44. [[Next]] 버튼을 클릭합니다.
-45. **Security configuration**에서 **Existing IAM role**을 선택합니다.
-46. 태스크 0에서 AWS CloudFormation이 생성한 역할을 선택합니다.
+41. [[Add an Amazon S3 data source]] 버튼을 클릭합니다.
+42. [[Next]] 버튼을 클릭합니다.
+43. **Security configuration**에서 **Existing IAM role**을 선택합니다.
+44. 태스크 0에서 AWS CloudFormation이 생성한 역할을 선택합니다.
 
 > [!NOTE]
 > Outputs 탭에서 확인한 `GlueServiceRoleName` 값을 사용합니다. 역할 이름은 `week11-3-pipeline-stack-GlueServiceRole-XXXXXXXXXXXX` 형태입니다.
 
-47. [[Next]] 버튼을 클릭합니다.
-48. **Set output and scheduling**에서 다음을 설정합니다:
+45. [[Next]] 버튼을 클릭합니다.
+46. **Set output and scheduling**에서 다음을 설정합니다:
     - **Target database**: `week11_pipeline_{StudentId}` 선택
     - **Crawler schedule**: `On demand` 유지
-49. [[Next]] 버튼을 클릭합니다.
-50. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
+47. [[Next]] 버튼을 클릭합니다.
+48. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
 
 ### 태스크 2.2: Crawler 실행
 
-51. 생성된 Crawler `week11-pipeline-crawler-{StudentId}`를 선택합니다.
-52. [[Run]] 버튼을 클릭합니다.
+49. 생성된 Crawler `week11-pipeline-crawler-{StudentId}`를 선택합니다.
+50. [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Crawler 실행에 1-2분이 소요됩니다. **State**가 "Running"에서 "Ready"로 변경될 때까지 기다립니다.
 > 페이지를 새로고침하여 최신 상태를 확인할 수 있습니다.
 
-53. **State**가 "Ready"로 변경될 때까지 기다립니다.
-54. **Tables added** 값이 1인지 확인합니다.
+51. **Tables added** 값이 1인지 확인합니다.
 
 ### 태스크 2.3: 생성된 테이블 확인
 
-55. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
-56. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
-57. 생성된 테이블 `raw`를 클릭합니다.
+52. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
+53. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
+54. 생성된 테이블 `raw`를 클릭합니다.
 
 > [!NOTE]
 > Crawler는 Amazon S3 폴더명을 기반으로 테이블 이름을 생성합니다. `raw/` 폴더를 스캔했으므로 테이블 이름이 `raw`가 됩니다.
 
-58. **Schema** 탭에서 자동으로 추론된 컬럼들을 확인합니다:
+55. **Schema** 탭에서 자동으로 추론된 컬럼들을 확인합니다:
     - `transaction_id` (bigint)
     - `customer_id` (string)
     - `product_id` (string)
@@ -267,9 +264,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.1: Visual ETL Job 생성
 
-59. 왼쪽 메뉴에서 **ETL jobs**를 선택합니다.
-60. **Create job** 섹션에서 **Visual ETL** 카드를 클릭합니다.
-61. "Untitled job" 빈 캔버스가 표시됩니다.
+56. 왼쪽 메뉴에서 **ETL jobs**를 선택합니다.
+57. **Create job** 섹션에서 **Visual ETL** 카드를 클릭합니다.
 
 > [!NOTE]
 > **Create job** 섹션에는 3가지 옵션이 카드 형태로 표시됩니다:
@@ -282,10 +278,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.2: Source 노드 추가
 
-62. 캔버스의 [[+ Add nodes]] 버튼을 클릭합니다.
-63. **+ Add nodes** 패널이 표시됩니다.
-64. **Sources** 탭에서 **AWS Glue Data Catalog**를 선택합니다.
-65. 오른쪽 **Data source properties - Data Catalog** 패널에서 다음을 설정합니다:
+58. 캔버스의 [[+ Add nodes]] 버튼을 클릭합니다.
+59. **Sources** 탭에서 **AWS Glue Data Catalog**를 선택합니다.
+60. 오른쪽 **Data source properties - Data Catalog** 패널에서 다음을 설정합니다:
     - **Database**: `week11_pipeline_{StudentId}` 선택
     - **Table**: `raw` 선택
 
@@ -294,11 +289,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.3: Transform 노드 추가
 
-66. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
-67. **Transforms** 탭에서 **Change Schema**를 선택합니다.
-68. 오른쪽 **Transform** 패널에서 다음을 확인합니다:
+61. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
+62. **Transforms** 탭에서 **Change Schema**를 선택합니다.
+63. 오른쪽 **Transform** 패널에서 다음을 확인합니다:
     - **Node parents**: `AWS Glue Data Catalog`가 자동으로 연결되어 있는지 확인합니다.
-69. **Change Schema (Apply mapping)** 테이블에서 컬럼 매핑을 확인합니다:
+64. **Change Schema (Apply mapping)** 테이블에서 컬럼 매핑을 확인합니다:
 
 | Source key       | Target key       | Data type | Drop |
 | ---------------- | ---------------- | --------- | ---- |
@@ -314,9 +309,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.4: Target 노드 추가
 
-70. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
-71. **Targets** 탭에서 **Amazon S3**를 선택합니다.
-72. 오른쪽 **Data target properties - S3** 패널에서 다음을 설정합니다:
+65. 캔버스의 [[+ Add nodes]] 버튼을 다시 클릭합니다.
+66. **Targets** 탭에서 **Amazon S3**를 선택합니다.
+67. 오른쪽 **Data target properties - S3** 패널에서 다음을 설정합니다:
     - **Format**: `Parquet` 선택
     - **Compression Type**: `Snappy` 유지 (기본값)
     - **S3 Target Location**: `s3://week11-data-{StudentId}-ap-northeast-2/processed/` 입력
@@ -327,13 +322,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!NOTE]
 > **Snappy 압축**: Parquet 파일의 기본 압축 알고리즘입니다. 압축/해제 속도가 빠르고 적절한 압축률을 제공하여 ETL 작업에 적합합니다.
 
-73. 캔버스에서 3개의 노드가 연결된 것을 확인합니다:
+68. 캔버스에서 3개의 노드가 연결된 것을 확인합니다:
     - **AWS Glue Data Catalog** → **Change Schema** → **Amazon S3**
 
 ### 태스크 3.5: Job 설정
 
-74. 상단 탭에서 **Job details**를 선택합니다.
-75. 다음을 설정합니다:
+69. 상단 탭에서 **Job details**를 선택합니다.
+70. 다음을 설정합니다:
     - **Name**: `week11-etl-csv-to-parquet-{StudentId}` 입력
     - **IAM Role**: 태스크 0에서 생성된 Glue 서비스 역할 선택 (Outputs의 `GlueServiceRoleName`)
     - **Glue version**: `Glue 5.0` 또는 `Glue 5.1` (콘솔 기본값 사용)
@@ -349,13 +344,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > **Automatically scale the number of workers**가 활성화되어 있으면 Worker 수를 직접 지정할 수 없습니다.
 > 이 실습에서는 비용 절감을 위해 자동 스케일링을 해제하고 Worker 수를 2로 고정합니다.
 
-76. 아래로 스크롤하여 **Advanced properties**를 펼칩니다.
-77. **Temporary path**에 `s3://week11-temp-{StudentId}-ap-northeast-2/temp/` 를 입력합니다.
+71. 아래로 스크롤하여 **Advanced properties**를 펼칩니다.
+72. **Temporary path**에 `s3://week11-temp-{StudentId}-ap-northeast-2/temp/` 를 입력합니다.
 
 > [!IMPORTANT]
 > `{StudentId}`를 본인의 학번 또는 고유 식별자로 변경합니다.
 
-78. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+73. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -363,21 +358,23 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `11-3`    |
 | `CreatedBy` | `Student` |
 
-79. 상단의 [[Save]] 버튼을 클릭합니다.
+74. 상단의 [[Save]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Job이 저장되면 상단의 "Job has not been saved" 메시지가 사라집니다.
 
 ### 태스크 3.6: ETL Job 실행
 
-80. 상단의 [[Run]] 버튼을 클릭합니다.
+75. 상단의 [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > ETL Job 실행에 3-5분이 소요됩니다. AWS Glue는 Apache Spark 클러스터를 시작하고, CSV 데이터를 읽고, Parquet 형식으로 변환하여 저장합니다.
 > **Runs** 탭에서 실행 상태를 확인할 수 있습니다.
 
-81. **Runs** 탭을 선택합니다.
-82. **Run status**가 "Running"에서 "Succeeded"로 변경될 때까지 기다립니다.
+76. **Runs** 탭을 선택합니다.
+
+> [!NOTE]
+> **Run status**가 "Running"에서 "Succeeded"로 변경될 때까지 기다립니다. ETL Job 실행에 3-5분이 소요됩니다.
 
 > [!TROUBLESHOOTING]
 > **문제**: Run status가 "Failed"로 표시됩니다
@@ -393,15 +390,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 3.7: 변환 결과 확인
 
-83. Amazon S3 콘솔로 이동합니다.
-84. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
-85. `processed/` 폴더를 클릭합니다.
-86. Parquet 파일이 생성되었는지 확인합니다.
+77. Amazon S3 콘솔로 이동합니다.
+78. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
+79. `processed/` 폴더를 클릭합니다.
+80. Parquet 파일이 생성되었는지 확인합니다.
 
 > [!NOTE]
 > ETL Job이 CSV 데이터를 Parquet 형식으로 변환하여 저장했습니다. Parquet 파일은 `.parquet` 또는 `.snappy.parquet` 확장자를 가집니다. 원본 CSV 파일과 비교하여 파일 크기가 줄어든 것을 확인할 수 있습니다.
 
-87. **Script** 탭을 선택하면 Visual ETL이 자동으로 생성한 PySpark 코드를 확인할 수 있습니다.
+81. **Script** 탭을 선택하면 Visual ETL이 자동으로 생성한 PySpark 코드를 확인할 수 있습니다.
 
 > [!NOTE]
 > Visual ETL은 시각적으로 구성한 파이프라인을 자동으로 PySpark 코드로 변환합니다. Script 탭에서 생성된 코드를 확인하고 학습할 수 있습니다.
@@ -414,34 +411,33 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 태스크 4.1: Athena 쿼리 결과 위치 설정
 
-88. 상단 검색창에 `Athena`를 입력하고 선택합니다.
-89. Amazon Athena 시작 페이지가 표시되면 **Query your data in Athena console** 섹션을 찾아 해당 영역을 클릭합니다.
-90. Query editor가 표시됩니다.
+82. 상단 검색창에 `Athena`를 입력하고 선택합니다.
+83. Amazon Athena 시작 페이지가 표시되면 **Query your data in Athena console** 섹션을 찾아 해당 영역을 클릭합니다.
 
 > [!NOTE]
 > 이미 Query editor가 표시되는 경우 89단계를 건너뜁니다.
 
-91. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
-92. 상단의 **Workgroup** 드롭다운에서 `primary`가 선택되어 있는지 확인합니다.
+84. 왼쪽 메뉴에서 **Query editor**를 선택합니다.
+85. 상단의 **Workgroup** 드롭다운에서 `primary`가 선택되어 있는지 확인합니다.
 
 > [!NOTE]
 > 이 실습에서는 **primary 워크그룹**을 사용합니다. Week 11-2에서는 전용 워크그룹을 생성했지만, 이번 실습에서는 기본 워크그룹의 설정만 변경하여 사용합니다.
 
-93. 상단 탭에서 **Query settings**를 선택합니다.
-94. **Query result location**이 설정되어 있지 않으면 [[Manage]] 버튼을 클릭합니다.
-95. **Query result location**에 `s3://week11-temp-{StudentId}-ap-northeast-2/athena-results/`를 입력합니다.
+86. 상단 탭에서 **Query settings**를 선택합니다.
+87. **Query result location**이 설정되어 있지 않으면 [[Manage]] 버튼을 클릭합니다.
+88. **Query result location**에 `s3://week11-temp-{StudentId}-ap-northeast-2/athena-results/`를 입력합니다.
 
 > [!IMPORTANT]
 > `{StudentId}`를 본인의 학번 또는 고유 식별자로 변경합니다.
 
-96. [[Save]] 버튼을 클릭합니다.
+89. [[Save]] 버튼을 클릭합니다.
 
 ### 태스크 4.2: 처리된 데이터 테이블 생성
 
-97. **Editor** 탭을 선택합니다.
-98. 왼쪽 패널의 **Data source**가 `AwsDataCatalog`인지 확인합니다.
-99. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
-100. 다음 쿼리를 입력합니다:
+90. **Editor** 탭을 선택합니다.
+91. 왼쪽 패널의 **Data source**가 `AwsDataCatalog`인지 확인합니다.
+92. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
+93. 다음 쿼리를 입력합니다:
 
 ```sql
 CREATE EXTERNAL TABLE processed_transactions (
@@ -462,23 +458,23 @@ LOCATION 's3://week11-data-{StudentId}-ap-northeast-2/processed/';
 > [!NOTE]
 > **EXTERNAL TABLE**은 데이터를 Amazon S3에 그대로 두고 메타데이터만 AWS Glue Data Catalog에 저장합니다. 테이블을 삭제해도 Amazon S3의 실제 데이터는 삭제되지 않습니다.
 
-101. [[Run]] 버튼을 클릭합니다.
+94. [[Run]] 버튼을 클릭합니다.
 
 ### 태스크 4.3: 데이터 쿼리 및 분석
 
-102. 다음 쿼리를 입력하여 처리된 데이터를 확인합니다:
+95. 다음 쿼리를 입력하여 처리된 데이터를 확인합니다:
 
 ```sql
 SELECT * FROM processed_transactions LIMIT 10;
 ```
 
-103. [[Run]] 버튼을 클릭합니다.
-104. 결과를 확인합니다.
+96. [[Run]] 버튼을 클릭합니다.
+97. 결과를 확인합니다.
 
 > [!NOTE]
 > CSV 원본 데이터와 동일한 내용이 Parquet 형식으로 저장되어 있음을 확인할 수 있습니다.
 
-105. 지역별 매출을 분석하는 쿼리를 실행합니다:
+98. 지역별 매출을 분석하는 쿼리를 실행합니다:
 
 ```sql
 SELECT
@@ -491,7 +487,7 @@ GROUP BY region
 ORDER BY total_sales DESC;
 ```
 
-106. 제품별 판매 실적을 확인하는 쿼리를 실행합니다:
+99. 제품별 판매 실적을 확인하는 쿼리를 실행합니다:
 
 ```sql
 SELECT
@@ -504,7 +500,7 @@ GROUP BY product_id
 ORDER BY total_revenue DESC;
 ```
 
-107. 원본 테이블(`raw`)과 변환된 테이블(`processed_transactions`)의 데이터 스캔량을 비교합니다:
+100. 원본 테이블(`raw`)과 변환된 테이블(`processed_transactions`)의 데이터 스캔량을 비교합니다:
 
 ```sql
 SELECT COUNT(*) as total_records FROM raw;
@@ -534,41 +530,39 @@ SELECT COUNT(*) as total_records FROM processed_transactions;
 
 ### 태스크 5.1: 새 데이터 업로드
 
-108. Amazon S3 콘솔로 이동합니다.
-109. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
-110. `raw/` 폴더를 클릭합니다.
-111. [[Upload]] 버튼을 클릭합니다.
-112. 다운로드한 ZIP 파일에서 `sales-data.csv` 파일을 선택합니다.
-113. [[Upload]] 버튼을 클릭합니다.
+101. Amazon S3 콘솔로 이동합니다.
+102. 데이터 버킷(`week11-data-{StudentId}-ap-northeast-2`)을 선택합니다.
+103. `raw/` 폴더를 클릭합니다.
+104. [[Upload]] 버튼을 클릭합니다.
+105. 다운로드한 ZIP 파일에서 `sales-data.csv` 파일을 선택합니다.
+106. [[Upload]] 버튼을 클릭합니다.
 
 ### 태스크 5.2: AWS Lambda 자동 실행 확인
 
-114. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
-115. `week11-pipeline-trigger-{StudentId}` 함수를 선택합니다.
-116. **Monitor** 탭을 선택합니다.
-117. **Logs**를 클릭하여 Amazon CloudWatch Logs에서 실행 로그를 확인합니다.
+107. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
+108. `week11-pipeline-trigger-{StudentId}` 함수를 선택합니다.
+109. **Monitor** 탭을 선택합니다.
+110. **Logs**를 클릭하여 Amazon CloudWatch Logs에서 실행 로그를 확인합니다.
 
 > [!NOTE]
 > 로그에서 "Starting AWS Glue Crawler" 메시지를 확인할 수 있습니다. 이는 EventBridge가 Amazon S3 업로드 이벤트를 감지하고 AWS Lambda 함수를 자동으로 실행했음을 의미합니다.
 
 ### 태스크 5.3: Crawler 자동 실행 확인
 
-118. AWS Glue 콘솔로 이동합니다.
-119. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-120. `week11-pipeline-crawler-{StudentId}` Crawler를 선택합니다.
-121. **State**가 "Running"인지 확인합니다.
+111. AWS Glue 콘솔로 이동합니다.
+112. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+113. `week11-pipeline-crawler-{StudentId}` Crawler를 선택합니다.
+114. **State**가 "Running"인지 확인합니다.
 
 > [!NOTE]
-> AWS Lambda 함수가 자동으로 Crawler를 시작했습니다. Crawler는 새로 업로드된 데이터를 스캔하여 Data Catalog를 업데이트합니다.
-
-122. **State**가 "Ready"로 변경될 때까지 기다립니다.
+> AWS Lambda 함수가 자동으로 Crawler를 시작했습니다. Crawler는 새로 업로드된 데이터를 스캔하여 Data Catalog를 업데이트합니다. **State**가 "Ready"로 변경될 때까지 기다립니다.
 
 ### 태스크 5.4: 업데이트된 데이터 확인
 
-123. Amazon Athena 콘솔로 이동합니다.
-124. **Editor** 탭을 선택합니다.
-125. **Database**에서 `week11_pipeline_{StudentId}`를 선택합니다.
-126. 다음 쿼리를 실행하여 새 데이터가 포함되었는지 확인합니다:
+115. Amazon Athena 콘솔로 이동합니다.
+116. **Editor** 탭을 선택합니다.
+117. **Database**에서 `week11_pipeline_{StudentId}`를 선택합니다.
+118. 다음 쿼리를 실행하여 새 데이터가 포함되었는지 확인합니다:
 
 ```sql
 SELECT COUNT(*) as total_records FROM raw;
@@ -607,7 +601,9 @@ SELECT COUNT(*) as total_records FROM raw;
     - **Tag key**: `Week`
     - **Tag value**: `11-3`
 6. [[Search resources]] 버튼을 클릭합니다.
-7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
+
+> [!OUTPUT]
+> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
@@ -616,73 +612,73 @@ SELECT COUNT(*) as total_records FROM raw;
 
 #### 1단계: Athena 수동 생성 테이블 삭제
 
-8. Amazon Athena 콘솔로 이동합니다.
-9. **Editor** 탭을 선택합니다.
-10. **Database**에서 `week11_pipeline_{StudentId}`를 선택합니다.
-11. 다음 쿼리를 실행합니다:
+7. Amazon Athena 콘솔로 이동합니다.
+8. **Editor** 탭을 선택합니다.
+9. **Database**에서 `week11_pipeline_{StudentId}`를 선택합니다.
+10. 다음 쿼리를 실행합니다:
 
 ```sql
 DROP TABLE IF EXISTS processed_transactions;
 ```
 
-12. [[Run]] 버튼을 클릭합니다.
+11. [[Run]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 태스크 4.2에서 Athena로 생성한 `processed_transactions` 테이블은 AWS CloudFormation이 관리하지 않으므로 수동으로 삭제해야 합니다.
 
 #### 2단계: AWS Glue ETL Job 삭제
 
-13. AWS Glue 콘솔로 이동합니다.
-14. 왼쪽 메뉴에서 **ETL jobs**를 선택합니다.
-15. `week11-etl-csv-to-parquet-{StudentId}` Job을 선택합니다.
-16. **Actions** > `Delete`를 선택합니다.
-17. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+12. AWS Glue 콘솔로 이동합니다.
+13. 왼쪽 메뉴에서 **ETL jobs**를 선택합니다.
+14. `week11-etl-csv-to-parquet-{StudentId}` Job을 선택합니다.
+15. **Actions** > `Delete`를 선택합니다.
+16. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 #### 3단계: AWS Glue Crawler 삭제
 
-18. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
-19. `week11-pipeline-crawler-{StudentId}` Crawler의 **State**가 "Ready"인지 확인합니다.
+17. 왼쪽 메뉴에서 **Data Catalog** > **Crawlers**를 선택합니다.
+18. `week11-pipeline-crawler-{StudentId}` Crawler의 **State**가 "Ready"인지 확인합니다.
 
 > [!IMPORTANT]
 > Crawler가 실행 중인 상태에서 삭제하면 오류가 발생할 수 있습니다. "Ready" 상태가 될 때까지 기다립니다.
 
-20. `week11-pipeline-crawler-{StudentId}`를 선택합니다.
-21. **Actions** > `Delete`를 선택합니다.
-22. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+19. `week11-pipeline-crawler-{StudentId}`를 선택합니다.
+20. **Actions** > `Delete`를 선택합니다.
+21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 #### 4단계: AWS Glue 테이블 및 Database 삭제
 
-23. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
-24. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
-25. `raw` 테이블을 선택합니다.
-26. **Actions** > `Delete table`을 선택합니다.
-27. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-28. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
-29. `week11_pipeline_{StudentId}`를 선택합니다.
-30. [[Delete]] 버튼을 클릭합니다.
-31. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+22. 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택합니다.
+23. **Database** 드롭다운에서 `week11_pipeline_{StudentId}`를 선택합니다.
+24. `raw` 테이블을 선택합니다.
+25. **Actions** > `Delete table`을 선택합니다.
+26. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+27. 왼쪽 메뉴에서 **Data Catalog** > **Databases**를 선택합니다.
+28. `week11_pipeline_{StudentId}`를 선택합니다.
+29. [[Delete]] 버튼을 클릭합니다.
+30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 #### 5단계: Amazon S3 버킷 비우기
 
 > [!IMPORTANT]
 > Amazon S3 버킷에 객체가 있으면 AWS CloudFormation 스택 삭제가 실패합니다. 반드시 3개 버킷을 모두 비운 후 스택을 삭제해야 합니다.
 
-32. Amazon S3 콘솔로 이동합니다.
-33. `week11-data-{StudentId}-ap-northeast-2` 버킷을 선택합니다.
-34. [[Empty]] 버튼을 클릭합니다.
-35. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-36. `week11-scripts-{StudentId}-ap-northeast-2` 버킷에 대해 33-35단계를 반복합니다.
-37. `week11-temp-{StudentId}-ap-northeast-2` 버킷에 대해 33-35단계를 반복합니다.
+31. Amazon S3 콘솔로 이동합니다.
+32. `week11-data-{StudentId}-ap-northeast-2` 버킷을 선택합니다.
+33. [[Empty]] 버튼을 클릭합니다.
+34. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+35. `week11-scripts-{StudentId}-ap-northeast-2` 버킷에 대해 33-35단계를 반복합니다.
+36. `week11-temp-{StudentId}-ap-northeast-2` 버킷에 대해 33-35단계를 반복합니다.
 
 #### 6단계: AWS CloudFormation 스택 삭제
 
-38. AWS CloudFormation 콘솔로 이동합니다.
-39. `week11-3-pipeline-stack` 스택을 선택합니다.
-40. [[Delete]] 버튼을 클릭합니다.
-41. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-42. 스택 삭제가 완료될 때까지 기다립니다 (3-5분 소요).
+37. AWS CloudFormation 콘솔로 이동합니다.
+38. `week11-3-pipeline-stack` 스택을 선택합니다.
+39. [[Delete]] 버튼을 클릭합니다.
+40. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
+> 스택 삭제에 3-5분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 > AWS CloudFormation 스택을 삭제하면 다음 리소스가 자동으로 삭제됩니다:
 >
 > - Amazon S3 버킷 3개 (버킷이 비어있는 경우)
@@ -703,23 +699,23 @@ DROP TABLE IF EXISTS processed_transactions;
 
 #### 7단계: Amazon S3 버킷 삭제 확인
 
-43. Amazon S3 콘솔로 이동합니다.
-44. `week11-data-{StudentId}-ap-northeast-2` 버킷이 남아있는 경우 선택합니다.
-45. [[Delete]] 버튼을 클릭합니다.
-46. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
-47. `week11-scripts-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
-48. `week11-temp-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
+41. Amazon S3 콘솔로 이동합니다.
+42. `week11-data-{StudentId}-ap-northeast-2` 버킷이 남아있는 경우 선택합니다.
+43. [[Delete]] 버튼을 클릭합니다.
+44. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+45. `week11-scripts-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
+46. `week11-temp-{StudentId}-ap-northeast-2` 버킷에 대해 44-46단계를 반복합니다.
 
 #### 8단계: Amazon CloudWatch Log Group 삭제
 
-49. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-50. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-51. 검색창에 `week11-pipeline-trigger`를 입력합니다.
-52. `/aws/lambda/week11-pipeline-trigger-{StudentId}` 로그 그룹을 선택합니다.
-53. **Actions** > `Delete log group(s)`를 선택합니다.
-54. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-55. 검색창에 `week11-3-data-pipeline-lab-SampleDataUploader`를 입력합니다.
-56. 해당 로그 그룹이 존재하면 선택하고 동일하게 삭제합니다.
+47. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+48. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+49. 검색창에 `week11-pipeline-trigger`를 입력합니다.
+50. `/aws/lambda/week11-pipeline-trigger-{StudentId}` 로그 그룹을 선택합니다.
+51. **Actions** > `Delete log group(s)`를 선택합니다.
+52. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+53. 검색창에 `week11-3-data-pipeline-lab-SampleDataUploader`를 입력합니다.
+54. 해당 로그 그룹이 존재하면 선택하고 동일하게 삭제합니다.
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
