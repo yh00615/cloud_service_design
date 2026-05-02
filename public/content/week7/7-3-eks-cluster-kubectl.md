@@ -1098,6 +1098,11 @@ kubectl get all
 
 #### 옵션 1: AWS CLI로 삭제
 
+> [!TIP]
+> AWS CLI 명령어에 익숙하거나 빠른 삭제를 원하는 경우 이 방법을 사용합니다.
+>
+> 콘솔 방식이 더 편하다면 아래 [옵션 2](#option-2)를 참고합니다.
+
 14. CloudShell에서 노드 그룹을 삭제합니다:
 
 ```bash
@@ -1135,6 +1140,11 @@ aws eks delete-cluster \
 > "DELETING"이 출력되면 대기하고, "ResourceNotFoundException" 오류가 나오면 삭제 완료입니다.
 
 #### 옵션 2: AWS 콘솔에서 삭제
+
+> [!TIP]
+> AWS 콘솔 방식을 선호하거나 각 단계를 확인하면서 삭제하고 싶은 경우 이 방법을 사용합니다.
+>
+> AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
 14. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
 15. **Clusters**에서 `my-eks-cluster`를 선택합니다.
