@@ -103,17 +103,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       // 버튼 컴포넌트 추가
       if (match[2]) {
-        // [[버튼]] - 키워드 기반 자동 판별
-        const primaryKeywords = [
-          'create', 'launch', 'deploy', 'run', 'start', 'submit',
-          'publish', 'enable', 'activate', 'confirm'
-        ];
-        const isPrimary = primaryKeywords.some(k =>
-          match![2].toLowerCase().includes(k)
-        );
+        // [[버튼]] - 모두 primary (주황색)
         parts.push(
           <span key={match.index} className="markdown-button-wrapper">
-            <AWSButton variant={isPrimary ? 'primary' : 'normal'} size="small">
+            <AWSButton variant="primary" size="small">
               {match[2]}
             </AWSButton>
           </span>,
@@ -180,7 +173,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   };
 
   // 변換되지 않은 **텍스트** 패턴을 <strong>으로 변환하는 후처리 함수
-  const processUnconvertedBold = (children: React.ReactNode): React.ReactNode => {
+  const processUnconvertedBold = (
+    children: React.ReactNode,
+  ): React.ReactNode => {
     if (typeof children === 'string') {
       // **텍스트** 패턴 찾기
       const pattern = /\*\*([^*]+)\*\*/g;
