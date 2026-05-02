@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Week 7-3 Amazon EKS Lab - VPC, IAM 역할 사전 구성'
+Description: 'Week 7-3 Amazon EKS Lab - VPC and IAM role pre-configuration'
 
 Parameters:
   ProjectTag:
@@ -12,10 +12,15 @@ Parameters:
     Default: '7-3'
     Description: Week tag value
 
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
   ClusterName:
     Type: String
     Default: my-eks-cluster
-    Description: EKS cluster name (태그 및 역할 이름에 사용)
+    Description: EKS cluster name (used for tags and role names)
 
 Resources:
   # ============================================================
@@ -36,7 +41,7 @@ Resources:
         - Key: Week
           Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -49,7 +54,7 @@ Resources:
         - Key: Week
           Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -72,7 +77,7 @@ Resources:
         - Key: Week
           Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -89,7 +94,7 @@ Resources:
         - Key: Week
           Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -103,7 +108,7 @@ Resources:
         - Key: Week
           Value: !Ref WeekTag
         - Key: CreatedBy
-          Value: CloudFormation
+          Value: !Ref CreatedByTag
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -163,43 +168,43 @@ Resources:
 
 Outputs:
   VpcId:
-    Description: VPC ID (EKS 클러스터 생성 시 선택)
+    Description: VPC ID (select when creating EKS cluster)
     Value: !Ref VPC
     Export:
       Name: !Sub '${AWS::StackName}-VpcId'
 
   PublicSubnet1Id:
-    Description: Public Subnet 1 ID (EKS 클러스터 생성 시 선택)
+    Description: Public Subnet 1 ID (select when creating EKS cluster)
     Value: !Ref PublicSubnet1
     Export:
       Name: !Sub '${AWS::StackName}-PublicSubnet1Id'
 
   PublicSubnet2Id:
-    Description: Public Subnet 2 ID (EKS 클러스터 생성 시 선택)
+    Description: Public Subnet 2 ID (select when creating EKS cluster)
     Value: !Ref PublicSubnet2
     Export:
       Name: !Sub '${AWS::StackName}-PublicSubnet2Id'
 
   ClusterRoleName:
-    Description: EKS 클러스터 IAM 역할 이름 (EKS 클러스터 생성 시 선택)
+    Description: EKS cluster IAM role name (select when creating EKS cluster)
     Value: !Sub '${ClusterName}-cluster-role'
     Export:
       Name: !Sub '${AWS::StackName}-ClusterRoleName'
 
   ClusterRoleArn:
-    Description: EKS 클러스터 IAM 역할 ARN
+    Description: EKS cluster IAM role ARN
     Value: !GetAtt EKSClusterRole.Arn
     Export:
       Name: !Sub '${AWS::StackName}-ClusterRoleArn'
 
   NodeRoleName:
-    Description: 워커 노드 IAM 역할 이름 (노드 그룹 생성 시 선택)
+    Description: Worker node IAM role name (select when creating node group)
     Value: !Sub '${ClusterName}-node-role'
     Export:
       Name: !Sub '${AWS::StackName}-NodeRoleName'
 
   NodeRoleArn:
-    Description: 워커 노드 IAM 역할 ARN
+    Description: Worker node IAM role ARN
     Value: !GetAtt EKSNodeRole.Arn
     Export:
       Name: !Sub '${AWS::StackName}-NodeRoleArn'
