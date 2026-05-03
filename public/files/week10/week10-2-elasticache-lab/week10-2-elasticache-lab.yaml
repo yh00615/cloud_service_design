@@ -357,6 +357,31 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:BatchWriteItem'
+                  - 'dynamodb:DescribeTable'
+                Resource: !GetAtt APIDataTable.Arn
+        - PolicyName: S3LabBucketAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                Resource:
+                  - !GetAtt LabFilesBucket.Arn
+                  - !Sub '${LabFilesBucket.Arn}/*'
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-SSMRole'
@@ -401,6 +426,21 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-LambdaExecutionRole'
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # S3 Bucket for Lab Files
+  LabFilesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvironmentName}-lab-files-${AWS::AccountId}'
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-lab-files'
         - Key: Project
           Value: !Ref ProjectTag
         - Key: Week
@@ -513,29 +553,35 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-APIDataTableName'
 
+  LabFilesBucketName:
+    Description: S3 bucket name for lab files upload
+    Value: !Ref LabFilesBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-LabFilesBucketName'
+
   SetupInstructions:
     Description: Next steps guide
     Value: !Sub |
-      ElastiCache 환경 구축이 완료되었습니다!
+      ElastiCache lab environment setup complete.
 
-      생성된 리소스:
+      Created resources:
       - VPC: ${VPC}
       - ElastiCache Subnet Group: ${ElastiCacheSubnetGroup}
       - Lambda Execution Role: ${LambdaExecutionRole}
       - DynamoDB Table: ${APIDataTable}
 
-      다음 단계:
-      1. ElastiCache Redis 클러스터 생성
+      Next steps:
+      1. Create ElastiCache Valkey cluster
          - Subnet Group: ${ElastiCacheSubnetGroup}
          - Security Group: ${ElastiCacheSecurityGroup}
          - Node Type: ${CacheNodeType}
 
-      2. Lambda 함수 생성 (API with Cache)
+      2. Create Lambda function (API with Cache)
          - VPC: ${VPC}
          - Subnets: ${PrivateSubnetA}, ${PrivateSubnetC}
          - Security Group: ${LambdaSecurityGroup}
          - Role: ${LambdaExecutionRole.Arn}
 
-      3. API Gateway 생성 및 Lambda 연동
+      3. Create API Gateway and connect to Lambda
 
-      4. 캐싱 성능 테스트
+      4. Test caching performance
