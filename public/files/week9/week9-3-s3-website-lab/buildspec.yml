@@ -6,34 +6,16 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo "Pre-build phase started on `date`"
-      - echo "Checking AWS CLI version..."
+      - echo "Pre-build phase started"
       - aws --version
-      - echo "Current directory:"
-      - pwd
-      - echo "Listing files:"
+      - echo "Listing files"
       - ls -la
-      
   build:
     commands:
-      - echo "Build phase started on `date`"
-      - echo "No build steps required for static website"
-      - echo "Files ready for deployment"
-      
+      - echo "Build phase started - no build steps required for static website"
   post_build:
     commands:
-      - echo "Post-build phase started on `date`"
-      - echo "Deploying to S3 bucket: $BUCKET_NAME"
-      - |
-        aws s3 sync . s3://$BUCKET_NAME \
-          --delete \
-          --exclude "buildspec.yml" \
-          --exclude ".git/*" \
-          --exclude "README.md"
+      - 'echo "Deploying to S3 bucket: $BUCKET_NAME"'
+      - 'aws s3 sync . s3://$BUCKET_NAME --delete --exclude "buildspec.yml" --exclude ".git/*" --exclude "README.md"'
       - echo "Deployment completed successfully"
-      - echo "Website URL: http://$BUCKET_NAME.s3-website.ap-northeast-2.amazonaws.com"
-
-artifacts:
-  files:
-    - '**/*'
-  name: website-build-$(date +%Y%m%d-%H%M%S)
+      - 'echo "Website URL: http://$BUCKET_NAME.s3-website.ap-northeast-2.amazonaws.com"'
