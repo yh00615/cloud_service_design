@@ -6,7 +6,7 @@ Parameters:
     Type: String
     Default: 'student'
     Description: 'Student ID for resource naming (e.g., student123)'
-    AllowedPattern: '^[a-z0-9-]+$'$'
+    AllowedPattern: '^[a-z0-9-]+$'
     ConstraintDescription: 'Must contain only lowercase letters, numbers, and hyphens'
 
   ProjectTag:
@@ -105,6 +105,13 @@ Resources:
                 Resource:
                   - !GetAtt WebsiteBucket.Arn
                   - !Sub '${WebsiteBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                  - 's3:PutObject'
+                Resource:
+                  - !Sub '${PipelineArtifactBucket.Arn}/*'
               - Effect: Allow
                 Action:
                   - 'codecommit:GitPull'
