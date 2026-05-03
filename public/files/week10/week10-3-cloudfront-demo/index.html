@@ -1,108 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickTable - 레스토랑 예약</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudFront Demo - Week 10-3</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
+  <body>
     <header>
-        <div class="container">
-            <img src="images/logo.png" alt="AWS Logo" class="logo">
-            <h1>CloudFront CDN Demo</h1>
-            <p class="subtitle">Week 10-3 실습 - Amazon CloudFront 배포</p>
-        </div>
+      <div class="container">
+        <h1>🍽️ QuickTable</h1>
+        <p class="subtitle">전 세계 레스토랑을 검색하고 예약하세요</p>
+        <p class="version">Version: 1.0</p>
+      </div>
     </header>
 
     <main class="container">
-        <section class="hero">
-            <img src="images/banner.jpg" alt="CloudFront Banner" class="banner">
-            <h2>Amazon CloudFront란?</h2>
+      <section class="hero">
+        <h2>빠르고 간편한 레스토랑 예약</h2>
+        <p>
+          QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수 있는
+          글로벌 서비스입니다. Amazon CloudFront CDN을 통해 서울, 도쿄, 뉴욕,
+          런던 등 어디서나 빠른 응답 속도를 제공합니다.
+        </p>
+      </section>
+
+      <section class="features">
+        <h2>서비스 특징</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>🌏 글로벌 배포</h3>
             <p>
-                Amazon CloudFront는 전 세계에 분산된 엣지 로케이션을 통해 콘텐츠를 빠르게 전달하는
-                CDN(Content Delivery Network) 서비스입니다.
+              Amazon CloudFront의 전 세계 엣지 로케이션을 통해 어디서나 빠르게
+              접근할 수 있습니다.
             </p>
-        </section>
-
-        <section class="features">
-            <h2>주요 기능</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>🚀 빠른 콘텐츠 전달</h3>
-                    <p>전 세계 450개 이상의 엣지 로케이션을 통해 낮은 지연 시간으로 콘텐츠를 제공합니다.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🔒 보안</h3>
-                    <p>AWS Shield Standard, SSL/TLS 암호화, OAC를 통한 S3 보안 접근을 제공합니다.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>💰 비용 효율적</h3>
-                    <p>사용한 만큼만 지불하며, 오리진 서버의 부하를 줄여 비용을 절감합니다.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>📊 실시간 분석</h3>
-                    <p>CloudWatch를 통해 실시간 메트릭과 로그를 확인할 수 있습니다.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="caching-demo">
-            <h2>캐싱 테스트</h2>
-            <p>이 페이지는 CloudFront를 통해 전달되고 있습니다. 아래 정보를 확인하세요:</p>
-
-            <div class="info-box">
-                <h3>캐시 상태 확인</h3>
-                <p>브라우저 개발자 도구(F12)를 열고 Network 탭에서 다음을 확인하세요:</p>
-                <ul>
-                    <li><strong>X-Cache</strong>: Hit from cloudfront (캐시됨) 또는 Miss from cloudfront (캐시 미스)</li>
-                    <li><strong>X-Amz-Cf-Pop</strong>: 요청을 처리한 엣지 로케이션</li>
-                    <li><strong>X-Amz-Cf-Id</strong>: CloudFront 요청 ID</li>
-                </ul>
-            </div>
-
-            <div class="test-buttons">
-                <button onclick="loadImage()">이미지 로드 테스트</button>
-                <button onclick="loadCSS()">CSS 캐싱 테스트</button>
-                <button onclick="loadJS()">JavaScript 캐싱 테스트</button>
-                <button onclick="showCacheInfo()">캐시 정보 표시</button>
-            </div>
-
-            <div id="test-result" class="test-result"></div>
-        </section>
-
-        <section class="invalidation-info">
-            <h2>캐시 무효화 (Invalidation)</h2>
+          </div>
+          <div class="feature-card">
+            <h3>🔒 안전한 접근</h3>
             <p>
-                CloudFront 콘솔에서 캐시를 무효화하여 즉시 새 콘텐츠를 배포할 수 있습니다.
+              OAC(Origin Access Control)로 S3 오리진을 보호하고, HTTPS를 통해
+              안전하게 서비스합니다.
             </p>
-            <div class="code-block">
-                <code>
-                    # AWS CLI로 캐시 무효화<br>
-                    aws cloudfront create-invalidation \<br>
-                    &nbsp;&nbsp;--distribution-id YOUR_DISTRIBUTION_ID \<br>
-                    &nbsp;&nbsp;--paths "/*"
-                </code>
-            </div>
-        </section>
+          </div>
+          <div class="feature-card">
+            <h3>⚡ 빠른 응답</h3>
+            <p>
+              엣지 로케이션 캐싱으로 사용자와 가장 가까운 위치에서 콘텐츠를
+              제공합니다.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>🔄 실시간 업데이트</h3>
+            <p>
+              캐시 무효화를 통해 레스토랑 정보와 메뉴를 즉시 갱신할 수 있습니다.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <section class="timestamp">
-            <h2>페이지 로드 시간</h2>
-            <p>이 페이지는 <span id="timestamp"></span>에 로드되었습니다.</p>
-            <p>페이지를 새로고침하여 캐싱 효과를 확인하세요.</p>
-        </section>
+      <section class="caching-demo">
+        <h2>캐싱 테스트</h2>
+        <p>
+          이 페이지는 Amazon CloudFront를 통해 전달되고 있습니다. 아래 버튼으로
+          캐싱 동작을 확인하세요.
+        </p>
+
+        <div class="info-box">
+          <h3>캐시 상태 확인 방법</h3>
+          <p>
+            브라우저 개발자 도구(F12)를 열고 Network 탭에서 다음 응답 헤더를
+            확인하세요:
+          </p>
+          <ul>
+            <li>
+              <strong>x-cache</strong>: Hit from cloudfront (캐시 히트) 또는
+              Miss from cloudfront (캐시 미스)
+            </li>
+            <li>
+              <strong>x-amz-cf-pop</strong>: 요청을 처리한 엣지 로케이션 (예:
+              ICN54-C1은 서울)
+            </li>
+            <li><strong>age</strong>: 캐시된 시간 (초 단위)</li>
+          </ul>
+        </div>
+
+        <div class="test-buttons">
+          <button onclick="testCSS()">CSS 캐싱 테스트</button>
+          <button onclick="testJS()">JS 캐싱 테스트</button>
+          <button onclick="showCacheInfo()">리소스 로딩 정보</button>
+        </div>
+
+        <div id="test-result" class="test-result"></div>
+      </section>
+
+      <section class="invalidation-info">
+        <h2>캐시 무효화 (Invalidation)</h2>
+        <p>
+          S3에 새 파일을 업로드해도 TTL이 만료되기 전까지는 이전 버전이
+          제공됩니다. CloudFront 콘솔에서 캐시를 무효화하여 즉시 새 콘텐츠를
+          배포할 수 있습니다.
+        </p>
+        <div class="code-block">
+          <code>
+            # AWS CLI로 캐시 무효화<br />
+            aws cloudfront create-invalidation \<br />
+            &nbsp;&nbsp;--distribution-id YOUR_DISTRIBUTION_ID \<br />
+            &nbsp;&nbsp;--paths "/*"
+          </code>
+        </div>
+      </section>
+
+      <section class="timestamp">
+        <h2>페이지 로드 시간</h2>
+        <p>이 페이지는 <span id="timestamp"></span>에 로드되었습니다.</p>
+        <p>페이지를 새로고침하여 캐싱 효과를 확인하세요.</p>
+      </section>
+
+      <section class="navigation">
+        <a href="about.html" class="nav-button"
+          >QuickTable 소개 페이지로 이동 →</a
+        >
+      </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 AWS CloudFront Demo - Week 10-3 실습</p>
-            <p>이 페이지는 교육 목적으로 제작되었습니다.</p>
-        </div>
+      <div class="container">
+        <p>
+          &copy; 2026 QuickTable - Week 10-3 Amazon CloudFront CDN 배포 실습
+        </p>
+        <p>이 페이지는 교육 목적으로 제작되었습니다.</p>
+      </div>
     </footer>
 
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
