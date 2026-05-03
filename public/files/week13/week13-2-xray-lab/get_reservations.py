@@ -65,7 +65,9 @@ def lambda_handler(event, context):
             - body (str): JSON 형식의 예약 목록
     """
     try:
-        user_id = 'anonymous'
+        # 쿼리 파라미터에서 userId 추출 (기본값: anonymous)
+        params = event.get('queryStringParameters') or {}
+        user_id = params.get('userId', 'anonymous')
 
         # 서브세그먼트: DynamoDB 예약 조회
         subsegment = xray_recorder.begin_subsegment('get_reservations')

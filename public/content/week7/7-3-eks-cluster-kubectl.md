@@ -1448,9 +1448,9 @@ kubectl delete pod <pod-name>                     # Pod 삭제
 
 **기본 동작 (Classic Load Balancer):**
 
-- `kubectl expose --type=LoadBalancer` 명령은 기본적으로 Classic Load Balancer를 생성합니다
-- NodePort 범위(30000-32767)를 통해 워커 노드와 통신합니다
-- 학습 및 테스트 환경에서는 충분히 사용 가능합니다
+- `kubectl expose --type=LoadBalancer` 명령은 기본적으로 Classic Load Balancer를 생성합니다.
+- NodePort 범위(30000-32767)를 통해 워커 노드와 통신합니다.
+- 학습 및 테스트 환경에서는 충분히 사용 가능합니다.
 
 **프로덕션 환경 권장사항 (ALB/NLB):**
 

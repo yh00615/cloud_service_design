@@ -496,6 +496,22 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 > 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
+### Amazon CloudWatch Log Group 삭제
+
+> [!WARNING]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
+19. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+20. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+21. 검색창에 `infrastructure-composer`를 입력합니다.
+22. `/aws/lambda/infrastructure-composer-serverless-a-ItemsFunction-*` 로그 그룹의 체크박스를 선택합니다.
+
+> [!NOTE]
+> AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다. 함수 이름 뒤의 랜덤 문자열은 AWS CloudFormation이 자동으로 생성한 것입니다.
+
+23. **Actions** > `Delete log group(s)`를 선택합니다.
+24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
