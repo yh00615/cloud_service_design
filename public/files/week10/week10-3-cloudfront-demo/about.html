@@ -1,125 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickTable - 서비스 소개</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - CloudFront Demo</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
+  <body>
     <header>
-        <div class="container">
-            <img src="images/logo.png" alt="AWS Logo" class="logo">
-            <h1>CloudFront 실습 정보</h1>
-            <p class="subtitle"><a href="index.html">← 메인 페이지로 돌아가기</a></p>
-        </div>
+      <div class="container">
+        <h1>🍽️ QuickTable 소개</h1>
+        <p class="subtitle">
+          <a href="index.html">← 메인 페이지로 돌아가기</a>
+        </p>
+      </div>
     </header>
 
     <main class="container">
-        <section class="about-content">
-            <h2>실습 목표</h2>
-            <ul>
-                <li>CloudFront 배포를 생성하고 S3 오리진을 연결할 수 있습니다</li>
-                <li>OAC(Origin Access Control)를 설정하여 S3 버킷을 보호할 수 있습니다</li>
-                <li>캐싱 동작과 TTL 설정을 이해할 수 있습니다</li>
-                <li>캐시 무효화(Invalidation)를 수행할 수 있습니다</li>
-                <li>CloudFront 메트릭을 모니터링할 수 있습니다</li>
-            </ul>
-        </section>
+      <section class="about-content">
+        <h2>QuickTable이란?</h2>
+        <p>
+          QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수 있는
+          글로벌 서비스입니다. AWS 클라우드 서비스를 활용하여 고성능, 고가용성
+          아키텍처를 구현합니다.
+        </p>
+      </section>
 
-        <section class="architecture">
-            <h2>아키텍처</h2>
-            <div class="info-box">
-                <pre>
-┌─────────┐
-│  사용자  │
-└────┬────┘
-     │
-     ▼
-┌─────────────────┐
-│   CloudFront    │ ← 엣지 로케이션 (전 세계)
-│   Distribution  │
-└────┬────────────┘
-     │
-     ▼
-┌─────────────────┐
-│   S3 Bucket     │ ← 오리진 (ap-northeast-2)
-│   (Private)     │
-└─────────────────┘
-                </pre>
-            </div>
-        </section>
+      <section class="architecture">
+        <h2>글로벌 아키텍처</h2>
+        <div class="info-box">
+          <pre>
+┌─────────────┐
+│   사용자     │  (서울, 도쿄, 뉴욕, 런던 등)
+└──────┬──────┘
+       │
+       ▼
+┌─────────────────────┐
+│   Amazon CloudFront  │  ← 엣지 로케이션 (전 세계)
+│   Distribution       │    HTTPS, 캐싱, OAC
+└──────┬──────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│   Amazon S3 Bucket   │  ← 오리진 (ap-northeast-2)
+│   (Private, OAC)     │    정적 웹사이트 파일
+└─────────────────────┘
+                </pre
+          >
+        </div>
+      </section>
 
-        <section class="file-types">
-            <h2>캐싱 테스트 파일 유형</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>HTML</h3>
-                    <p>index.html, about.html</p>
-                    <p><strong>TTL</strong>: 짧게 설정 (예: 300초)</p>
-                </div>
-                <div class="feature-card">
-                    <h3>CSS</h3>
-                    <p>style.css</p>
-                    <p><strong>TTL</strong>: 중간 (예: 3600초)</p>
-                </div>
-                <div class="feature-card">
-                    <h3>JavaScript</h3>
-                    <p>script.js</p>
-                    <p><strong>TTL</strong>: 중간 (예: 3600초)</p>
-                </div>
-                <div class="feature-card">
-                    <h3>이미지</h3>
-                    <p>logo.png, banner.jpg</p>
-                    <p><strong>TTL</strong>: 길게 설정 (예: 86400초)</p>
-                </div>
-            </div>
-        </section>
+      <section class="features">
+        <h2>QuickTable 시리즈 구성</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Week 4-3</h3>
+            <p>Lambda + API Gateway로 예약 API 구축</p>
+          </div>
+          <div class="feature-card">
+            <h3>Week 9-3</h3>
+            <p>S3로 정적 웹사이트 호스팅</p>
+          </div>
+          <div class="feature-card">
+            <h3>Week 10-2</h3>
+            <p>ElastiCache로 API 성능 최적화</p>
+          </div>
+          <div class="feature-card highlight">
+            <h3>Week 10-3 (현재)</h3>
+            <p>CloudFront로 글로벌 CDN 배포</p>
+          </div>
+        </div>
+      </section>
 
-        <section class="best-practices">
-            <h2>CloudFront 모범 사례</h2>
-            <ul>
-                <li><strong>파일 타입별 TTL 설정</strong>: 정적 파일은 길게, 동적 콘텐츠는 짧게</li>
-                <li><strong>압축 활성화</strong>: Gzip/Brotli 압축으로 전송 속도 향상</li>
-                <li><strong>HTTPS 사용</strong>: SSL/TLS 인증서로 보안 강화</li>
-                <li><strong>OAC 사용</strong>: S3 버킷을 비공개로 유지하고 CloudFront를 통해서만 접근</li>
-                <li><strong>캐시 키 최적화</strong>: 쿼리 문자열, 헤더, 쿠키 설정 최적화</li>
-                <li><strong>모니터링</strong>: CloudWatch 메트릭으로 성능 추적</li>
-            </ul>
-        </section>
+      <section class="file-types">
+        <h2>캐싱 전략 가이드</h2>
+        <p>
+          파일 유형별로 적절한 TTL을 설정하면 성능과 콘텐츠 신선도를 균형 있게
+          유지할 수 있습니다.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>HTML</h3>
+            <p>index.html, about.html</p>
+            <p><strong>권장 TTL</strong>: 짧게 (예: 300초)</p>
+            <p>자주 변경되는 콘텐츠</p>
+          </div>
+          <div class="feature-card">
+            <h3>CSS</h3>
+            <p>style.css</p>
+            <p><strong>권장 TTL</strong>: 중간 (예: 3600초)</p>
+            <p>버전 관리로 갱신 가능</p>
+          </div>
+          <div class="feature-card">
+            <h3>JavaScript</h3>
+            <p>script.js</p>
+            <p><strong>권장 TTL</strong>: 중간 (예: 3600초)</p>
+            <p>버전 관리로 갱신 가능</p>
+          </div>
+          <div class="feature-card">
+            <h3>이미지</h3>
+            <p>로고, 배너 등</p>
+            <p><strong>권장 TTL</strong>: 길게 (예: 86400초)</p>
+            <p>거의 변경되지 않는 콘텐츠</p>
+          </div>
+        </div>
+      </section>
 
-        <section class="troubleshooting">
-            <h2>문제 해결</h2>
-            <div class="info-box">
-                <h3>403 Forbidden 오류</h3>
-                <p><strong>원인</strong>: S3 버킷 정책이 CloudFront OAC를 허용하지 않음</p>
-                <p><strong>해결</strong>: CloudFormation이 제안하는 버킷 정책을 복사하여 S3 버킷에 적용</p>
-            </div>
+      <section class="best-practices">
+        <h2>CloudFront 모범 사례</h2>
+        <ul>
+          <li>
+            <strong>파일 타입별 TTL 설정</strong>: 정적 파일은 길게, 동적
+            콘텐츠는 짧게 설정합니다.
+          </li>
+          <li>
+            <strong>압축 활성화</strong>: Gzip/Brotli 압축으로 전송 크기를 줄여
+            속도를 향상시킵니다.
+          </li>
+          <li>
+            <strong>HTTPS 사용</strong>: CloudFront 기본 인증서 또는 ACM 커스텀
+            인증서로 보안을 강화합니다.
+          </li>
+          <li>
+            <strong>OAC 사용</strong>: S3 버킷을 비공개로 유지하고 CloudFront를
+            통해서만 접근하도록 합니다.
+          </li>
+          <li>
+            <strong>캐시 키 최적화</strong>: 불필요한 쿼리 스트링, 헤더, 쿠키를
+            캐시 키에서 제외합니다.
+          </li>
+        </ul>
+      </section>
 
-            <div class="info-box">
-                <h3>오래된 콘텐츠가 표시됨</h3>
-                <p><strong>원인</strong>: 캐시가 아직 만료되지 않음</p>
-                <p><strong>해결</strong>: CloudFront 콘솔에서 캐시 무효화(Invalidation) 생성</p>
-            </div>
+      <section class="troubleshooting">
+        <h2>문제 해결</h2>
+        <div class="info-box warning">
+          <h3>403 Forbidden 오류</h3>
+          <p>
+            <strong>원인</strong>: S3 버킷 정책이 CloudFront OAC를 허용하지 않음
+          </p>
+          <p>
+            <strong>해결</strong>: CloudFront가 제안하는 버킷 정책을 복사하여 S3
+            버킷에 적용
+          </p>
+        </div>
 
-            <div class="info-box">
-                <h3>느린 첫 로딩</h3>
-                <p><strong>원인</strong>: 캐시 미스 (Miss from cloudfront)</p>
-                <p><strong>정상</strong>: 첫 요청은 오리진에서 가져오므로 느릴 수 있음. 이후 요청은 빠름</p>
-            </div>
-        </section>
+        <div class="info-box warning">
+          <h3>오래된 콘텐츠가 표시됨</h3>
+          <p><strong>원인</strong>: 캐시 TTL이 아직 만료되지 않음</p>
+          <p>
+            <strong>해결</strong>: CloudFront 콘솔에서 캐시 무효화(Invalidation)
+            생성
+          </p>
+        </div>
+
+        <div class="info-box warning">
+          <h3>느린 첫 로딩</h3>
+          <p><strong>원인</strong>: 캐시 미스 (Miss from cloudfront)</p>
+          <p>
+            <strong>정상</strong>: 첫 요청은 오리진에서 가져오므로 느릴 수 있음.
+            이후 요청은 캐시에서 빠르게 제공됨
+          </p>
+        </div>
+      </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 AWS CloudFront Demo - Week 10-3 실습</p>
-            <p><a href="index.html">메인 페이지로 돌아가기</a></p>
-        </div>
+      <div class="container">
+        <p>
+          &copy; 2026 QuickTable - Week 10-3 Amazon CloudFront CDN 배포 실습
+        </p>
+        <p><a href="index.html">메인 페이지로 돌아가기</a></p>
+      </div>
     </footer>
 
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
