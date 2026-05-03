@@ -9,5 +9,8 @@
 ## 관련 태스크
 
 - 태스크 0: 실습 환경 구축 (AWS CloudFormation 스택 생성으로 QuickTable API 인프라 자동 배포)
+- 태스크 1: AWS Lambda 함수 코드 확인 (AWS X-Ray SDK 통합 패턴 확인)
 - 태스크 2: AWS X-Ray 추적 활성화 확인 (AWS Lambda 함수의 Active tracing 설정 확인)
-- 태스크 3: API 호출 및 트레이스 생성 (예약 생성/조회 API 호출하여 AWS X-Ray 트레이스 데이터 생성)
+- 태스크 3~4: API 호출 및 트레이스 생성 (예약 생성/조회 API 호출하여 AWS X-Ray 트레이스 데이터 생성)
+- 태스크 5~6: 서비스 맵 확인 및 트레이스 분석
+- 태스크 7: AWS X-Ray Insights 및 Analytics 활용

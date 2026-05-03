@@ -16,16 +16,19 @@ prerequisites:
   - AWS Lambda 함수 기본 지식
 ---
 
-이 실습에서는 AWS X-Ray를 사용하여 QuickTable 레스토랑 예약 시스템의 분산 추적을 구현합니다. Week 4에서 구축한 QuickTable API에 AWS X-Ray SDK를 통합하고, 서비스 맵과 트레이스를 분석하여 예약 생성 및 조회 과정의 성능과 병목 지점을 식별하는 방법을 학습합니다. Amazon API Gateway → AWS Lambda → Amazon DynamoDB로 이어지는 전체 요청 흐름을 추적하고, 각 단계의 실행 시간과 오류를 시각화합니다.
+이 실습에서는 AWS X-Ray를 사용하여 QuickTable 레스토랑 예약 시스템의 분산 추적을 구현합니다. Week 4에서 구축한 QuickTable API에 AWS X-Ray SDK를 통합하고, 서비스 맵과 트레이스를 분석하여 예약 생성 및 조회 과정의 성능과 병목 지점을 식별하는 방법을 학습합니다.  
+Amazon API Gateway → AWS Lambda → Amazon DynamoDB로 이어지는 전체 요청 흐름을 추적하고, 각 단계의 실행 시간과 오류를 시각화합니다.
 
 > [!CONCEPT] 분산 추적 (Distributed Tracing)
 > 분산 추적은 마이크로서비스 아키텍처에서 하나의 요청이 여러 서비스를 거치는 과정을 추적하는 기술입니다. 각 서비스에서 소요된 시간, 발생한 오류, 호출 순서를 시각화하여 성능 병목 지점과 장애 원인을 빠르게 파악할 수 있습니다.
 >
-> **AWS X-Ray**는 AWS에서 제공하는 분산 추적 서비스로, 애플리케이션의 요청 흐름을 서비스 맵과 트레이스 타임라인으로 시각화합니다. 주요 구성 요소:
+> **AWS X-Ray**는 AWS에서 제공하는 분산 추적 서비스로, 애플리케이션의 요청 흐름을 서비스 맵과 트레이스 타임라인으로 시각화합니다.
+>
+> **주요 구성 요소**:
 >
 > - **트레이스 (Trace)**: 하나의 요청이 시작부터 끝까지 거치는 전체 경로
-> - **세그먼트 (Segment)**: 각 서비스(API Gateway, Lambda 등)에서 처리한 작업 단위
-> - **서브세그먼트 (Subsegment)**: 세그먼트 내 세부 작업 (DynamoDB 호출, 비즈니스 로직 등)
+> - **세그먼트 (Segment)**: 각 서비스(Amazon API Gateway, AWS Lambda 등)에서 처리한 작업 단위
+> - **서브세그먼트 (Subsegment)**: 세그먼트 내 세부 작업 (Amazon DynamoDB 호출, 비즈니스 로직 등)
 > - **어노테이션 (Annotation)**: 검색 가능한 키-값 메타데이터
 > - **서비스 맵 (Service Map)**: 서비스 간 연결과 상태를 보여주는 시각적 다이어그램
 
@@ -39,8 +42,11 @@ prerequisites:
 > **관련 태스크:**
 >
 > - 태스크 0: 실습 환경 구축 (AWS CloudFormation 스택 생성으로 QuickTable API 인프라 자동 배포)
+> - 태스크 1: AWS Lambda 함수 코드 확인 (AWS X-Ray SDK 통합 패턴 확인)
 > - 태스크 2: AWS X-Ray 추적 활성화 확인 (AWS Lambda 함수의 Active tracing 설정 확인)
-> - 태스크 3: API 호출 및 트레이스 생성 (예약 생성/조회 API 호출하여 AWS X-Ray 트레이스 데이터 생성)
+> - 태스크 3~4: API 호출 및 트레이스 생성 (예약 생성/조회 API 호출하여 AWS X-Ray 트레이스 데이터 생성)
+> - 태스크 5~6: 서비스 맵 확인 및 트레이스 분석
+> - 태스크 7: AWS X-Ray Insights 및 Analytics 활용
 
 > [!NOTE]
 > 이 실습에서는 `aws_xray_sdk` (AWS X-Ray SDK for Python)를 사용합니다.
@@ -59,9 +65,10 @@ prerequisites:
 AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 - **Amazon DynamoDB 테이블**: Reservations (사용자별 예약 데이터 저장, userId/reservationId 키)
+- **AWS Lambda Layer**: aws-xray-sdk (Custom Resource로 자동 빌드, AWS X-Ray SDK 패키지 포함)
 - **AWS Lambda 함수**: CreateReservation, GetReservations (AWS X-Ray SDK 통합, 예약 생성/조회 처리)
 - **AWS IAM 역할**: AWS Lambda 실행 역할 (Amazon DynamoDB 접근 + AWS X-Ray 추적 권한 포함)
-- **Amazon API Gateway**: QuickTableXRayAPI (REST API, /reservations 리소스 및 POST/GET 메서드)
+- **Amazon API Gateway**: QuickTableXRayAPI (REST API, /reservations 리소스 및 POST/GET 메서드, AWS X-Ray 추적 활성화)
 
 ### 상세 단계
 
@@ -73,48 +80,44 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week13-2-xray-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
+5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week13-2-xray-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 9. **Stack name**에 `week13-2-xray-lab-stack`을 입력합니다.
+10. **Parameters** 섹션에서 기본값을 확인합니다:
+    - **EnvironmentName**: `week13-2-xray-lab` (기본값 유지)
+    - **ProjectTag**: `AWS-Lab` (기본값 유지)
+    - **WeekTag**: `13-2` (기본값 유지)
+    - **CreatedByTag**: `CloudFormation` (기본값 유지)
 
 > [!NOTE]
-> **Parameters** 섹션의 기본값을 유지합니다.
+> Parameters에서 설정한 태그 값(Project, Week, CreatedBy)은 모든 리소스에 자동으로 적용됩니다. 별도로 Tags 섹션에서 추가할 필요가 없습니다.
 
-10. [[Next]] 버튼을 클릭합니다.
-11. **Configure stack options** 페이지에서 아래로 스크롤하여 **Tags** 섹션을 확인합니다.
-12. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
-
-| Key         | Value            |
-| ----------- | ---------------- |
-| `Project`   | `AWS-Lab`        |
-| `Week`      | `13-2`           |
-| `CreatedBy` | `CloudFormation` |
-
-> [!NOTE]
-> 이 태그들은 AWS CloudFormation 스택이 생성하는 모든 리소스(Amazon DynamoDB 테이블, AWS Lambda 함수 2개, Amazon API Gateway, AWS IAM 역할)에 자동으로 전파됩니다.
-
+11. [[Next]] 버튼을 클릭합니다.
+12. **Configure stack options** 페이지에서 기본값을 유지합니다.
 13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
 14. [[Next]] 버튼을 클릭합니다.
 15. **Review and create** 페이지에서 설정을 확인합니다.
 16. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> 스택 생성에 2-3분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시되며, "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+> 스택 생성에 3-5분이 소요됩니다. AWS X-Ray SDK Lambda Layer 자동 빌드 과정이 포함되어 있어 일반 스택보다 시간이 더 걸릴 수 있습니다. 상태가 "CREATE_IN_PROGRESS"로 표시되며, "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 > **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 17. **Outputs** 탭을 선택합니다.
 18. 출력값들을 확인하고 메모장에 복사합니다:
-	- `ApiUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
-	- `CreateFunctionName`: 예약 생성 AWS Lambda 함수 이름
-	- `GetFunctionName`: 예약 조회 AWS Lambda 함수 이름
-	- `TableName`: Amazon DynamoDB 테이블 이름 (Reservations)
-
-다음 태스크에서 이 값들을 사용합니다.
+    - `ApiUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
+    - `CreateFunctionName`: 예약 생성 AWS Lambda 함수 이름
+    - `GetFunctionName`: 예약 조회 AWS Lambda 함수 이름
+    - `TableName`: Amazon DynamoDB 테이블 이름 (Reservations)
 
 > [!IMPORTANT]
 > 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
+
+> [!NOTE]
+> AWS CloudFormation 스택은 AWS X-Ray SDK(`aws_xray_sdk`)를 포함하는 AWS Lambda Layer를 Custom Resource로 자동 빌드합니다. 이 Layer가 CreateReservation, GetReservations 함수에 연결되어 `from aws_xray_sdk.core import patch_all, xray_recorder` 코드가 정상 동작합니다.
+> AWS Lambda 런타임에는 AWS X-Ray SDK가 기본 포함되어 있지 않으므로, Layer 없이는 `No module named 'aws_xray_sdk'` 오류가 발생합니다.
 
 ✅ **태스크 완료**: 실습 환경이 준비되었습니다.
 
@@ -166,8 +169,6 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 27. 왼쪽 메뉴에서 **Monitoring and operations tools**를 선택합니다.
 28. **CloudWatch Application Signals and AWS X-Ray** 섹션에서 **Lambda service traces**가 활성화되어 있는지 확인합니다.
 
-AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
-
 > [!NOTE]
 > AWS CloudFormation 템플릿에서 Lambda service traces(Active tracing)가 자동으로 활성화되었습니다.
 > 이 설정으로 AWS Lambda 함수의 모든 호출이 AWS X-Ray에 자동으로 추적됩니다.
@@ -183,7 +184,7 @@ AWS CloudFormation 템플릿이 자동으로 설정을 완료했습니다.
 30. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
 
 > [!NOTE]
-> CloudShell이 시작될 때까지 기다립니다.
+> AWS CloudShell이 시작될 때까지 기다립니다.
 
 31. 환경 변수를 설정합니다:
 
@@ -218,12 +219,18 @@ export API_URL="YOUR_API_URL"
 echo $API_URL
 ```
 
+> [!OUTPUT]
+>
+> ```
+> https://abc123def4.execute-api.ap-northeast-2.amazonaws.com/prod
+> ```
+
 33. 다음 명령어를 실행하여 예약을 생성합니다:
 
 ```bash
-curl -X POST ${API_URL}/reservations \
+curl -s -X POST ${API_URL}/reservations \
   -H "Content-Type: application/json" \
-  -d '{"userId": "anonymous", "restaurantName": "강남 맛집", "date": "2026-05-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}'
+  -d '{"userId": "anonymous", "restaurantName": "강남 맛집", "date": "2026-05-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}' | jq .
 ```
 
 > [!OUTPUT]
@@ -235,18 +242,32 @@ curl -X POST ${API_URL}/reservations \
 > }
 > ```
 
-요청이 성공적으로 처리되었습니다.
-
 > [!NOTE]
-> 요청 본문에 `userId`를 `"anonymous"`로 지정했습니다.
->
-> **userId 동작**:
->
-> - Amazon DynamoDB 테이블의 키가 userId/reservationId이므로, 모든 예약이 "anonymous" 사용자로 생성됩니다
-> - 예약 조회 시 "anonymous" 사용자의 모든 예약이 반환됩니다
-> - 실제 프로덕션 환경에서는 Amazon Cognito 등을 사용하여 실제 사용자 ID를 전달해야 합니다
+> 요청 본문의 `userId`는 Amazon DynamoDB 테이블의 파티션 키입니다.
+> 태스크 3에서는 `"anonymous"`로, 34번에서는 `"user-kim"`, `"user-lee"`, `"user-park"` 등 다양한 사용자로 예약을 생성합니다.
+> 태스크 4에서 쿼리 파라미터로 특정 사용자의 예약만 조회할 수 있습니다.
 
-34. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다 (5-10회 권장).
+34. 다양한 사용자와 레스토랑 데이터로 여러 건의 예약을 생성하여 추가 트레이스를 생성합니다:
+
+```bash
+curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
+  -d '{"userId": "user-kim", "restaurantName": "이태원 파스타", "date": "2026-05-21", "time": "19:00", "partySize": 2, "phoneNumber": "010-2345-6789"}' | jq .
+
+curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
+  -d '{"userId": "user-lee", "restaurantName": "홍대 스시", "date": "2026-05-22", "time": "12:30", "partySize": 6, "phoneNumber": "010-3456-7890"}' | jq .
+
+curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
+  -d '{"userId": "user-park", "restaurantName": "서초 한정식", "date": "2026-05-23", "time": "17:30", "partySize": 8, "phoneNumber": "010-4567-8901"}' | jq .
+
+curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
+  -d '{"userId": "user-kim", "restaurantName": "종로 갈비", "date": "2026-05-24", "time": "18:30", "partySize": 4, "phoneNumber": "010-5678-9012"}' | jq .
+
+curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
+  -d '{"userId": "user-lee", "restaurantName": "강남 맛집", "date": "2026-05-25", "time": "20:00", "partySize": 3, "phoneNumber": "010-6789-0123"}' | jq .
+```
+
+> [!TIP]
+> userId, 레스토랑 이름, 날짜, 인원 수가 각각 다르게 생성되므로 태스크 6에서 어노테이션 기반 필터링을 테스트할 때 유용합니다.
 
 ✅ **태스크 완료**: 예약 생성 트레이스가 생성되었습니다.
 
@@ -254,10 +275,19 @@ curl -X POST ${API_URL}/reservations \
 
 이 태스크에서는 QuickTable 예약 조회 API를 호출하여 AWS X-Ray 트레이스를 생성합니다.
 
-35. CloudShell에서 다음 명령어를 실행하여 예약을 조회합니다:
+35. AWS CloudShell에서 다음 명령어를 실행하여 anonymous 사용자의 예약을 조회합니다:
 
 ```bash
-curl -X GET ${API_URL}/reservations
+curl -s -X GET "${API_URL}/reservations" | jq .
+```
+
+> [!NOTE]
+> 쿼리 파라미터 없이 호출하면 기본값인 `anonymous` 사용자의 예약이 조회됩니다.
+
+36. 특정 사용자의 예약을 조회합니다:
+
+```bash
+curl -s -X GET "${API_URL}/reservations?userId=user-kim" | jq .
 ```
 
 > [!OUTPUT]
@@ -265,19 +295,34 @@ curl -X GET ${API_URL}/reservations
 > ```json
 > [
 >   {
->     "userId": "anonymous",
->     "reservationId": "RSV-20260520-a1b2c3d4",
->     "restaurantName": "강남 맛집",
->     "date": "2026-05-20",
->     "time": "18:00",
+>     "userId": "user-kim",
+>     "reservationId": "RSV-20260521-a1b2c3d4",
+>     "restaurantName": "이태원 파스타",
+>     "date": "2026-05-21",
+>     "time": "19:00",
+>     "partySize": 2,
+>     "status": "confirmed",
+>     "createdAt": "2026-05-03T10:30:00.123456"
+>   },
+>   {
+>     "userId": "user-kim",
+>     "reservationId": "RSV-20260524-e5f6g7h8",
+>     "restaurantName": "종로 갈비",
+>     "date": "2026-05-24",
+>     "time": "18:30",
 >     "partySize": 4,
 >     "status": "confirmed",
->     "createdAt": "2026-05-15T10:30:00.123456"
+>     "createdAt": "2026-05-03T10:31:00.456789"
 >   }
 > ]
 > ```
 
-36. 여러 번 명령어를 실행하여 추가 트레이스를 생성합니다.
+37. 다른 사용자의 예약도 조회하여 추가 트레이스를 생성합니다:
+
+```bash
+curl -s -X GET "${API_URL}/reservations?userId=user-lee" | jq .
+curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
+```
 
 ✅ **태스크 완료**: 예약 조회 트레이스가 생성되었습니다.
 
@@ -285,30 +330,38 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 콘솔에서 QuickTable API의 서비스 맵을 확인합니다.
 
-37. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+38. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
 
 > [!NOTE]
 > AWS X-Ray는 Amazon CloudWatch 콘솔에 통합되어 있습니다.
 > 왼쪽 메뉴의 **Application Signals (APM)** 섹션에서 AWS X-Ray 관련 기능을 사용할 수 있습니다.
 
-38. 왼쪽 메뉴에서 **Application Signals (APM)** > **Trace Map**을 선택합니다.
-39. 서비스 맵에서 다음 구성 요소를 확인합니다:
-	- **Client**: 요청을 보낸 클라이언트 (CloudShell/curl)
-	- **Amazon API Gateway**: QuickTableXRayAPI
-	- **AWS Lambda**: CreateReservation, GetReservations
-	- **Amazon DynamoDB**: Reservations
+39. 왼쪽 메뉴에서 **Application Signals (APM)** > **Trace Map**을 선택합니다.
+40. 서비스 맵에서 다음 구성 요소를 확인합니다:
+    - **Client**: 요청을 보낸 클라이언트 (AWS CloudShell/curl)
+    - **ApiGateway Stage**: QuickTableXRayAPI/prod
+    - **Lambda Context / Lambda Function**: CreateReservation, GetReservations (각각 2개 노드)
+    - **DynamoDB Table**: Reservations
 
 > [!NOTE]
 > 서비스 맵이 표시되는 데 최대 5분이 소요될 수 있습니다. 페이지를 새로고침하여 확인합니다.
 >
 > **서비스 맵 구성 요소**:
 >
-> - **Client 노드**: Amazon API Gateway가 아니라 요청을 보낸 클라이언트(CloudShell/curl)를 나타냅니다
-> - **Amazon API Gateway 노드**: QuickTableXRayAPI REST API를 나타냅니다
-> - 두 노드는 별도로 표시됩니다
+> - **Client 노드**: 요청을 보낸 클라이언트(AWS CloudShell/curl)를 나타냅니다.
+> - **ApiGateway Stage 노드**: QuickTableXRayAPI/prod REST API Stage를 나타냅니다.
+> - **Lambda Context / Lambda Function**: AWS Lambda 함수가 Context(초기화/호출 관리)와 Function(실제 코드 실행) 두 개 노드로 분리되어 표시됩니다.
+> - **DynamoDB Table 노드**: Reservations 테이블을 나타냅니다.
 
-40. AWS Lambda 함수 노드를 클릭합니다.
-41. 오른쪽 패널에서 평균 응답 시간, 요청 수, 오류율을 확인합니다.
+41. AWS Lambda 함수 노드를 클릭합니다.
+42. 하단 패널에서 **Metrics** 탭의 요약 정보를 확인합니다:
+    - **Latency (avg)**: 평균 응답 시간 (예: 266ms)
+    - **Requests**: 분당 요청 수 (예: 1.20/min)
+    - **Faults**: 분당 오류 수 (예: 0.00/min)
+
+> [!NOTE]
+> **Latency** 그래프에 "No data available"이 표시될 수 있습니다. 시간 범위를 조정하거나 데이터가 충분히 수집될 때까지 기다립니다.
+> 노드 하단의 **View logs**, **View traces**, **Analyze traces**, **View dashboard** 버튼으로 상세 분석 페이지로 이동할 수 있습니다.
 
 ✅ **태스크 완료**: 서비스 맵을 확인했습니다.
 
@@ -316,134 +369,189 @@ curl -X GET ${API_URL}/reservations
 
 이 태스크에서는 AWS X-Ray 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인합니다.
 
-42. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
-43. 트레이스 목록에서 POST /reservations 요청을 선택합니다.
-44. 트레이스 타임라인에서 다음 정보를 확인합니다:
-	- **전체 응답 시간**: 요청부터 응답까지 소요된 시간
-	- **세그먼트**: Amazon API Gateway, AWS Lambda, Amazon DynamoDB 각각의 실행 시간
-	- **서브세그먼트**: create_reservation, dynamodb_put_item 등의 커스텀 서브세그먼트
-
-45. 세그먼트를 클릭하여 상세 정보를 확인합니다.
-46. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
+43. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
+44. 상단의 시간 범위를 `1h` 또는 `6h`로 변경합니다.
+45. 검색창을 비운 상태에서 [[Run query]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> AWS CloudFormation 템플릿으로 배포된 AWS Lambda 함수 코드에는 `subsegment.put_annotation()`으로 추가된 어노테이션이 포함되어 있습니다.
-> 어노테이션에는 restaurantName, date, status 등의 정보가 포함되어 있으며, 이를 통해 특정 조건으로 트레이스를 필터링할 수 있습니다.
->
-> 어노테이션이 표시되지 않는 경우:
->
-> - 태스크 1에서 확인한 AWS Lambda 함수 코드에 `subsegment.put_annotation()` 호출이 있는지 재확인합니다
-> - 트레이스가 충분히 생성되었는지 확인합니다 (태스크 3, 4에서 5-10회 API 호출)
+> 기본 시간 범위가 `5m`으로 설정되어 있어 API 호출 시점이 5분 이전이면 트레이스가 표시되지 않습니다. `1h` 이상으로 변경하면 수집된 트레이스가 표시됩니다.
 
-47. **Metadata** 탭에서 예약 데이터를 확인합니다.
+> [!TIP]
+> 검색창에 쿼리를 입력하여 특정 트레이스만 필터링할 수 있습니다. 다음 쿼리를 입력하고 [[Run query]]를 클릭해봅니다:
+>
+> - 특정 레스토랑 예약만 조회: `annotation.restaurantName = "강남 맛집"`
+> - 응답 시간이 1초 이상인 트레이스: `responsetime > 1`
+> - 오류가 발생한 트레이스: `!OK`
 
-48. GET /reservations 요청도 동일하게 분석합니다.
+46. 트레이스 목록에서 트레이스 ID를 클릭하여 상세 페이지로 이동합니다.
+
+47. 트레이스 타임라인(**Segments Timeline**)에서 다음 정보를 확인합니다:
+    - **QuickTableXRayAPI/prod** (AWS::ApiGateway::Stage): API 요청 수신 및 AWS Lambda 호출
+    - **week13-2-xray-lab-CreateReservation** (AWS::Lambda): Lambda Context (초기화/호출 관리)
+    - **week13-2-xray-lab-CreateReservation** (AWS::Lambda::Function): 실제 함수 코드 실행, `validate_input`, `create_dynamodb_item` 서브세그먼트
+    - **DynamoDB** (AWS::DynamoDB::Table): PutItem 작업
+
+> [!NOTE]
+> 상단의 **Trace details** 탭에서는 해당 트레이스의 서비스 맵을 확인할 수 있습니다.  
+> Client → ApiGateway Stage → Lambda Context → Lambda Function → DynamoDB Table 흐름이 시각적으로 표시됩니다.
+
+48. Segments Timeline에서 `validate_input` 또는 `create_dynamodb_item` 서브세그먼트를 클릭합니다.
+49. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
+
+> [!NOTE]
+> 어노테이션에는 `operation`, `restaurantName`, `date`, `reservation_id`, `status` 등의 정보가 포함되어 있습니다.
+
+50. **Metadata** 탭에서 예약 데이터를 확인합니다.
+
+> [!NOTE]
+> 하단의 **Logs** 섹션에서 해당 트레이스와 연결된 Amazon CloudWatch 로그를 바로 확인할 수 있습니다.
+
+51. 트레이스 목록으로 돌아가서 GET /reservations 요청도 동일하게 분석합니다.
 
 ✅ **태스크 완료**: 트레이스를 분석했습니다.
 
-## 태스크 7: AWS X-Ray Insights 및 Analytics 활용
+## 태스크 7: Application Insights 확인
 
-이 태스크에서는 AWS X-Ray Insights와 Analytics를 사용하여 자동 이상 탐지 및 트레이스 분석 기능을 확인합니다.
+이 태스크에서는 Amazon CloudWatch Application Insights를 사용하여 자동 이상 탐지 기능을 확인합니다.
 
-49. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **Application Signals (APM)** > **Application Insights**를 선택합니다.
-50. Insights 대시보드에서 다음 정보를 확인합니다:
-	- **응답 시간 이상**: 평균 응답 시간이 증가한 경우
-	- **오류율 이상**: 오류율이 증가한 경우
-	- **스로틀링 이상**: 요청이 제한된 경우
+52. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **Application Signals (APM)** > **Application Insights**를 선택합니다.
+53. **Overview** 탭에서 **Problems detected** 섹션을 확인합니다.
 
 > [!NOTE]
-> AWS X-Ray Insights는 **충분한 트레이스 데이터(수백~수천 건)**가 있어야 이상 탐지가 작동합니다.
-> 실습에서는 트레이스 수가 적어(수 건~수십 건) 이상이 표시되지 않을 가능성이 높습니다.
+> "There are no problems"가 표시되면 정상입니다. Application Insights는 **충분한 트레이스 데이터(수백에서 수천 건)**가 있어야 이상 탐지가 작동합니다.
+> 실습에서는 트레이스 수가 적어(수 건에서 수십 건) 이상이 표시되지 않을 가능성이 높습니다.
 >
-> **Insights 활용 시나리오**:
+> **프로덕션 환경에서의 Insights 활용**:
 >
-> - 프로덕션 환경에서 대량의 트레이스 데이터가 수집되는 경우
-> - 응답 시간이나 오류율이 평소와 다른 패턴을 보이는 경우
-> - 자동으로 이상을 탐지하고 알림을 받고 싶은 경우
-> - 특정 시간대에 성능 저하가 발생했는지 확인하고 싶은 경우
+> - 응답 시간이나 오류율이 평소와 다른 패턴을 보이는 경우 자동으로 이상을 탐지합니다.
+> - **Detected problems summary**에서 최근 30일간 감지된 문제를 확인할 수 있습니다.
+> - **Top recurrent problems**에서 반복적으로 발생하는 문제를 식별할 수 있습니다.
 
-51. **Application Signals (APM)** > **Traces** 페이지로 이동합니다.
-
-> [!NOTE]
-> 이전에는 별도의 Analytics 메뉴가 있었으나, 현재는 Traces 페이지에서 필터링 및 그룹화 기능을 사용하여 동일한 분석을 수행할 수 있습니다.
-
-52. **Filter traces**에서 어노테이션 기반 조건을 추가하여 특정 트레이스를 필터링합니다.
-
-> [!NOTE]
-> Traces 페이지에서 어노테이션 기반으로 트레이스를 필터링할 수 있습니다.
-> 예: `annotation.restaurantName = "강남 맛집"` 조건으로 특정 레스토랑 예약만 필터링
->
-> 어노테이션 필터가 표시되려면 AWS Lambda 코드에서 `subsegment.put_annotation()` 호출이 있어야 합니다.
-> 태스크 1에서 확인한 코드를 참고합니다.
-
-✅ **태스크 완료**: AWS X-Ray Insights 및 Analytics를 활용하여 이상 탐지 및 분석 기능을 확인했습니다.
+✅ **태스크 완료**: Application Insights의 자동 이상 탐지 기능을 확인했습니다.
 
 ## 마무리
 
 다음을 성공적으로 수행했습니다:
 
-- AWS CloudFormation으로 QuickTable 예약 시스템의 AWS X-Ray 추적 환경을 구축했습니다
-- AWS X-Ray SDK가 통합된 AWS Lambda 함수 코드를 확인했습니다
-- 예약 생성 및 조회 API를 호출하여 트레이스를 생성했습니다
-- 서비스 맵에서 Client → Amazon API Gateway → AWS Lambda → Amazon DynamoDB 흐름을 확인했습니다
-- 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인했습니다
-- AWS X-Ray Insights를 활용하여 자동 이상 탐지 기능을 확인했습니다
+- AWS CloudFormation으로 QuickTable 예약 시스템의 AWS X-Ray 추적 환경을 구축했습니다.
+- AWS X-Ray SDK가 통합된 AWS Lambda 함수 코드를 확인했습니다.
+- 예약 생성 및 조회 API를 호출하여 트레이스를 생성했습니다.
+- 서비스 맵에서 Client → Amazon API Gateway → AWS Lambda → Amazon DynamoDB 흐름을 확인했습니다.
+- 트레이스를 분석하여 예약 생성 및 조회 과정의 성능을 확인했습니다.
+- AWS X-Ray Insights를 활용하여 자동 이상 탐지 기능을 확인했습니다.
 
 # 🗑️ 리소스 정리
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
 
-### 사전 확인: Tag Editor로 리소스 확인
+> [!IMPORTANT]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택에 포함되지 않으므로 **수동으로 삭제**해야 합니다.
+> 로그 그룹을 삭제하지 않으면 스토리지 비용(GB당 월 $0.50)이 계속 부과됩니다.
+
+### 단계 1: Tag Editor로 생성된 리소스 확인
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `13-2`
+   - **Tag key**: `Week`
+   - **Tag value**: `13-2`
 6. [[Search resources]] 버튼을 클릭합니다.
-
-> [!OUTPUT]
-> 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
-### 스택 삭제: AWS CloudFormation 스택 삭제
+### 단계 2: Amazon CloudWatch Log Group 삭제
 
-7. AWS CloudFormation 콘솔로 이동합니다.
-8. `week13-2-xray-lab-stack` 스택을 선택합니다.
-9. [[Delete]] 버튼을 클릭합니다.
-10. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+#### 옵션 1: AWS CLI로 삭제
+
+> [!TIP]
+> AWS CLI 명령어에 익숙하거나 빠른 삭제를 원하는 경우 이 방법을 사용합니다.
+>
+> 콘솔 방식이 더 편하다면 아래 [옵션 2](#option-2)를 참고합니다.
+
+7. AWS CloudShell에서 Amazon CloudWatch Log Group을 삭제합니다:
+
+```bash
+aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-CreateReservation --region ap-northeast-2
+aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-GetReservations --region ap-northeast-2
+aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBuilder --region ap-northeast-2
+```
 
 > [!NOTE]
-> 스택 삭제가 완료될 때까지 기다립니다.
-> AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할이 모두 자동으로 삭제됩니다.
-> AWS X-Ray 트레이스 데이터는 자동으로 삭제되지 않지만, 30일 후 자동으로 만료됩니다.
+> 삭제가 성공하면 출력이 없습니다. 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws logs describe-log-groups --log-group-name-prefix /aws/lambda/week13-2-xray-lab --query "logGroups[*].logGroupName" --output text --region ap-northeast-2
+> ```
+>
+> 출력이 없으면 삭제 완료입니다.
 
-### Amazon CloudWatch Log Group 삭제
+> [!TIP]
+> 특정 접두사로 시작하는 로그 그룹을 한번에 삭제하려면 다음 명령어를 사용합니다:
+>
+> ```bash
+> aws logs describe-log-groups --log-group-name-prefix /aws/lambda/week13-2-xray-lab --query "logGroups[*].logGroupName" --output text --region ap-northeast-2 | tr '\t' '\n' | while read lg; do aws logs delete-log-group --log-group-name "$lg" --region ap-northeast-2; echo "삭제: $lg"; done
+> ```
+>
+> 이전 차시에서 남아있는 로그 그룹까지 전체 삭제하려면 다음 명령어를 사용합니다:
+>
+> ```bash
+> aws logs describe-log-groups --query "logGroups[*].logGroupName" --output text --region ap-northeast-2 | tr '\t' '\n' | while read lg; do aws logs delete-log-group --log-group-name "$lg" --region ap-northeast-2; echo "삭제: $lg"; done
+> ```
+>
+> ⚠️ 위 명령어는 해당 리전의 **모든** 로그 그룹을 삭제합니다. 실습 전용 계정에서만 사용하세요.
 
-11. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-12. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-13. 다음 로그 그룹을 검색하여 삭제합니다:
-	- `/aws/lambda/week13-2-xray-lab-CreateReservation`
-	- `/aws/lambda/week13-2-xray-lab-GetReservations`
+#### 옵션 2: AWS 콘솔에서 삭제
+
+> [!TIP]
+> AWS 콘솔 방식을 선호하거나 각 단계를 확인하면서 삭제하고 싶은 경우 이 방법을 사용합니다.
+>
+> AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
+
+7. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+8. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+9. 검색창에 `week13-2-xray-lab`을 입력합니다.
+10. 다음 로그 그룹의 체크박스를 선택합니다:
+    - `/aws/lambda/week13-2-xray-lab-CreateReservation`
+    - `/aws/lambda/week13-2-xray-lab-GetReservations`
+    - `/aws/lambda/week13-2-xray-lab-LayerBuilder`
+11. **Actions** > `Delete log group(s)`를 선택합니다.
+12. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다.
-> 함수 이름은 CloudFormation 템플릿에서 `week13-2-xray-lab-CreateReservation`, `week13-2-xray-lab-GetReservations`로 지정되어 있습니다.
->
-> Amazon API Gateway 로그 그룹(`/aws/apigateway/QuickTableXRayAPI`)은 AWS CloudFormation 템플릿에서 Amazon CloudWatch 로깅을 명시적으로 활성화한 경우에만 생성됩니다.
-> 해당 로그 그룹이 존재하지 않을 수 있으며, 존재하는 로그 그룹만 삭제하면 됩니다.
-
-14. 각 로그 그룹을 선택한 후 **Actions** > `Delete log group(s)`를 선택합니다.
-15. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
-
-> [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
-> 로그 그룹을 삭제하지 않으면 스토리지 비용(GB당 월 $0.50)이 계속 부과됩니다.
+
+### 단계 3: AWS CloudFormation 스택 삭제
+
+13. AWS CloudFormation 콘솔로 이동합니다.
+14. `week13-2-xray-lab-stack` 스택을 선택합니다.
+15. [[Delete]] 버튼을 클릭합니다.
+16. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, AWS Lambda Layer, Amazon API Gateway, AWS IAM 역할이 모두 자동으로 삭제됩니다.
+> AWS X-Ray 트레이스 데이터는 자동으로 삭제되지 않지만, 30일 후 자동으로 만료됩니다.
+
+### 단계 4: 최종 삭제 확인 (Tag Editor 활용)
+
+모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
+
+17. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+18. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+19. **Regions**에서 `ap-northeast-2`를 선택합니다.
+20. **Resource types**에서 `All supported resource types`를 선택합니다.
+21. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `13-2`
+22. [[Search resources]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+> 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
@@ -480,17 +588,17 @@ QuickTable 레스토랑 예약 시스템에서 AWS X-Ray는 다음과 같은 분
 
 **세그먼트 (Segment)**:
 
-- **Amazon API Gateway 세그먼트**: API 요청 수신 및 AWS Lambda 호출
-- **AWS Lambda 세그먼트**: CreateReservation 또는 GetReservations 함수 실행
-- **Amazon DynamoDB 세그먼트**: Reservations 테이블 읽기/쓰기 작업
+- **ApiGateway Stage 세그먼트**: QuickTableXRayAPI/prod - API 요청 수신 및 AWS Lambda 호출
+- **Lambda Context 세그먼트**: AWS Lambda 함수 초기화 및 호출 관리
+- **Lambda Function 세그먼트**: CreateReservation 또는 GetReservations 함수 코드 실행
+- **DynamoDB Table 세그먼트**: Reservations 테이블 읽기/쓰기 작업
 
 **서브세그먼트 (Subsegment)**:
 
-- **create_reservation**: 예약 생성 비즈니스 로직
-- **get_reservations**: 예약 조회 비즈니스 로직
-- **dynamodb_put_item**: Amazon DynamoDB PutItem 작업
-- **dynamodb_query**: Amazon DynamoDB Query 작업
-- **validate_input**: 입력 데이터 검증
+- **validate_input**: 입력 데이터 검증 (어노테이션: operation, restaurantName, date)
+- **create_dynamodb_item**: Amazon DynamoDB PutItem 작업 (어노테이션: reservation_id, status)
+- **get_reservations**: Amazon DynamoDB Query 작업 (어노테이션: operation, user_id)
+- **DynamoDB**: `patch_all()`에 의해 자동 생성되는 Amazon DynamoDB 호출 서브세그먼트
 
 **어노테이션 (Annotation)**:
 
@@ -510,8 +618,8 @@ QuickTable 레스토랑 예약 시스템에서 AWS X-Ray는 다음과 같은 분
 QuickTable 서비스 맵은 다음 구성 요소를 보여줍니다:
 
 ```
-Client → Amazon API Gateway → AWS Lambda (CreateReservation) → Amazon DynamoDB (Reservations)
-                            → AWS Lambda (GetReservations) → Amazon DynamoDB (Reservations)
+Client → ApiGateway Stage → Lambda Context (CreateReservation) → Lambda Function (CreateReservation) → DynamoDB Table (Reservations)
+                          → Lambda Context (GetReservations) → Lambda Function (GetReservations) → DynamoDB Table (Reservations)
 ```
 
 **성능 지표**:
@@ -525,6 +633,16 @@ Client → Amazon API Gateway → AWS Lambda (CreateReservation) → Amazon Dyna
 
 - AWS Lambda 콜드 스타트: 첫 요청 시 초기화 시간 증가
 - Amazon DynamoDB 쓰기 지연: 대량 예약 생성 시 지연 발생
+
+### Amazon CloudWatch의 AWS X-Ray 관련 뷰
+
+Amazon CloudWatch 콘솔의 **Application Signals (APM)** 섹션에서 AWS X-Ray 트레이스 데이터를 다양한 관점으로 확인할 수 있습니다.
+
+- **Trace Map**: 서비스 간 트레이스 흐름을 시각화합니다. 각 노드의 Latency, Requests, Faults 메트릭을 확인할 수 있습니다.
+- **Traces**: 개별 트레이스를 검색하고 Segments Timeline에서 세그먼트/서브세그먼트별 실행 시간, Annotations, Metadata를 분석합니다.
+- **Application Map**: 애플리케이션 단위로 서비스를 그룹화하여 전체 아키텍처를 보여줍니다. 관련 서비스 간 요청 수와 상태를 한눈에 파악할 수 있습니다.
+- **Services**: SLI(Service Level Indicator) 상태, fault rate, 서비스별 의존성 경로를 운영 관점에서 모니터링합니다.
+- **Application Insights**: 충분한 트레이스 데이터가 수집되면 응답 시간 이상, 오류율 증가 등을 자동으로 탐지합니다.
 
 ### AWS X-Ray SDK 사용 패턴
 
@@ -582,24 +700,24 @@ segment.put_metadata('request', event)  # 상세 정보
 
 **어노테이션 활용**:
 
-- 검색 가능한 정보는 어노테이션으로 저장합니다
-- 레스토랑 이름, 날짜, 상태 등을 어노테이션으로 추가합니다
-- 필터링 및 그룹화에 활용합니다
+- 검색 가능한 정보는 어노테이션으로 저장합니다.
+- 레스토랑 이름, 날짜, 상태 등을 어노테이션으로 추가합니다.
+- 필터링 및 그룹화에 활용합니다.
 
 **서브세그먼트 세분화**:
 
-- 병목 지점을 정확히 식별하기 위해 서브세그먼트를 세분화합니다
-- 입력 검증, 비즈니스 로직, Amazon DynamoDB 작업을 별도 서브세그먼트로 추적합니다
+- 병목 지점을 정확히 식별하기 위해 서브세그먼트를 세분화합니다.
+- 입력 검증, 비즈니스 로직, Amazon DynamoDB 작업을 별도 서브세그먼트로 추적합니다.
 
 **오류 처리**:
 
-- 오류 발생 시 세그먼트에 오류 정보를 기록합니다
-- 오류 원인과 스택 트레이스를 메타데이터로 저장합니다
+- 오류 발생 시 세그먼트에 오류 정보를 기록합니다.
+- 오류 원인과 스택 트레이스를 메타데이터로 저장합니다.
 
 **샘플링 규칙**:
 
-- 프로덕션 환경에서는 샘플링 규칙을 사용하여 비용을 절감합니다
-- 중요한 요청은 100% 추적하고, 일반 요청은 샘플링합니다
+- 프로덕션 환경에서는 샘플링 규칙을 사용하여 비용을 절감합니다.
+- 중요한 요청은 100% 추적하고, 일반 요청은 샘플링합니다.
 - 예: 예약 생성은 100%, 예약 조회는 10% 샘플링
 - **기본 샘플링**: 초당 1개 요청 + 추가 요청의 5% (Reservoir + Fixed rate)
 - **커스텀 규칙**: AWS X-Ray 콘솔에서 URL 패턴, HTTP 메서드, 서비스별로 샘플링 비율 설정 가능
@@ -615,19 +733,19 @@ AWS X-Ray SDK/Daemon은 2026년 2월 25일부터 유지보수 모드에 진입�
 
 **권장 사항**:
 
-- 이 실습에서 사용한 `aws_xray_sdk`는 계속 동작하지만, 새로운 프로젝트에서는 OpenTelemetry 기반 계측을 권장합니다
-- OpenTelemetry는 벤더 중립적인 오픈소스 표준으로, AWS X-Ray뿐 아니라 다양한 백엔드(Jaeger, Zipkin 등)로 트레이스를 전송할 수 있습니다
-- AWS는 AWS Distro for OpenTelemetry(ADOT)를 통해 OpenTelemetry를 지원합니다
+- 이 실습에서 사용한 `aws_xray_sdk`는 계속 동작하지만, 새로운 프로젝트에서는 OpenTelemetry 기반 계측을 권장합니다.
+- OpenTelemetry는 벤더 중립적인 오픈소스 표준으로, AWS X-Ray뿐 아니라 다양한 백엔드(Jaeger, Zipkin 등)로 트레이스를 전송할 수 있습니다.
+- AWS는 AWS Distro for OpenTelemetry(ADOT)를 통해 OpenTelemetry를 지원합니다.
 
 **X-Ray SDK와 OpenTelemetry 비교**:
 
-| 항목 | AWS X-Ray SDK | OpenTelemetry (ADOT) |
-|------|---------------|----------------------|
-| 상태 | 유지보수 모드 (2026.02~) | 활발히 개발 중 |
-| 표준 | AWS 전용 | 벤더 중립 오픈소스 표준 |
-| 백엔드 | AWS X-Ray만 지원 | X-Ray, Jaeger, Zipkin 등 다중 지원 |
-| 자동 계측 | `patch_all()` | OpenTelemetry Auto-Instrumentation |
-| AWS Lambda 지원 | Active tracing | ADOT Lambda Layer |
+| 항목            | AWS X-Ray SDK            | OpenTelemetry (ADOT)               |
+| --------------- | ------------------------ | ---------------------------------- |
+| 상태            | 유지보수 모드 (2026.02~) | 활발히 개발 중                     |
+| 표준            | AWS 전용                 | 벤더 중립 오픈소스 표준            |
+| 백엔드          | AWS X-Ray만 지원         | X-Ray, Jaeger, Zipkin 등 다중 지원 |
+| 자동 계측       | `patch_all()`            | OpenTelemetry Auto-Instrumentation |
+| AWS Lambda 지원 | Active tracing           | ADOT Lambda Layer                  |
 
 **OpenTelemetry 마이그레이션 예시** (참고용):
 

@@ -83,9 +83,145 @@ Resources:
         - Key: CreatedBy
           Value: !Ref CreatedByTag
 
+  # AWS IAM 역할: Layer 빌더 Lambda 실행 역할
+  LayerBuilderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-LayerBuilder-Role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: LayerManagement
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:PublishLayerVersion
+                  - lambda:DeleteLayerVersion
+                  - lambda:GetLayerVersion
+                Resource: '*'
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Custom Resource Lambda: X-Ray SDK Layer 자동 빌드
+  XRaySDKLayerBuilder:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-LayerBuilder'
+      Runtime: python3.13
+      Handler: index.handler
+      Role: !GetAtt LayerBuilderRole.Arn
+      Timeout: 120
+      MemorySize: 512
+      Code:
+        ZipFile: |
+          """
+          Custom Resource: aws-xray-sdk Lambda Layer 자동 빌드
+
+          CloudFormation Custom Resource로 호출되어 aws-xray-sdk 패키지를
+          Lambda Layer로 빌드하고 배포합니다.
+          """
+          import json
+          import os
+          import subprocess
+          import zipfile
+          import boto3
+          import urllib.request
+
+          def handler(event, context):
+              response_data = {}
+              try:
+                  request_type = event['RequestType']
+                  if request_type == 'Delete':
+                      send_response(event, context, 'SUCCESS', {})
+                      return
+
+                  # pip install aws-xray-sdk to /tmp/python
+                  install_dir = '/tmp/python'
+                  os.makedirs(install_dir, exist_ok=True)
+                  subprocess.check_call([
+                      'pip', 'install', 'aws-xray-sdk', '-t', install_dir, '--quiet'
+                  ])
+
+                  # zip 패키징
+                  zip_path = '/tmp/xray-sdk-layer.zip'
+                  with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+                      for root, dirs, files in os.walk('/tmp/python'):
+                          for f in files:
+                              full_path = os.path.join(root, f)
+                              arcname = os.path.relpath(full_path, '/tmp')
+                              zf.write(full_path, arcname)
+
+                  # Layer 배포
+                  client = boto3.client('lambda')
+                  with open(zip_path, 'rb') as f:
+                      layer_content = f.read()
+
+                  response = client.publish_layer_version(
+                      LayerName=f"{os.environ.get('LAYER_NAME', 'xray-sdk-layer')}",
+                      Description='AWS X-Ray SDK for Python (auto-built)',
+                      Content={'ZipFile': layer_content},
+                      CompatibleRuntimes=['python3.13', 'python3.12'],
+                  )
+
+                  response_data['LayerVersionArn'] = response['LayerVersionArn']
+                  send_response(event, context, 'SUCCESS', response_data)
+
+              except Exception as e:
+                  print(f'Error: {e}')
+                  send_response(event, context, 'FAILED', {'Error': str(e)})
+
+          def send_response(event, context, status, data):
+              body = json.dumps({
+                  'Status': status,
+                  'Reason': f'See CloudWatch Log Stream: {context.log_stream_name}',
+                  'PhysicalResourceId': context.log_stream_name,
+                  'StackId': event['StackId'],
+                  'RequestId': event['RequestId'],
+                  'LogicalResourceId': event['LogicalResourceId'],
+                  'Data': data
+              })
+              req = urllib.request.Request(
+                  event['ResponseURL'],
+                  data=body.encode('utf-8'),
+                  headers={'Content-Type': 'application/json'},
+                  method='PUT'
+              )
+              urllib.request.urlopen(req)
+      Environment:
+        Variables:
+          LAYER_NAME: !Sub '${EnvironmentName}-xray-sdk'
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Custom Resource: Layer 빌드 트리거
+  XRaySDKLayer:
+    Type: Custom::XRaySDKLayer
+    Properties:
+      ServiceToken: !GetAtt XRaySDKLayerBuilder.Arn
+
   # AWS Lambda 함수: CreateReservation (X-Ray SDK 통합)
   CreateReservationFunction:
     Type: AWS::Lambda::Function
+    DependsOn: XRaySDKLayer
     Properties:
       FunctionName: !Sub '${EnvironmentName}-CreateReservation'
       Runtime: python3.13
@@ -94,6 +230,8 @@ Resources:
       Timeout: 30
       TracingConfig:
         Mode: Active
+      Layers:
+        - !GetAtt XRaySDKLayer.LayerVersionArn
       Environment:
         Variables:
           TABLE_NAME: !Ref ReservationsTable
@@ -188,6 +326,7 @@ Resources:
   # AWS Lambda 함수: GetReservations (X-Ray SDK 통합)
   GetReservationsFunction:
     Type: AWS::Lambda::Function
+    DependsOn: XRaySDKLayer
     Properties:
       FunctionName: !Sub '${EnvironmentName}-GetReservations'
       Runtime: python3.13
@@ -196,6 +335,8 @@ Resources:
       Timeout: 30
       TracingConfig:
         Mode: Active
+      Layers:
+        - !GetAtt XRaySDKLayer.LayerVersionArn
       Environment:
         Variables:
           TABLE_NAME: !Ref ReservationsTable
@@ -241,7 +382,9 @@ Resources:
                   dict: HTTP 응답 (statusCode, headers, body)
               """
               try:
-                  user_id = 'anonymous'
+                  # 쿼리 파라미터에서 userId 추출 (기본값: anonymous)
+                  params = event.get('queryStringParameters') or {}
+                  user_id = params.get('userId', 'anonymous')
 
                   # 커스텀 서브세그먼트: DynamoDB 조회
                   subsegment = xray_recorder.begin_subsegment('get_reservations')
@@ -328,7 +471,21 @@ Resources:
       - GetReservationsMethod
     Properties:
       RestApiId: !Ref QuickTableXRayAPI
+
+  ApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
       StageName: prod
+      RestApiId: !Ref QuickTableXRayAPI
+      DeploymentId: !Ref ApiDeployment
+      TracingEnabled: true
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
 
   CreateReservationInvokePermission:
     Type: AWS::Lambda::Permission
@@ -349,7 +506,7 @@ Resources:
 Outputs:
   ApiUrl:
     Description: API Gateway Invoke URL
-    Value: !Sub 'https://${QuickTableXRayAPI}.execute-api.${AWS::Region}.amazonaws.com/prod'
+    Value: !Sub 'https://${QuickTableXRayAPI}.execute-api.${AWS::Region}.amazonaws.com/${ApiStage}'
 
   CreateFunctionName:
     Description: CreateReservation Lambda Function Name

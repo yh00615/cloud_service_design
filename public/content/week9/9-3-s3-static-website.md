@@ -602,6 +602,22 @@ git push origin main
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 > 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
+### Amazon CloudWatch Log Group 삭제
+
+> [!WARNING]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
+25. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+26. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+27. 검색창에 `week9-3`를 입력합니다.
+28. `/aws/codebuild/student-week9-3-website-build` 로그 그룹의 체크박스를 선택합니다.
+
+> [!NOTE]
+> 로그 그룹 이름에 Parameters에서 설정한 StudentId가 포함되어 있습니다 (예: `student-week9-3-website-build`).
+
+29. **Actions** > `Delete log group(s)`를 선택합니다.
+30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
