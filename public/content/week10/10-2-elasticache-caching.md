@@ -61,6 +61,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 2. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week10/10-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 3. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 4. **Specify template**에서 `Upload a template file`을 선택합니다.
 5. [[Choose file]] 버튼을 클릭한 후 다운로드한 `week10-2-elasticache-lab.yaml` 파일을 선택합니다.

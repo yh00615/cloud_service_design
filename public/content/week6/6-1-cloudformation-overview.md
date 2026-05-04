@@ -89,6 +89,9 @@ Outputs:
 4. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
 5. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 6. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week6/6-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 7. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 8. **Specify template**에서 `Upload a template file`을 선택합니다.
 9. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-create.yaml` 파일을 선택합니다.

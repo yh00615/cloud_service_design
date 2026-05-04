@@ -56,6 +56,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week2-2-iam-role-assumerole.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week2/2-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week2-2-iam-role-assumerole.yaml` 파일을 선택합니다.
@@ -653,8 +656,8 @@ aws sts get-caller-identity
 
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `2-2`
+   - **Tag key**: `Week`
+   - **Tag value**: `2-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -728,8 +731,10 @@ aws sts get-caller-identity
 30. **Regions**에서 `All regions`를 선택합니다.
 31. **Resource types**에서 `All supported resource types`를 선택합니다.
 32. **Tags** 섹션에서 다음 태그를 입력합니다:
-   - **Tag key**: `Week`
-   - **Optional tag value**: `2-2`
+
+- **Tag key**: `Week`
+- **Optional tag value**: `2-2`
+
 33. [[Search resources]] 버튼을 클릭합니다.
 34. 검색 결과가 비어있는지 확인합니다.
 

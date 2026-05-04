@@ -94,6 +94,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week11-3-data-pipeline-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week11/11-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week11-3-data-pipeline-lab.yaml` 파일을 선택합니다.
@@ -165,7 +168,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!IMPORTANT]
 > `{StudentId}`를 본인의 학번 또는 고유 식별자로 변경합니다. 예: `week11_pipeline_20240001`
 >
-> AWS Glue Database 이름에는 하이픈(-)을 사용할 수 없습니다. 언더스코어(_)를 사용합니다.
+> AWS Glue Database 이름에는 하이픈(-)을 사용할 수 없습니다. 언더스코어(\_)를 사용합니다.
 
 30. **Location - optional**에 `s3://week11-data-{StudentId}-ap-northeast-2/`를 입력합니다.
 31. **Description - optional**에 `Week 11-3 data pipeline lab database`를 입력합니다.
@@ -335,6 +338,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 > [!NOTE]
 > AWS Glue 5.1이 2026년 2월부터 서울 리전에서 사용 가능합니다. 콘솔 기본값이 `Glue 5.0` 또는 `Glue 5.1`로 표시될 수 있으며, 어느 버전이든 이 실습에서는 동일하게 동작합니다.
+
     - **Language**: `Python 3` 유지 (기본값)
     - **Worker type**: `G 1X` 유지 (기본값)
     - **Automatically scale the number of workers**: 체크 해제
@@ -598,8 +602,8 @@ SELECT COUNT(*) as total_records FROM raw;
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `11-3`
+   - **Tag key**: `Week`
+   - **Tag value**: `11-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -814,11 +818,11 @@ DROP TABLE IF EXISTS processed_transactions;
 
 ### CSV vs Parquet 비교
 
-| 특성 | CSV | Parquet |
-| --- | --- | --- |
-| 저장 방식 | 행 기반 (텍스트) | 컬럼 기반 (바이너리) |
-| 압축률 | 낮음 | 높음 (Snappy, GZIP 등) |
-| 쿼리 성능 | 전체 행 스캔 필요 | 필요한 컬럼만 읽기 |
-| Athena 비용 | 높음 (전체 데이터 스캔) | 낮음 (컬럼 선택적 스캔) |
-| 사람 가독성 | 텍스트 에디터로 확인 가능 | 전용 도구 필요 |
+| 특성        | CSV                        | Parquet                  |
+| ----------- | -------------------------- | ------------------------ |
+| 저장 방식   | 행 기반 (텍스트)           | 컬럼 기반 (바이너리)     |
+| 압축률      | 낮음                       | 높음 (Snappy, GZIP 등)   |
+| 쿼리 성능   | 전체 행 스캔 필요          | 필요한 컬럼만 읽기       |
+| Athena 비용 | 높음 (전체 데이터 스캔)    | 낮음 (컬럼 선택적 스캔)  |
+| 사람 가독성 | 텍스트 에디터로 확인 가능  | 전용 도구 필요           |
 | 적합한 용도 | 데이터 교환, 소규모 데이터 | 분석 쿼리, 대규모 데이터 |
