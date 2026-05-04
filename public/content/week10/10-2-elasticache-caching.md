@@ -84,6 +84,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 11. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 12. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
+    <img src="/images/week10/10-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
@@ -831,33 +833,33 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. Amazon EC2 콘솔로 이동합니다.
-8. 왼쪽 메뉴에서 **Instances**를 선택합니다.
-9. `quicktable-cache-client` 인스턴스를 선택합니다.
-10. **Instance state** > `Terminate instance`를 선택합니다.
-11. 확인 창에서 [[Terminate]] 버튼을 클릭합니다.
-12. Amazon ElastiCache 콘솔로 이동합니다.
-13. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
-14. `quicktable-cache` 캐시를 선택합니다.
-15. **Actions** > `Delete`를 선택합니다.
-16. **Create backup**에서 `No`를 선택합니다.
-17. 확인 창에서 `quicktable-cache`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+10. Amazon EC2 콘솔로 이동합니다.
+11. 왼쪽 메뉴에서 **Instances**를 선택합니다.
+12. `quicktable-cache-client` 인스턴스를 선택합니다.
+13. **Instance state** > `Terminate instance`를 선택합니다.
+14. 확인 창에서 [[Terminate]] 버튼을 클릭합니다.
+15. Amazon ElastiCache 콘솔로 이동합니다.
+16. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
+17. `quicktable-cache` 캐시를 선택합니다.
+18. **Actions** > `Delete`를 선택합니다.
+19. **Create backup**에서 `No`를 선택합니다.
+20. 확인 창에서 `quicktable-cache`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon ElastiCache 캐시 삭제에 5-10분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
 
-18. Amazon S3 콘솔로 이동합니다.
-19. 태스크 0에서 생성한 `LabFilesBucketName` 값의 버킷을 선택합니다.
-20. [[Empty]] 버튼을 클릭합니다.
-21. 확인 창에서 `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+21. Amazon S3 콘솔로 이동합니다.
+22. 태스크 0에서 생성한 `LabFilesBucketName` 값의 버킷을 선택합니다.
+23. [[Empty]] 버튼을 클릭합니다.
+24. 확인 창에서 `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-22. AWS CloudFormation 콘솔로 이동합니다.
-23. `week10-2-quicktable-cache-stack` 스택을 선택합니다.
-24. [[Delete stack]] 버튼을 클릭합니다.
-25. 확인 창에서 스택 이름 `week10-2-quicktable-cache-stack`을 입력합니다.
-26. [[Delete stack]] 버튼을 클릭합니다.
+25. AWS CloudFormation 콘솔로 이동합니다.
+26. `week10-2-quicktable-cache-stack` 스택을 선택합니다.
+27. [[Delete stack]] 버튼을 클릭합니다.
+28. 확인 창에서 스택 이름 `week10-2-quicktable-cache-stack`을 입력합니다.
+29. [[Delete stack]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon VPC, 서브넷, 보안 그룹, NAT Gateway, Amazon DynamoDB 테이블, Amazon S3 버킷, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -866,14 +868,14 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-27. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-28. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-29. **Regions**에서 `ap-northeast-2`를 선택합니다.
-30. **Resource types**에서 `All supported resource types`를 선택합니다.
-31. **Tags** 섹션에서 다음을 입력합니다:
+30. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+31. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+32. **Regions**에서 `ap-northeast-2`를 선택합니다.
+33. **Resource types**에서 `All supported resource types`를 선택합니다.
+34. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `10-2`
-32. [[Search resources]] 버튼을 클릭합니다.
+35. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.

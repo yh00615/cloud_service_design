@@ -74,12 +74,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-   <img src="/images/week12/12-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week12/12-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week12-1-secrets-manager-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+
+<img src="/images/week12/12-1-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
+
 9. **Stack name**에 `week12-1-secrets-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **ProjectTag**: `AWS-Lab` (기본값 유지)
@@ -92,6 +95,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > Parameters에서 설정한 태그 값(Project, Week, CreatedBy)은 모든 리소스에 자동으로 적용됩니다. 별도로 Tags 섹션에서 추가할 필요가 없습니다.
 
 11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task0-step11-options.png" alt="CloudFormation Configure stack options" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -99,6 +105,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
+
+    <img src="/images/week12/12-1-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-sm" />
 
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
@@ -117,6 +125,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `DBUsername`: 데이터베이스 사용자 이름 (admin)
     - `LambdaFunctionName`: AWS Lambda 함수 이름
 
+    <img src="/images/week12/12-1-task0-step19-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 > [!IMPORTANT]
 > 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
 
@@ -130,6 +140,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 21. 왼쪽 메뉴에서 **Customer managed keys**를 선택합니다.
 22. [[Create key]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-1-task1-step22-createkey.png" alt="KMS Create key" class="guide-img-md" />
+
 ### Step 1: Configure key
 
 23. **Key type**에서 `Symmetric`이 선택되어 있는지 확인합니다.
@@ -139,6 +151,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > **Advanced options**의 **Key material origin**은 `KMS - recommended`, **Regionality**는 `Single-region key`를 기본값으로 유지합니다.
 
 25. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task1-step25-configkey.png" alt="KMS Configure key" class="guide-img-md" />
 
 ### Step 2: Add labels
 
@@ -154,16 +168,22 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 29. [[Next]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-1-task1-step29-labels.png" alt="KMS Add labels" class="guide-img-md" />
+
 ### Step 3: Define key administrative permissions
 
 30. **Key administrators** 섹션에서 본인의 AWS IAM 사용자를 선택합니다.
 31. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task1-step31-admin.png" alt="KMS Key administrative permissions" class="guide-img-md" />
 
 ### Step 4: Define key usage permissions
 
 32. **Key users** 섹션에서 AWS CloudFormation이 생성한 AWS Lambda 실행 역할을 선택합니다.
     - 검색창에 `week12-1`을 입력하여 `week12-1-lambda-secrets-role`을 찾아 선택합니다.
 33. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task1-step33-usage.png" alt="KMS Key usage permissions" class="guide-img-md" />
 
 ### Step 5: Edit key policy
 
@@ -172,11 +192,17 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 34. [[Next]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-1-task1-step34-policy.png" alt="KMS Edit key policy" class="guide-img-md" />
+
 ### Step 6: Review
 
 35. 설정을 검토하고 [[Finish]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-1-task1-step35-review.png" alt="KMS Review" class="guide-img-md" />
+
 ✅ **태스크 완료**: AWS KMS 키가 생성되었습니다.
+
+<img src="/images/week12/12-1-task1-complete.png" alt="KMS 키 생성 완료" class="guide-img-md" />
 
 ## 태스크 2: AWS Secrets Manager에 Amazon RDS 자격증명 저장
 
@@ -184,6 +210,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 36. 상단 검색창에 `Secrets Manager`을 입력하고 선택합니다.
 37. [[Store a new secret]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task2-step37-store.png" alt="Secrets Manager Store a new secret" class="guide-img-md" />
+
 38. **Secret type**에서 `Credentials for Amazon RDS database`를 선택합니다.
 39. **User name**에 `admin`을 입력합니다.
 40. **Password**에 `LabPassword456!`을 입력합니다.
@@ -196,6 +225,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - 인스턴스 ID: `week12-1-mysql-db`
 
 43. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task2-step43-name.png" alt="Secrets Manager Secret name" class="guide-img-md" />
+
 44. **Secret name**에 `prod/db/mysql/credentials`를 입력합니다.
 45. **Description**에 `Production MySQL database credentials`를 입력합니다.
 46. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
@@ -207,6 +239,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `CreatedBy` | `Student` |
 
 47. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task2-step47-rotation.png" alt="Secrets Manager Rotation configuration" class="guide-img-md" />
+
 48. **Automatic rotation** 토글을 활성화합니다.
 
 > [!IMPORTANT]
@@ -233,13 +268,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > `Create default role`을 선택하면 로테이션 함수에 필요한 AWS IAM 역할이 자동으로 생성됩니다.
 
 51. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task2-step51-next.png" alt="Secrets Manager Rotation function" class="guide-img-md" />
+
 52. 설정을 검토합니다.
+
+    <img src="/images/week12/12-1-task2-step52-review.png" alt="Secrets Manager Review" class="guide-img-md" />
+
 53. [[Store]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 시크릿 생성 후 "AWS CloudFormation is setting up rotation resources, this can take up to two minutes to complete" 메시지가 표시됩니다. AWS Secrets Manager가 로테이션 AWS Lambda 함수를 자동으로 생성하고 있으며, **2분 정도 기다린 후** 페이지를 새로고침합니다.
 
 ✅ **태스크 완료**: Amazon RDS 자격증명이 저장되고 자동 로테이션이 설정되었습니다.
+
+<img src="/images/week12/12-1-task2-complete.png" alt="Secrets Manager 시크릿 생성 완료" class="guide-img-md" />
 
 ## 태스크 3: 자동 로테이션 테스트
 
@@ -249,13 +292,23 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 55. **Rotation** 탭을 선택합니다.
 56. **Lambda rotation function** 링크(`SecretsManagermysql-rotation-lambda`)를 클릭하여 AWS Lambda 콘솔로 이동합니다.
 
+    <img src="/images/week12/12-1-task3-step56-rotation.png" alt="Secrets Manager Rotation 탭" class="guide-img-md" />
+
 > [!NOTE]
 > **Rotation** 탭 하단의 **Lambda rotation function**에 링크가 표시됩니다. 링크가 표시되지 않으면 상단 검색창에 `Lambda`를 입력하고 `SecretsManagermysql-rotation-lambda` 함수를 직접 선택합니다.
 
 57. **Configuration** 탭 > **VPC**를 선택합니다.
 58. [[Edit]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task3-step58-edit.png" alt="Lambda VPC Edit" class="guide-img-md" />
+
 59. **Security groups**에서 `week12-1-rds-sg`를 제거하고 `week12-1-lambda-sg`를 선택합니다.
+
+    <img src="/images/week12/12-1-task3-step59-sg.png" alt="Lambda Security groups 변경" class="guide-img-md" />
+
 60. [[Save]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task3-step60-save.png" alt="Lambda VPC Save" class="guide-img-md" />
 
 > [!IMPORTANT]
 > AWS Secrets Manager가 자동 생성한 로테이션 AWS Lambda 함수는 Amazon RDS의 보안 그룹(`week12-1-rds-sg`)을 기본으로 사용합니다. 이 보안 그룹은 아웃바운드 HTTPS(443)가 허용되지 않아 AWS Secrets Manager API에 접근할 수 없습니다. `week12-1-lambda-sg`로 변경하면 Amazon RDS 접근(3306)과 AWS Secrets Manager API 접근(443) 모두 가능합니다.
@@ -263,6 +316,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 61. AWS Secrets Manager 콘솔로 돌아가서 `prod/db/mysql/credentials` 시크릿을 선택합니다.
 62. **Rotation** 탭을 선택합니다.
 63. **Rotation status**가 `Enabled`로 표시되는지 확인합니다.
+
+    <img src="/images/week12/12-1-task3-step63-status.png" alt="Secrets Manager Rotation status" class="guide-img-md" />
 
 > [!NOTE]
 > 시크릿 생성 직후에는 **Rotation status**가 `Disabled`로 표시될 수 있습니다. AWS CloudFormation이 로테이션 리소스를 설정하는 데 최대 2분이 소요됩니다. 페이지를 새로고침하여 `Enabled`로 변경될 때까지 기다립니다.
@@ -284,11 +339,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 64. **Last rotated date**에 값이 표시되는지 확인합니다. 2-3분 소요될 수 있으므로 페이지를 새로고침하며 기다립니다.
 
+    <img src="/images/week12/12-1-task3-step64-lastrotated.png" alt="Secrets Manager Last rotated date" class="guide-img-md" />
+
 > [!NOTE]
 > 보안 그룹 변경 후 이전에 실패했던 로테이션이 자동으로 재시도되어 성공할 수 있습니다. **Last rotated date**에 값이 이미 표시되면 아래 Rotate secret immediately 단계를 건너뛰어도 됩니다. 자동 재시도까지 2-3분 소요될 수 있으므로 페이지를 새로고침하며 기다립니다.
 
 65. **Last rotated date**가 `-`인 경우 [[Rotate secret immediately]] 버튼을 클릭합니다.
 66. 확인 창에서 [[Rotate]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task3-step66-confirm.png" alt="Secrets Manager Rotate 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 > "Secret scheduled for rotation" 메시지가 표시됩니다.
@@ -335,9 +394,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 6. **Rotation** 탭에서 [[Rotate secret immediately]] 버튼을 클릭합니다.
 
 67. 1-2분 후 페이지를 새로고침합니다.
+
+    <img src="/images/week12/12-1-task3-step66-rotate.png" alt="Secrets Manager Rotate secret" class="guide-img-md" />
+
 68. **Last rotated date**에 날짜가 표시되면 로테이션이 성공한 것입니다.
 69. **Overview** 탭을 선택합니다.
 70. **Secret value** 섹션에서 [[Retrieve secret value]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task3-step70-secretvalue.png" alt="Secrets Manager Secret value" class="guide-img-md" />
 
 > [!NOTE]
 > **Key/value** 탭에서 다음과 같이 표시됩니다:
@@ -367,6 +431,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 72. 상단 검색창에 `Systems Manager`을 입력하고 선택합니다.
 73. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
 74. [[Create parameter]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task4-step74-create.png" alt="Parameter Store Create parameter" class="guide-img-md" />
+
 75. **Name**에 `/prod/app/config/db-connection-string`을 입력합니다.
 76. **Description**에 `Database connection string`을 입력합니다.
 77. **Tier**에서 `Standard`를 선택합니다.
@@ -381,6 +448,8 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 
 예: `mysql://admin:password@week12-1-mysql-db.xxxxx.ap-northeast-2.rds.amazonaws.com:3306/mydb`
 
+<img src="/images/week12/12-1-task4-step81-value.png" alt="Parameter Store Value 입력" class="guide-img-md" />
+
 > [!NOTE]
 > 이 연결 문자열은 예시입니다. 실제 환경에서는 비밀번호를 하드코딩하지 말고 AWS Secrets Manager에서 가져와야 합니다.
 
@@ -394,7 +463,11 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 
 83. [[Create parameter]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-1-task4-step83-created.png" alt="Parameter Store 파라미터 생성 완료" class="guide-img-md" />
+
 ✅ **태스크 완료**: 데이터베이스 연결 문자열이 AWS Systems Manager Parameter Store에 저장되었습니다.
+
+<img src="/images/week12/12-1-task4-complete.png" alt="Parameter Store 파라미터 목록" class="guide-img-md" />
 
 ## 태스크 5: AWS Lambda 함수 테스트
 
@@ -403,6 +476,9 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 84. 상단 검색창에 `Lambda`을 입력하고 선택합니다.
 85. `access-secrets-demo` 함수를 선택합니다.
 86. **Code** 탭을 선택합니다.
+
+    <img src="/images/week12/12-1-task5-step86-code.png" alt="Lambda Code 탭" class="guide-img-md" />
+
 87. 코드를 확인합니다:
     - AWS Secrets Manager에서 자격증명 조회
     - AWS Systems Manager Parameter Store에서 파라미터 조회
@@ -443,8 +519,13 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > **Event JSON**은 기본값(`{}`)을 유지합니다.
 
 91. [[Save]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-task5-step91-save.png" alt="Lambda Test event Save" class="guide-img-md" />
+
 92. [[Test]] 버튼을 클릭합니다.
 93. 실행 결과를 확인합니다.
+
+    <img src="/images/week12/12-1-task5-step93-result.png" alt="Lambda 실행 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -504,6 +585,12 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 94. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
 95. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 
+    <img src="/images/week12/12-1-task5-step95-cwl1.png" alt="CloudWatch Log Management" class="guide-img-md" />
+
+    <img src="/images/week12/12-1-task5-step95-cwl2.png" alt="CloudWatch Log groups" class="guide-img-md" />
+
+    <img src="/images/week12/12-1-task5-step95-cwl3.png" alt="CloudWatch Log streams" class="guide-img-md" />
+
 > [!NOTE]
 > Amazon CloudWatch Logs에서 다음 2개의 로그 그룹을 확인할 수 있습니다:
 >
@@ -533,6 +620,8 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
    - **Tag value**: `12-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+<img src="/images/week12/12-1-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
@@ -546,6 +635,8 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
 > 콘솔 방식이 더 편하다면 아래 [옵션 2](#option-2)를 참고합니다.
 
 7. AWS CloudShell에서 AWS Secrets Manager 시크릿을 즉시 삭제합니다:
+
+<img src="/images/week12/12-1-cleanup-step7-secrets.png" alt="Secrets Manager 시크릿 삭제" class="guide-img-md" />
 
 ```bash
 aws secretsmanager delete-secret --secret-id prod/db/mysql/credentials --force-delete-without-recovery --region ap-northeast-2
@@ -561,6 +652,8 @@ aws secretsmanager delete-secret --secret-id prod/db/mysql/credentials --force-d
 
 8. AWS Systems Manager Parameter Store 파라미터를 삭제합니다:
 
+<img src="/images/week12/12-1-cleanup-step8-secrets-delete.png" alt="Parameter Store 파라미터 삭제" class="guide-img-md" />
+
 ```bash
 aws ssm delete-parameter --name /prod/app/config/db-connection-string --region ap-northeast-2
 ```
@@ -573,6 +666,8 @@ aws ssm delete-parameter --name /prod/app/config/db-connection-string --region a
 > ```
 
 9. AWS KMS 키 삭제를 예약합니다:
+
+<img src="/images/week12/12-1-cleanup-step9-ssm.png" alt="KMS 키 삭제 예약" class="guide-img-md" />
 
 ```bash
 KEY_ID=$(aws kms list-aliases --query "Aliases[?AliasName=='alias/secrets-encryption-key'].TargetKeyId | [0]" --output text --region ap-northeast-2)
@@ -590,6 +685,8 @@ aws kms schedule-key-deletion --key-id $KEY_ID --pending-window-in-days 7 --regi
 > `PendingDeletion`이 출력되면 삭제 예약 완료입니다.
 
 10. 로테이션 AWS Lambda 함수를 삭제합니다:
+
+    <img src="/images/week12/12-1-cleanup-step10-ssm-delete.png" alt="Lambda 함수 삭제" class="guide-img-md" />
 
 ```bash
 aws lambda delete-function --function-name SecretsManagermysql-rotation-lambda --region ap-northeast-2
@@ -609,52 +706,94 @@ aws lambda delete-function --function-name SecretsManagermysql-rotation-lambda -
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. 상단 검색창에 `Secrets Manager`를 입력하고 선택합니다.
-8. `prod/db/mysql/credentials` 시크릿을 선택합니다.
-9. **Actions** > `Delete secret`을 선택합니다.
-10. **Waiting period**를 `7`일로 설정하고 [[Schedule deletion]] 버튼을 클릭합니다.
-11. 상단 검색창에 `Systems Manager`를 입력하고 선택합니다.
-12. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
-13. `/prod/app/config/db-connection-string` 파라미터를 선택합니다.
-14. [[Delete]] 버튼을 클릭합니다.
-15. 확인 창에서 [[Delete parameters]] 버튼을 클릭합니다.
-16. 상단 검색창에 `KMS`를 입력하고 선택합니다.
-17. 왼쪽 메뉴에서 **Customer managed keys**를 선택합니다.
-18. `secrets-encryption-key`를 선택합니다.
-19. **Key actions** > `Schedule key deletion`을 선택합니다.
-20. **Waiting period (in days)**에 `7`을 입력합니다.
-21. **Confirmation** 섹션에서 `I confirm that I want to schedule these keys for deletion` 체크박스를 선택합니다.
-22. [[Schedule deletion]] 버튼을 클릭합니다.
-23. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
-24. `SecretsManagermysql-rotation-lambda` 함수를 선택합니다.
-25. **Actions** > `Delete`를 선택합니다.
-26. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+11. 상단 검색창에 `Secrets Manager`를 입력하고 선택합니다.
+
+12. `prod/db/mysql/credentials` 시크릿을 선택합니다.
+
+13. **Actions** > `Delete secret`을 선택합니다.
+
+    <img src="/images/week12/12-1-cleanup-step13-kms.png" alt="Delete secret" class="guide-img-md" />
+
+14. **Waiting period**를 `7`일로 설정하고 [[Schedule deletion]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step14-kms-delete.png" alt="Schedule deletion" class="guide-img-sm" />
+
+15. 상단 검색창에 `Systems Manager`를 입력하고 선택합니다.
+16. 왼쪽 메뉴에서 **Parameter Store**를 선택합니다.
+17. `/prod/app/config/db-connection-string` 파라미터를 선택합니다.
+
+18. [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step18-lambda.png" alt="Parameter Store 삭제" class="guide-img-md" />
+
+19. 확인 창에서 [[Delete parameters]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step19-cfn.png" alt="Delete parameters 확인" class="guide-img-sm" />
+
+20. 상단 검색창에 `KMS`를 입력하고 선택합니다.
+21. 왼쪽 메뉴에서 **Customer managed keys**를 선택합니다.
+22. `secrets-encryption-key`를 선택합니다.
+
+23. **Key actions** > `Schedule key deletion`을 선택합니다.
+
+    <img src="/images/week12/12-1-cleanup-step23-cwl.png" alt="KMS Schedule key deletion" class="guide-img-md" />
+
+24. **Waiting period (in days)**에 `7`을 입력합니다.
+25. **Confirmation** 섹션에서 `I confirm that I want to schedule these keys for deletion` 체크박스를 선택합니다.
+26. [[Schedule deletion]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step26-lambda-delete.png" alt="KMS 삭제 예약 완료" class="guide-img-md" />
+
+27. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
+28. `SecretsManagermysql-rotation-lambda` 함수를 선택합니다.
+29. **Actions** > `Delete`를 선택합니다.
+
+    <img src="/images/week12/12-1-cleanup-step29-nested.png" alt="Lambda Actions Delete" class="guide-img-md" />
+
+30. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step30-nested-delete.png" alt="Lambda 삭제 확인" class="guide-img-sm" />
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-27. AWS CloudFormation 콘솔로 이동합니다.
-28. `SecretsManagerRDSMySQLRotationSingleUser`로 시작하는 중첩(NESTED) 스택을 선택합니다.
-29. [[Delete]] 버튼을 클릭합니다.
-30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+31. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+32. `SecretsManagerRDSMySQLRotationSingleUser`로 시작하는 중첩(NESTED) 스택을 선택합니다.
+33. [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step33-cfn-delete.png" alt="중첩 스택 삭제" class="guide-img-md" />
+
+34. 확인 창에서 스택 이름을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step34-cwl.png" alt="중첩 스택 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > 이 중첩 스택은 AWS Secrets Manager가 로테이션을 설정할 때 자동으로 생성한 것입니다. 로테이션 AWS Lambda 함수와 AWS IAM 역할이 포함되어 있습니다. 2개가 표시될 수 있으며, 모두 삭제합니다.
 
-31. `week12-1-secrets-lab-stack` 스택을 선택합니다.
-32. [[Delete]] 버튼을 클릭합니다.
-33. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+35. `week12-1-secrets-lab-stack` 스택을 선택합니다.
+36. [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step36-cwl-select.png" alt="CloudFormation 스택 삭제" class="guide-img-md" />
+
+37. 확인 창에서 스택 이름 `week12-1-secrets-lab-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step37-cwl-delete.png" alt="CloudFormation 스택 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > 스택 삭제에 10-15분이 소요됩니다 (Amazon RDS 인스턴스 포함). AWS CloudFormation 스택을 삭제하면 Amazon RDS, Amazon VPC, AWS Lambda 함수, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 ### 단계 4: Amazon CloudWatch Log Group 삭제
 
-34. Amazon CloudWatch 콘솔로 이동합니다.
-35. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-36. 검색창에 `SecretsManagermysql`을 입력합니다.
-37. `/aws/lambda/SecretsManagermysql-rotation-lambda` 로그 그룹의 체크박스를 선택합니다.
-38. **Actions** > `Delete log group(s)`를 선택합니다.
-39. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+38. Amazon CloudWatch 콘솔로 이동합니다.
+39. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+40. 검색창에 `SecretsManagermysql`을 입력합니다.
+41. `/aws/lambda/SecretsManagermysql-rotation-lambda` 로그 그룹의 체크박스를 선택합니다.
+42. **Actions** > `Delete log group(s)`를 선택합니다.
+
+    <img src="/images/week12/12-1-cleanup-step42-actions.png" alt="CloudWatch Delete log group" class="guide-img-md" />
+
+43. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step43-delete.png" alt="CloudWatch Delete 확인" class="guide-img-sm" />
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
@@ -675,18 +814,22 @@ aws lambda delete-function --function-name SecretsManagermysql-rotation-lambda -
 >
 > 출력이 없으면 삭제 완료입니다.
 
+<img src="/images/week12/12-1-cleanup-cli-loggroup.png" alt="CLI 로그 그룹 삭제" class="guide-img-md" />
+
 ### 단계 5: 최종 삭제 확인 (Tag Editor 활용)
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-40. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-41. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-42. **Regions**에서 `ap-northeast-2`를 선택합니다.
-43. **Resource types**에서 `All supported resource types`를 선택합니다.
-44. **Tags** 섹션에서 다음을 입력합니다:
+44. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+45. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+46. **Regions**에서 `ap-northeast-2`를 선택합니다.
+47. **Resource types**에서 `All supported resource types`를 선택합니다.
+48. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `12-1`
-45. [[Search resources]] 버튼을 클릭합니다.
+49. [[Search resources]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-1-cleanup-step49-tageditor.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.

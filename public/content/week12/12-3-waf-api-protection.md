@@ -96,6 +96,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
+    <img src="/images/week12/12-3-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
@@ -684,32 +686,32 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. 상단 검색창에 `WAF`를 입력하고 **WAF & Shield**를 선택합니다.
-8. 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
-9. `QuickTable-WAF-WebACL`을 선택합니다.
-10. [[Actions]] 드롭다운에서 **Delete protection pack (web ACL)**을 선택합니다.
-11. 확인 창에 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+10. 상단 검색창에 `WAF`를 입력하고 **WAF & Shield**를 선택합니다.
+11. 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
+12. `QuickTable-WAF-WebACL`을 선택합니다.
+13. [[Actions]] 드롭다운에서 **Delete protection pack (web ACL)**을 선택합니다.
+14. 확인 창에 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-12. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
-13. `week12-3-waf-api-protection-stack` 스택을 선택합니다.
-14. [[Delete]] 버튼을 클릭합니다.
-15. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+15. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+16. `week12-3-waf-api-protection-stack` 스택을 선택합니다.
+17. [[Delete stack]] 버튼을 클릭합니다.
+18. 확인 창에서 스택 이름 `week12-3-waf-api-protection-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
 
 ### 단계 4: Amazon CloudWatch Log Group 삭제
 
-16. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-17. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-18. 검색창에 `Week12-3`을 입력합니다.
-19. 다음 로그 그룹의 체크박스를 선택합니다:
+19. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+20. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+21. 검색창에 `Week12-3`을 입력합니다.
+22. 다음 로그 그룹의 체크박스를 선택합니다:
     - `/aws/lambda/Week12-3-CreateReservation`
     - `/aws/lambda/Week12-3-GetReservations`
-20. **Actions** > `Delete log group(s)`를 선택합니다.
-21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+23. **Actions** > `Delete log group(s)`를 선택합니다.
+24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다. 이 외에 이번 실습과 관련된 로그 그룹이 남아있다면 함께 삭제합니다.
@@ -734,14 +736,14 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-22. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-23. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-24. **Regions**에서 `ap-northeast-2`를 선택합니다.
-25. **Resource types**에서 `All supported resource types`를 선택합니다.
-26. **Tags** 섹션에서 다음을 입력합니다:
+25. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+26. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+27. **Regions**에서 `ap-northeast-2`를 선택합니다.
+28. **Resource types**에서 `All supported resource types`를 선택합니다.
+29. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `12-3`
-27. [[Search resources]] 버튼을 클릭합니다.
+30. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.

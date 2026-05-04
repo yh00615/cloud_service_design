@@ -514,15 +514,15 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-8. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
-9. 검색창에 `week13-2-xray-lab`을 입력합니다.
-10. 다음 로그 그룹의 체크박스를 선택합니다:
+8. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+9. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+10. 검색창에 `week13-2-xray-lab`을 입력합니다.
+11. 다음 로그 그룹의 체크박스를 선택합니다:
     - `/aws/lambda/week13-2-xray-lab-CreateReservation`
     - `/aws/lambda/week13-2-xray-lab-GetReservations`
     - `/aws/lambda/week13-2-xray-lab-LayerBuilder`
-11. **Actions** > `Delete log group(s)`를 선택합니다.
-12. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+12. **Actions** > `Delete log group(s)`를 선택합니다.
+13. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다.
@@ -530,10 +530,10 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-13. AWS CloudFormation 콘솔로 이동합니다.
-14. `week13-2-xray-lab-stack` 스택을 선택합니다.
-15. [[Delete]] 버튼을 클릭합니다.
-16. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+14. AWS CloudFormation 콘솔로 이동합니다.
+15. `week13-2-xray-lab-stack` 스택을 선택합니다.
+16. [[Delete]] 버튼을 클릭합니다.
+17. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, AWS Lambda Layer, Amazon API Gateway, AWS IAM 역할이 모두 자동으로 삭제됩니다.
@@ -543,14 +543,14 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-17. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-18. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-19. **Regions**에서 `ap-northeast-2`를 선택합니다.
-20. **Resource types**에서 `All supported resource types`를 선택합니다.
-21. **Tags** 섹션에서 다음을 입력합니다:
+18. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+19. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+20. **Regions**에서 `ap-northeast-2`를 선택합니다.
+21. **Resource types**에서 `All supported resource types`를 선택합니다.
+22. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `13-2`
-22. [[Search resources]] 버튼을 클릭합니다.
+23. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.

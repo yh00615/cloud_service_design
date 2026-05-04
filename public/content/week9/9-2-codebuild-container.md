@@ -87,6 +87,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
+    <img src="/images/week9/9-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
@@ -840,23 +842,23 @@ aws codebuild delete-project \
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. Amazon ECR 콘솔로 이동합니다.
-8. 생성한 Amazon ECR 리포지토리를 선택합니다.
-9. 모든 이미지를 선택합니다 (체크박스 클릭).
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
-12. AWS CodeBuild 콘솔의 왼쪽 메뉴에서 **Build projects**를 선택합니다.
-13. `week9-2-container-build` 빌드 프로젝트를 선택합니다.
-14. **Actions** > `Delete build project`를 선택합니다.
-15. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+9. Amazon ECR 콘솔로 이동합니다.
+10. 생성한 Amazon ECR 리포지토리를 선택합니다.
+11. 모든 이미지를 선택합니다 (체크박스 클릭).
+12. [[Delete]] 버튼을 클릭합니다.
+13. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+14. AWS CodeBuild 콘솔의 왼쪽 메뉴에서 **Build projects**를 선택합니다.
+15. `week9-2-container-build` 빌드 프로젝트를 선택합니다.
+16. **Actions** > `Delete build project`를 선택합니다.
+17. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-16. AWS CloudFormation 콘솔로 이동합니다.
-17. `week9-2-codebuild-stack` 스택을 선택합니다.
-18. [[Delete stack]] 버튼을 클릭합니다.
-19. 확인 창에서 스택 이름 `week9-2-codebuild-stack`을 입력합니다.
+18. AWS CloudFormation 콘솔로 이동합니다.
+19. `week9-2-codebuild-stack` 스택을 선택합니다.
 20. [[Delete stack]] 버튼을 클릭합니다.
+21. 확인 창에서 스택 이름 `week9-2-codebuild-stack`을 입력합니다.
+22. [[Delete stack]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon ECR 리포지토리, CodeCommit 리포지토리, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -865,14 +867,14 @@ aws codebuild delete-project \
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-21. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-22. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-23. **Regions**에서 `ap-northeast-2`를 선택합니다.
-24. **Resource types**에서 `All supported resource types`를 선택합니다.
-25. **Tags** 섹션에서 다음을 입력합니다:
+23. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+24. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+25. **Regions**에서 `ap-northeast-2`를 선택합니다.
+26. **Resource types**에서 `All supported resource types`를 선택합니다.
+27. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `9-2`
-26. [[Search resources]] 버튼을 클릭합니다.
+28. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -883,12 +885,12 @@ aws codebuild delete-project \
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
 
-27. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-28. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
-29. 검색창에 `week9-2`를 입력합니다.
-30. `/aws/codebuild/week9-2-container-build` 로그 그룹의 체크박스를 선택합니다.
-31. **Actions** > `Delete log group(s)`를 선택합니다.
-32. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+29. AWS Management Console 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+30. 왼쪽 메뉴에서 **Logs** > **Log groups**를 선택합니다.
+31. 검색창에 `week9-2`를 입력합니다.
+32. `/aws/codebuild/week9-2-container-build` 로그 그룹의 체크박스를 선택합니다.
+33. **Actions** > `Delete log group(s)`를 선택합니다.
+34. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

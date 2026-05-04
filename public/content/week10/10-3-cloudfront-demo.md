@@ -643,29 +643,29 @@ aws s3api delete-bucket --bucket $BUCKET_NAME --region ap-northeast-2
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-7. Amazon CloudFront 콘솔의 왼쪽 메뉴에서 **Functions**를 선택합니다.
-8. `quicktable-redirect` 함수 이름을 클릭하여 상세 페이지로 이동합니다.
-9. **Publish** 탭을 선택합니다.
-10. **Associated distributions** 섹션에서 연결된 배포의 체크박스를 선택합니다.
-11. [[Remove association]] 버튼을 클릭합니다.
+14. Amazon CloudFront 콘솔의 왼쪽 메뉴에서 **Functions**를 선택합니다.
+15. `quicktable-redirect` 함수 이름을 클릭하여 상세 페이지로 이동합니다.
+16. **Publish** 탭을 선택합니다.
+17. **Associated distributions** 섹션에서 연결된 배포의 체크박스를 선택합니다.
+18. [[Remove association]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Association 제거 후 배포 업데이트가 시작됩니다. Amazon CloudFront 콘솔의 **Distributions** 페이지에서 배포 상태가 `Enabled`로 돌아올 때까지 기다립니다. 배포 업데이트 중에는 함수를 삭제할 수 없습니다.
 
-12. 배포 업데이트가 완료되면 왼쪽 메뉴에서 **Functions**를 선택하여 목록으로 돌아갑니다.
-13. `quicktable-redirect` 함수의 라디오 버튼을 선택합니다.
-14. [[Delete]] 버튼을 클릭합니다.
-15. 왼쪽 메뉴에서 **Distributions**를 선택합니다.
-16. 배포의 체크박스를 선택합니다.
-17. [[Disable]] 버튼을 클릭합니다.
-18. 확인 창에서 [[Disable]] 버튼을 클릭합니다.
+19. 배포 업데이트가 완료되면 왼쪽 메뉴에서 **Functions**를 선택하여 목록으로 돌아갑니다.
+20. `quicktable-redirect` 함수의 라디오 버튼을 선택합니다.
+21. [[Delete]] 버튼을 클릭합니다.
+22. 왼쪽 메뉴에서 **Distributions**를 선택합니다.
+23. 배포의 체크박스를 선택합니다.
+24. [[Disable]] 버튼을 클릭합니다.
+25. 확인 창에서 [[Disable]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 배포 비활성화에 5-15분이 소요됩니다. 상태가 `Disabled`로 변경될 때까지 기다립니다. 페이지를 새로고침하여 최신 상태를 확인합니다.
 
-19. 상태가 `Disabled`로 변경되면 배포의 체크박스를 다시 선택합니다.
-20. [[Delete]] 버튼을 클릭합니다.
-21. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+26. 상태가 `Disabled`로 변경되면 배포의 체크박스를 다시 선택합니다.
+27. [[Delete]] 버튼을 클릭합니다.
+28. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!TROUBLESHOOTING]
 > **문제**: "Distribution must be disabled before deleting" 오류 발생
@@ -674,15 +674,15 @@ aws s3api delete-bucket --bucket $BUCKET_NAME --region ap-northeast-2
 >
 > **해결**: 5-10분 추가 대기 후 페이지를 새로고침하고 다시 시도합니다.
 
-22. Amazon S3 콘솔로 이동합니다.
-23. 버킷을 선택합니다.
-24. [[Empty]] 버튼을 클릭합니다.
-25. 확인 창에서 `permanently delete`를 입력합니다.
-26. [[Empty]] 버튼을 클릭합니다.
-27. 버킷을 다시 선택합니다.
-28. [[Delete]] 버튼을 클릭합니다.
-29. 확인 창에서 버킷 이름을 입력합니다.
-30. [[Delete bucket]] 버튼을 클릭합니다.
+29. Amazon S3 콘솔로 이동합니다.
+30. 버킷을 선택합니다.
+31. [[Empty]] 버튼을 클릭합니다.
+32. 확인 창에서 `permanently delete`를 입력합니다.
+33. [[Empty]] 버튼을 클릭합니다.
+34. 버킷을 다시 선택합니다.
+35. [[Delete]] 버튼을 클릭합니다.
+36. 확인 창에서 버킷 이름을 입력합니다.
+37. [[Delete bucket]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon CloudFront 배포를 삭제해도 OAC가 추가한 Amazon S3 버킷 정책은 자동으로 제거되지 않습니다. 하지만 버킷 자체를 삭제하면 버킷 정책도 함께 삭제되므로 별도 정리가 필요 없습니다.
@@ -691,14 +691,14 @@ aws s3api delete-bucket --bucket $BUCKET_NAME --region ap-northeast-2
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-31. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-32. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-33. **Regions**에서 `All regions`를 선택합니다.
-34. **Resource types**에서 `All supported resource types`를 선택합니다.
-35. **Tags** 섹션에서 다음을 입력합니다:
+38. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+39. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+40. **Regions**에서 `All regions`를 선택합니다.
+41. **Resource types**에서 `All supported resource types`를 선택합니다.
+42. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `10-3`
-36. [[Search resources]] 버튼을 클릭합니다.
+43. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
