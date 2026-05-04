@@ -77,6 +77,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week12-3-waf-api-protection.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
+
 9. **Stack name**에 `week12-3-waf-api-protection-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **EnvironmentName**: `week12-3-quicktable-api` (기본값 유지)
@@ -88,6 +91,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > Parameters에서 설정한 태그 값(Project, Week, CreatedBy)은 모든 리소스에 자동으로 적용됩니다. 별도로 Tags 섹션에서 추가할 필요가 없습니다.
 
 11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task0-step11-options.png" alt="CloudFormation Configure stack options" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -113,6 +119,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
     - `ApiGatewayStageArn`: Amazon API Gateway Stage ARN (AWS WAF 연결에 사용)
 
+    <img src="/images/week12/12-3-task0-step18-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 > [!IMPORTANT]
 > 이 출력값들은 이후 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
 
@@ -130,6 +138,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > AWS CloudShell이 시작될 때까지 기다립니다.
 
 21. 다음 명령어로 환경 변수를 설정합니다:
+
+    <img src="/images/week12/12-3-task1-step21-cloudshell.png" alt="AWS CloudShell" class="guide-img-md" />
 
 ```bash
 # API URL 설정 (태스크 0에서 복사한 Invoke URL로 변경)
@@ -151,6 +161,8 @@ export API_URL="<ApiGatewayInvokeUrl>"
 > URL이 출력되면 정상입니다. 출력이 없으면 `export` 명령어를 다시 실행합니다.
 
 22. 정상적인 예약 생성 요청을 보냅니다:
+
+    <img src="/images/week12/12-3-task1-step22-request.png" alt="정상 요청 테스트" class="guide-img-md" />
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -178,6 +190,8 @@ curl -s -X POST $API_URL/reservations \
 ### 태스크 1.2: SQL Injection 공격 시뮬레이션
 
 23. SQL Injection 패턴이 포함된 요청을 보냅니다:
+
+    <img src="/images/week12/12-3-task1-step23-sqli.png" alt="SQL Injection 공격 시뮬레이션" class="guide-img-md" />
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -208,6 +222,8 @@ curl -s -X POST $API_URL/reservations \
 ### 태스크 1.3: XSS 공격 시뮬레이션
 
 24. XSS 패턴이 포함된 요청을 보냅니다:
+
+    <img src="/images/week12/12-3-task1-step24-xss.png" alt="XSS 공격 시뮬레이션" class="guide-img-md" />
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -244,6 +260,9 @@ curl -s -X POST $API_URL/reservations \
 26. 왼쪽 메뉴에서 **Explore items**를 선택합니다.
 27. 왼쪽 테이블 목록에서 `Week12-3-QuickTableReservations`를 선택합니다.
 28. **Scan or query items**에서 `Scan`이 선택된 상태에서 [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task1-step28-dynamodb.png" alt="DynamoDB Explore items" class="guide-img-md" />
+
 29. 저장된 항목에서 `restaurantName`에 SQL Injection 문자열(`test' OR 1=1; DROP TABLE reservations; --`)과 XSS 스크립트(`<script>alert(document.cookie)</script>`)가 그대로 저장되어 있는지 확인합니다.
 
 > [!NOTE]
@@ -274,6 +293,8 @@ curl -s -X POST $API_URL/reservations \
 31. 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
 32. [[Create protection pack (web ACL)]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-3-task2-step32-create.png" alt="WAF Create protection pack" class="guide-img-md" />
+
 ### 태스크 2.1: Tell us about your app
 
 33. **App category**에서 `Other`를 선택합니다.
@@ -287,6 +308,8 @@ curl -s -X POST $API_URL/reservations \
 35. **Select resources to protect** 섹션에서 [[Add resources]] 드롭다운을 클릭합니다.
 36. **Regional** > **Add regional resources**를 선택합니다.
 
+    <img src="/images/week12/12-3-task2-step36-regional.png" alt="Add regional resources" class="guide-img-md" />
+
 > [!NOTE]
 > Amazon API Gateway REST API는 리전 리소스이므로 **Regional** > **Add regional resources**를 선택합니다. Amazon CloudFront를 보호하는 경우에는 **Global** > **Add CloudFront or Amplify resources**를 선택합니다.
 
@@ -296,6 +319,9 @@ curl -s -X POST $API_URL/reservations \
 > 태스크 0에서 생성한 Amazon API Gateway가 `Amazon API Gateway REST API` 타입으로 표시됩니다. 표시되지 않으면 스택 생성이 완료되었는지 확인합니다.
 
 38. [[Add]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step38-add.png" alt="리소스 추가 완료" class="guide-img-md" />
+
 39. **Select resources to protect** 섹션에 `Week12-3-QuickTableAPI - prod`가 추가되었는지 확인합니다.
 
 ### 태스크 2.3: Choose initial protections
@@ -324,24 +350,56 @@ curl -s -X POST $API_URL/reservations \
 > `You build it`은 추가하는 규칙 수에 따라 예상 비용이 증가합니다. 실습은 짧은 시간만 사용하고 바로 삭제하므로 실제 청구 금액은 미미합니다.
 
 41. 오른쪽 **Add rules** 패널에서 `AWS-managed rule group`을 선택합니다.
+
+    <img src="/images/week12/12-3-task2-step41-sqldatabase.png" alt="AWS-managed rule group 선택" class="guide-img-md" />
+
 42. **Free** 목록에서 `SQL database`를 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-rule-detail.png" alt="SQL database 규칙 상세" class="guide-img-sm" />
+
 43. 기본 설정을 유지하고 [[Add rule]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step47-addrule.png" alt="SQL database 추가 완료" class="guide-img-sm" />
+
+    <img src="/images/week12/12-3-task2-step47-addrule.png" alt="SQL database 추가" class="guide-img-sm" />
 
 > [!NOTE]
 > **SQL database** 규칙 그룹(200 WCU)은 SQL Injection 공격 패턴을 탐지합니다. 요청 본문, 쿼리 문자열, URI, 헤더에서 SQL 구문을 검사합니다.
 
 44. 다시 [[Add rule]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step48-addrule.png" alt="Add rule 클릭" class="guide-img-sm" />
+
 45. `AWS-managed rule group`을 선택합니다.
+
+    <img src="/images/week12/12-3-task2-rule-list.png" alt="AWS-managed rule group 목록" class="guide-img-sm" />
+
 46. **Free** 목록에서 `Core rule set`을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-rule-detail.png" alt="Core rule set 규칙 상세" class="guide-img-sm" />
+
 47. 기본 설정을 유지하고 [[Add rule]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step47-corerule-added.png" alt="Core rule set 추가 완료" class="guide-img-sm" />
 
 > [!NOTE]
 > **Core rule set (CRS)** (700 WCU)는 OWASP Top 10에 포함된 일반적인 웹 취약점을 방어합니다. XSS, 파일 포함(File Inclusion), 경로 탐색(Path Traversal) 등의 공격 패턴을 탐지합니다.
 
 48. 다시 [[Add rule]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step48-addrule.png" alt="Add rule 클릭" class="guide-img-sm" />
+
 49. `AWS-managed rule group`을 선택합니다.
+
+    <img src="/images/week12/12-3-task2-rule-list.png" alt="AWS-managed rule group 목록" class="guide-img-sm" />
+
 50. **Free** 목록에서 `Known bad inputs`를 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-rule-detail.png" alt="Known bad inputs 규칙 상세" class="guide-img-sm" />
+
 51. 기본 설정을 유지하고 [[Add rule]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step51-badinputs-added.png" alt="Known bad inputs 추가 완료" class="guide-img-sm" />
 
 > [!NOTE]
 > **Known bad inputs** (200 WCU)는 Log4j/Log4Shell 취약점 등 알려진 악성 입력 패턴을 차단합니다.
@@ -359,7 +417,13 @@ curl -s -X POST $API_URL/reservations \
 
 52. 다시 [[Add rule]] 버튼을 클릭합니다.
 53. `Custom rule`을 선택합니다.
+
+    <img src="/images/week12/12-3-task2-step53-customrule.png" alt="Custom rule 선택" class="guide-img-sm" />
+
 54. `Rate-based rule`을 선택하고 [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step54-ratebased.png" alt="Rate-based rule 선택" class="guide-img-sm" />
+
 55. **Action**에서 `Block`을 확인합니다.
 56. **Rule name**에 `QuickTable-RateLimit-Rule`을 입력합니다.
 57. **Rate limit**에 `100`을 입력합니다.
@@ -376,6 +440,8 @@ curl -s -X POST $API_URL/reservations \
 
 60. [[Add rule]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-3-task2-step60-ratelimit.png" alt="Rate-based rule 추가 완료" class="guide-img-sm" />
+
 > [!NOTE]
 > 4개의 규칙이 추가되었습니다. 각 규칙의 WCU(Web ACL Capacity Unit)가 표시됩니다:
 >
@@ -389,12 +455,16 @@ curl -s -X POST $API_URL/reservations \
 >
 > Web ACL의 최대 WCU는 5,000입니다. 현재 1,102 WCU를 사용하므로 여유가 충분합니다.
 
-61. [[Next]] 버튼을 클릭합니다.
+61. 추가된 규칙 목록을 확인합니다.
+
+    <img src="/images/week12/12-3-task2-step60-rules.png" alt="4개 규칙 추가 완료" class="guide-img-sm" />
 
 ### 태스크 2.5: Name and describe
 
 62. **Name**에 `QuickTable-WAF-WebACL`을 입력합니다.
 63. **Description**에 `WAF Web ACL for QuickTable API protection`을 입력합니다.
+
+    <img src="/images/week12/12-3-task2-step63-name.png" alt="Name and describe" class="guide-img-md" />
 
 ### 태스크 2.6: Customize protection pack (web ACL)
 
@@ -404,6 +474,8 @@ curl -s -X POST $API_URL/reservations \
 > 프로덕션 환경에서는 Amazon CloudWatch Logs, Amazon S3, 또는 Amazon Data Firehose로 로깅을 설정하여 차단된 요청을 분석할 수 있습니다.
 
 65. [[Create protection pack (web ACL)]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-task2-step65-create.png" alt="Create protection pack" class="guide-img-md" />
 
 > [!NOTE]
 > Protection Pack (Web ACL) 생성에 1-2분이 소요됩니다. 생성이 완료되면 상세 페이지로 이동합니다.
@@ -431,6 +503,8 @@ curl -s -X POST $API_URL/reservations \
 ### 태스크 3.1: 정상 요청 확인
 
 66. AWS CloudShell에서 정상적인 예약 생성 요청을 보냅니다:
+
+    <img src="/images/week12/12-3-task3-step66-normal.png" alt="정상 요청 확인" class="guide-img-md" />
 
 ```bash
 curl -s -X POST $API_URL/reservations \
@@ -462,6 +536,8 @@ curl -s -X POST $API_URL/reservations \
 
 67. SQL Injection 패턴이 포함된 요청을 보냅니다:
 
+    <img src="/images/week12/12-3-task3-step67-sqli403.png" alt="SQL Injection 차단 403" class="guide-img-md" />
+
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservations \
   -H "Content-Type: application/json" \
@@ -479,6 +555,8 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservati
 
 68. 응답 본문을 확인합니다:
 
+    <img src="/images/week12/12-3-task3-step68-forbidden.png" alt="Forbidden 응답" class="guide-img-md" />
+
 ```bash
 curl -s -X POST $API_URL/reservations \
   -H "Content-Type: application/json" \
@@ -495,6 +573,8 @@ curl -s -X POST $API_URL/reservations \
 ### 태스크 3.3: XSS 차단 확인
 
 69. XSS 패턴이 포함된 요청을 보냅니다:
+
+    <img src="/images/week12/12-3-task3-step69-xss403.png" alt="XSS 차단 403" class="guide-img-md" />
 
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservations \
@@ -515,6 +595,8 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST $API_URL/reservati
 
 70. 경로 탐색(Path Traversal) 공격을 테스트합니다:
 
+    <img src="/images/week12/12-3-task3-step70-path403.png" alt="Path Traversal 차단 403" class="guide-img-md" />
+
 ```bash
 curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
   "$API_URL/reservations?file=../../../etc/passwd"
@@ -527,6 +609,8 @@ curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
 > ```
 
 71. 정상 조회 요청이 여전히 동작하는지 확인합니다:
+
+    <img src="/images/week12/12-3-task3-step71-get.png" alt="정상 GET 요청" class="guide-img-md" />
 
 ```bash
 curl -s -X GET $API_URL/reservations | jq .
@@ -559,13 +643,21 @@ curl -s -X GET $API_URL/reservations | jq .
 72. AWS WAF 콘솔의 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
 73. `QuickTable-WAF-WebACL` 행에서 **Dashboard** 열의 **View**를 클릭합니다.
 
+    <img src="/images/week12/12-3-task4-step73-dashboard.png" alt="WAF Dashboard" class="guide-img-md" />
+
 > [!NOTE]
 > 또는 `QuickTable-WAF-WebACL`을 선택한 후 [[Actions]] 드롭다운에서 **View dashboard**를 선택합니다.
+>
+> <img src="/images/week12/12-3-task4-step73-actions.png" alt="WAF Actions 드롭다운" class="guide-img-sm" />
 
 74. 대시보드에서 다음 정보를 확인합니다:
     - **Summary**: Total, Allowed, Blocked 요청 수
     - **Protection pack (web ACL) activity**: 규칙별 트래픽 흐름 (Sequential rules view)
     - **Action totals**: 시간대별 Allow/Block 요청 그래프
+
+    <img src="/images/week12/12-3-task4-step74-summary.png" alt="WAF Dashboard Summary" class="guide-img-md" />
+
+    <img src="/images/week12/12-3-task4-step74-activity.png" alt="WAF Protection pack activity" class="guide-img-md" />
 
 > [!NOTE]
 > 메트릭이 표시되기까지 1-2분이 소요될 수 있습니다. 그래프가 비어 있으면 잠시 기다린 후 새로고침합니다.
@@ -573,6 +665,8 @@ curl -s -X GET $API_URL/reservations | jq .
 ### 태스크 4.2: 규칙별 메트릭 확인
 
 75. **All rules** 섹션에서 규칙별 메트릭을 확인합니다.
+
+    <img src="/images/week12/12-3-task4-step75-allrules.png" alt="All rules 메트릭" class="guide-img-md" />
 
 > [!NOTE]
 > 각 규칙 그룹별로 차단된 요청 수가 표시됩니다:
@@ -585,6 +679,9 @@ curl -s -X GET $API_URL/reservations | jq .
 ### 태스크 4.3: Overview에서 트래픽 특성 확인
 
 76. **Overview** 섹션에서 **Traffic characteristics**를 선택합니다.
+
+    <img src="/images/week12/12-3-task4-step76-traffic.png" alt="Traffic characteristics" class="guide-img-md" />
+
 77. **Attack types**에서 탐지된 공격 유형(SQLi, XSS, GenericLFI 등)을 확인합니다.
 78. **Top 10 countries**에서 요청 출발지 국가를 확인합니다.
 
@@ -600,6 +697,8 @@ curl -s -X GET $API_URL/reservations | jq .
 
 79. 같은 Dashboard 페이지 하단으로 스크롤하여 **Sampled requests** 섹션을 확인합니다.
 
+    <img src="/images/week12/12-3-task4-step79-sampled.png" alt="Sampled requests" class="guide-img-md" />
+
 > [!NOTE]
 > **Protection packs (web ACLs)** 목록에서 `QuickTable-WAF-WebACL`의 **Sampled requ...** 열의 **View**를 클릭하거나, [[Actions]] 드롭다운에서 **View sampled requests**를 선택해도 동일한 화면으로 이동할 수 있습니다.
 
@@ -611,6 +710,10 @@ curl -s -X GET $API_URL/reservations | jq .
     - **Time**: 요청 시간
 
 81. 차단된 요청(Block)을 클릭하여 상세 정보를 확인합니다.
+
+    <img src="/images/week12/12-3-task4-step81-detail1.png" alt="차단된 요청 상세 1" class="guide-img-md" />
+
+    <img src="/images/week12/12-3-task4-step81-detail2.png" alt="차단된 요청 상세 2" class="guide-img-md" />
 
 > [!TIP]
 > Sampled requests는 최대 3시간 동안의 요청 샘플을 보여줍니다. 전체 로그가 필요한 경우 AWS WAF 로깅을 활성화하여 Amazon S3, Amazon CloudWatch Logs, 또는 Amazon Data Firehose로 전송할 수 있습니다.
@@ -636,6 +739,8 @@ curl -s -X GET $API_URL/reservations | jq .
    - **Tag value**: `12-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+    <img src="/images/week12/12-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
@@ -654,6 +759,8 @@ curl -s -X GET $API_URL/reservations | jq .
 aws wafv2 list-web-acls --scope REGIONAL --region ap-northeast-2 --query "WebACLs[?Name=='QuickTable-WAF-WebACL'].[Id,LockToken]" --output text
 ```
 
+<img src="/images/week12/12-3-cleanup-step7-webacl-id.png" alt="Web ACL ID 확인" class="guide-img-md" />
+
 8. Amazon API Gateway 연결을 해제합니다:
 
 ```bash
@@ -662,6 +769,8 @@ WEB_ACL_ARN=$(aws wafv2 list-web-acls --scope REGIONAL --region ap-northeast-2 -
 aws wafv2 disassociate-web-acl --resource-arn $API_STAGE_ARN --region ap-northeast-2
 ```
 
+<img src="/images/week12/12-3-cleanup-step8-disassociate.png" alt="API Gateway 연결 해제" class="guide-img-md" />
+
 9. Web ACL을 삭제합니다:
 
 ```bash
@@ -669,6 +778,8 @@ WEB_ACL_ID=$(aws wafv2 list-web-acls --scope REGIONAL --region ap-northeast-2 --
 LOCK_TOKEN=$(aws wafv2 list-web-acls --scope REGIONAL --region ap-northeast-2 --query "WebACLs[?Name=='QuickTable-WAF-WebACL'].LockToken | [0]" --output text)
 aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB_ACL_ID --lock-token $LOCK_TOKEN --region ap-northeast-2
 ```
+
+<img src="/images/week12/12-3-cleanup-step9-delete.png" alt="Web ACL 삭제" class="guide-img-md" />
 
 > [!NOTE]
 > 삭제를 확인하려면 다음 명령어를 실행합니다:
@@ -690,14 +801,24 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 11. 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
 12. `QuickTable-WAF-WebACL`을 선택합니다.
 13. [[Actions]] 드롭다운에서 **Delete protection pack (web ACL)**을 선택합니다.
+
+    <img src="/images/week12/12-3-cleanup-step13-actions.png" alt="Actions 드롭다운에서 Delete 선택" class="guide-img-md" />
+
 14. 확인 창에 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-cleanup-step14-delete.png" alt="delete 입력 후 삭제" class="guide-img-sm" />
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
 15. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 16. `week12-3-waf-api-protection-stack` 스택을 선택합니다.
 17. [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-cleanup-step17-delete-stack.png" alt="Delete stack 버튼" class="guide-img-md" />
+
 18. 확인 창에서 스택 이름 `week12-3-waf-api-protection-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-cleanup-step18-confirm.png" alt="스택 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -711,7 +832,12 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
     - `/aws/lambda/Week12-3-CreateReservation`
     - `/aws/lambda/Week12-3-GetReservations`
 23. **Actions** > `Delete log group(s)`를 선택합니다.
+
+    <img src="/images/week12/12-3-cleanup-step23-loggroup.png" alt="Delete log group 선택" class="guide-img-md" />
+
 24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-cleanup-step24-delete.png" alt="Delete 확인" class="guide-img-sm" />
 
 > [!WARNING]
 > Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다. 이 외에 이번 실습과 관련된 로그 그룹이 남아있다면 함께 삭제합니다.
@@ -731,6 +857,8 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 > ```
 >
 > 출력이 없으면 삭제 완료입니다.
+>
+> <img src="/images/week12/12-3-cleanup-step24-cli.png" alt="CLI 로그 그룹 삭제" class="guide-img-md" />
 
 ### 단계 5: 최종 삭제 확인 (Tag Editor 활용)
 
@@ -744,6 +872,8 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
     - **Tag key**: `Week`
     - **Tag value**: `12-3`
 30. [[Search resources]] 버튼을 클릭합니다.
+
+    <img src="/images/week12/12-3-cleanup-step30-tageditor.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.

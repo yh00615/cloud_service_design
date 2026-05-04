@@ -74,14 +74,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-<img src="/images/week12/12-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+    <img src="/images/week12/12-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week12-1-secrets-manager-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 
-<img src="/images/week12/12-1-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
+    <img src="/images/week12/12-1-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
 
 9. **Stack name**에 `week12-1-secrets-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
@@ -620,7 +620,7 @@ mysql://admin:password@{DBEndpoint}:3306/mydb
    - **Tag value**: `12-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-<img src="/images/week12/12-1-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+    <img src="/images/week12/12-1-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
@@ -686,7 +686,7 @@ aws kms schedule-key-deletion --key-id $KEY_ID --pending-window-in-days 7 --regi
 
 10. 로테이션 AWS Lambda 함수를 삭제합니다:
 
-    <img src="/images/week12/12-1-cleanup-step10-ssm-delete.png" alt="Lambda 함수 삭제" class="guide-img-md" />
+<img src="/images/week12/12-1-cleanup-step10-ssm-delete.png" alt="Lambda 함수 삭제" class="guide-img-md" />
 
 ```bash
 aws lambda delete-function --function-name SecretsManagermysql-rotation-lambda --region ap-northeast-2
