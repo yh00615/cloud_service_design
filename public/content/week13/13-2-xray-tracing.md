@@ -87,6 +87,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week13-2-xray-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+
+<img src="/images/week13/13-2-task0-step8-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
+
 9. **Stack name**에 `week13-2-xray-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **EnvironmentName**: `week13-2-xray-lab` (기본값 유지)
@@ -98,8 +101,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > Parameters에서 설정한 태그 값(Project, Week, CreatedBy)은 모든 리소스에 자동으로 적용됩니다. 별도로 Tags 섹션에서 추가할 필요가 없습니다.
 
 11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week13/13-2-task0-step11-options.png" alt="CloudFormation Configure stack options" class="guide-img-md" />
+
 12. **Configure stack options** 페이지에서 기본값을 유지합니다.
 13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+
+    <img src="/images/week13/13-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 14. [[Next]] 버튼을 클릭합니다.
 15. **Review and create** 페이지에서 설정을 확인합니다.
 16. [[Submit]] 버튼을 클릭합니다.
@@ -114,6 +123,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `CreateFunctionName`: 예약 생성 AWS Lambda 함수 이름
     - `GetFunctionName`: 예약 조회 AWS Lambda 함수 이름
     - `TableName`: Amazon DynamoDB 테이블 이름 (Reservations)
+
+    <img src="/images/week13/13-2-task0-step18-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
 
 > [!IMPORTANT]
 > 이 출력값들은 다음 태스크에서 사용됩니다. 반드시 메모장에 저장합니다.
@@ -131,7 +142,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 19. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
 20. 왼쪽 메뉴에서 **Functions**를 선택합니다.
 21. 함수 목록에서 `CreateReservation`으로 시작하는 함수를 선택합니다.
+
+    <img src="/images/week13/13-2-task1-step21-lambda.png" alt="Lambda 함수 목록" class="guide-img-md" />
+
 22. **Code** 탭을 선택합니다.
+
+    <img src="/images/week13/13-2-task1-step22-code.png" alt="Lambda Code 탭" class="guide-img-md" />
+
 23. 코드 편집기에서 AWS X-Ray SDK 통합 부분을 확인합니다.
 
 > [!NOTE]
@@ -161,6 +178,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 24. `GetReservations`로 시작하는 함수도 동일하게 확인합니다.
 
+    <img src="/images/week13/13-2-task1-step24-layer.png" alt="GetReservations 함수 확인" class="guide-img-md" />
+
 ✅ **태스크 완료**: AWS Lambda 함수 코드를 확인했습니다.
 
 ## 태스크 2: AWS X-Ray 추적 활성화 확인
@@ -172,11 +191,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 27. 왼쪽 메뉴에서 **Monitoring and operations tools**를 선택합니다.
 28. **CloudWatch Application Signals and AWS X-Ray** 섹션에서 **Lambda service traces**가 활성화되어 있는지 확인합니다.
 
+    <img src="/images/week13/13-2-task2-step28-xray-active.png" alt="X-Ray Active tracing 확인" class="guide-img-md" />
+
 > [!NOTE]
 > AWS CloudFormation 템플릿에서 Lambda service traces(Active tracing)가 자동으로 활성화되었습니다.
 > 이 설정으로 AWS Lambda 함수의 모든 호출이 AWS X-Ray에 자동으로 추적됩니다.
 
 29. `GetReservations` 함수도 동일하게 확인합니다.
+
+    <img src="/images/week13/13-2-task2-step29-env.png" alt="GetReservations X-Ray 확인" class="guide-img-md" />
 
 ✅ **태스크 완료**: AWS X-Ray 추적이 활성화되어 있습니다.
 
@@ -222,6 +245,8 @@ export API_URL="YOUR_API_URL"
 echo $API_URL
 ```
 
+<img src="/images/week13/13-2-task3-step32-cloudshell.png" alt="CloudShell 환경 변수 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -235,6 +260,8 @@ curl -s -X POST ${API_URL}/reservations \
   -H "Content-Type: application/json" \
   -d '{"userId": "anonymous", "restaurantName": "강남 맛집", "date": "2026-05-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}' | jq .
 ```
+
+<img src="/images/week13/13-2-task3-step33-post.png" alt="예약 생성 요청" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -269,6 +296,8 @@ curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
   -d '{"userId": "user-lee", "restaurantName": "강남 맛집", "date": "2026-05-25", "time": "20:00", "partySize": 3, "phoneNumber": "010-6789-0123"}' | jq .
 ```
 
+<img src="/images/week13/13-2-task3-step34-get.png" alt="다양한 예약 생성" class="guide-img-md" />
+
 > [!TIP]
 > userId, 레스토랑 이름, 날짜, 인원 수가 각각 다르게 생성되므로 태스크 6에서 어노테이션 기반 필터링을 테스트할 때 유용합니다.
 
@@ -284,6 +313,8 @@ curl -s -X POST ${API_URL}/reservations -H "Content-Type: application/json" \
 curl -s -X GET "${API_URL}/reservations" | jq .
 ```
 
+<img src="/images/week13/13-2-task4-step35-get-anon.png" alt="anonymous 사용자 예약 조회" class="guide-img-md" />
+
 > [!NOTE]
 > 쿼리 파라미터 없이 호출하면 기본값인 `anonymous` 사용자의 예약이 조회됩니다.
 
@@ -292,6 +323,8 @@ curl -s -X GET "${API_URL}/reservations" | jq .
 ```bash
 curl -s -X GET "${API_URL}/reservations?userId=user-kim" | jq .
 ```
+
+<img src="/images/week13/13-2-task4-step36-get-user.png" alt="user-kim 예약 조회" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -327,6 +360,8 @@ curl -s -X GET "${API_URL}/reservations?userId=user-lee" | jq .
 curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
 ```
 
+<img src="/images/week13/13-2-task4-step37-get-all.png" alt="다른 사용자 예약 조회" class="guide-img-md" />
+
 ✅ **태스크 완료**: 예약 조회 트레이스가 생성되었습니다.
 
 ## 태스크 5: 서비스 맵 확인
@@ -346,6 +381,8 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
     - **Lambda Context / Lambda Function**: CreateReservation, GetReservations (각각 2개 노드)
     - **DynamoDB Table**: Reservations
 
+    <img src="/images/week13/13-2-task5-step40-tracemap.png" alt="X-Ray Trace Map" class="guide-img-md" />
+
 > [!NOTE]
 > 서비스 맵이 표시되는 데 최대 5분이 소요될 수 있습니다. 페이지를 새로고침하여 확인합니다.
 >
@@ -362,6 +399,8 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
     - **Requests**: 분당 요청 수 (예: 1.20/min)
     - **Faults**: 분당 오류 수 (예: 0.00/min)
 
+    <img src="/images/week13/13-2-task5-step42-traces.png" alt="Trace Map Metrics" class="guide-img-md" />
+
 > [!NOTE]
 > **Latency** 그래프에 "No data available"이 표시될 수 있습니다. 시간 범위를 조정하거나 데이터가 충분히 수집될 때까지 기다립니다.
 > 노드 하단의 **View logs**, **View traces**, **Analyze traces**, **View dashboard** 버튼으로 상세 분석 페이지로 이동할 수 있습니다.
@@ -375,6 +414,10 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
 43. 왼쪽 메뉴에서 **Application Signals (APM)** > **Traces**를 선택합니다.
 44. 상단의 시간 범위를 `1h` 또는 `6h`로 변경합니다.
 45. 검색창을 비운 상태에서 [[Run query]] 버튼을 클릭합니다.
+
+    <img src="/images/week13/13-2-task5-step45-trace-list.png" alt="Traces 목록" class="guide-img-md" />
+
+    <img src="/images/week13/13-2-task5-step45-trace-detail.png" alt="Traces 상세" class="guide-img-md" />
 
 > [!NOTE]
 > 기본 시간 범위가 `5m`으로 설정되어 있어 API 호출 시점이 5분 이전이면 트레이스가 표시되지 않습니다. `1h` 이상으로 변경하면 수집된 트레이스가 표시됩니다.
@@ -394,11 +437,20 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
     - **week13-2-xray-lab-CreateReservation** (AWS::Lambda::Function): 실제 함수 코드 실행, `validate_input`, `create_dynamodb_item` 서브세그먼트
     - **DynamoDB** (AWS::DynamoDB::Table): PutItem 작업
 
+    <img src="/images/week13/13-2-task5-step47-timeline1.png" alt="Segments Timeline" class="guide-img-md" />
+
+    <img src="/images/week13/13-2-task5-step47-timeline2.png" alt="Segments Timeline 상세" class="guide-img-md" />
+
 > [!NOTE]
 > 상단의 **Trace details** 탭에서는 해당 트레이스의 서비스 맵을 확인할 수 있습니다.  
 > Client → ApiGateway Stage → Lambda Context → Lambda Function → DynamoDB Table 흐름이 시각적으로 표시됩니다.
 
 48. Segments Timeline에서 `validate_input` 또는 `create_dynamodb_item` 서브세그먼트를 클릭합니다.
+
+    <img src="/images/week13/13-2-task5-step48-subsegment1.png" alt="서브세그먼트 클릭" class="guide-img-md" />
+
+    <img src="/images/week13/13-2-task5-step48-subsegment2.png" alt="서브세그먼트 상세" class="guide-img-md" />
+
 49. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
 
 > [!NOTE]
@@ -406,10 +458,16 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
 
 50. **Metadata** 탭에서 예약 데이터를 확인합니다.
 
+    <img src="/images/week13/13-2-task5-step50-metadata.png" alt="Metadata 탭" class="guide-img-md" />
+
 > [!NOTE]
 > 하단의 **Logs** 섹션에서 해당 트레이스와 연결된 Amazon CloudWatch 로그를 바로 확인할 수 있습니다.
 
 51. 트레이스 목록으로 돌아가서 GET /reservations 요청도 동일하게 분석합니다.
+
+    <img src="/images/week13/13-2-task5-step51-get-trace1.png" alt="GET 트레이스 분석 1" class="guide-img-md" />
+
+    <img src="/images/week13/13-2-task5-step51-get-trace2.png" alt="GET 트레이스 분석 2" class="guide-img-md" />
 
 ✅ **태스크 완료**: 트레이스를 분석했습니다.
 
@@ -418,6 +476,9 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
 이 태스크에서는 Amazon CloudWatch Application Insights를 사용하여 자동 이상 탐지 기능을 확인합니다.
 
 52. Amazon CloudWatch 콘솔 왼쪽 메뉴에서 **Application Signals (APM)** > **Application Insights**를 선택합니다.
+
+    <img src="/images/week13/13-2-task6-step52-filter.png" alt="Application Insights" class="guide-img-md" />
+
 53. **Overview** 탭에서 **Problems detected** 섹션을 확인합니다.
 
 > [!NOTE]
@@ -463,6 +524,8 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
    - **Tag value**: `13-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+    <img src="/images/week13/13-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
@@ -482,6 +545,8 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-CreateR
 aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-GetReservations --region ap-northeast-2
 aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBuilder --region ap-northeast-2
 ```
+
+<img src="/images/week13/13-2-cleanup-step7-cli-log.png" alt="CLI 로그 그룹 삭제" class="guide-img-md" />
 
 > [!NOTE]
 > 삭제가 성공하면 출력이 없습니다. 삭제를 확인하려면 다음 명령어를 실행합니다:
@@ -522,7 +587,12 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
     - `/aws/lambda/week13-2-xray-lab-GetReservations`
     - `/aws/lambda/week13-2-xray-lab-LayerBuilder`
 12. **Actions** > `Delete log group(s)`를 선택합니다.
+
+    <img src="/images/week13/13-2-cleanup-step12-loggroup.png" alt="Delete log group 선택" class="guide-img-md" />
+
 13. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week13/13-2-cleanup-step13-delete.png" alt="Delete 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다.
@@ -530,10 +600,12 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-14. AWS CloudFormation 콘솔로 이동합니다.
+14. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 15. `week13-2-xray-lab-stack` 스택을 선택합니다.
-16. [[Delete]] 버튼을 클릭합니다.
-17. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+16. [[Delete stack]] 버튼을 클릭합니다.
+17. 확인 창에서 스택 이름 `week13-2-xray-lab-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week13/13-2-cleanup-step17-delete-stack.png" alt="스택 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon DynamoDB 테이블, AWS Lambda 함수, AWS Lambda Layer, Amazon API Gateway, AWS IAM 역할이 모두 자동으로 삭제됩니다.
@@ -551,6 +623,8 @@ aws logs delete-log-group --log-group-name /aws/lambda/week13-2-xray-lab-LayerBu
     - **Tag key**: `Week`
     - **Tag value**: `13-2`
 23. [[Search resources]] 버튼을 클릭합니다.
+
+    <img src="/images/week13/13-2-cleanup-step23-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
