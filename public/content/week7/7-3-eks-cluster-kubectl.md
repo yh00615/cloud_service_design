@@ -115,6 +115,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
+    <img src="/images/week7/7-3-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
@@ -1149,31 +1151,31 @@ aws eks delete-cluster \
 >
 > AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
 
-14. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
-15. **Clusters**에서 `my-eks-cluster`를 선택합니다.
-16. **Compute** 탭을 선택합니다.
-17. **Node groups** 섹션에서 `my-node-group`을 선택합니다.
-18. [[Delete]] 버튼을 클릭합니다.
-19. 확인 창에서 `my-node-group`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+16. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
+17. **Clusters**에서 `my-eks-cluster`를 선택합니다.
+18. **Compute** 탭을 선택합니다.
+19. **Node groups** 섹션에서 `my-node-group`을 선택합니다.
+20. [[Delete]] 버튼을 클릭합니다.
+21. 확인 창에서 `my-node-group`을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 노드 그룹 삭제에 3-5분이 소요됩니다. 노드 그룹이 완전히 삭제되어야 클러스터를 삭제할 수 있습니다.
 
-20. 노드 그룹이 삭제되면 클러스터 목록으로 돌아갑니다.
-21. `my-eks-cluster`를 선택합니다.
-22. [[Delete cluster]] 버튼을 클릭합니다.
-23. 확인 창에서 `my-eks-cluster`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+22. 노드 그룹이 삭제되면 클러스터 목록으로 돌아갑니다.
+23. `my-eks-cluster`를 선택합니다.
+24. [[Delete cluster]] 버튼을 클릭합니다.
+25. 확인 창에서 `my-eks-cluster`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 클러스터 삭제에 5-10분이 소요됩니다. 상태가 "Deleting"에서 완전히 사라질 때까지 기다립니다.
 
 ### 단계 5: AWS CloudFormation 스택 삭제
 
-14. AWS Management Console 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
-15. `week7-3-eks-lab-stack` 스택을 선택합니다.
-16. [[Delete stack]] 버튼을 클릭합니다.
-17. 확인 창에서 스택 이름 `week7-3-eks-lab-stack`을 입력합니다.
-18. [[Delete stack]] 버튼을 클릭합니다.
+26. AWS Management Console 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+27. `week7-3-eks-lab-stack` 스택을 선택합니다.
+28. [[Delete stack]] 버튼을 클릭합니다.
+29. 확인 창에서 스택 이름 `week7-3-eks-lab-stack`을 입력합니다.
+30. [[Delete stack]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 VPC, 서브넷, IAM 역할 등 모든 사전 인프라가 자동으로 삭제됩니다.
@@ -1191,14 +1193,14 @@ aws eks delete-cluster \
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-19. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-20. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-21. **Regions**에서 `ap-northeast-2`를 선택합니다.
-22. **Resource types**에서 `All supported resource types`를 선택합니다.
-23. **Tags** 섹션에서 다음을 입력합니다:
+31. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+32. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+33. **Regions**에서 `ap-northeast-2`를 선택합니다.
+34. **Resource types**에서 `All supported resource types`를 선택합니다.
+35. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `7-3`
-24. [[Search resources]] 버튼을 클릭합니다.
+36. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
