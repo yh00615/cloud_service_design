@@ -60,6 +60,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
 4. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 5. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week5/5-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 6. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 7. **Specify template**에서 `Upload a template file`을 선택합니다.
 8. [[Choose file]] 버튼을 클릭한 후 `week5-1-rds-lab.yaml` 파일을 선택합니다.
@@ -246,10 +249,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 이 태스크에서는 수동 페일오버를 수행하여 Multi-AZ의 고가용성 메커니즘을 확인합니다. 페일오버는 Primary 인스턴스에 장애가 발생했을 때 Standby 인스턴스가 자동으로 Primary로 승격되는 과정입니다. 이 실습에서는 재부팅을 통해 페일오버를 시뮬레이션합니다.
 
 > [!CONCEPT] Multi-AZ 페일오버의 핵심 가치
-> 
+>
 > Single-AZ 배포에서는 Primary 인스턴스 장애 시 수동 복구에 수십 분이 소요되지만, Multi-AZ는 1-2분 내에 자동으로 Standby를 Primary로 승격합니다.
 >
 > **핵심 특징:**
+>
 > - **엔드포인트 불변**: DNS 엔드포인트가 동일하게 유지되어 애플리케이션 코드 변경 불필요
 > - **자동 전환**: Amazon RDS가 장애를 감지하고 자동으로 페일오버 수행
 > - **데이터 무손실**: 동기식 복제로 데이터 손실 없이 전환
@@ -293,6 +297,7 @@ DB instance restarted
 이 태스크에서는 읽기 성능 확장을 위한 Read Replica를 생성합니다. Read Replica는 Primary DB의 데이터를 비동기식으로 복제하여 읽기 전용 쿼리를 처리합니다.
 
 > [!CONCEPT] Multi-AZ Standby vs Read Replica
+>
 > - **Multi-AZ Standby**는 읽기/쓰기가 불가능한 대기 전용 인스턴스입니다. 오직 페일오버를 위해 존재하며, 평상시에는 사용할 수 없습니다.
 > - **Read Replica**는 읽기 전용 쿼리를 처리할 수 있어 읽기 부하를 분산할 수 있습니다. 따라서 읽기 성능 확장을 위해서는 Read Replica를 별도로 생성해야 합니다.
 
@@ -307,7 +312,7 @@ DB instance restarted
 76. **Availability** 섹션에서 기본값을 확인합니다.
 
 > [!NOTE]
-> Primary 인스턴스가 Multi-AZ이므로 Read Replica도 Multi-AZ로 기본 선택됩니다. 
+> Primary 인스턴스가 Multi-AZ이므로 Read Replica도 Multi-AZ로 기본 선택됩니다.
 > 실습에서는 기본값을 유지합니다.
 
 77. **Connectivity** 섹션에서 다음이 선택되어 있는지 확인합니다:
@@ -361,7 +366,7 @@ DB instance restarted
 다음을 성공적으로 수행했습니다:
 
 - Amazon RDS MySQL 인스턴스를 Multi-AZ로 생성했습니다.
-- Multi-AZ 페일오버를 시뮬레이션하여 고가용성 메커니즘을 확인했습니다. 
+- Multi-AZ 페일오버를 시뮬레이션하여 고가용성 메커니즘을 확인했습니다.
 - Read Replica를 생성하여 읽기 성능을 향상시켰습니다.
 - 자동 백업과 수동 스냅샷을 구성했습니다.
 - Multi-AZ와 Read Replica의 차이를 이해했습니다.
@@ -380,12 +385,12 @@ DB instance restarted
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `5-1`
+   - **Tag key**: `Week`
+   - **Tag value**: `5-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 7. 이 실습에서 생성한 리소스들이 표시됩니다:
-    - Amazon RDS 인스턴스 (`mysql-lab-instance`, `mysql-lab-replica`)
-    - AWS CloudFormation 스택으로 생성된 네트워크 리소스 (Amazon VPC, 서브넷, 보안 그룹, NAT Gateway, Elastic IP 등)
+   - Amazon RDS 인스턴스 (`mysql-lab-instance`, `mysql-lab-replica`)
+   - AWS CloudFormation 스택으로 생성된 네트워크 리소스 (Amazon VPC, 서브넷, 보안 그룹, NAT Gateway, Elastic IP 등)
 
 > [!NOTE]
 > Tag Editor 검색 결과에는 수동으로 생성한 Amazon RDS 인스턴스뿐만 아니라, 태스크 0에서 AWS CloudFormation으로 생성한 네트워크 리소스들도 함께 표시됩니다. 이는 CloudFormation 템플릿에서 모든 리소스에 동일한 태그(`Week: 5-1`)를 적용했기 때문입니다.

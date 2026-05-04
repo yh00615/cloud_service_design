@@ -59,6 +59,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week11-2-datalake-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+   <img src="/images/week11/11-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week11-2-datalake-lab.yaml` 파일을 선택합니다.
@@ -243,11 +246,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 42. **Tags - optional** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
-| Key         | Value            |
-| ----------- | ---------------- |
-| `Project`   | `AWS-Lab`        |
-| `Week`      | `11-2`           |
-| `CreatedBy` | `Student`        |
+| Key         | Value     |
+| ----------- | --------- |
+| `Project`   | `AWS-Lab` |
+| `Week`      | `11-2`    |
+| `CreatedBy` | `Student` |
 
 43. [[Next]] 버튼을 클릭합니다.
 44. **Data source configuration**에서 다음을 설정합니다:
@@ -555,8 +558,8 @@ ORDER BY reservation_count DESC;
 99. **Set output and scheduling**에서 다음을 설정합니다:
     - **Target database**: `quicktable_db_{StudentId}`를 선택합니다.
     - **Crawler schedule**: `On demand`를 선택합니다.
-100. [[Next]] 버튼을 클릭합니다.
-101. 설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
+100.  [[Next]] 버튼을 클릭합니다.
+101.  설정을 검토하고 [[Create crawler]] 버튼을 클릭합니다.
 
 ### 태스크 5.2: Crawler 실행 및 테이블 확인
 
@@ -570,6 +573,8 @@ ORDER BY reservation_count DESC;
 105. **Database** 드롭다운에서 `quicktable_db_{StudentId}`를 선택합니다.
 106. 새로 생성된 테이블 `restaurant_data`를 클릭합니다.
 107. **Schema** 탭에서 컬럼 정보를 확인합니다:
+
+
     - restaurantid: string
     - name: string
     - cuisine: string
@@ -727,8 +732,11 @@ ORDER BY reservation_count DESC;
 116. Processed Data 버킷 (`quicktable-processed-{StudentId}-ap-northeast-2`)을 선택합니다.
 117. `reservation-analysis-{StudentId}/` 폴더로 이동합니다.
 118. 파티션 구조를 확인합니다:
+
+
     - `status=confirmed/` 폴더
     - `status=cancelled/` 폴더
+
 119. 각 폴더 내의 Parquet 파일을 확인합니다.
 
 > [!TIP]
@@ -763,8 +771,8 @@ ORDER BY reservation_count DESC;
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `11-2`
+   - **Tag key**: `Week`
+   - **Tag value**: `11-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]

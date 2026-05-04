@@ -345,6 +345,9 @@ Outputs:
 
 60. 새 브라우저 탭에서 AWS Management Console 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 61. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+
+    <img src="/images/week6/6-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+
 62. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 63. **Specify template**에서 `Upload a template file`을 선택합니다.
 64. [[Choose file]] 버튼을 클릭한 후 다운로드한 YAML 파일을 선택합니다.
