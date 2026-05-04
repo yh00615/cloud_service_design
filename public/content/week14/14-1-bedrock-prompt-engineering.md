@@ -27,10 +27,10 @@ prerequisites:
 > [!CONCEPT] 프롬프트 엔지니어링 핵심 기법
 > 프롬프트 엔지니어링은 생성형 AI 모델로부터 원하는 응답을 얻기 위해 입력을 최적화하는 기술입니다.
 >
-> - **Zero-shot**: 예시 없이 작업을 직접 요청합니다. 간단한 작업에 적합합니다
-> - **Few-shot**: 몇 가지 예시를 제공하여 패턴을 학습시킵니다. 일관된 형식이 필요할 때 사용합니다
-> - **Chain-of-Thought (CoT)**: 단계별 사고 과정을 유도합니다. 복잡한 추론이 필요할 때 사용합니다
-> - **시스템 프롬프트**: 모델의 역할, 응답 형식, 제약 조건을 정의합니다
+> - **Zero-shot**: 예시 없이 작업을 직접 요청합니다. 간단한 작업에 적합합니다.
+> - **Few-shot**: 몇 가지 예시를 제공하여 패턴을 학습시킵니다. 일관된 형식이 필요할 때 사용합니다.
+> - **Chain-of-Thought (CoT)**: 단계별 사고 과정을 유도합니다. 복잡한 추론이 필요할 때 사용합니다.
+> - **시스템 프롬프트**: 모델의 역할, 응답 형식, 제약 조건을 정의합니다.
 
 > [!NOTE]
 > Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
@@ -56,8 +56,16 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Test** > **Playground**를 선택합니다.
 3. [[Select model]] 버튼을 클릭합니다.
+
+<img src="/images/week14/14-1-task1-step3-select-model.png" alt="Select model 버튼" class="guide-img-md" />
+
 4. 왼쪽 **Categories**에서 `Anthropic`을 선택합니다.
-5. **Models** 목록에서 사용 가능한 최신 Claude 모델을 선택합니다 (예: `Claude 4.6`, `Claude 3.5 Sonnet`, 또는 `Claude 3 Haiku`).
+5. **Models** 목록에서 사용 가능한 최신 Claude 모델을 선택합니다 (예: `Claude Opus 4.7`, `Claude Sonnet 4.6`, 또는 `Claude Haiku 4.5`).
+
+   <img src="/images/week14/14-1-task1-step5-model1.png" alt="Anthropic 카테고리 선택" class="guide-img-sm" />
+
+   <img src="/images/week14/14-1-task1-step5-model2.png" alt="Claude 모델 선택" class="guide-img-sm" />
+
 6. [[Apply]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -65,11 +73,11 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 > Playground 메뉴가 **Test** 하위에 위치하며, Chat/Text 탭이 별도로 표시될 수 있습니다.
 
 > [!NOTE]
-> **모델 선택 가이드 (2026년 3월 기준)**:
+> **모델 선택 가이드 (2026년 5월 기준)**:
 >
-> - **Claude Opus 4.6** (최고 성능): 가장 우수한 성능, 복잡한 작업에 최적 (2026년 2월 출시)
-> - **Claude Sonnet 4.6** (권장): 성능과 비용의 균형, 대부분의 작업에 적합 (2026년 2월 출시)
-> - **Claude Haiku 4.5** (빠르고 저렴): 빠른 응답 속도와 낮은 비용
+> - **Claude Opus 4.7** (최고 성능): 가장 우수한 성능, 복잡한 작업에 최적 (1M 토큰 컨텍스트)
+> - **Claude Sonnet 4.6** (권장): 성능과 비용의 균형, 대부분의 작업에 적합
+> - **Claude Haiku 4.5** (빠르고 저렴): 빠른 응답 속도와 낮은 비용 (200K 토큰 컨텍스트)
 >
 > 실습은 모든 Claude 모델에서 동일하게 작동하므로, 사용 가능한 최신 모델을 선택하는 것을 권장합니다.
 > Sonnet 4.6이 성능과 비용 면에서 가장 균형잡힌 선택입니다.
@@ -80,6 +88,8 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 
 7. 채팅 입력창에 다음 프롬프트를 입력합니다. `AWS Lambda란 무엇인가요?`
 8. [[Run]] 버튼(또는 전송 버튼)을 클릭합니다.
+
+<img src="/images/week14/14-1-task1-step8-run.png" alt="Run 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > AWS Console UI는 시점에 따라 변경될 수 있습니다. "Run" 버튼이 화살표(▶) 아이콘으로 표시될 수 있습니다.
@@ -100,6 +110,8 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 
 10. 오른쪽 패널에서 **Token count**를 확인합니다.
 
+    <img src="/images/week14/14-1-task1-step10-token.png" alt="Token count 확인" class="guide-img-md" />
+
 > [!NOTE]
 > Token count는 입력(Input tokens)과 출력(Output tokens)으로 구분됩니다.
 > 토큰은 비용 계산의 기준이 되며, 한국어는 영어보다 더 많은 토큰을 사용합니다.
@@ -115,7 +127,10 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 
 Zero-shot 프롬프팅은 예시 없이 작업을 직접 요청하는 가장 기본적인 방법입니다.
 
-11. [[New chat]] 버튼을 클릭하여 새 대화를 시작합니다.
+11. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+
+    <img src="/images/week14/14-1-task2-step11-clear.png" alt="Clear 버튼으로 대화 초기화" class="guide-img-sm" />
+
 12. 다음 프롬프트를 입력합니다:
 
 ```text
@@ -124,6 +139,9 @@ Zero-shot 프롬프팅은 예시 없이 작업을 직접 요청하는 가장 기
 ```
 
 13. [[Run]] 버튼(또는 전송 버튼)을 클릭합니다.
+
+    <img src="/images/week14/14-1-task2-step13-zeroshot.png" alt="Zero-shot 프롬프팅 결과" class="guide-img-md" />
+
 14. 응답을 확인합니다.
 
 > [!OUTPUT]
@@ -144,7 +162,7 @@ Zero-shot 프롬프팅은 예시 없이 작업을 직접 요청하는 가장 기
 
 Few-shot 프롬프팅은 몇 가지 예시를 제공하여 모델이 패턴을 학습하도록 하는 방법입니다.
 
-15. [[New chat]] 버튼을 클릭합니다.
+15. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
 16. 다음 프롬프트를 입력합니다:
 
 ```text
@@ -165,6 +183,9 @@ Few-shot 프롬프팅은 몇 가지 예시를 제공하여 모델이 패턴을 �
 ```
 
 17. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task2-step17-fewshot.png" alt="Few-shot 프롬프팅 결과" class="guide-img-md" />
+
 18. 응답을 확인합니다.
 
 > [!OUTPUT]
@@ -190,7 +211,7 @@ Few-shot 프롬프팅은 몇 가지 예시를 제공하여 모델이 패턴을 �
 
 Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명하도록 유도하는 방법입니다.
 
-19. [[New chat]] 버튼을 클릭합니다.
+19. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
 20. 다음 프롬프트를 입력합니다:
 
 ```text
@@ -206,6 +227,9 @@ Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명�
 ```
 
 21. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task2-step21-cot.png" alt="Chain-of-Thought 프롬프팅 결과" class="guide-img-md" />
+
 22. 응답을 확인합니다.
 
 > [!OUTPUT]
@@ -235,7 +259,7 @@ Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명�
 > [!NOTE]
 > 응답 예시입니다. 실제 응답은 다를 수 있습니다.
 >
-> 이 계산은 AWS Lambda 무료 티어(월 100만 건 요청, 400,000 GB-초)를 제외한 가격 기준입니다.
+> 생성형 AI의 계산 결과는 정확하지 않을 수 있습니다. 실제 비용은 [AWS Lambda 요금 페이지](https://aws.amazon.com/ko/lambda/pricing/)에서 확인합니다.
 >
 > Chain-of-Thought 프롬프팅은 복잡한 문제 해결에 효과적입니다.
 > "단계별로", "차근차근", "먼저 ~, 그 다음 ~" 같은 표현을 사용하면 더 상세한 설명을 얻을 수 있습니다.
@@ -249,23 +273,32 @@ Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명�
 
 ### 태스크 3.1: 시스템 프롬프트 설정
 
-23. [[New chat]] 버튼을 클릭합니다.
-24. 오른쪽 패널에서 **System prompts** 섹션을 찾습니다.
+23. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+24. 왼쪽의 [[Open configurations]] 버튼을 클릭하여 설정 패널을 엽니다.
+
+    <img src="/images/week14/14-1-task3-step24-open-config.png" alt="Open configurations 버튼" class="guide-img-sm" />
+
+> [!NOTE]
+> 설정 패널이 이미 열려있는 경우 이 단계를 건너뜁니다.
+
+25. **System prompts** 섹션을 찾습니다.
+
+    <img src="/images/week14/14-1-task3-step25-system-prompt.png" alt="System prompts 섹션" class="guide-img-sm" />
 
 > [!NOTE]
 > AWS Console UI는 시점에 따라 변경될 수 있습니다.
 > "Add system prompt" 버튼이 별도로 표시되지 않고, 시스템 프롬프트 입력 영역이 바로 노출될 수 있습니다.
 
-25. 시스템 프롬프트 입력 영역에 다음을 입력합니다:
+26. 시스템 프롬프트 입력 영역에 다음을 입력합니다:
 
 ```text
 당신은 AWS 클라우드 아키텍처 전문가입니다.
 사용자의 질문에 대해 다음 형식으로 답변합니다:
 
-26. 핵심 개념 설명.
-27. AWS 서비스 추천.
-28. 모범 사례.
-29. 주의사항.
+1. 핵심 개념 설명.
+2. AWS 서비스 추천.
+3. 모범 사례.
+4. 주의사항.
 
 답변은 간결하고 실용적이어야 하며, 기술 용어는 쉽게 설명합니다.
 ```
@@ -273,9 +306,12 @@ Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명�
 > [!NOTE]
 > 시스템 프롬프트를 입력하면 자동으로 적용됩니다. 별도의 저장 버튼이 없습니다.
 
-30. 채팅 입력창에 다음 질문을 입력합니다: `서버리스 아키텍처를 구축하려면 어떻게 해야 하나요?`.
-31. [[Run]] 버튼을 클릭합니다.
-32. 응답을 확인합니다.
+27. 채팅 입력창에 다음 질문을 입력합니다: `서버리스 아키텍처를 구축하려면 어떻게 해야 하나요?`.
+28. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task3-step28-sysprompt-result.png" alt="시스템 프롬프트 적용 결과" class="guide-img-md" />
+
+29. 응답을 확인합니다.
 
 > [!OUTPUT]
 >
@@ -313,21 +349,21 @@ Chain-of-Thought 프롬프팅은 모델이 단계별로 사고 과정을 설명�
 
 Temperature는 응답의 창의성과 무작위성을 제어하는 파라미터입니다.
 
-33. [[New chat]] 버튼을 클릭합니다.
+30. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+31. **System prompts** 입력 영역의 내용을 모두 삭제합니다.
 
 > [!NOTE]
-> 이전 태스크에서 설정한 시스템 프롬프트는 New chat을 클릭해도 유지됩니다.
-> Temperature 비교 실험에서는 시스템 프롬프트를 제거하고 진행하는 것을 권장합니다.
-> 시스템 프롬프트 입력 영역을 비워서 제거할 수 있습니다.
+> 이전 태스크에서 설정한 시스템 프롬프트는 Clear를 클릭해도 유지됩니다.
+> Temperature 비교 실험에서는 시스템 프롬프트의 영향을 배제하기 위해 제거하고 진행합니다.
 
-34. 오른쪽 패널에서 **Configurations** 섹션을 찾습니다.
+32. 설정 패널의 **Randomness and diversity** 섹션을 찾습니다.
 
 > [!NOTE]
 > **Randomness and diversity** 섹션에서 **Control by**를 통해 Temperature 또는 Top P를 선택할 수 있습니다.
 
-35. **Temperature** 슬라이더를 `0.1`로 설정합니다.
+33. **Temperature** 슬라이더를 `0.1`로 설정합니다.
 
-Temperature 값의 의미를 이해합니다.
+    <img src="/images/week14/14-1-task3-step33-temp01.png" alt="Temperature 0.1 설정" class="guide-img-sm" />
 
 > [!NOTE]
 > Temperature 값의 의미:
@@ -335,14 +371,21 @@ Temperature 값의 의미를 이해합니다.
 > - 0에 가까울수록: 일관되고 예측 가능한 응답 (사실 기반 질문에 적합)
 > - 1에 가까울수록: 창의적이고 다양한 응답 (창작 작업에 적합)
 
-36. 채팅 입력창에 다음을 입력합니다: `AWS Lambda의 장점 3가지를 알려주세요.`.
-37. [[Run]] 버튼을 클릭합니다.
-38. 응답을 확인하고 메모장에 복사합니다.
-39. [[New chat]] 버튼을 클릭합니다.
-40. **Temperature** 슬라이더를 `0.9`로 설정합니다.
-41. 동일한 질문을 입력합니다: `AWS Lambda의 장점 3가지를 알려주세요.`.
-42. [[Run]] 버튼을 클릭합니다.
-43. 응답을 확인하고 이전 응답과 비교합니다.
+34. 채팅 입력창에 다음을 입력합니다: `AWS Lambda의 장점 3가지를 알려주세요.`.
+35. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task3-step35-temp01-result.png" alt="Temperature 0.1 응답 결과" class="guide-img-md" />
+
+36. 응답을 확인하고 메모장에 복사합니다.
+
+37. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+38. **Temperature** 슬라이더를 `0.9`로 설정합니다.
+39. 동일한 질문을 입력합니다: `AWS Lambda의 장점 3가지를 알려주세요.`.
+40. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task3-step40-temp09-result.png" alt="Temperature 0.9 응답 결과" class="guide-img-md" />
+
+41. 응답을 확인하고 이전 응답과 비교합니다.
 
 두 응답을 비교하여 다음을 확인합니다:
 
@@ -360,13 +403,9 @@ Temperature 값의 의미를 이해합니다.
 
 Top P는 응답 생성 시 고려할 토큰의 범위를 제어하는 파라미터입니다.
 
-44. [[New chat]] 버튼을 클릭합니다.
-45. **Inference configurations** 섹션에서 **Top P** 슬라이더를 `0.5`로 설정합니다.
-
-> [!NOTE]
-> "Inference configurations" 대신 "Inference parameters"로 표시될 수 있습니다.
-
-Top P 값의 의미를 이해합니다.
+42. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+43. **Randomness and diversity** 섹션에서 **Control by**를 `Top P`로 변경합니다.
+44. **Top P** 슬라이더를 `0.1`로 설정합니다.
 
 > [!NOTE]
 > Top P 값의 의미:
@@ -376,18 +415,65 @@ Top P 값의 의미를 이해합니다.
 >
 > Temperature와 Top P는 함께 사용하여 응답의 품질을 조정합니다.
 
-46. 채팅 입력창에 다음을 입력합니다: `서버리스 아키텍처의 단점을 설명해주세요.`.
-47. [[Run]] 버튼을 클릭합니다.
-48. 응답을 확인합니다.
+45. 채팅 입력창에 다음을 입력합니다: `서버리스 아키텍처의 단점을 설명해주세요.`.
+46. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task3-step46-topp01-result.png" alt="Top P 0.1 응답 결과" class="guide-img-md" />
+
+47. 응답을 확인하고 메모장에 복사합니다.
+48. 상단의 [[Clear]] 버튼(빗자루 아이콘)을 클릭하여 대화를 초기화합니다.
+49. **Top P** 슬라이더를 `0.9`로 설정합니다.
+50. 동일한 질문을 입력합니다: `서버리스 아키텍처의 단점을 설명해주세요.`.
+51. [[Run]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-1-task3-step51-topp09-result.png" alt="Top P 0.9 응답 결과" class="guide-img-md" />
+
+52. 응답을 확인하고 이전 응답과 비교합니다.
+
+두 응답을 비교하여 다음을 확인합니다:
+
+- **어휘 다양성**: Top P 0.1은 일반적인 단어 위주, 0.9는 다양한 표현 사용
+- **내용 범위**: 0.1은 핵심 내용 중심, 0.9는 부가적인 관점 포함 가능
+- **일관성**: 동일 질문을 반복 실행했을 때 0.1은 유사한 답변, 0.9는 매번 다른 답변
+
+> [!NOTE]
+> Top P 0.1에서는 가장 확률이 높은 토큰만 선택하여 일관된 답변을 제공하고,
+> Top P 0.9에서는 더 많은 토큰 후보를 고려하여 다양한 표현을 사용합니다.
+
+> [!CONCEPT] Temperature vs Top P
+>
+> 두 파라미터 모두 응답의 다양성을 제어하지만 방식이 다릅니다:
+>
+> - **Temperature**: 확률 분포 자체를 변형합니다. 높을수록 낮은 확률의 토큰도 선택될 가능성이 커져 예측 불가능한 응답이 나옵니다.
+> - **Top P**: 확률 분포는 유지하되, 상위 P%에 해당하는 토큰만 후보로 제한합니다. 낮을수록 소수의 고확률 토큰만 사용합니다.
+>
+> 실무에서는 둘 중 하나만 조정하는 것을 권장합니다. 둘 다 높게 설정하면 응답이 지나치게 무작위해질 수 있습니다.
 
 ✅ **태스크 완료**: 시스템 프롬프트와 파라미터 조정이 완료되었습니다.
 
 # 🗑️ 리소스 정리
 
 > [!NOTE]
-> 이 실습에서는 별도의 리소스 정리가 필요하지 않습니다.
-> Amazon Bedrock Playground는 영구적인 리소스를 생성하지 않으며, 모델 사용 시에만 토큰 기반 비용이 발생합니다.
-> 모든 서버리스 Foundation Model에 대한 액세스는 자동으로 활성화되어 있으며, Anthropic 모델의 Use case details 양식은 일회성이므로 별도의 비활성화 작업이 필요하지 않습니다.
+> 이 실습에서는 **별도의 리소스 정리가 필요하지 않습니다.**
+
+### 리소스 삭제가 불필요한 이유
+
+이 실습에서는 Amazon Bedrock Playground만 사용했으며, 영구적인 AWS 리소스(Amazon EC2, Amazon RDS, AWS Lambda 등)를 생성하지 않았습니다.
+
+- **Amazon Bedrock Playground**: 브라우저 기반 인터페이스로, 대화 종료 시 데이터가 유지되지 않습니다.
+- **모델 액세스**: 모든 서버리스 Foundation Model에 대한 액세스는 자동으로 활성화되어 있으며, 비활성화할 필요가 없습니다.
+- **Use case details 양식**: 일회성 제출이며, 취소하거나 삭제할 필요가 없습니다.
+
+### 비용 산정 기준
+
+Amazon Bedrock은 **사용한 만큼만 과금**되는 토큰 기반 요금제입니다:
+
+- **Input tokens**: 프롬프트(입력)에 사용된 토큰 수 기준 과금
+- **Output tokens**: 모델 응답(출력)에 사용된 토큰 수 기준 과금
+- **대기 비용 없음**: Playground를 열어두기만 해도 비용이 발생하지 않습니다. 실제로 Run 버튼을 클릭하여 모델을 호출할 때만 과금됩니다.
+
+> [!NOTE]
+> 이 실습에서 사용한 토큰 양은 매우 적으므로 (수백~수천 토큰), 실제 청구 금액은 $0.01 미만입니다.
 
 ## 삭제 확인
 
@@ -412,10 +498,10 @@ Top P 값의 의미를 이해합니다.
 
 다음을 성공적으로 수행했습니다:
 
-- Playground를 사용하여 기본 프롬프트를 테스트했습니다
-- Zero-shot, Few-shot, Chain-of-Thought 프롬프팅 기법을 실습했습니다
-- 시스템 프롬프트로 모델의 역할과 응답 형식을 정의했습니다
-- Temperature와 Top P 파라미터를 조정하여 응답 품질을 최적화했습니다
+- Playground를 사용하여 기본 프롬프트를 테스트했습니다.
+- Zero-shot, Few-shot, Chain-of-Thought 프롬프팅 기법을 실습했습니다.
+- 시스템 프롬프트로 모델의 역할과 응답 형식을 정의했습니다.
+- Temperature와 Top P 파라미터를 조정하여 응답 품질을 최적화했습니다.
 
 ## 추가 학습 리소스
 
@@ -526,9 +612,9 @@ Top P 값의 의미를 이해합니다.
 - 비용 관리 및 응답 시간 최적화
 - Claude Haiku 4.5: 최대 64,000 토큰 (컨텍스트 윈도우 200K 토큰)
 - Claude Sonnet 4.6: 최대 64,000 토큰 (컨텍스트 윈도우 1M 토큰)
-- Claude Opus 4.6: 최대 128,000 토큰 (컨텍스트 윈도우 1M 토큰)
+- Claude Opus 4.7: 최대 128,000 토큰 (컨텍스트 윈도우 1M 토큰)
 - 권장: 짧은 답변 500, 중간 1000, 긴 답변 2000-4000
-- 사용 중인 모델의 공식 문서에서 최대 토큰 수를 확인합니다
+- 사용 중인 모델의 공식 문서에서 최대 토큰 수를 확인합니다.
 
 ### 효과적인 프롬프트 작성 팁
 
@@ -572,10 +658,10 @@ Top P 값의 의미를 이해합니다.
 
 **반복적 개선:**
 
-- 초기 프롬프트 작성.
-- 응답 확인 및 문제점 파악.
-- 프롬프트 수정 (구체화, 제약 추가).
-- 재테스트 및 비교.
+- 초기 프롬프트 작성
+- 응답 확인 및 문제점 파악
+- 프롬프트 수정 (구체화, 제약 추가)
+- 재테스트 및 비교
 - 최적 프롬프트 선택
 
 **A/B 테스트:**
@@ -614,9 +700,9 @@ Top P 값의 의미를 이해합니다.
 당신은 AWS 기술 지원 전문가입니다.
 고객의 문제를 친절하게 해결하고, 단계별 가이드를 제공합니다.
 답변은 다음 형식을 따르세요:
-5. 문제 확인
-6. 해결 방법 (단계별)
-7. 추가 도움말
+1. 문제 확인
+2. 해결 방법 (단계별)
+3. 추가 도움말
 
 Temperature: 0.3 (일관된 답변)
 Top P: 0.5 (정확성 우선)
@@ -658,15 +744,15 @@ Top P: 0.9 (다양한 표현)
 - 간결한 시스템 프롬프트 작성
 - 응답 길이 제한 (Max Tokens)
 
-**적절한 모델 선택 (2026년 3월 기준):**
+**적절한 모델 선택 (2026년 5월 기준):**
 
-- 빠른 응답, 저렴한 비용: Claude Haiku 4.5 ($1/$5 per 1M tokens)
-- 성능과 비용의 균형 (권장): Claude Sonnet 4.6 ($3/$15 per 1M tokens)
-- 최고 성능: Claude Opus 4.6 ($5/$25 per 1M tokens)
+- 빠른 응답, 저렴한 비용: Claude Haiku 4.5
+- 성능과 비용의 균형 (권장): Claude Sonnet 4.6
+- 최고 성능: Claude Opus 4.7
 
 > [!NOTE]
 > 실무에서는 작업 복잡도에 따라 모델을 선택합니다.
-> Claude Sonnet 4.6은 대부분의 작업에서 Opus급 성능을 제공하면서 비용이 합리적이므로 가장 많이 사용됩니다.
+> Claude Sonnet 4.6은 대부분의 작업에서 성능과 비용의 균형이 좋아 가장 많이 사용됩니다.
 > 콘솔에서 사용 가능한 최신 모델을 확인하여 선택합니다.
 
 **캐싱 활용:**
