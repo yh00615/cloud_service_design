@@ -282,7 +282,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 8. **Rotation strategy**에서 `Single user`를 선택합니다.
 > 9. [[Save]] 버튼을 클릭합니다.
 
-64. **Last rotated date**에 값이 표시되는지 확인합니다.
+64. **Last rotated date**에 값이 표시되는지 확인합니다. 2-3분 소요될 수 있으므로 페이지를 새로고침하며 기다립니다.
 
 > [!NOTE]
 > 보안 그룹 변경 후 이전에 실패했던 로테이션이 자동으로 재시도되어 성공할 수 있습니다. **Last rotated date**에 값이 이미 표시되면 아래 Rotate secret immediately 단계를 건너뛰어도 됩니다. 자동 재시도까지 2-3분 소요될 수 있으므로 페이지를 새로고침하며 기다립니다.
@@ -338,6 +338,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 68. **Last rotated date**에 날짜가 표시되면 로테이션이 성공한 것입니다.
 69. **Overview** 탭을 선택합니다.
 70. **Secret value** 섹션에서 [[Retrieve secret value]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> **Key/value** 탭에서 다음과 같이 표시됩니다:
+>
+> | Secret key           | Secret value                               |
+> | -------------------- | ------------------------------------------ |
+> | username             | admin                                      |
+> | password             | (랜덤 문자열, 예: `=fJ)m(dl8Y}4n#HEvU...`) |
+> | engine               | mysql                                      |
+> | host                 | week12-1-mysql-db.xxxxx.rds.amazonaws.com  |
+> | port                 | 3306                                       |
+> | dbInstanceIdentifier | week12-1-mysql-db                          |
+>
+> `password` 값이 `LabPassword456!`이 아닌 랜덤 문자열로 변경되어 있으면 로테이션이 성공한 것입니다.
+
 71. 비밀번호가 `LabPassword456!`에서 새로운 랜덤 값으로 변경되었는지 확인합니다.
 
 > [!NOTE]
