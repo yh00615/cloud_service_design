@@ -437,9 +437,9 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
     - **week13-2-xray-lab-CreateReservation** (AWS::Lambda::Function): 실제 함수 코드 실행, `validate_input`, `create_dynamodb_item` 서브세그먼트
     - **DynamoDB** (AWS::DynamoDB::Table): PutItem 작업
 
-    <img src="/images/week13/13-2-task5-step47-timeline1.png" alt="Segments Timeline" class="guide-img-md" />
+    <img src="/images/week13/13-2-task5-step47-timeline1.png" alt="Segments Timeline 1" class="guide-img-md" />
 
-    <img src="/images/week13/13-2-task5-step47-timeline2.png" alt="Segments Timeline 상세" class="guide-img-md" />
+    <img src="/images/week13/13-2-task5-step47-timeline2.png" alt="Segments Timeline 2" class="guide-img-md" />
 
 > [!NOTE]
 > 상단의 **Trace details** 탭에서는 해당 트레이스의 서비스 맵을 확인할 수 있습니다.  
@@ -447,9 +447,9 @@ curl -s -X GET "${API_URL}/reservations?userId=user-park" | jq .
 
 48. Segments Timeline에서 `validate_input` 또는 `create_dynamodb_item` 서브세그먼트를 클릭합니다.
 
-    <img src="/images/week13/13-2-task5-step48-subsegment1.png" alt="서브세그먼트 클릭" class="guide-img-md" />
+    <img src="/images/week13/13-2-task5-step48-subsegment1.png" alt="서브세그먼트 1" class="guide-img-md" />
 
-    <img src="/images/week13/13-2-task5-step48-subsegment2.png" alt="서브세그먼트 상세" class="guide-img-md" />
+    <img src="/images/week13/13-2-task5-step48-subsegment2.png" alt="서브세그먼트 2" class="guide-img-md" />
 
 49. **Annotations** 탭에서 커스텀 어노테이션을 확인합니다.
 

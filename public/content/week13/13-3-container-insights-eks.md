@@ -860,14 +860,14 @@ kubectl get hpa
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon EKS 클러스터를 생성하고 Container Insights를 활성화했습니다
-- Amazon EKS Add-on 방식으로 Amazon CloudWatch 에이전트와 Fluent Bit을 배포했습니다
-- 샘플 애플리케이션을 배포하고 LoadBalancer 서비스를 생성했습니다
-- Container Insights 대시보드에서 클러스터, 노드, Pod 수준의 메트릭을 확인했습니다
-- Amazon CloudWatch Logs Insights로 컨테이너 로그를 쿼리하고 분석했습니다
-- 커스텀 대시보드를 생성하여 주요 메트릭을 시각화했습니다
-- Amazon CloudWatch 알람을 설정하여 이상 상황을 자동으로 감지했습니다
-- 리소스 제한을 조정하고 Horizontal Pod Autoscaler를 설정하여 자동 스케일링을 구현했습니다
+- Amazon EKS 클러스터를 생성하고 Container Insights를 활성화했습니다.
+- Amazon EKS Add-on 방식으로 Amazon CloudWatch 에이전트와 Fluent Bit을 배포했습니다.
+- 샘플 애플리케이션을 배포하고 LoadBalancer 서비스를 생성했습니다.
+- Container Insights 대시보드에서 클러스터, 노드, Pod 수준의 메트릭을 확인했습니다.
+- Amazon CloudWatch Logs Insights로 컨테이너 로그를 쿼리하고 분석했습니다.
+- 커스텀 대시보드를 생성하여 주요 메트릭을 시각화했습니다.
+- Amazon CloudWatch 알람을 설정하여 이상 상황을 자동으로 감지했습니다.
+- 리소스 제한을 조정하고 Horizontal Pod Autoscaler를 설정하여 자동 스케일링을 구현했습니다.
 
 # 🗑️ 리소스 정리
 
