@@ -33,7 +33,7 @@ Parameters:
     Description: CreatedBy tag value
 
 Resources:
-  # S3 Buckets - 학번으로 고유성 보장
+  # S3 Buckets - unique per student
   RawDataBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -47,8 +47,6 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      VersioningConfiguration:
-        Status: Enabled
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-RawData'
@@ -72,8 +70,6 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      VersioningConfiguration:
-        Status: Enabled
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-ProcessedData'
@@ -203,28 +199,28 @@ Resources:
           import json
           import boto3
           import cfnresponse
-          
+
           s3 = boto3.client('s3')
-          
-          # QuickTable 예약 샘플 CSV 데이터
+
+          # QuickTable reservation sample CSV data
           RESERVATIONS_CSV = """reservationId,userId,restaurantId,restaurantName,date,time,partySize,status,totalAmount,createdAt
-          RES001,user123,REST001,강남 맛집,2024-01-15,18:30,4,confirmed,120000,2024-01-10T10:30:00.123456
-          RES002,user456,REST002,서울 한식당,2024-01-16,19:00,2,cancelled,60000,2024-01-12T14:20:00.234567
-          RES003,user789,REST001,강남 맛집,2024-01-17,12:00,6,confirmed,180000,2024-01-15T09:15:00.345678
-          RES004,user123,REST003,부산 해물집,2024-01-20,19:30,3,confirmed,90000,2024-01-18T11:45:00.456789
-          RES005,user456,REST002,서울 한식당,2024-01-22,20:00,5,confirmed,150000,2024-01-20T16:30:00.567890"""
-          
-          # QuickTable 레스토랑 정보 JSON Lines 데이터
-          RESTAURANTS_JSON = """{"restaurantId": "REST001", "name": "강남 맛집", "cuisine": "Korean", "location": "Gangnam", "rating": 4.5}
-          {"restaurantId": "REST002", "name": "서울 한식당", "cuisine": "Korean", "location": "Seoul", "rating": 4.2}
-          {"restaurantId": "REST003", "name": "부산 해물집", "cuisine": "Seafood", "location": "Busan", "rating": 4.7}"""
-          
+          RES001,user123,REST001,Gangnam Restaurant,2024-01-15,18:30,4,confirmed,120000,2024-01-10T10:30:00.123456
+          RES002,user456,REST002,Seoul Korean,2024-01-16,19:00,2,cancelled,60000,2024-01-12T14:20:00.234567
+          RES003,user789,REST001,Gangnam Restaurant,2024-01-17,12:00,6,confirmed,180000,2024-01-15T09:15:00.345678
+          RES004,user123,REST003,Busan Seafood,2024-01-20,19:30,3,confirmed,90000,2024-01-18T11:45:00.456789
+          RES005,user456,REST002,Seoul Korean,2024-01-22,20:00,5,confirmed,150000,2024-01-20T16:30:00.567890"""
+
+          # QuickTable restaurant info JSON Lines data
+          RESTAURANTS_JSON = """{"restaurantId": "REST001", "name": "Gangnam Restaurant", "cuisine": "Korean", "location": "Gangnam", "rating": 4.5}
+          {"restaurantId": "REST002", "name": "Seoul Korean", "cuisine": "Korean", "location": "Seoul", "rating": 4.2}
+          {"restaurantId": "REST003", "name": "Busan Seafood", "cuisine": "Seafood", "location": "Busan", "rating": 4.7}"""
+
           def handler(event, context):
               try:
                   if event['RequestType'] == 'Create':
                       bucket = event['ResourceProperties']['BucketName']
                       
-                      # 예약 CSV 파일 업로드
+                      # Upload reservation CSV file
                       s3.put_object(
                           Bucket=bucket,
                           Key='reservation-data/reservations.csv',
@@ -232,7 +228,7 @@ Resources:
                           ContentType='text/csv'
                       )
                       
-                      # 레스토랑 JSON Lines 파일 업로드
+                      # Upload restaurant JSON Lines file
                       s3.put_object(
                           Bucket=bucket,
                           Key='restaurant-data/restaurants.json',
@@ -295,6 +291,6 @@ Outputs:
   SampleDataLocation:
     Description: Sample data location
     Value: !Sub |
-      QuickTable 샘플 데이터가 자동으로 업로드되었습니다:
-      - 예약 데이터: s3://${RawDataBucket}/reservation-data/reservations.csv
-      - 레스토랑 정보: s3://${RawDataBucket}/restaurant-data/restaurants.json
+      Sample data uploaded automatically:
+      - Reservations: s3://${RawDataBucket}/reservation-data/reservations.csv
+      - Restaurants: s3://${RawDataBucket}/restaurant-data/restaurants.json

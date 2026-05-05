@@ -75,16 +75,16 @@ prerequisites:
 12. 생성된 테이블을 클릭합니다.
 13. **Actions** > `Create item`을 선택합니다.
 14. **Attributes** 섹션에서 다음 값을 입력합니다:
-	- **reservationId**: `RES001`
+    - **reservationId**: `RES001`
 15. [[Add new attribute]] 버튼을 클릭합니다.
 16. `String`을 선택합니다.
 17. **Attribute name**에 `customerName`을 입력합니다.
 18. **Value**에 `김철수`를 입력합니다.
 19. 같은 방식으로 다음 속성들을 추가합니다:
-	- `date` (String): `2026-02-15`
-	- `time` (String): `19:00`
-	- `partySize` (Number): `4`
-	- `status` (String): `confirmed`
+    - `date` (String): `2026-02-15`
+    - `time` (String): `19:00`
+    - `partySize` (Number): `4`
+    - `status` (String): `confirmed`
 20. [[Create item]] 버튼을 클릭합니다.
 21. 같은 방식으로 다음 샘플 예약 데이터를 추가합니다:
 
@@ -594,8 +594,8 @@ def cancel_reservation(params):
 44. [[Edit]] 버튼을 클릭합니다.
 45. [[Add environment variable]] 버튼을 클릭하여 다음 환경 변수를 추가합니다:
 
-| 변수명       | 값                       | 설명                 |
-| ------------ | ------------------------ | -------------------- |
+| 변수명       | 값                       | 설명                        |
+| ------------ | ------------------------ | --------------------------- |
 | `TABLE_NAME` | `RestaurantReservations` | Amazon DynamoDB 테이블 이름 |
 
 46. [[Save]] 버튼을 클릭합니다.
@@ -639,8 +639,9 @@ def cancel_reservation(params):
 > "Select model" 대신 "Choose model" 또는 다른 이름으로 표시될 수 있습니다.
 > 기본적으로 Amazon Bedrock Agents에 최적화된 모델만 표시됩니다.
 > 모든 모델을 보려면 "Amazon Bedrock Agents optimized" 체크를 해제합니다.
-> 
+>
 > **권장 모델 (2026년 3월 기준)**:
+>
 > - **Claude Sonnet 4.6**: 성능과 비용의 균형 (권장, 2026년 2월 출시)
 > - **Claude Opus 4.6**: 최고 성능, 복잡한 대화에 최적 (2026년 2월 출시)
 > - **Claude Haiku 4.5**: 빠른 응답 속도, 저렴한 비용
@@ -679,8 +680,8 @@ def cancel_reservation(params):
 
 65. **Action groups** 섹션에서 [[Add]] 버튼을 클릭합니다.
 66. **Action group details**에서 다음을 입력합니다:
-	- **Action group name**: `QuickTableReservationActions`
-	- **Action group description**: `QuickTable 예약 관리 기능`
+    - **Action group name**: `QuickTableReservationActions`
+    - **Action group description**: `QuickTable 예약 관리 기능`
 67. **Action group type**에서 `Define with function details`를 선택합니다.
 
 > [!NOTE]
@@ -871,10 +872,10 @@ def cancel_reservation(params):
 ```
 
 94. Trace 패널에서 Agent의 사고 과정을 확인합니다:
-	- **Pre-processing**: 사용자 입력 분석
-	- **Orchestration**: 어떤 함수를 호출할지 결정
-	- **Action invocation**: AWS Lambda 함수 호출
-	- **Post-processing**: 응답 생성
+    - **Pre-processing**: 사용자 입력 분석
+    - **Orchestration**: 어떤 함수를 호출할지 결정
+    - **Action invocation**: AWS Lambda 함수 호출
+    - **Post-processing**: 응답 생성
 
 > [!NOTE]
 > Trace를 통해 Agent가 어떻게 의사결정을 하는지 이해할 수 있습니다.
@@ -926,8 +927,11 @@ def cancel_reservation(params):
 102. Agent 상세 페이지 상단에서 **Aliases** 탭을 선택합니다.
 103. [[Create alias]] 버튼을 클릭합니다.
 104. **Alias details**에서 다음을 입력합니다:
-	- **Alias name**: `production`
-	- **Alias description**: `프로덕션 환경용 Agent`
+
+
+    - **Alias name**: `production`
+    - **Alias description**: `프로덕션 환경용 Agent`
+
 105. **Version** 섹션에서 `Create a new version`을 선택합니다.
 106. [[Create alias]] 버튼을 클릭합니다.
 
@@ -1059,7 +1063,7 @@ def lambda_handler(event, context):
 | ---------------- | ---------------- | --------------------------------------------------------------------- |
 | `AGENT_ID`       | (Agent ID 입력)  | Amazon Bedrock Agent ID (Agent 상세 페이지의 Agent overview에서 확인) |
 | `AGENT_ALIAS_ID` | (별칭 ID 입력)   | 별칭 ID (별칭 상세 페이지에서 확인, ARN이 아닌 ID만 입력)             |
-| `BEDROCK_REGION` | `ap-northeast-2` | Amazon Bedrock Agent가 배포된 리전                                           |
+| `BEDROCK_REGION` | `ap-northeast-2` | Amazon Bedrock Agent가 배포된 리전                                    |
 
 128. [[Save]] 버튼을 클릭합니다.
 
@@ -1134,13 +1138,13 @@ def lambda_handler(event, context):
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon DynamoDB 테이블을 생성하고 QuickTable 예약 데이터를 저장했습니다
-- AWS Lambda 함수로 QuickTable 예약 관리 기능을 구현했습니다
-- Amazon Bedrock Agent를 생성하고 QuickTable Action Group을 설정했습니다
-- Week 14-2에서 생성한 Knowledge Base를 Agent에 연결했습니다
-- Agent를 테스트하고 대화형 QuickTable 예약 시스템을 확인했습니다
-- Agent 별칭을 생성하여 프로덕션 환경에 배포했습니다
-- AWS Lambda 함수로 Agent를 프로그래밍 방식으로 호출했습니다
+- Amazon DynamoDB 테이블을 생성하고 QuickTable 예약 데이터를 저장했습니다.
+- AWS Lambda 함수로 QuickTable 예약 관리 기능을 구현했습니다.
+- Amazon Bedrock Agent를 생성하고 QuickTable Action Group을 설정했습니다.
+- Week 14-2에서 생성한 Knowledge Base를 Agent에 연결했습니다.
+- Agent를 테스트하고 대화형 QuickTable 예약 시스템을 확인했습니다.
+- Agent 별칭을 생성하여 프로덕션 환경에 배포했습니다.
+- AWS Lambda 함수로 Agent를 프로그래밍 방식으로 호출했습니다.
 
 Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickTable 레스토랑 예약 시스템이 완성되었습니다. 고객은 자연어로 대화하며 예약을 생성하고 관리할 수 있으며, 레스토랑 정보에 대한 질문에도 답변받을 수 있습니다.
 
@@ -1156,8 +1160,8 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 3. **Regions**에서 `ap-northeast-2`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-	- **Tag key**: `Week`
-	- **Tag value**: `14-3`
+   - **Tag key**: `Week`
+   - **Tag value**: `14-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -1219,8 +1223,8 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 34. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 35. 검색창에 `/aws/lambda/BedrockAgent`를 입력합니다.
 36. 다음 로그 그룹들을 선택합니다:
-	- `/aws/lambda/BedrockAgentReservationHandler`
-	- `/aws/lambda/BedrockAgentInvoker`
+    - `/aws/lambda/BedrockAgentReservationHandler`
+    - `/aws/lambda/BedrockAgentInvoker`
 37. **Actions** > `Delete log group(s)`를 선택합니다.
 38. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 

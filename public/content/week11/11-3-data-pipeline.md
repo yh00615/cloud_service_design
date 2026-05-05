@@ -584,11 +584,11 @@ SELECT COUNT(*) as total_records FROM raw;
 
 다음을 성공적으로 수행했습니다:
 
-- AWS Glue Database를 직접 생성하여 데이터 카탈로그를 구성했습니다
-- AWS Glue Crawler를 직접 생성하고 실행하여 Amazon S3 데이터의 스키마를 자동으로 추론했습니다
-- AWS Glue Visual ETL Job을 직접 생성하여 CSV 데이터를 Parquet 형식으로 변환했습니다
-- Amazon Athena로 변환된 데이터를 SQL로 쿼리하고 분석했습니다
-- EventBridge와 AWS Lambda를 활용한 이벤트 기반 파이프라인 자동화 흐름을 확인했습니다
+- AWS Glue Database를 직접 생성하여 데이터 카탈로그를 구성했습니다.
+- AWS Glue Crawler를 직접 생성하고 실행하여 Amazon S3 데이터의 스키마를 자동으로 추론했습니다.
+- AWS Glue Visual ETL Job을 직접 생성하여 CSV 데이터를 Parquet 형식으로 변환했습니다.
+- Amazon Athena로 변환된 데이터를 SQL로 쿼리하고 분석했습니다.
+- EventBridge와 AWS Lambda를 활용한 이벤트 기반 파이프라인 자동화 흐름을 확인했습니다.
 
 # 🗑️ 리소스 정리
 

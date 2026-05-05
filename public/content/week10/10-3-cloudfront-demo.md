@@ -472,11 +472,11 @@ function handler(event) {
 
 다음을 성공적으로 수행했습니다:
 
-- QuickTable 프론트엔드를 Amazon S3 오리진 버킷에 업로드
-- Amazon CloudFront 배포 생성 및 OAC 자동 설정으로 전 세계 배포
-- 캐싱 동작 확인 및 응답 헤더 분석
-- 캐시 무효화를 통한 QuickTable 콘텐츠 갱신
-- Amazon CloudFront Functions로 엣지 로케이션에서 URL 리다이렉트 구현
+- QuickTable 프론트엔드를 Amazon S3 오리진 버킷에 업로드했습니다.
+- Amazon CloudFront 배포 생성 및 OAC 자동 설정으로 전 세계 배포했습니다.
+- 캐싱 동작 확인 및 응답 헤더 분석을 수행했습니다.
+- 캐시 무효화를 통한 QuickTable 콘텐츠 갱신을 수행했습니다.
+- Amazon CloudFront Functions로 엣지 로케이션에서 URL 리다이렉트를 구현했습니다.
 
 Week 9-3에서 구축한 QuickTable 정적 웹사이트가 이제 Amazon CloudFront를 통해 전 세계 사용자에게 빠르게 제공됩니다. Week 10-2의 Amazon ElastiCache와 결합하여 QuickTable은 글로벌 규모의 고성능 레스토랑 예약 시스템으로 발전했습니다.
 

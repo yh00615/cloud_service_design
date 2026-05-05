@@ -336,12 +336,12 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 
 다음을 성공적으로 수행했습니다:
 
-- RAG (Retrieval-Augmented Generation) 아키텍처를 이해했습니다
-- Amazon Bedrock Knowledge Base를 생성하고 구성했습니다
-- QuickTable 레스토랑의 메뉴, 영업 정보, FAQ를 3개 문서로 분리하여 데이터 소스로 연결하고 동기화했습니다
-- 벡터 임베딩과 의미 기반 검색 원리를 학습했습니다
-- 생성형 AI와 지식 베이스를 통합하여 정확한 답변을 생성했습니다
-- 환각 방지와 Source attribution의 중요성을 이해했습니다
+- RAG (Retrieval-Augmented Generation) 아키텍처를 이해했습니다.
+- Amazon Bedrock Knowledge Base를 생성하고 구성했습니다.
+- QuickTable 레스토랑의 메뉴, 영업 정보, FAQ를 3개 문서로 분리하여 데이터 소스로 연결하고 동기화했습니다.
+- 벡터 임베딩과 의미 기반 검색 원리를 학습했습니다.
+- 생성형 AI와 지식 베이스를 통합하여 정확한 답변을 생성했습니다.
+- 환각 방지와 Source attribution의 중요성을 이해했습니다.
 
 이 Knowledge Base는 다음 세션인 Week 14-3에서 Amazon Bedrock Agent와 통합하여 QuickTable AI 챗봇의 핵심 구성 요소로 사용됩니다.
 
