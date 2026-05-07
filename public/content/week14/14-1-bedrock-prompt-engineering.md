@@ -62,9 +62,9 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 4. 왼쪽 **Categories**에서 `Anthropic`을 선택합니다.
 5. **Models** 목록에서 사용 가능한 최신 Claude 모델을 선택합니다 (예: `Claude Opus 4.7`, `Claude Sonnet 4.6`, 또는 `Claude Haiku 4.5`).
 
-   <img src="/images/week14/14-1-task1-step5-model1.png" alt="Anthropic 카테고리 선택" class="guide-img-sm" />
+    <img src="/images/week14/14-1-task1-step5-model1.png" alt="Anthropic 카테고리 선택" class="guide-img-sm" />
 
-   <img src="/images/week14/14-1-task1-step5-model2.png" alt="Claude 모델 선택" class="guide-img-sm" />
+    <img src="/images/week14/14-1-task1-step5-model2.png" alt="Claude 모델 선택" class="guide-img-sm" />
 
 6. [[Apply]] 버튼을 클릭합니다.
 

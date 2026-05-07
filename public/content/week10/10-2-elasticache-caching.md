@@ -62,12 +62,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 1. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 2. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-   <img src="/images/week10/10-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week10/10-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 3. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 4. **Specify template**에서 `Upload a template file`을 선택합니다.
 5. [[Choose file]] 버튼을 클릭한 후 다운로드한 `week10-2-elasticache-lab.yaml` 파일을 선택합니다.
 6. [[Next]] 버튼을 클릭합니다.
+
+<img src="/images/week10/10-2-task0-step6-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
+
 7. **Stack name**에 `week10-2-quicktable-cache-stack`을 입력합니다.
 8. **Parameters** 섹션에서 기본값을 확인합니다:
    - **CacheNodeType**: `cache.t3.micro`
@@ -76,6 +79,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
    - **ProjectTag**: `AWS-Lab`
    - **WeekTag**: `10-2`
 9. [[Next]] 버튼을 클릭합니다.
+
+<img src="/images/week10/10-2-task0-step9-parameters.png" alt="CloudFormation Parameters 설정" class="guide-img-md" />
+
 10. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -103,6 +109,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 스택 생성에 5-7분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 16. **Outputs** 탭을 선택합니다.
+
+    <img src="/images/week10/10-2-task0-step16-create-progress.png" alt="CloudFormation 스택 생성 완료" class="guide-img-md" />
+
 17. 출력값들을 확인하고 메모장에 복사합니다:
     - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
     - `PrivateSubnetAId`: 프라이빗 서브넷 A ID (예: subnet-0a1b2c3d4e5f6g7h8)
@@ -140,6 +149,8 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 19. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
 20. [[Create cache]] 버튼을 클릭합니다.
 
+    <img src="/images/week10/10-2-task1-step20-elasticache-console.png" alt="ElastiCache Valkey caches - Create cache" class="guide-img-md" />
+
 > [!NOTE]
 > 왼쪽 메뉴에 Redis OSS caches도 있지만, AWS는 Valkey를 권장 엔진으로 제공합니다. Valkey는 Redis OSS와 완전 호환되므로 기존 Redis 명령어와 클라이언트를 그대로 사용할 수 있습니다.
 
@@ -151,6 +162,8 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 23. **Creation method**에서 `Cluster cache`를 선택합니다.
 
+    <img src="/images/week10/10-2-task1-step23-cache-settings.png" alt="Create cache - Creation method 선택" class="guide-img-md" />
+
 > [!NOTE]
 > `Easy create`는 권장 설정으로 빠르게 생성하지만, 이 실습에서는 캐시 구성을 직접 설정하는 학습 목적으로 `Cluster cache`를 선택합니다.
 
@@ -160,9 +173,14 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 > Cluster mode Disabled는 단일 샤드(노드 그룹)로 구성됩니다. 이 실습에서는 단순한 캐싱 용도이므로 Disabled로 충분합니다.
 
 25. **Cluster info** 섹션에서 **Name**에 `quicktable-cache`, **Description**에 `QuickTable reservation cache`를 입력합니다.
+
+    <img src="/images/week10/10-2-task1-step25-cluster-info.png" alt="Cluster info - Name, Description 입력" class="guide-img-md" />
+
 26. **Location**에서 `AWS Cloud`를 선택합니다 (기본값).
 27. **Multi-AZ**의 `Enable` 체크를 해제합니다.
 28. **Auto-failover**의 `Enable` 체크를 해제합니다.
+
+    <img src="/images/week10/10-2-task1-step28-node-type.png" alt="Node type 및 설정" class="guide-img-md" />
 
 > [!NOTE]
 > Multi-AZ와 Auto-failover는 고가용성을 위한 설정입니다. 이 실습에서는 레플리카를 0으로 설정하므로 비활성화합니다.
@@ -180,6 +198,9 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 > 기본값은 `cache.r7g.large`로 설정되어 있습니다. 실습 비용을 줄이기 위해 반드시 `cache.t3.micro`로 변경합니다.
 
 33. **Number of replicas**에서 `0`을 입력합니다.
+
+    <img src="/images/week10/10-2-task1-step33-subnet-group.png" alt="Connectivity - Subnet group 설정" class="guide-img-md" />
+
 34. **Connectivity** 섹션에서 **Network type**은 `IPv4`를 유지합니다.
 35. **Subnet groups**에서 `Choose existing subnet group`을 선택하고, 태스크 0에서 생성한 서브넷 그룹을 선택합니다.
 
@@ -188,7 +209,11 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 36. **Availability Zone placements**에서 `No preference`를 선택합니다.
 37. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task1-step37-security.png" alt="Security 설정" class="guide-img-md" />
+
 38. **Security** 섹션에서 **Encryption at rest**의 `Enable` 체크를 해제합니다.
+
 39. **Encryption in transit**의 `Enable` 체크를 해제합니다.
 40. **Selected security groups**에서 [[Manage]] 버튼을 클릭하고, 태스크 0에서 생성한 `week10-2-elasticache-lab-ElastiCache-SG` 보안 그룹을 선택합니다.
 
@@ -196,8 +221,16 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 > 기본 보안 그룹이 선택되어 있으면 해제하고, ElastiCache 전용 보안 그룹만 선택합니다.
 
 41. **Backup** 섹션에서 `Enable automatic backups`의 체크를 해제합니다.
-42. **Logs** 섹션은 기본값 (모두 체크 해제)을 유지합니다.
-43. **Maintenance** 섹션은 기본값을 유지합니다: **Maintenance window**는 `No preference`, **Auto upgrade minor versions**는 `Enable`, **Topic for Amazon SNS notification**은 `Disable notifications`.
+
+    <img src="/images/week10/10-2-task1-step41-tags.png" alt="Tags 설정" class="guide-img-md" />
+
+42. **Maintenance** 섹션은 기본값을 유지합니다.
+    - **Maintenance window**: `No preference`
+    - **Auto upgrade minor versions**: `Enable`
+    - **Topic for Amazon SNS notification**: `Disable notifications`
+43. **Logs** 섹션은 기본값 (모두 체크 해제)을 유지합니다.
+
+    <img src="/images/week10/10-2-task1-step43-logs.png" alt="Logs 섹션 기본값 유지" class="guide-img-md" />
 
 44. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -208,7 +241,13 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 | `CreatedBy` | `Student` |
 
 45. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task1-step45-next.png" alt="Tags 설정 후 Next" class="guide-img-md" />
+
 46. **Review and create** 페이지에서 설정을 확인합니다.
+
+    <img src="/images/week10/10-2-task1-step46-review.png" alt="Review and create 페이지" class="guide-img-md" />
+
 47. [[Create]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -225,6 +264,8 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 ✅ **태스크 완료**: Amazon ElastiCache Valkey 캐시가 생성되었습니다.
 
+<img src="/images/week10/10-2-task1-complete.png" alt="ElastiCache Valkey 캐시 생성 완료" class="guide-img-md" />
+
 ## 태스크 2: Valkey 엔드포인트 확인
 
 ### 태스크 설명
@@ -236,6 +277,9 @@ Valkey는 Redis OSS 호환 오픈소스 인메모리 데이터 저장소로, 데
 
 48. Amazon ElastiCache 콘솔에서 `quicktable-cache` 캐시를 선택합니다.
 49. **Cluster details** 섹션에서 **Primary endpoint**를 확인합니다.
+
+    <img src="/images/week10/10-2-task2-step49-endpoint.png" alt="ElastiCache Primary endpoint 확인" class="guide-img-md" />
+
 50. Primary endpoint 값을 복사하여 메모장에 저장합니다.
 
 > [!NOTE]
@@ -262,7 +306,13 @@ Valkey CLI를 사용하여 기본 명령어를 실습하고 캐싱 동작을 이
 51. AWS Management Console에 로그인한 후 상단 검색창에 `EC2`을 입력하고 선택합니다.
 52. 왼쪽 메뉴에서 **Instances**를 선택합니다.
 53. [[Launch instances]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task3-step53-ec2-console.png" alt="EC2 Launch instances" class="guide-img-md" />
+
 54. **Name**에 `quicktable-cache-client`를 입력합니다.
+
+    <img src="/images/week10/10-2-task3-step54-name-tags.png" alt="EC2 Name 및 Tags 설정" class="guide-img-md" />
+
 55. **Add additional tags** 링크를 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
@@ -271,37 +321,49 @@ Valkey CLI를 사용하여 기본 명령어를 실습하고 캐싱 동작을 이
 | `Week`      | `10-2`    |
 | `CreatedBy` | `Student` |
 
+<img src="/images/week10/10-2-task3-step55-tags.png" alt="Additional tags 추가" class="guide-img-md" />
+
 56. **Application and OS Images**에서 `Amazon Linux 2023 AMI`를 선택합니다.
+
+    <img src="/images/week10/10-2-task3-step56-ami.png" alt="AMI 선택" class="guide-img-md" />
+
 57. **Instance type**에서 `t3.micro`를 선택합니다.
 58. **Key pair**에서 `Proceed without a key pair`를 선택합니다.
+
+    <img src="/images/week10/10-2-task3-step58-keypair.png" alt="Key pair - Proceed without a key pair" class="guide-img-md" />
+
 59. **Network settings**에서 [[Edit]] 버튼을 클릭한 후 **Amazon VPC**는 태스크 0에서 생성한 VPC, **Subnet**은 프라이빗 서브넷 중 하나, **Auto-assign public IP**는 `Disable`을 선택합니다.
 60. **Firewall (security groups)**에서 `Select existing security group`을 선택하고, 태스크 0에서 생성한 `week10-2-elasticache-lab-EC2-SG` 보안 그룹을 선택합니다.
+
+    <img src="/images/week10/10-2-task3-step60-security-group.png" alt="Security group 선택" class="guide-img-md" />
+
 61. **Advanced details** 섹션을 확장합니다.
 62. **IAM instance profile**에서 태스크 0에서 생성한 `week10-2-elasticache-lab-SSMInstanceProfile`을 선택합니다.
+
+    <img src="/images/week10/10-2-task3-step63-launch.png" alt="IAM instance profile 및 Launch instance" class="guide-img-md" />
+
 63. [[Launch instance]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task3-step63-launch-success.png" alt="Launch instance 완료" class="guide-img-md" />
 
 > [!NOTE]
 > 인스턴스 생성이 완료될 때까지 기다립니다. 상태가 "Running"으로 변경되면 다음 단계를 진행합니다.
 
 64. 인스턴스를 선택합니다.
 65. [[Connect]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task3-step65-ssm-connect.png" alt="EC2 Connect 버튼" class="guide-img-md" />
+
 66. **Session Manager** 탭을 선택합니다.
 67. [[Connect]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-task3-step67-ssm-session.png" alt="Session Manager Connect" class="guide-img-md" />
 
 > [!NOTE]
 > Session Manager는 SSH 키 없이 안전하게 Amazon EC2 인스턴스에 접속할 수 있는 AWS Systems Manager 기능입니다.
 > AWS IAM 역할을 통해 인증되므로 별도의 키 관리가 필요 없습니다.
 
-68. Session Manager 터미널이 열리면 `ec2-user`로 전환합니다:
-
-```bash
-sudo su - ec2-user
-```
-
-> [!NOTE]
-> Session Manager는 `ssm-user`로 접속되므로 `ec2-user`로 전환해야 홈 디렉토리와 패키지 설치가 정상적으로 동작합니다.
-
-69. Valkey CLI를 설치합니다:
+68. Session Manager 터미널이 열리면 다음 명령어로 Valkey CLI를 설치합니다:
 
 ```bash
 sudo yum install -y gcc make
@@ -313,15 +375,21 @@ make
 sudo cp src/valkey-cli /usr/local/bin/
 ```
 
+<img src="/images/week10/10-2-task4-step68-valkey-install1.png" alt="Valkey CLI 설치 진행" class="guide-img-md" />
+
+<img src="/images/week10/10-2-task4-step68-valkey-install2.png" alt="Valkey CLI 설치 완료" class="guide-img-sm" />
+
 > [!NOTE]
 > Valkey 8.0.7은 8.0.x 시리즈의 최신 안정 버전입니다 (2026년 2월 릴리스). Valkey 9.0.x 시리즈도 출시되었으나, ElastiCache에서 사용하는 엔진 버전과 맞추기 위해 8.0.x를 사용합니다.
 > 최신 버전은 [Valkey Releases](https://github.com/valkey-io/valkey/releases) 페이지에서 확인할 수 있으며, 위 명령어의 버전 번호(`8.0.7`)를 변경하여 사용합니다.
 
-70. Valkey CLI 설치를 확인합니다:
+69. Valkey CLI 설치를 확인합니다:
 
 ```bash
 valkey-cli --version
 ```
+
+<img src="/images/week10/10-2-task4-step69-valkey-version.png" alt="valkey-cli 버전 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -329,7 +397,7 @@ valkey-cli --version
 > valkey-cli 8.0.7
 > ```
 
-71. Valkey 캐시에 연결합니다:
+70. Valkey 캐시에 연결합니다:
 
 ```bash
 valkey-cli -h <Primary-Endpoint> -p 6379
@@ -339,7 +407,7 @@ valkey-cli -h <Primary-Endpoint> -p 6379
 > `<Primary-Endpoint>`를 태스크 2에서 복사한 엔드포인트로 대체합니다.
 > 예: `valkey-cli -h quicktable-cache.xxxxx.ng.0001.apne2.cache.amazonaws.com -p 6379`
 
-72. 연결이 성공하면 Valkey CLI 프롬프트가 표시됩니다:
+71. 연결이 성공하면 Valkey CLI 프롬프트가 표시됩니다:
 
 > [!OUTPUT]
 >
@@ -347,11 +415,13 @@ valkey-cli -h <Primary-Endpoint> -p 6379
 > quicktable-cache.xxxxx.ng.0001.apne2.cache.amazonaws.com:6379>
 > ```
 
-73. PING 명령어로 연결을 테스트합니다:
+72. PING 명령어로 연결을 테스트합니다:
 
 ```bash
 PING
 ```
+
+<img src="/images/week10/10-2-task4-step72-valkey-connect.png" alt="PING PONG 연결 테스트" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -373,11 +443,11 @@ String, Hash, List 데이터 타입과 TTL 설정 방법을 학습합니다.
 
 ### 상세 단계
 
-74. Valkey CLI 프롬프트에서 다음 명령어들을 실행합니다.
+73. Valkey CLI 프롬프트에서 다음 명령어들을 실행합니다.
 
 #### String 타입 (SET/GET)
 
-75. 키-값 쌍을 저장합니다:
+74. 키-값 쌍을 저장합니다:
 
 ```bash
 SET user:1:name "John Doe"
@@ -387,7 +457,9 @@ SET user:1:name "John Doe"
 SET user:1:email "john@example.com"
 ```
 
-76. 저장된 값을 조회합니다:
+<img src="/images/week10/10-2-task4-step74-string-ops.png" alt="String SET 명령어 실행" class="guide-img-md" />
+
+75. 저장된 값을 조회합니다:
 
 ```bash
 GET user:1:name
@@ -396,6 +468,8 @@ GET user:1:name
 ```bash
 GET user:1:email
 ```
+
+<img src="/images/week10/10-2-task4-step75-hash-ops.png" alt="String GET 명령어 실행" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -406,17 +480,19 @@ GET user:1:email
 
 #### TTL 설정 (SETEX)
 
-77. TTL(Time To Live)을 설정하여 30분 후 자동 삭제되는 데이터를 저장합니다:
+76. TTL(Time To Live)을 설정하여 30분 후 자동 삭제되는 데이터를 저장합니다:
 
 ```bash
 SETEX session:abc123 1800 "user_session_data"
 ```
 
-78. 남은 TTL을 확인합니다:
+77. 남은 TTL을 확인합니다:
 
 ```bash
 TTL session:abc123
 ```
+
+<img src="/images/week10/10-2-task4-step77-ttl.png" alt="TTL 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -427,20 +503,24 @@ TTL session:abc123
 > [!NOTE]
 > TTL 값은 초 단위로 표시됩니다. 1800초 = 30분입니다.
 > 시간이 지나면 값이 감소하며, -1은 TTL이 설정되지 않음, -2는 키가 존재하지 않음을 의미합니다.
+>
+> <img src="/images/week10/10-2-task4-step77-ttl-note.png" alt="TTL 만료 후 확인" class="guide-img-md" />
 
 #### Hash 타입 (HSET/HGETALL)
 
-79. Hash 데이터 구조로 사용자 정보를 저장합니다:
+78. Hash 데이터 구조로 사용자 정보를 저장합니다:
 
 ```bash
 HSET user:2 name "Jane Smith" email "jane@example.com" age "28"
 ```
 
-80. Hash의 모든 필드를 조회합니다:
+79. Hash의 모든 필드를 조회합니다:
 
 ```bash
 HGETALL user:2
 ```
+
+<img src="/images/week10/10-2-task4-step79-hash.png" alt="Hash HGETALL 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -455,17 +535,19 @@ HGETALL user:2
 
 #### List 타입 (LPUSH/LRANGE)
 
-81. List에 예약 ID를 추가합니다:
+80. List에 예약 ID를 추가합니다:
 
 ```bash
 LPUSH reservations:recent "res001" "res002" "res003"
 ```
 
-82. List의 모든 요소를 조회합니다:
+81. List의 모든 요소를 조회합니다:
 
 ```bash
 LRANGE reservations:recent 0 -1
 ```
+
+<img src="/images/week10/10-2-task4-step81-list.png" alt="List LRANGE 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -480,13 +562,13 @@ LRANGE reservations:recent 0 -1
 
 #### 키 삭제 및 존재 확인 (DEL/EXISTS)
 
-83. 키를 삭제합니다:
+82. 키를 삭제합니다:
 
 ```bash
 DEL user:1:name
 ```
 
-84. 키가 존재하는지 확인합니다:
+83. 키가 존재하는지 확인합니다:
 
 ```bash
 EXISTS user:1:name
@@ -495,6 +577,8 @@ EXISTS user:1:name
 ```bash
 EXISTS user:1:email
 ```
+
+<img src="/images/week10/10-2-task4-step83-del.png" alt="DEL 및 EXISTS 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -505,11 +589,13 @@ EXISTS user:1:email
 
 EXISTS는 키가 존재하면 1, 존재하지 않으면 0을 반환합니다.
 
-85. Valkey CLI를 종료합니다:
+84. Valkey CLI를 종료합니다:
 
 ```bash
 exit
 ```
+
+<img src="/images/week10/10-2-task4-step84-exit.png" alt="Valkey CLI 종료" class="guide-img-md" />
 
 ✅ **태스크 완료**: Valkey 기본 명령어를 실습했습니다.
 
@@ -524,51 +610,67 @@ exit
 
 #### 실습 파일을 Amazon S3에 업로드 (CloudShell)
 
-86. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
-87. CloudShell 우측 상단의 **Actions** 드롭다운을 클릭한 후 `Upload file`을 선택합니다.
-88. 다운로드한 `week10-2-elasticache-lab.zip` 파일을 선택하고 업로드합니다.
-89. 업로드한 파일을 S3 버킷에 복사합니다:
+85. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
+86. CloudShell 우측 상단의 **Actions** 드롭다운을 클릭한 후 `Upload file`을 선택합니다.
+
+    <img src="/images/week10/10-2-task5-step86-cloudshell.png" alt="CloudShell Actions > Upload file" class="guide-img-md" />
+
+87. 다운로드한 `week10-2-elasticache-lab.zip` 파일을 선택하고 업로드합니다.
+88. 업로드한 파일을 S3 버킷에 복사합니다:
 
 ```bash
 aws s3 cp ~/week10-2-elasticache-lab.zip s3://<LabFilesBucketName>/
 ```
+
+<img src="/images/week10/10-2-task5-step88-s3-upload.png" alt="S3 버킷에 파일 복사" class="guide-img-md" />
 
 > [!NOTE]
 > `<LabFilesBucketName>`은 태스크 0의 Outputs에서 확인한 값으로 대체합니다.
 
 #### Amazon EC2에서 실습 파일 다운로드 및 실행 (Session Manager)
 
-90. Amazon EC2 콘솔로 이동하여 `quicktable-cache-client` 인스턴스를 선택합니다.
-91. [[Connect]] > **Session Manager** > [[Connect]]를 클릭합니다.
-92. `ec2-user`로 전환합니다:
+89. Amazon EC2 콘솔로 이동하여 `quicktable-cache-client` 인스턴스를 선택합니다.
+90. [[Connect]] > **Session Manager** > [[Connect]]를 클릭합니다.
+91. `ec2-user`로 전환합니다:
 
 ```bash
 sudo su - ec2-user
 ```
 
-93. S3에서 실습 파일을 다운로드하고 압축을 해제합니다:
+<img src="/images/week10/10-2-task5-step91-ssm-connect.png" alt="ec2-user 전환" class="guide-img-sm" />
+
+> [!NOTE]
+> Session Manager는 `ssm-user`로 접속됩니다. `ec2-user`로 전환해야 홈 디렉토리(`/home/ec2-user`)를 사용할 수 있고, 파일 다운로드 및 패키지 설치가 정상적으로 동작합니다.
+
+92. S3에서 실습 파일을 다운로드하고 압축을 해제합니다:
 
 ```bash
 aws s3 cp s3://<LabFilesBucketName>/week10-2-elasticache-lab.zip .
 unzip week10-2-elasticache-lab.zip
 ```
 
+<img src="/images/week10/10-2-task5-step92-s3-download.png" alt="S3 다운로드 및 압축 해제" class="guide-img-md" />
+
 > [!NOTE]
 > 파일이 홈 디렉토리(`~`)에 직접 압축 해제됩니다. `ls` 명령어로 `app.py`, `requirements.txt` 등이 있는지 확인합니다.
 
-94. Python 3와 pip를 설치합니다:
+93. Python 3와 pip를 설치합니다:
 
 ```bash
 sudo yum install -y python3 python3-pip
 ```
 
-95. 필요한 Python 패키지를 설치합니다:
+<img src="/images/week10/10-2-task5-step93-s3-download.png" alt="Python 3 설치" class="guide-img-md" />
+
+94. 필요한 Python 패키지를 설치합니다:
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-96. 환경 변수를 설정합니다:
+<img src="/images/week10/10-2-task5-step94-pip-install.png" alt="pip install 완료" class="guide-img-md" />
+
+95. 환경 변수를 설정합니다:
 
 ```bash
 export REDIS_HOST=<Primary-Endpoint>
@@ -577,15 +679,27 @@ export DYNAMODB_TABLE=week10-2-elasticache-lab-APIData
 export AWS_DEFAULT_REGION=ap-northeast-2
 ```
 
+<img src="/images/week10/10-2-task5-step95-env-vars.png" alt="환경 변수 설정" class="guide-img-md" />
+
 > [!NOTE]
 > `<Primary-Endpoint>`를 태스크 2에서 복사한 엔드포인트로 대체합니다.
 > 환경 변수명이 `REDIS_HOST`인 이유는 Valkey가 Redis OSS와 호환되어 기존 Redis 클라이언트 라이브러리를 그대로 사용하기 때문입니다.
+>
+> 설정한 환경 변수를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> echo $REDIS_HOST
+> echo $REDIS_PORT
+> echo $DYNAMODB_TABLE
+> ```
 
-97. DynamoDB 테이블을 초기화합니다:
+96. DynamoDB 테이블을 초기화합니다:
 
 ```bash
 python3 init_dynamodb.py
 ```
+
+<img src="/images/week10/10-2-task5-step96-env-verify.png" alt="DynamoDB 테이블 초기화" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -594,11 +708,13 @@ python3 init_dynamodb.py
 > 10개의 사용자 데이터가 추가되었습니다.
 > ```
 
-98. FastAPI 애플리케이션을 백그라운드로 실행합니다:
+97. FastAPI 애플리케이션을 백그라운드로 실행합니다:
 
 ```bash
 nohup uvicorn app:app --host 0.0.0.0 --port 5000 > app.log 2>&1 &
 ```
+
+<img src="/images/week10/10-2-task5-step97-init-dynamodb.png" alt="FastAPI 앱 백그라운드 실행" class="guide-img-md" />
 
 > [!NOTE]
 > FastAPI는 자동으로 API 문서를 생성합니다:
@@ -606,11 +722,13 @@ nohup uvicorn app:app --host 0.0.0.0 --port 5000 > app.log 2>&1 &
 > - Swagger UI: `http://<Amazon EC2-IP>:5000/docs`
 > - ReDoc: `http://<Amazon EC2-IP>:5000/redoc`
 
-99. 애플리케이션이 정상적으로 실행되는지 확인합니다:
+98. 애플리케이션이 정상적으로 실행되는지 확인합니다:
 
 ```bash
 curl -s http://localhost:5000/health | python3 -m json.tool
 ```
+
+<img src="/images/week10/10-2-task5-step98-app-start.png" alt="앱 실행 및 health check" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -621,11 +739,13 @@ curl -s http://localhost:5000/health | python3 -m json.tool
 > }
 > ```
 
-100. 캐시 없이 사용자 정보를 조회합니다 (첫 번째 요청):
+99. 캐시 없이 사용자 정보를 조회합니다 (첫 번째 요청):
 
 ```bash
 curl -s http://localhost:5000/user/1/nocache | python3 -m json.tool
 ```
+
+<img src="/images/week10/10-2-task5-step99-benchmark.png" alt="캐시 없이 조회 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -643,7 +763,7 @@ curl -s http://localhost:5000/user/1/nocache | python3 -m json.tool
 > }
 > ```
 
-101. 캐시를 사용하여 동일한 사용자 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
+100. 캐시를 사용하여 동일한 사용자 정보를 조회합니다 (첫 번째 요청 - 캐시 미스):
 
 ```bash
 curl -s http://localhost:5000/user/1 | python3 -m json.tool
@@ -665,11 +785,13 @@ curl -s http://localhost:5000/user/1 | python3 -m json.tool
 > }
 > ```
 
-102. 동일한 요청을 다시 실행합니다 (두 번째 요청 - 캐시 히트):
+101. 동일한 요청을 다시 실행합니다 (두 번째 요청 - 캐시 히트):
 
 ```bash
 curl -s http://localhost:5000/user/1 | python3 -m json.tool
 ```
+
+<img src="/images/week10/10-2-task5-step101-cache-hit.png" alt="캐시 히트 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -691,11 +813,13 @@ curl -s http://localhost:5000/user/1 | python3 -m json.tool
 > 캐시를 사용하면 응답 시간이 약 20배 빨라집니다 (43.87ms → 2.15ms).
 > 실제 프로덕션 환경에서는 10-50배의 성능 향상을 기대할 수 있습니다.
 
-103. 캐시 통계를 확인합니다:
+102. 캐시 통계를 확인합니다:
 
 ```bash
 curl -s http://localhost:5000/cache/stats | python3 -m json.tool
 ```
+
+<img src="/images/week10/10-2-task5-step102-cache-stats.png" alt="캐시 통계 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -709,11 +833,13 @@ curl -s http://localhost:5000/cache/stats | python3 -m json.tool
 > }
 > ```
 
-104. 성능 벤치마크를 실행합니다:
+103. 성능 벤치마크를 실행합니다:
 
 ```bash
 python3 benchmark.py
 ```
+
+<img src="/images/week10/10-2-task5-step103-benchmark.png" alt="벤치마크 실행 결과" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -735,6 +861,8 @@ python3 benchmark.py
 > [!NOTE]
 > 성능 향상 배율은 네트워크 환경에 따라 달라집니다. 같은 VPC 내에서는 DynamoDB 접근도 빠르기 때문에 차이가 작을 수 있습니다.
 > 실제 프로덕션 환경에서 외부 데이터베이스를 사용하는 경우 10-50배의 성능 향상을 기대할 수 있습니다.
+>
+> <img src="/images/week10/10-2-task5-step103-benchmark-note.png" alt="벤치마크 결과 상세" class="guide-img-sm" />
 
 ✅ **태스크 완료**: FastAPI 애플리케이션으로 Cache-Aside 패턴을 테스트했습니다.
 
@@ -767,6 +895,8 @@ python3 benchmark.py
    - **Tag value**: `10-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+<img src="/images/week10/10-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
@@ -786,6 +916,8 @@ INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=quickta
 aws ec2 terminate-instances --instance-ids $INSTANCE_ID --region ap-northeast-2
 ```
 
+<img src="/images/week10/10-2-cleanup-step7-ec2-terminate.png" alt="EC2 인스턴스 종료" class="guide-img-md" />
+
 > [!NOTE]
 > 인스턴스 상태를 확인하려면 다음 명령어를 실행합니다:
 >
@@ -794,12 +926,16 @@ aws ec2 terminate-instances --instance-ids $INSTANCE_ID --region ap-northeast-2
 > ```
 >
 > `terminated`가 출력되면 삭제 완료입니다.
+>
+> <img src="/images/week10/10-2-cleanup-step7-ec2-note.png" alt="EC2 인스턴스 종료 확인" class="guide-img-md" />
 
 8. Amazon ElastiCache 캐시를 삭제합니다:
 
 ```bash
 aws elasticache delete-replication-group --replication-group-id quicktable-cache --region ap-northeast-2
 ```
+
+<img src="/images/week10/10-2-cleanup-step8-elasticache-delete.png" alt="ElastiCache 캐시 삭제" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon ElastiCache 캐시 삭제에 5-10분이 소요됩니다. 삭제 상태를 확인하려면 다음 명령어를 실행합니다:
@@ -809,12 +945,16 @@ aws elasticache delete-replication-group --replication-group-id quicktable-cache
 > ```
 >
 > `available`은 아직 삭제되지 않은 상태, `deleting`이 출력되면 대기하고, `ReplicationGroupNotFoundFault` 오류가 나오면 삭제 완료입니다.
+>
+> <img src="/images/week10/10-2-cleanup-step8-elasticache-note.png" alt="ElastiCache 삭제 상태 확인" class="guide-img-md" />
 
 9. Amazon S3 버킷을 비웁니다:
 
 ```bash
 aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
 ```
+
+<img src="/images/week10/10-2-cleanup-step9-s3-empty.png" alt="S3 버킷 비우기" class="guide-img-md" />
 
 > [!NOTE]
 > `<LabFilesBucketName>`은 태스크 0의 Outputs에서 확인한 값으로 대체합니다.
@@ -837,13 +977,24 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
 11. 왼쪽 메뉴에서 **Instances**를 선택합니다.
 12. `quicktable-cache-client` 인스턴스를 선택합니다.
 13. **Instance state** > `Terminate instance`를 선택합니다.
+
+    <img src="/images/week10/10-2-cleanup-step13-stack-delete.png" alt="EC2 Terminate instance" class="guide-img-md" />
+
 14. 확인 창에서 [[Terminate]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-cleanup-step14-stack-confirm.png" alt="Terminate 확인" class="guide-img-sm" />
+
 15. Amazon ElastiCache 콘솔로 이동합니다.
 16. 왼쪽 메뉴에서 **Valkey caches**를 선택합니다.
 17. `quicktable-cache` 캐시를 선택합니다.
 18. **Actions** > `Delete`를 선택합니다.
+
+    <img src="/images/week10/10-2-cleanup-step18-elasticache-delete.png" alt="ElastiCache Actions > Delete" class="guide-img-md" />
+
 19. **Create backup**에서 `No`를 선택합니다.
 20. 확인 창에서 `quicktable-cache`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week10/10-2-cleanup-step20-elasticache-confirm.png" alt="ElastiCache 삭제 확인 - 이름 입력" class="guide-img-sm" />
 
 > [!NOTE]
 > Amazon ElastiCache 캐시 삭제에 5-10분이 소요됩니다. 삭제가 완료될 때까지 기다립니다.
@@ -853,12 +1004,17 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
 23. [[Empty]] 버튼을 클릭합니다.
 24. 확인 창에서 `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
 
+    <img src="/images/week10/10-2-cleanup-step24-s3-empty.png" alt="S3 버킷 Empty 확인" class="guide-img-sm" />
+
 ### 단계 3: AWS CloudFormation 스택 삭제
 
 25. AWS CloudFormation 콘솔로 이동합니다.
 26. `week10-2-quicktable-cache-stack` 스택을 선택합니다.
 27. [[Delete stack]] 버튼을 클릭합니다.
 28. 확인 창에서 스택 이름 `week10-2-quicktable-cache-stack`을 입력합니다.
+
+    <img src="/images/week10/10-2-cleanup-step28-stack-delete.png" alt="CloudFormation 스택 삭제 확인" class="guide-img-sm" />
+
 29. [[Delete stack]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -876,6 +1032,8 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
     - **Tag key**: `Week`
     - **Tag value**: `10-2`
 35. [[Search resources]] 버튼을 클릭합니다.
+
+<img src="/images/week10/10-2-cleanup-step35-tageditor-final.png" alt="Tag Editor 최종 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
