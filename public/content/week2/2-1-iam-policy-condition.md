@@ -46,7 +46,7 @@ prerequisites:
 2. 오른쪽 상단에서 현재 리전이 `Asia Pacific (Seoul) ap-northeast-2`인지 확인합니다.
 3. [[Create bucket]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task1-step2-region-check.png" alt="AWS 콘솔 리전 확인" class="guide-img-md" />
+    <img src="/images/week2/2-1-task1-step2-region-check.png" alt="AWS 콘솔 리전 확인" class="guide-img-md" />
 
 4. **Bucket name**에 `iam-condition-lab-YOUR-INITIALS-12345`를 입력합니다.
 
@@ -71,7 +71,7 @@ prerequisites:
 > [!NOTE]
 > 나머지 설정은 기본값을 유지합니다.
 
-   <img src="/images/week2/2-1-task1-step8-bucket-region.png" alt="S3 버킷 생성 화면" class="guide-img-sm" />
+    <img src="/images/week2/2-1-task1-step8-bucket-region.png" alt="S3 버킷 생성 화면" class="guide-img-sm" />
 
 > [!NOTE]
 > 버킷 생성은 즉시 완료되며 별도의 대기 시간이 없습니다. 버킷 목록 페이지로 자동 이동합니다.
@@ -161,7 +161,7 @@ prerequisites:
 14. 왼쪽 메뉴에서 **Policies**를 선택합니다.
 15. [[Create policy]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task2-step3-create-policy.png" alt="IAM Policies 페이지에서 Create policy 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task2-step3-create-policy.png" alt="IAM Policies 페이지에서 Create policy 버튼" class="guide-img-md" />
 
 16. **JSON** 탭을 선택합니다.
 17. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다:
@@ -218,7 +218,7 @@ prerequisites:
    > **이 실습의 테스트 제한사항**: 태스크 8에서는 AWS IAM 사용자의 Access Key(장기 자격증명)를 사용하므로 `aws:MultiFactorAuthPresent` 키가 요청에 포함되지 않습니다. BoolIfExists는 키가 없을 때 조건을 true로 평가하지만, Deny Statement의 조건이 "false"를 요구하므로 결과적으로 Deny가 적용됩니다. 따라서 이 실습에서는 "MFA 없이 쓰기 차단"만 테스트하고, "MFA 있을 때 쓰기 허용"은 테스트하지 않습니다. MFA 있을 때의 동작을 테스트하려면 AWS STS GetSessionToken으로 임시 자격증명을 발급받거나, AWS 콘솔에 MFA 인증으로 로그인한 후 Amazon S3 콘솔에서 직접 파일을 업로드해야 합니다.
 18. [[Next]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task2-step6-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task2-step6-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
 
 19. **Policy name**에 `S3MFARequiredPolicy`를 입력합니다.
 20. **Description**에 `Requires MFA for Amazon S3 write operations`를 입력합니다.
@@ -328,7 +328,7 @@ prerequisites:
 
 34. [[Next]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task3-step8-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task3-step8-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
 
 35. **Policy name**에 `S3IPRestrictionPolicy`를 입력합니다.
 36. **Description**에 `Restricts Amazon S3 access to specific IP addresses`를 입력합니다.
@@ -451,7 +451,7 @@ prerequisites:
 
 43. [[Next]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task4-step4-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task4-step4-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
 
 44. **Policy name**에 `S3TimeBasedPolicy`를 입력합니다.
 45. **Description**에 `Restricts Amazon S3 access to specific date range`를 입력합니다.
@@ -465,7 +465,7 @@ prerequisites:
 
 47. [[Create policy]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task4-step8-create-policy.png" alt="IAM 정책 생성 완료 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task4-step8-create-policy.png" alt="IAM 정책 생성 완료 버튼" class="guide-img-md" />
 
 48. 정책 생성이 완료되면 **Policies** 페이지로 자동 이동합니다.
 
@@ -526,7 +526,7 @@ prerequisites:
 
 52. [[Next]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task5-step4-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task5-step4-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
 
 53. **Policy name**에 `S3ComplexConditionPolicy`를 입력합니다.
 54. **Description**에 `Amazon S3 access with multiple conditions`를 입력합니다.
@@ -540,7 +540,7 @@ prerequisites:
 
 56. [[Create policy]] 버튼을 클릭합니다.
 
-   <img src="/images/week2/2-1-task5-step8-create-policy.png" alt="IAM 정책 생성 최종 확인 화면에서 Create policy 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task5-step8-create-policy.png" alt="IAM 정책 생성 최종 확인 화면에서 Create policy 버튼" class="guide-img-md" />
 
 57. 정책 생성이 완료되면 **Policies** 페이지로 자동 이동합니다.
 
@@ -563,7 +563,7 @@ prerequisites:
 58. AWS IAM 콘솔로 이동합니다.
 59. 왼쪽 메뉴에서 **Users**를 선택합니다.
 60. [[Create user]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task6-step3-create-user.png" alt="IAM Create user 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task6-step3-create-user.png" alt="IAM Create user 버튼" class="guide-img-md" />
 
 61. **User name**에 `condition-test-user`를 입력합니다.
 62. **Provide user access to the AWS Management Console** 체크박스는 체크하지 않습니다.
@@ -574,7 +574,7 @@ prerequisites:
 > **CloudShell 사용 방식 설명**: 태스크 7에서 AWS CloudShell을 사용하지만, CloudShell은 현재 로그인한 관리자 계정의 자격증명을 사용합니다. condition-test-user의 자격증명은 `--profile condition-test` 옵션으로 별도로 지정하여 테스트하므로, condition-test-user에게 콘솔 접근 권한이 필요하지 않습니다.
 
 63. [[Next]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task6-step6-next-button.png" alt="IAM 사용자 생성 화면에서 Next 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task6-step6-next-button.png" alt="IAM 사용자 생성 화면에서 Next 버튼" class="guide-img-md" />
 
 64. **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
 
@@ -648,12 +648,12 @@ prerequisites:
 77. 왼쪽 메뉴에서 **Users**를 선택합니다.
 78. 사용자 목록에서 `condition-test-user`를 검색합니다.
 79. `condition-test-user`를 클릭합니다.
-   <img src="/images/week2/2-1-task7-step4-user-details.png" alt="IAM 사용자 목록에서 condition-test-user 선택" class="guide-img-md" />
+    <img src="/images/week2/2-1-task7-step4-user-details.png" alt="IAM 사용자 목록에서 condition-test-user 선택" class="guide-img-md" />
 
 80. **Security credentials** 탭을 선택합니다.
 81. **Access keys** 섹션으로 스크롤합니다.
 82. [[Create access key]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task7-step7-create-access-key.png" alt="IAM Security credentials 탭에서 Create access key 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-task7-step7-create-access-key.png" alt="IAM Security credentials 탭에서 Create access key 버튼" class="guide-img-md" />
 
 83. **Use case**에서 `Command Line Interface (CLI)`를 선택합니다.
 
@@ -705,7 +705,7 @@ aws configure --profile condition-test
     - **Default region name**: `ap-northeast-2` 입력
    - **Default output format**: `json` 입력
 
-   <img src="/images/week2/2-1-task7-step3-configure-profile.png" alt="AWS CLI 프로파일 구성 프롬프트" class="guide-img-md" />
+    <img src="/images/week2/2-1-task7-step3-configure-profile.png" alt="AWS CLI 프로파일 구성 프롬프트" class="guide-img-md" />
 
 > [!TIP]
 > 프로파일 이름은 IAM 사용자 이름과 달라도 됩니다. 이 실습에서는 간결하게 `condition-test`를 사용합니다.
@@ -770,7 +770,7 @@ aws s3 cp test.txt s3://iam-condition-lab-YOUR-INITIALS-12345/ --profile conditi
 > [!IMPORTANT]
 > **AccessDenied** 오류가 나와야 정상입니다. 이는 S3MFARequiredPolicy의 DenyS3ActionsWithoutMFA Statement가 MFA 없는 쓰기 작업을 차단했음을 의미합니다. 오류 메시지에 "with an explicit deny in an identity-based policy"라고 표시되어 정책의 Deny Statement가 작동했음을 확인할 수 있습니다.
 
-   <img src="/images/week2/2-1-task7-step4-upload-denied.png" alt="MFA 없이 S3 업로드 시도 시 AccessDenied 오류" class="guide-img-md" />
+    <img src="/images/week2/2-1-task7-step4-upload-denied.png" alt="MFA 없이 S3 업로드 시도 시 AccessDenied 오류" class="guide-img-md" />
 
 97. 버킷에서 객체 삭제를 시도합니다 (실패 예상):
 
@@ -784,7 +784,7 @@ aws s3 rm s3://iam-condition-lab-YOUR-INITIALS-12345/test.txt --profile conditio
 > delete failed: s3://iam-condition-lab-demo-12345/test.txt An error occurred (AccessDenied) when calling the DeleteObject operation: User: arn:aws:iam::123456789012:user/condition-test-user is not authorized to perform: s3:DeleteObject on resource: "arn:aws:s3:::iam-condition-lab-demo-12345/test.txt" with an explicit deny in an identity-based policy
 > ```
 
-   <img src="/images/week2/2-1-task7-step5-delete-denied.png" alt="MFA 없이 S3 삭제 시도 시 AccessDenied 오류" class="guide-img-md" />
+    <img src="/images/week2/2-1-task7-step5-delete-denied.png" alt="MFA 없이 S3 삭제 시도 시 AccessDenied 오류" class="guide-img-md" />
 
 > [!NOTE]
 > 삭제 작업도 MFA 없이는 차단됩니다.
@@ -818,18 +818,18 @@ aws s3 rm s3://iam-condition-lab-YOUR-INITIALS-12345/test.txt --profile conditio
 102. **Permissions** 탭을 선택합니다.
 103. [[Add permissions]] 드롭다운 버튼을 클릭합니다.
 104. 드롭다운 메뉴에서 `Add permissions`를 선택합니다.
-   <img src="/images/week2/2-1-task8-step7-add-permissions.png" alt="Add permissions 드롭다운 메뉴" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step7-add-permissions.png" alt="Add permissions 드롭다운 메뉴" class="guide-img-md" />
 
 105. **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
 106. **Permissions policies** 섹션으로 스크롤합니다.
 107. 정책 검색창에 `S3IPRestrictionPolicy`를 입력합니다.
 108. `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
 109. [[Next]] 버튼을 클릭합니다.
-    <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 선택 후 Next 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 선택 후 Next 버튼" class="guide-img-md" />
 
 110. [[Add permissions]] 버튼을 클릭합니다.
-    <img src="/images/week2/2-1-task8-step13-add-permissions.png" alt="Add permissions 버튼" class="guide-img-md" />
-    <img src="/images/week2/2-1-task8-step13-add-permissions-2.png" alt="정책 연결 완료 화면" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step13-add-permissions.png" alt="Add permissions 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step13-add-permissions-2.png" alt="정책 연결 완료 화면" class="guide-img-md" />
 
 > [!NOTE]
 > 이제 condition-test-user에는 S3MFARequiredPolicy와 S3IPRestrictionPolicy 두 개의 정책이 연결되어 있습니다.
@@ -864,7 +864,7 @@ curl https://checkip.amazonaws.com
 117. 정책 목록에서 `S3IPRestrictionPolicy`를 검색합니다.
 118. `S3IPRestrictionPolicy`를 클릭합니다.
 119. **Permissions** 탭에서 [[Edit]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task8-step9-edit-policy.png" alt="정책 편집 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step9-edit-policy.png" alt="정책 편집 버튼" class="guide-img-md" />
 
 120. **JSON** 탭을 선택합니다.
 121. 기존 정책의 `aws:SourceIp` 배열에 CloudShell IP를 추가합니다:
@@ -908,10 +908,10 @@ curl https://checkip.amazonaws.com
 > - JSON 배열 형식을 정확히 지켜야 합니다. (쉼표, 대괄호 확인)
 
 122. [[Next]] 버튼을 클릭합니다.
-    <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 수정 후 Next 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 수정 후 Next 버튼" class="guide-img-md" />
 
 123. [[Save changes]] 버튼을 클릭합니다.
-    <img src="/images/week2/2-1-task8-step13-save-changes.png" alt="정책 저장 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step13-save-changes.png" alt="정책 저장 버튼" class="guide-img-md" />
 
 > [!OUTPUT]
 > 정책 수정이 완료되면 화면 상단에 녹색 배너로 "Policy S3IPRestrictionPolicy updated."라는 성공 메시지가 표시됩니다.
@@ -938,7 +938,7 @@ aws s3 ls --profile condition-test
 > YYYY-MM-DD HH:MM:SS iam-condition-lab-[이니셜]-[숫자]
 > ```
 
-   <img src="/images/week2/2-1-task8-step16-bucket-list.png" alt="CloudShell IP 추가 후 버킷 목록 조회 성공" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step16-bucket-list.png" alt="CloudShell IP 추가 후 버킷 목록 조회 성공" class="guide-img-md" />
 
 > [!NOTE]
 > 현재 IP가 태스크 3에서 허용 목록에 추가되었으므로 접근이 성공합니다.
@@ -957,10 +957,10 @@ aws s3 ls --profile condition-test
 127. **Permissions** 탭을 선택합니다.
 128. **Permissions policies** 섹션에서 `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
 129. [[Remove]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task8-step4-remove-button.png" alt="정책 제거 버튼" class="guide-img-md" />
+     <img src="/images/week2/2-1-task8-step4-remove-button.png" alt="정책 제거 버튼" class="guide-img-md" />
 
 130. 확인 창에서 [[Remove policy]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-task8-step5-remove-policy.png" alt="정책 제거 확인 대화상자" class="guide-img-sm" />
+     <img src="/images/week2/2-1-task8-step5-remove-policy.png" alt="정책 제거 확인 대화상자" class="guide-img-sm" />
 
 > [!NOTE]
 > IP 제한 정책 테스트가 완료되었으므로 정책을 분리합니다. 이제 condition-test-user에는 S3MFARequiredPolicy만 남아있습니다.
@@ -1024,11 +1024,11 @@ aws s3 ls --profile condition-test
 12. **Access keys** 섹션으로 스크롤합니다.
 13. **Access keys** 섹션에서 생성한 Access Key를 선택합니다.
 14. **Actions** > `Deactivate`를 선택합니다.
-   <img src="/images/week2/2-1-cleanup-step8-deactivate.png" alt="Access Key 비활성화 확인 창" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step8-deactivate.png" alt="Access Key 비활성화 확인 창" class="guide-img-md" />
 
 15. 확인 창에서 [[Deactivate]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step9-deactivate-complete.png" alt="Access Key 비활성화 완료 화면" class="guide-img-sm" />
-   <img src="/images/week2/2-1-cleanup-step9-deactivate-complete-2.png" alt="비활성화된 Access Key 상태" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step9-deactivate-complete.png" alt="Access Key 비활성화 완료 화면" class="guide-img-sm" />
+    <img src="/images/week2/2-1-cleanup-step9-deactivate-complete-2.png" alt="비활성화된 Access Key 상태" class="guide-img-md" />
 
 16. 다시 **Actions** > `Delete`를 선택합니다.
     <img src="/images/week2/2-1-cleanup-step10-delete.png" alt="Access Key 삭제 확인 창" class="guide-img-md" />
@@ -1097,7 +1097,7 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 27. 사용자 목록에서 `condition-test-user`를 검색합니다.
 28. `condition-test-user`를 선택합니다.
 29. [[Delete]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step5-delete-user.png" alt="IAM 사용자 삭제 확인 창" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step5-delete-user.png" alt="IAM 사용자 삭제 확인 창" class="guide-img-md" />
 
 30. 확인 창이 나타나면 입력 필드에 `confirm`을 입력합니다.
 
@@ -1105,7 +1105,7 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 > AWS는 실수로 인한 삭제를 방지하기 위해 "confirm"을 입력하도록 요구합니다. 사용자를 삭제하면 연결된 정책도 자동으로 분리됩니다.
 
 31. [[Delete user]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step7-user-deleted.png" alt="IAM 사용자 삭제 완료 메시지" class="guide-img-sm" />
+    <img src="/images/week2/2-1-cleanup-step7-user-deleted.png" alt="IAM 사용자 삭제 완료 메시지" class="guide-img-sm" />
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "User "condition-test-user" deleted."라는 성공 메시지가 표시됩니다.
@@ -1122,11 +1122,11 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 > 정책이 선택되면 라디오 버튼에 점이 표시되고, 상단의 [[Delete]] 버튼이 활성화됩니다.
 
 35. 상단의 [[Delete]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step4-delete-button.png" alt="IAM 정책 삭제 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step4-delete-button.png" alt="IAM 정책 삭제 버튼" class="guide-img-md" />
 
 36. 확인 창이 나타나면 입력 필드에 `S3MFARequiredPolicy`를 입력합니다.
 37. [[Delete]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step6-delete-confirm.png" alt="IAM 정책 삭제 확인 창" class="guide-img-sm" />
+    <img src="/images/week2/2-1-cleanup-step6-delete-confirm.png" alt="IAM 정책 삭제 확인 창" class="guide-img-sm" />
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "Policy deleted."라는 성공 메시지가 표시됩니다.
@@ -1147,7 +1147,7 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 40. 버킷 목록에서 `iam-condition-lab-YOUR-INITIALS-12345` 버킷을 검색합니다.
 41. 버킷 이름 왼쪽의 라디오 버튼을 선택합니다.
 42. [[Delete]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step4-delete-bucket-button.png" alt="S3 버킷 삭제 버튼" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step4-delete-bucket-button.png" alt="S3 버킷 삭제 버튼" class="guide-img-md" />
 
 43. 확인 창이 나타나면 입력 필드에 버킷 이름 전체를 입력합니다.
 
@@ -1155,7 +1155,7 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
 > 버킷 이름을 정확히 입력해야 [[Delete bucket]] 버튼이 활성화됩니다.
 
 44. [[Delete bucket]] 버튼을 클릭합니다.
-   <img src="/images/week2/2-1-cleanup-step6-delete-bucket.png" alt="S3 버킷 삭제 확인 창" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step6-delete-bucket.png" alt="S3 버킷 삭제 확인 창" class="guide-img-md" />
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "Successfully deleted bucket"이라는 성공 메시지가 표시됩니다.
@@ -1185,7 +1185,7 @@ rm ~/.aws/credentials.bak ~/.aws/config.bak
     - **Tag value**: `2-1`
 51. [[Search resources]] 버튼을 클릭합니다.
 52. 검색 결과에 리소스가 표시되지 않는지 확인합니다.
-   <img src="/images/week2/2-1-cleanup-step7-no-resources.png" alt="Tag Editor 검색 결과 - 리소스 없음" class="guide-img-md" />
+    <img src="/images/week2/2-1-cleanup-step7-no-resources.png" alt="Tag Editor 검색 결과 - 리소스 없음" class="guide-img-md" />
 
 > [!NOTE]
 > 모든 리소스가 정상적으로 삭제되었다면 검색 결과에 아무것도 표시되지 않습니다. 만약 리소스가 남아있다면 해당 리소스를 수동으로 삭제해야 합니다.
