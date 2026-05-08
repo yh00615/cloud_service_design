@@ -580,7 +580,7 @@ curl -X GET $API_URL/reservations \
 
 ---
 
-## 1단계: Tag Editor로 생성된 리소스 확인
+### 단계 1: Tag Editor로 생성된 리소스 확인
 
 실습에서 생성한 모든 리소스를 Tag Editor로 확인합니다.
 
@@ -601,7 +601,7 @@ curl -X GET $API_URL/reservations \
 
 ---
 
-## 2단계: 리소스 삭제
+### 단계 2: 리소스 삭제
 
 다음 두 가지 방법 중 하나를 선택하여 리소스를 삭제할 수 있습니다.
 
@@ -716,7 +716,7 @@ fi
 
 ---
 
-## 3단계: AWS CloudFormation 스택 삭제
+### 단계 3: AWS CloudFormation 스택 삭제
 
 마지막으로 AWS CloudFormation 스택을 삭제하여 나머지 모든 리소스를 정리합니다.
 
@@ -757,7 +757,7 @@ fi
 
 ---
 
-## 4단계: 최종 삭제 확인 (Tag Editor 활용)
+### 단계 4: 최종 삭제 확인 (Tag Editor 활용)
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
@@ -775,6 +775,19 @@ fi
 > 스택 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 5: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+39. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+40. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+41. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+42. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+43. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

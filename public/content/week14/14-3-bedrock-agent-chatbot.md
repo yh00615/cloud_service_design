@@ -1153,7 +1153,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
 
-## 1단계: 생성된 리소스 확인 (Tag Editor)
+### 단계 1: 생성된 리소스 확인 (Tag Editor)
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -1170,7 +1170,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
 
-## 2단계: 리소스 삭제
+### 단계 2: 리소스 삭제
 
 ### Amazon Bedrock Agent 삭제
 
@@ -1259,7 +1259,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 > Knowledge Base를 삭제하면 Amazon S3 버킷의 문서는 삭제되지 않습니다.
 > Amazon S3 버킷도 삭제하려면 Amazon S3 콘솔에서 `quicktable-kb-documents-YOUR-INITIALS` 버킷을 삭제합니다.
 
-## 3단계: 삭제 확인
+### 단계 3: 삭제 확인
 
 51. `Resource Groups & Tag Editor`로 이동합니다.
 52. Tag key: `Week`, Tag value: `14-3`으로 검색합니다.
