@@ -517,6 +517,19 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
+### 단계 4: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+25. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+26. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+27. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+28. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+29. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+
 ## 추가 학습 리소스
 
 - [AWS Infrastructure Composer 사용 설명서](https://docs.aws.amazon.com/infrastructure-composer/latest/dg/what-is-composer.html)

@@ -359,7 +359,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > 리소스 삭제 순서를 반드시 지켜야 합니다: **Knowledge Base → OpenSearch Serverless → S3** 순서로 삭제합니다.
 > OpenSearch Serverless 컬렉션을 먼저 삭제하면 Knowledge Base가 벡터 데이터를 정리하지 못해 삭제 실패(DELETE_UNSUCCESSFUL) 상태에 빠질 수 있으며, 이 경우 복구가 매우 어렵습니다.
 
-## 1단계: 생성된 리소스 확인 (Tag Editor)
+### 단계 1: 생성된 리소스 확인 (Tag Editor)
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -376,7 +376,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 각 서비스 콘솔에서 수행해야 합니다.
 
-## 2단계: 리소스 삭제
+### 단계 2: 리소스 삭제
 
 ### Amazon Bedrock Knowledge Base 삭제
 
@@ -437,7 +437,7 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 37. 버킷 이름을 입력합니다.
 38. [[Delete bucket]] 버튼을 클릭합니다.
 
-## 3단계: 삭제 확인
+### 단계 3: 삭제 확인
 
 39. `Resource Groups & Tag Editor`로 이동합니다.
 40. Tag key: `Week`, Tag value: `14-2`로 검색합니다.

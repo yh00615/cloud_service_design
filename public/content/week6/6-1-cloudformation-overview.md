@@ -90,7 +90,7 @@ Outputs:
 5. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 6. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week6/6-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week6/6-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 7. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 8. **Specify template**에서 `Upload a template file`을 선택합니다.
@@ -403,7 +403,7 @@ Outputs:
 > [!WARNING]
 > 이 데모는 비용이 거의 발생하지 않지만, 실습 종료 후 모든 리소스를 삭제하는 것이 좋습니다.
 
-### 1단계: 생성된 리소스 확인 (Tag Editor)
+### 단계 1: 생성된 리소스 확인 (Tag Editor)
 
 실습에서 생성한 모든 리소스를 확인합니다.
 
@@ -422,7 +422,7 @@ Outputs:
 > Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
 > 실제 삭제는 2단계에서 수행합니다.
 
-### 2단계: Amazon S3 버킷 비우기 (필요시)
+### 단계 2: Amazon S3 버킷 비우기 (필요시)
 
 > [!NOTE]
 > 이 데모에서는 버킷에 파일을 업로드하지 않았으므로 이 단계는 건너뛸 수 있습니다.
@@ -436,7 +436,7 @@ Outputs:
 10. 확인 창에서 `permanently delete`를 입력합니다.
 11. [[Empty]] 버튼을 클릭합니다.
 
-### 3단계: AWS CloudFormation 스택 삭제
+### 단계 3: AWS CloudFormation 스택 삭제
 
 12. AWS CloudFormation 콘솔로 이동합니다.
 13. `demo-s3-stack`을 선택합니다.
@@ -454,7 +454,7 @@ Outputs:
     > 스택이 목록에서 사라졌는지 확인합니다. DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
     > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
 
-### 4단계: 삭제 확인
+### 단계 4: 삭제 확인
 
 모든 리소스가 삭제되었는지 확인합니다.
 
@@ -472,6 +472,19 @@ Outputs:
 > 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 5: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+23. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+24. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+25. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+26. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+27. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 마무리
 

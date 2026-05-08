@@ -144,8 +144,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 >
 > <img src="/images/week1/1-1-task0-step19-stack-complete.png" alt="CloudFormation 스택 생성 완료 상태" class="guide-img-md" />
-18. **Outputs** 탭을 선택합니다.
-19. 출력값들을 확인하고 메모장에 복사합니다:
+> 18. **Outputs** 탭을 선택합니다.
+> 19. 출력값들을 확인하고 메모장에 복사합니다:
+
     <img src="/images/week1/1-1-task0-step21-outputs.png" alt="CloudFormation 스택 Outputs 탭의 출력값" class="guide-img-md" />
     - `GetReservationFunctionName`: QuickTable 예약 조회 AWS Lambda 함수 이름
     - `LogsBucketName`: QuickTable 로그 버킷 이름 (예: quicktable-logs-a1b2c3d4e5f6)
@@ -171,7 +172,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 20. AWS Management Console에 로그인한 후 상단 검색창에 `S3`을 입력하고 선택합니다.
 21. 왼쪽 메뉴에서 **General purpose buckets**를 선택합니다.
 22. 태스크 0의 Outputs에서 복사한 `ReservationsBucketName` 값을 사용하여 버킷을 찾습니다.
-   <img src="/images/week1/1-1-task1-step3-bucket-search.png" alt="S3 콘솔에서 버킷 검색" class="guide-img-md" />
+    <img src="/images/week1/1-1-task1-step3-bucket-search.png" alt="S3 콘솔에서 버킷 검색" class="guide-img-md" />
 
 > [!TIP]
 > 버킷이 많은 경우 검색창에 복사한 버킷 이름을 붙여넣어 필터링합니다.
@@ -180,7 +181,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 24. **Properties** 탭을 선택합니다.
 25. 아래로 스크롤하여 **Tags** 섹션을 찾습니다.
 26. 기존 태그를 확인합니다.
-   <img src="/images/week1/1-1-task1-step7-tags-section.png" alt="S3 버킷의 Tags 섹션" class="guide-img-md" />
+    <img src="/images/week1/1-1-task1-step7-tags-section.png" alt="S3 버킷의 Tags 섹션" class="guide-img-md" />
 
 > [!NOTE]
 > AWS CloudFormation 템플릿이 추가한 `Week=1-1` 태그가 이미 존재합니다. 여기에 추가 태그를 수동으로 추가합니다.
@@ -193,8 +194,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Owner`       | `TeamA`       |
 
 28. [[Save changes]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-task1-step9-add-tag.png" alt="S3 버킷에 태그 추가" class="guide-img-md" />
-   <img src="/images/week1/1-1-task1-step9-add-tag-2.png" alt="S3 버킷 태그 저장" class="guide-img-md" />
+    <img src="/images/week1/1-1-task1-step9-add-tag.png" alt="S3 버킷에 태그 추가" class="guide-img-md" />
+    <img src="/images/week1/1-1-task1-step9-add-tag-2.png" alt="S3 버킷 태그 저장" class="guide-img-md" />
 
 ✅ **태스크 완료**: 첫 번째 Amazon S3 버킷에 태그가 추가되었습니다.
 
@@ -217,13 +218,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 검색 결과에서 2개의 버킷이 표시됩니다.
 
 35. **Tags** 열에서 `quicktable-reservations-{접미사}` 버킷의 태그 개수를 클릭합니다.
-   <img src="/images/week1/1-1-task2-step8-tags-popup.png" alt="Tag Editor 검색 결과에서 태그 개수 클릭" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task2-step8-tags-popup.png" alt="Tag Editor 검색 결과에서 태그 개수 클릭" class="guide-img-sm" />
 
 > [!NOTE]
 > **Tags** 열에 표시된 숫자(예: 6)를 클릭하면 해당 리소스의 상세 태그 목록을 확인할 수 있습니다.
 
 36. 태그 목록을 확인합니다.
-   <img src="/images/week1/1-1-task2-step9-tags-detail.png" alt="첫 번째 버킷의 태그 상세 목록" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task2-step9-tags-detail.png" alt="첫 번째 버킷의 태그 상세 목록" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -322,7 +323,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Tag key**: `Week`
     - **Tag value**: `1-1`
 51. [[Search resources]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-task3-step5-search-results.png" alt="Tag Editor 검색 결과 - Week=1-1 태그를 가진 모든 리소스" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task3-step5-search-results.png" alt="Tag Editor 검색 결과 - Week=1-1 태그를 가진 모든 리소스" class="guide-img-sm" />
 
 > [!IMPORTANT]
 > **All regions 선택 이유**: AWS IAM 역할은 글로벌 리소스이지만, Tag Editor에서 항상 검색되지는 않습니다.  
@@ -361,7 +362,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 54. 왼쪽 메뉴에서 **AWS Resource Groups**를 선택합니다.
 55. [[Create resource group]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-task4-step2-create-group.png" alt="왼쪽 메뉴에서 Create Resource Group 선택" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task4-step2-create-group.png" alt="왼쪽 메뉴에서 Create Resource Group 선택" class="guide-img-sm" />
 56. **Group type**에서 `Tag based`를 선택합니다.
 57. **Grouping criteria** 섹션에서 다음을 입력합니다:
     - **Resource types**: `All supported resource types` (기본값)
@@ -378,7 +379,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Group name**: `week1-1-lab-resources`
     - **Group description**: `Week 1-1 Tag Editor Lab Resources`
 60. [[Create group]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-task4-step7-create-group-button.png" alt="Create group 버튼" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task4-step7-create-group-button.png" alt="Create group 버튼" class="guide-img-sm" />
 
 > [!TIP]
 > Resource Groups 생성 시 **Group tags (Optional)** 기능을 사용하면 Resource Group 자체에 태그를 추가할 수 있습니다.  
@@ -393,10 +394,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 61. 왼쪽 메뉴에서 **Saved resource groups**를 선택합니다.
 62. `week1-1-lab-resources` 그룹을 선택합니다.
-   <img src="/images/week1/1-1-task5-step2-select-group.png" alt="week1-1-lab-resources 그룹 선택" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task5-step2-select-group.png" alt="week1-1-lab-resources 그룹 선택" class="guide-img-sm" />
 63. **Resources** 탭에서 그룹에 포함된 리소스 목록을 확인합니다.
 64. 각 리소스의 타입, 이름, 리전, 태그 정보를 확인합니다.
-   <img src="/images/week1/1-1-task5-step4-resource-details.png" alt="Resource Groups에 포함된 리소스 목록" class="guide-img-sm" />
+    <img src="/images/week1/1-1-task5-step4-resource-details.png" alt="Resource Groups에 포함된 리소스 목록" class="guide-img-sm" />
 
 ✅ **태스크 완료**: Resource Groups에서 리소스를 확인했습니다.
 
@@ -420,7 +421,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 비용을 방지합니다.
 
-## 1단계: 생성된 리소스 확인 (Tag Editor)
+### 단계 1: 생성된 리소스 확인 (Tag Editor)
 
 실습에서 생성한 모든 리소스를 확인합니다.
 
@@ -429,8 +430,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. **Regions**에서 `All regions`를 선택합니다.
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `1-1`
+   - **Tag key**: `Week`
+   - **Tag value**: `1-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]
@@ -440,7 +441,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > Tag Editor는 리소스를 **찾는 용도**로만 사용됩니다.
 > 실제 삭제는 2단계에서 수행합니다.
 
-## 2단계: 리소스 삭제
+### 단계 2: 리소스 삭제
 
 ### AWS CloudFormation 스택 삭제
 
@@ -450,14 +451,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 8. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
 9. `week1-1-tag-editor-lab-stack` 스택을 선택합니다.
 10. [[Delete stack]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-cleanup-step4-delete-stack.png" alt="CloudFormation 스택 Delete 버튼" class="guide-img-sm" />
+    <img src="/images/week1/1-1-cleanup-step4-delete-stack.png" alt="CloudFormation 스택 Delete 버튼" class="guide-img-sm" />
 11. 확인 창이 나타나면 입력 필드에 삭제할 스택 이름을 입력합니다.
 
 > [!NOTE]
 > 입력 필드 위에 "Type "{스택이름}" to confirm deletion of the stack" 메시지가 표시됩니다. 이 메시지에 표시된 스택 이름을 정확히 입력해야 합니다. 이번 실습에서는 `week1-1-tag-editor-lab-stack`을 입력합니다.
 
 12. [[Delete stack]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-1-cleanup-step6-delete-stack-button.png" alt="스택 삭제 확인 후 Delete stack 버튼 클릭" class="guide-img-sm" />
+    <img src="/images/week1/1-1-cleanup-step6-delete-stack-button.png" alt="스택 삭제 확인 후 Delete stack 버튼 클릭" class="guide-img-sm" />
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다.  
@@ -485,7 +486,7 @@ Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 
 > [!IMPORTANT]
 > Resource Groups는 AWS CloudFormation 스택 삭제로 함께 제거되지 않으므로 반드시 별도로 삭제해야 합니다.
 
-## 3단계: 삭제 확인
+### 단계 3: 삭제 확인
 
 모든 리소스가 삭제되었는지 확인합니다.
 
@@ -497,7 +498,7 @@ Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 
     - **Optional tag value**: `1-1`
 22. [[Search resources]] 버튼을 클릭합니다.
 23. 검색 결과가 비어있는지 확인합니다.
-   <img src="/images/week1/1-1-cleanup-step3-6-search-empty.png" alt="Tag Editor 검색 결과가 비어있는 화면" class="guide-img-md" />
+    <img src="/images/week1/1-1-cleanup-step3-6-search-empty.png" alt="Tag Editor 검색 결과가 비어있는 화면" class="guide-img-md" />
 
 > [!NOTE]
 > 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.  
@@ -507,6 +508,19 @@ Resource Groups는 리소스를 그룹화하는 논리적 컨테이너이므로 
 > 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 4: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+24. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+25. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+26. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+27. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+28. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

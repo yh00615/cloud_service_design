@@ -1320,9 +1320,9 @@ aws glue delete-database --name quicktable_db_${STUDENT_ID}
 > 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
 > [!TROUBLESHOOTING]
-> **문제**: AWS CloudFormation 스택 삭제가 실패합니다
+> **문제**: AWS CloudFormation 스택 삭제가 실패합니다.
 >
-> **원인**: Amazon S3 버킷에 객체가 남아있습니다
+> **원인**: Amazon S3 버킷에 객체가 남아있습니다.
 >
 > **해결**:
 >
@@ -1331,6 +1331,19 @@ aws glue delete-database --name quicktable_db_${STUDENT_ID}
 > 3. AWS CloudFormation 콘솔로 돌아가서 스택 삭제를 다시 시도합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 5: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+54. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+55. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+56. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+57. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+58. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

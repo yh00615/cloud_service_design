@@ -72,7 +72,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week9/9-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week9/9-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
@@ -624,6 +624,19 @@ git push origin main
 30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 5: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+31. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+32. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+33. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+34. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+35. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

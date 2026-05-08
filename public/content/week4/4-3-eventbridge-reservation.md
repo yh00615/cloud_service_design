@@ -712,7 +712,7 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 ---
 
-## 1단계: 생성된 리소스 확인 (Tag Editor)
+### 단계 1: 생성된 리소스 확인 (Tag Editor)
 
 실습에서 생성한 모든 리소스를 확인합니다.
 
@@ -733,7 +733,7 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
 
 ---
 
-## 2단계: Amazon EventBridge 리소스 삭제
+### 단계 2: Amazon EventBridge 리소스 삭제
 
 수동으로 생성한 Amazon EventBridge 규칙과 Event Bus를 먼저 삭제합니다. 이 리소스들은 AWS CloudFormation 스택에 포함되지 않으므로 별도로 삭제해야 합니다.
 
@@ -836,7 +836,7 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 
 ---
 
-## 3단계: AWS CloudFormation 스택 삭제
+### 단계 3: AWS CloudFormation 스택 삭제
 
 23. AWS CloudFormation 콘솔로 이동합니다.
 24. `week4-3-quicktable-events-lab-stack` 스택을 선택합니다.
@@ -850,7 +850,7 @@ echo "Amazon EventBridge Event Bus 삭제 완료"
 
 ---
 
-## 4단계: Amazon CloudWatch Log Groups 삭제
+### 단계 4: Amazon CloudWatch Log Groups 삭제
 
 이 실습에서는 AWS CloudFormation 템플릿에 Amazon CloudWatch Log Groups가 포함되어 있어 스택 삭제 시 자동으로 삭제됩니다. 하지만 스택 삭제 전에 AWS Lambda 함수가 실행되면서 추가 Log Groups가 생성될 수 있으므로, 다음 단계로 확인하고 남아있는 Log Groups를 삭제합니다.
 
@@ -897,7 +897,7 @@ fi
 
 ---
 
-## 5단계: 삭제 확인
+### 단계 5: 삭제 확인
 
 모든 리소스가 삭제되었는지 확인합니다.
 
@@ -919,6 +919,19 @@ fi
 > 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 6: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+42. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+43. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+44. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+45. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+46. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

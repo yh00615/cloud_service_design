@@ -61,7 +61,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 4. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 5. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week5/5-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week5/5-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 6. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 7. **Specify template**에서 `Upload a template file`을 선택합니다.
@@ -378,7 +378,7 @@ DB instance restarted
 
 ---
 
-## 1단계: Tag Editor로 생성된 리소스 확인
+### 단계 1: Tag Editor로 생성된 리소스 확인
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -400,7 +400,7 @@ DB instance restarted
 
 ---
 
-## 2단계: Amazon RDS 인스턴스 삭제
+### 단계 2: Amazon RDS 인스턴스 삭제
 
 다음 두 가지 방법 중 하나를 선택하여 리소스를 삭제할 수 있습니다.
 
@@ -525,7 +525,7 @@ echo "모든 Amazon RDS 리소스 삭제 완료"
 
 ---
 
-## 3단계: AWS CloudFormation 스택 삭제
+### 단계 3: AWS CloudFormation 스택 삭제
 
 > [!IMPORTANT]
 > Amazon RDS 인스턴스(Primary, Read Replica)가 모두 삭제 완료된 후에 AWS CloudFormation 스택을 삭제합니다.
@@ -545,7 +545,7 @@ echo "모든 Amazon RDS 리소스 삭제 완료"
 
 ---
 
-## 4단계: Tag Editor로 모든 리소스 삭제 확인
+### 단계 4: Tag Editor로 모든 리소스 삭제 확인
 
 35. AWS Management Console 상단 검색창에 `Resource Groups & Tag Editor`을 입력하고 선택합니다.
 36. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
@@ -565,6 +565,19 @@ echo "모든 Amazon RDS 리소스 삭제 완료"
 > NAT Gateway가 "Deleted" 상태로 일시적으로 표시될 수 있습니다. 리소스 링크를 클릭하여 VPC 콘솔에서 "Deleted" 상태를 확인하면 정상적으로 삭제된 것입니다. Tag Editor 캐시가 업데이트되면 검색 결과에서 사라집니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
+
+### 단계 5: AWS CloudFormation 템플릿 버킷 삭제 (선택)
+
+AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` 접두사의 Amazon S3 버킷에 자동 저장됩니다. 이 버킷은 스택 삭제 시 자동으로 제거되지 않습니다.
+
+> [!NOTE]
+> 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
+
+42. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+43. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+44. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+45. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+46. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 
