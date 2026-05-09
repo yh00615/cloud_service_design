@@ -549,7 +549,7 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 7. [[Delete]] 버튼을 클릭하여 삭제를 확정합니다.
 
-<img src="/images/week1/1-2-cleanup-step2-confirm-delete.png" alt="워크로드 삭제 확인 창" class="guide-img-sm" />
+    <img src="/images/week1/1-2-cleanup-step2-confirm-delete.png" alt="워크로드 삭제 확인 창" class="guide-img-sm" />
 
 ### 단계 3: 삭제 확인
 

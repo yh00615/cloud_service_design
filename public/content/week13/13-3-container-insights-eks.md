@@ -51,7 +51,7 @@ prerequisites:
 
 1. AWS Management Console 상단의 AWS CloudShell 아이콘을 클릭합니다.
 
-<img src="/images/week13/13-3-task1-step1-cloudshell.png" alt="CloudShell 아이콘 클릭" class="guide-img-sm" />
+    <img src="/images/week13/13-3-task1-step1-cloudshell.png" alt="CloudShell 아이콘 클릭" class="guide-img-sm" />
 
 > [!NOTE]
 > AWS CloudShell 초기 로딩에 30초-1분이 소요될 수 있습니다. 환경이 로드될 때까지 기다립니다.
@@ -1161,7 +1161,7 @@ kubectl delete pod load-generator
    - **Tag value**: `13-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-<img src="/images/week13/13-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+    <img src="/images/week13/13-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. Amazon EKS 클러스터는 eksctl로 삭제하는 것이 권장됩니다.
