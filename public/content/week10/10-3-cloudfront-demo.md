@@ -47,7 +47,7 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 3. 상단 검색창에 `S3`을 입력하고 선택한 후 왼쪽 메뉴에서 **General purpose buckets**를 선택합니다.
 4. [[Create bucket]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-3-task0-step4-s3-bucket.png" alt="S3 Create bucket" class="guide-img-md" />
+    <img src="/images/week10/10-3-task0-step4-s3-bucket.png" alt="S3 Create bucket" class="guide-img-md" />
 
 5. **General configuration** 섹션에서 **AWS Region**이 `Asia Pacific (Seoul) ap-northeast-2`로 설정되어 있는지 확인합니다.
 6. **Bucket namespace**에서 `Global namespace`가 선택되어 있는지 확인합니다.
@@ -62,7 +62,7 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 7. **Bucket name**에 `quicktable-cloudfront-origin-{Initials}-{StudentId}`를 입력합니다.
 
-<img src="/images/week10/10-3-task0-step7-bucket-name.png" alt="Bucket name 입력" class="guide-img-md" />
+    <img src="/images/week10/10-3-task0-step7-bucket-name.png" alt="Bucket name 입력" class="guide-img-md" />
 
 > [!TIP]
 > `{Initials}`를 본인의 이니셜로, `{StudentId}`를 본인의 학번으로 변경합니다 (예: `quicktable-cloudfront-origin-jdoe-20240001`).
@@ -70,7 +70,7 @@ QuickTable은 전 세계 사용자가 레스토랑을 검색하고 예약할 수
 
 8. **Block Public Access settings**는 모두 체크된 상태로 유지합니다.
 
-<img src="/images/week10/10-3-task0-step8-block-public.png" alt="Block Public Access 설정 유지" class="guide-img-md" />
+    <img src="/images/week10/10-3-task0-step8-block-public.png" alt="Block Public Access 설정 유지" class="guide-img-md" />
 
 > [!CONCEPT] Amazon S3 퍼블릭 액세스 차단 (S3 Block Public Access)
 > Amazon CloudFront는 OAC(Origin Access Control)를 통해 비공개 Amazon S3 버킷에 접근합니다.
@@ -610,7 +610,7 @@ Week 9-3에서 구축한 QuickTable 정적 웹사이트가 이제 Amazon CloudFr
    - **Tag value**: `10-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-3-cleanup-step6-disable-distribution.png" alt="Tag Editor 리소스 검색 결과" class="guide-img-md" />
+    <img src="/images/week10/10-3-cleanup-step6-disable-distribution.png" alt="Tag Editor 리소스 검색 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > Amazon S3 버킷이 표시됩니다.

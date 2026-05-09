@@ -57,7 +57,7 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 2. 왼쪽 메뉴에서 **Test** > **Playground**를 선택합니다.
 3. [[Select model]] 버튼을 클릭합니다.
 
-<img src="/images/week14/14-1-task1-step3-select-model.png" alt="Select model 버튼" class="guide-img-md" />
+    <img src="/images/week14/14-1-task1-step3-select-model.png" alt="Select model 버튼" class="guide-img-md" />
 
 4. 왼쪽 **Categories**에서 `Anthropic`을 선택합니다.
 5. **Models** 목록에서 사용 가능한 최신 Claude 모델을 선택합니다 (예: `Claude Opus 4.7`, `Claude Sonnet 4.6`, 또는 `Claude Haiku 4.5`).
@@ -89,7 +89,7 @@ Playground는 코드 작성 없이 브라우저에서 직접 Foundation Model과
 7. 채팅 입력창에 다음 프롬프트를 입력합니다. `AWS Lambda란 무엇인가요?`
 8. [[Run]] 버튼(또는 전송 버튼)을 클릭합니다.
 
-<img src="/images/week14/14-1-task1-step8-run.png" alt="Run 버튼 클릭" class="guide-img-md" />
+    <img src="/images/week14/14-1-task1-step8-run.png" alt="Run 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > AWS Console UI는 시점에 따라 변경될 수 있습니다. "Run" 버튼이 화살표(▶) 아이콘으로 표시될 수 있습니다.

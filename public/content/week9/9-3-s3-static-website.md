@@ -72,19 +72,25 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-<img src="/images/week9/9-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+    <img src="/images/week9/9-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week9-3-s3-website-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-task0-step8-cloudformation.png" alt="CloudFormation 템플릿 업로드 후 Next" class="guide-img-md" />
+
 9. **Stack name**에 `week9-3-s3-website-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **CreatedByTag**: `CloudFormation`
     - **ProjectTag**: `AWS-Lab`
-    - **StudentId**: `student` (필요 시 본인 ID로 변경)
+    - **StudentId**: 본인의 학번 입력 (예: `20240001`)
     - **WeekTag**: `9-3`
 11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-task0-step11-parameters.png" alt="CloudFormation Parameters 설정" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -112,6 +118,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 18. **Outputs** 탭을 선택합니다.
+
+    <img src="/images/week9/9-3-task0-step18-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 19. 출력값들을 확인하고 메모장에 복사합니다:
     - `WebsiteBucketName`: Amazon S3 버킷 이름
     - `WebsiteURL`: Amazon S3 정적 웹사이트 URL
@@ -160,11 +169,15 @@ mkdir ~/quicktable-frontend
 cd ~/quicktable-frontend
 ```
 
+<img src="/images/week9/9-3-task1-step23-cloudshell.png" alt="CloudShell 작업 디렉토리 생성" class="guide-img-sm" />
+
 24. git-remote-codecommit 헬퍼를 설치합니다:
 
 ```bash
 pip install --user git-remote-codecommit
 ```
+
+<img src="/images/week9/9-3-task1-step24-git-clone.png" alt="git-remote-codecommit 설치" class="guide-img-md" />
 
 > [!NOTE]
 > git-remote-codecommit은 AWS IAM 자격 증명을 사용하여 CodeCommit에 인증하는 Git 헬퍼입니다.
@@ -176,6 +189,8 @@ pip install --user git-remote-codecommit
 ```bash
 git clone codecommit::ap-northeast-2://<repository-name>
 ```
+
+<img src="/images/week9/9-3-task1-step25-git-clone.png" alt="CodeCommit 리포지토리 복제" class="guide-img-md" />
 
 > [!NOTE]
 > `<repository-name>`은 태스크 0에서 생성된 CodeCommit 리포지토리 이름으로 대체합니다.
@@ -193,6 +208,8 @@ git clone codecommit::ap-northeast-2://<repository-name>
 cd <repository-name>
 ```
 
+<img src="/images/week9/9-3-task1-step26-create-files.png" alt="리포지토리 디렉토리 이동" class="guide-img-md" />
+
 > [!NOTE]
 > `<repository-name>`은 리포지토리 이름으로 대체합니다. 예: `cd student-week9-3-website-repo`
 
@@ -202,6 +219,8 @@ cd <repository-name>
 git config user.name "Your Name"
 git config user.email "your.email@example.com"
 ```
+
+<img src="/images/week9/9-3-task1-step27-git-push.png" alt="Git 사용자 정보 설정" class="guide-img-md" />
 
 > [!NOTE]
 > Git 사용자 정보는 커밋 이력에 기록됩니다. 실제 이름과 이메일을 입력하거나 테스트용 정보를 사용할 수 있습니다.
@@ -213,6 +232,8 @@ git config user.email "your.email@example.com"
 29. 파일 선택 창이 열리면 압축 해제한 폴더로 이동합니다.
 30. `index.html` 파일을 선택합니다.
 31. [[Open]] 또는 [[열기]] 버튼을 클릭하여 업로드를 시작합니다.
+
+    <img src="/images/week9/9-3-task1-step31-git-push.png" alt="CloudShell 파일 업로드" class="guide-img-md" />
 
 > [!NOTE]
 > 파일을 연속으로 빠르게 업로드하면 "Too Many Requests" 오류가 발생할 수 있습니다. 이 경우 몇 초 기다린 후 다시 시도합니다.
@@ -245,6 +266,8 @@ mv ~/index.html ~/about.html ~/style.css ~/script.js ~/buildspec.yml .
 ls -la
 ```
 
+<img src="/images/week9/9-3-task1-step34-verify.png" alt="파일 목록 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -263,11 +286,17 @@ ls -la
 git add .
 ```
 
+<img src="/images/week9/9-3-task2-step36-pipeline-trigger.png" alt="git add 전 status 확인" class="guide-img-md" />
+
+<img src="/images/week9/9-3-task2-step36-pipeline-status.png" alt="git add 실행" class="guide-img-sm" />
+
 37. 추가된 파일을 확인합니다:
 
 ```bash
 git status
 ```
+
+<img src="/images/week9/9-3-task2-step37-git-status.png" alt="git status - 추가된 파일 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -289,6 +318,8 @@ git status
 git commit -m "Initial commit: CI/CD Demo website files"
 ```
 
+<img src="/images/week9/9-3-task2-step39-git-push.png" alt="git commit 실행" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -306,6 +337,8 @@ git commit -m "Initial commit: CI/CD Demo website files"
 ```bash
 git push origin main
 ```
+
+<img src="/images/week9/9-3-task2-step40-git-push.png" alt="git push 실행 결과" class="guide-img-md" />
 
 > [!TIP]
 > 기본 브랜치가 `master`로 생성된 경우 다음 명령어로 `main`으로 변경할 수 있습니다:
@@ -334,6 +367,8 @@ git push origin main
 43. 생성한 리포지토리를 선택합니다.
 44. **Code** 탭에서 5개의 파일이 모두 표시되는지 확인합니다.
 
+    <img src="/images/week9/9-3-task2-step44-codecommit.png" alt="CodeCommit 리포지토리 파일 확인" class="guide-img-md" />
+
 > [!TIP]
 > 각 파일을 클릭하여 내용을 확인할 수 있습니다. `index.html`은 CI/CD Pipeline Demo 메인 페이지이며, `about.html`은 프로젝트 소개 페이지입니다.
 
@@ -349,23 +384,35 @@ git push origin main
 46. 왼쪽 메뉴에서 **Pipelines**를 선택합니다.
 47. 태스크 0에서 복사한 `CodePipelineName` 값의 파이프라인을 선택합니다.
 
+    <img src="/images/week9/9-3-task2-step47-pipeline-detail.png" alt="CodePipeline 파이프라인 상세" class="guide-img-md" />
+
 > [!NOTE]
 > AWS CloudFormation 스택이 자동으로 생성한 AWS CodePipeline입니다. 파이프라인 이름은 `student-week9-3-website-pipeline` 형식입니다.
 >
 > 태스크 1에서 코드를 푸시하기 전에 이 화면에 오면 파이프라인이 **Failed** 상태로 표시될 수 있습니다. CodeCommit 리포지토리가 비어 있어 Source 단계에서 실패한 것이므로 정상입니다. 태스크 1 완료 후 자동으로 다시 실행됩니다.
+>
+> <img src="/images/week9/9-3-task2-step47-pipeline.png" alt="CodePipeline Failed 상태 예시" class="guide-img-sm" />
 
 48. 파이프라인 구조를 확인합니다: **Source 단계** (CodeCommit에서 소스 코드 가져오기)와 **Build 단계** (AWS CodeBuild로 빌드 및 Amazon S3 배포)로 구성되어 있습니다.
+
+    <img src="/images/week9/9-3-task2-step48-pipeline-stages.png" alt="CodePipeline Source 및 Build 단계 구조" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon S3 배포는 AWS CodeBuild의 buildspec.yml에서 `aws s3 sync` 명령으로 수행하므로 별도의 Deploy 단계가 없습니다.
 
 49. **Settings** 탭을 선택합니다.
+
+    <img src="/images/week9/9-3-task2-step49-settings.png" alt="CodePipeline Settings 탭" class="guide-img-md" />
+
 50. **Service role** 섹션에서 AWS IAM 역할을 확인합니다.
 
 > [!NOTE]
 > AWS CloudFormation 스택이 생성한 AWS IAM 역할로, CodeCommit 및 AWS CodeBuild 접근 권한이 포함되어 있습니다.
 
 51. **Executions** 탭을 선택합니다.
+
+    <img src="/images/week9/9-3-task2-step51-executions.png" alt="CodePipeline Executions 탭" class="guide-img-md" />
+
 52. 파이프라인 실행 이력을 확인합니다.
 
 > [!NOTE]
@@ -381,10 +428,18 @@ git push origin main
 
 53. [[Release change]] 버튼을 클릭하여 파이프라인 실행을 시작합니다.
 54. 확인 창에서 [[Release]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-task2-step54-succeeded.png" alt="파이프라인 Release 실행" class="guide-img-md" />
+
 55. **Executions** 탭에서 페이지를 새로고침합니다.
 56. 새로 생성된 **Execution ID** (Status가 "In progress")를 클릭합니다.
+
+    <img src="/images/week9/9-3-task2-step56-execution-detail.png" alt="파이프라인 실행 상세 - Source 및 Build 단계" class="guide-img-md" />
+
 57. Source 단계가 "Succeeded"로 변경되는 것을 확인합니다.
 58. Build 단계가 자동으로 시작되는 것을 확인합니다.
+
+    <img src="/images/week9/9-3-task2-step58-build-started.png" alt="Build 단계 실행 중" class="guide-img-md" />
 
 > [!NOTE]
 > 전체 파이프라인 실행에 3-5분이 소요됩니다. 각 단계의 **Details** 링크를 클릭하여 상세 진행 상황을 확인할 수 있습니다.
@@ -406,11 +461,16 @@ git push origin main
 60. 태스크 0에서 복사한 `WebsiteBucketName` 값의 버킷을 선택합니다.
 61. **Objects** 탭에서 배포된 파일들을 확인합니다: `index.html`, `about.html`, `style.css`, `script.js`
 
+    <img src="/images/week9/9-3-task3-step60-s3-objects.png" alt="S3 버킷 배포된 파일 확인" class="guide-img-md" />
+
 > [!NOTE]
 > buildspec.yml은 빌드 스펙 파일이므로 Amazon S3에 배포되지 않습니다.
 
 62. 새 브라우저 탭을 엽니다.
 63. 태스크 0에서 복사한 `WebsiteURL` 값을 주소창에 붙여넣고 Enter를 누릅니다.
+
+    <img src="/images/week9/9-3-task3-step63-website.png" alt="S3 정적 웹사이트 접속 확인" class="guide-img-md" />
+
 64. AWS CI/CD Pipeline Demo 메인 페이지가 정상적으로 표시되는지 확인합니다.
 
 > [!NOTE]
@@ -440,6 +500,8 @@ cd ~/quicktable-frontend/<repository-name>
 grep "Version: 1.0" index.html
 ```
 
+<img src="/images/week9/9-3-task4-step68-edit-file.png" alt="grep으로 변경 대상 문자열 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -452,11 +514,15 @@ grep "Version: 1.0" index.html
 sed -i 's/Version: 1.0/Version: 2.0/g' index.html
 ```
 
+<img src="/images/week9/9-3-task4-step69-git-diff.png" alt="sed로 파일 수정" class="guide-img-md" />
+
 70. 변경사항을 확인합니다:
 
 ```bash
 cat index.html | grep -i "Version:"
 ```
+
+<img src="/images/week9/9-3-task4-step70-git-push.png" alt="변경된 버전 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -470,6 +536,8 @@ cat index.html | grep -i "Version:"
 git add index.html
 ```
 
+<img src="/images/week9/9-3-task4-step71-git-add.png" alt="git add 실행" class="guide-img-md" />
+
 > [!TIP]
 > `git add index.html`은 특정 파일만 스테이징합니다. 여러 파일을 추가하려면 `git add file1 file2` 형식으로 나열하거나, 모든 변경 파일을 추가하려면 `git add .`을 사용합니다.
 
@@ -479,26 +547,37 @@ git add index.html
 git commit -m "Update version to 2.0"
 ```
 
+<img src="/images/week9/9-3-task4-step72-git-commit.png" alt="git commit 실행" class="guide-img-md" />
+
 73. CodeCommit에 푸시합니다:
 
 ```bash
 git push origin main
 ```
 
+<img src="/images/week9/9-3-task4-step73-git-push.png" alt="git push 실행" class="guide-img-md" />
+
 74. AWS CodePipeline 콘솔로 이동합니다.
 75. 태스크 0에서 복사한 `CodePipelineName` 값의 파이프라인을 선택합니다.
 76. 파이프라인이 자동으로 실행되는지 확인합니다.
+
+    <img src="/images/week9/9-3-task4-step76-pipeline-running.png" alt="파이프라인 자동 실행 확인" class="guide-img-md" />
 
 > [!NOTE]
 > Source 단계가 "Succeeded"로 표시될 때까지 기다립니다.
 
 77. Build 단계가 진행되는 것을 확인합니다.
 
+    <img src="/images/week9/9-3-task4-step77-build-succeeded.png" alt="Build 단계 완료" class="guide-img-md" />
+
 > [!NOTE]
 > 전체 파이프라인 실행에 3-5분이 소요됩니다. 각 단계의 로그를 클릭하여 상세 진행 상황을 확인할 수 있습니다.
 > Build 단계가 완료될 때까지 기다립니다.
 
 78. 웹 브라우저에서 Amazon S3 웹사이트 URL을 새로고침합니다.
+
+    <img src="/images/week9/9-3-task4-step78-version-updated.png" alt="웹사이트 Version 2.0 업데이트 확인" class="guide-img-md" />
+
 79. 버전이 "Version: 2.0"으로 업데이트되었는지 확인합니다.
 
 ✅ **태스크 완료**: 코드 변경이 자동으로 빌드되고 Amazon S3에 배포되었습니다.
@@ -518,6 +597,8 @@ git push origin main
 
 82. 해당 버킷을 선택합니다.
 83. **Objects** 탭에서 아티팩트 파일들을 확인합니다.
+
+    <img src="/images/week9/9-3-task5-step83-artifacts-bucket.png" alt="아티팩트 버킷 Objects 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 버킷 내부에 파이프라인 이름으로 된 폴더가 있고, 그 안에 `SourceOutp/` 폴더가 있습니다.
@@ -562,16 +643,24 @@ git push origin main
    - **Tag value**: `9-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+    <img src="/images/week9/9-3-cleanup-step6-tageditor.png" alt="Tag Editor 리소스 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
 ### 단계 2: Amazon S3 버킷 비우기
 
 7. Amazon S3 콘솔로 이동합니다.
-8. 태스크 0에서 복사한 `WebsiteBucketName` 값의 버킷을 선택합니다.
+8. 버킷 목록에서 파이프라인 아티팩트 버킷 (`pipeline-artifacts`가 포함된 버킷)을 선택합니다.
 9. [[Empty]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-cleanup-step9-empty-bucket.png" alt="S3 버킷 Empty 클릭" class="guide-img-md" />
+
 10. 확인 창에서 `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-11. 버킷 목록으로 돌아가서 파이프라인 아티팩트 버킷 (`pipeline-artifacts`가 포함된 버킷)을 선택합니다.
+
+    <img src="/images/week9/9-3-cleanup-step10-permanently-delete.png" alt="permanently delete 입력 후 Empty" class="guide-img-md" />
+
+11. 버킷 목록으로 돌아가서 태스크 0에서 복사한 `WebsiteBucketName` 값의 버킷을 선택합니다.
 12. [[Empty]] 버튼을 클릭합니다.
 13. 확인 창에서 `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
 
@@ -586,6 +675,8 @@ git push origin main
 16. [[Delete stack]] 버튼을 클릭합니다.
 17. 확인 창에서 스택 이름 `week9-3-s3-website-stack`을 입력합니다.
 18. [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-cleanup-step18-stack-delete.png" alt="CloudFormation 스택 삭제" class="guide-img-md" />
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon S3 버킷, CodeCommit 리포지토리, AWS CodeBuild 프로젝트, AWS CodePipeline, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -602,6 +693,8 @@ git push origin main
     - **Tag key**: `Week`
     - **Tag value**: `9-3`
 24. [[Search resources]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-cleanup-step24-tageditor-confirm.png" alt="Tag Editor 최종 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -621,7 +714,21 @@ git push origin main
 > 로그 그룹 이름에 Parameters에서 설정한 StudentId가 포함되어 있습니다 (예: `student-week9-3-website-build`).
 
 29. **Actions** > `Delete log group(s)`를 선택합니다.
+
+    <img src="/images/week9/9-3-cleanup-step29-delete-loggroup.png" alt="CloudWatch Log Group 삭제 선택" class="guide-img-md" />
+
 30. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-3-cleanup-step30-confirm-delete.png" alt="Log Group 삭제 확인" class="guide-img-sm" />
+
+> [!TIP]
+> AWS CLI로 삭제하려면 CloudShell에서 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws logs delete-log-group --log-group-name "/aws/codebuild/student-week9-3-website-build" --region ap-northeast-2
+> ```
+>
+> StudentId를 변경한 경우 로그 그룹 이름도 맞춰서 수정합니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 

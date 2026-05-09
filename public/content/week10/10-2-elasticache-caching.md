@@ -62,14 +62,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 1. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 2. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-<img src="/images/week10/10-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+    <img src="/images/week10/10-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 3. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 4. **Specify template**에서 `Upload a template file`을 선택합니다.
 5. [[Choose file]] 버튼을 클릭한 후 다운로드한 `week10-2-elasticache-lab.yaml` 파일을 선택합니다.
 6. [[Next]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-2-task0-step6-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
+    <img src="/images/week10/10-2-task0-step6-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
 
 7. **Stack name**에 `week10-2-quicktable-cache-stack`을 입력합니다.
 8. **Parameters** 섹션에서 기본값을 확인합니다:
@@ -80,7 +80,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
    - **WeekTag**: `10-2`
 9. [[Next]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-2-task0-step9-parameters.png" alt="CloudFormation Parameters 설정" class="guide-img-md" />
+    <img src="/images/week10/10-2-task0-step9-parameters.png" alt="CloudFormation Parameters 설정" class="guide-img-md" />
 
 10. **Configure stack options** 페이지가 열립니다.
 
@@ -895,7 +895,7 @@ python3 benchmark.py
    - **Tag value**: `10-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+    <img src="/images/week10/10-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
@@ -1033,7 +1033,7 @@ aws s3 rm s3://<LabFilesBucketName> --recursive --region ap-northeast-2
     - **Tag value**: `10-2`
 35. [[Search resources]] 버튼을 클릭합니다.
 
-<img src="/images/week10/10-2-cleanup-step35-tageditor-final.png" alt="Tag Editor 최종 삭제 확인" class="guide-img-md" />
+    <img src="/images/week10/10-2-cleanup-step35-tageditor-final.png" alt="Tag Editor 최종 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
