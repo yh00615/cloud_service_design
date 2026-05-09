@@ -107,6 +107,8 @@ Resources:
                   - lambda:PublishLayerVersion
                   - lambda:DeleteLayerVersion
                   - lambda:GetLayerVersion
+                  - lambda:ListLayerVersions
+                  - lambda:UpdateFunctionConfiguration
                 Resource: '*'
       Tags:
         - Key: Project
@@ -146,6 +148,32 @@ Resources:
               try:
                   request_type = event['RequestType']
                   if request_type == 'Delete':
+                      client = boto3.client('lambda')
+                      layer_name = os.environ.get('LAYER_NAME', 'xray-sdk-layer')
+                      env_name = os.environ.get('ENVIRONMENT_NAME', '')
+                      # Layer를 참조하는 함수들의 Layers 설정 제거
+                      function_names = [
+                          f'{env_name}-CreateReservation',
+                          f'{env_name}-GetReservations'
+                      ]
+                      for func_name in function_names:
+                          try:
+                              client.update_function_configuration(
+                                  FunctionName=func_name,
+                                  Layers=[]
+                              )
+                          except Exception as e:
+                              print(f'Function update warning ({func_name}): {e}')
+                      # Layer 버전 삭제
+                      try:
+                          versions = client.list_layer_versions(LayerName=layer_name)
+                          for v in versions.get('LayerVersions', []):
+                              client.delete_layer_version(
+                                  LayerName=layer_name,
+                                  VersionNumber=v['Version']
+                              )
+                      except Exception as e:
+                          print(f'Layer deletion warning: {e}')
                       send_response(event, context, 'SUCCESS', {})
                       return
 
@@ -204,6 +232,7 @@ Resources:
       Environment:
         Variables:
           LAYER_NAME: !Sub '${EnvironmentName}-xray-sdk'
+          ENVIRONMENT_NAME: !Ref EnvironmentName
       Tags:
         - Key: Project
           Value: !Ref ProjectTag
