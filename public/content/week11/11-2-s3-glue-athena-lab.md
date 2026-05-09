@@ -60,14 +60,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week11/11-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week11/11-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week11-2-datalake-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 
-    <img src="/images/week11/11-2-task0-step8-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
+<img src="/images/week11/11-2-task0-step8-upload.png" alt="CloudFormation 템플릿 업로드" class="guide-img-md" />
 
 9. **Stack name**에 `week11-2-quicktable-datalake-stack`을 입력합니다.
 10. **Parameters** 섹션에서 다음을 입력합니다:
@@ -430,7 +430,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 61. Crawler가 생성한 `reservation_data` 테이블을 클릭합니다.
 
 > [!TIP]
-> **다른 방법**: 왼쪽 메뉴에서 **Data Catalog** > **Tables**를 선택하면 테이블 목록에서 `reservation_data`를 직접 클릭하여 테이블 상세 페이지로 이동할 수 있습니다.
+> **다른 방법**: 왼쪽 메뉴에서 **Data Catalog tables**를 선택하면 테이블 목록에서 `reservation_data`를 직접 클릭하여 테이블 상세 페이지로 이동할 수 있습니다.
 
 > [!NOTE]
 > **Crawler 실행 후 테이블명 확인 방법**:
@@ -1035,7 +1035,7 @@ ORDER BY reservation_count DESC;
    - **Tag value**: `11-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-    <img src="/images/week11/11-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+<img src="/images/week11/11-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
