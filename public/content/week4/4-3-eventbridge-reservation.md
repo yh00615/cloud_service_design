@@ -154,7 +154,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 ### 상세 단계
 
-22. AWS Management Console 상단 검색창에 `EventBridge`을 입력하고 선택합니다.
+22. AWS Management Console 상단 검색창에 `EventBridge`를 입력하고 선택합니다.
 23. 왼쪽 메뉴에서 **Event buses**를 선택합니다.
 24. **Custom event bus** 섹션에서 [[Create event bus]] 버튼을 클릭합니다.
 25. **Event bus details** 섹션에서 다음을 입력합니다:
@@ -278,7 +278,7 @@ Amazon EventBridge 규칙은 이벤트 패턴을 정의하여 특정 이벤트�
 51. [[Create rule]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거할 수 있도록 권한이 자동으로 추가됩니다.
+> Amazon Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거할 수 있도록 권한이 자동으로 추가됩니다.
 
 규칙 생성 후 필요에 따라 수정하거나 삭제할 수 있습니다.
 
@@ -351,7 +351,7 @@ TableAvailabilityChecker AWS Lambda 함수가 예약 가능한 슬롯이 부족�
 
 ### 태스크 설명
 
-ReservationProcessor 함수를 테스트 이벤트로 실행하면 ReservationCreated 이벤트가 발행되고, 태스크 2에서 생성한 Amazon EventBridge 규칙이 이 이벤트를 감지하여 TableAvailabilityChecker 함수를 자동으로 트리거합니다.
+ReservationProcessor 함수를 테스트 이벤트로 실행하면 ReservationCreated 이벤트가 발행되고, 태스크 2에서 생성한 Amazon Amazon EventBridge 규칙이 이 이벤트를 감지하여 TableAvailabilityChecker 함수를 자동으로 트리거합니다.
 
 **이벤트 흐름**:
 
@@ -479,7 +479,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 90. 로그에서 "Table available: party size (2) within available slots (5)" 메시지를 확인합니다.
 
 > [!NOTE]
-> TableAvailabilityChecker 함수가 자동으로 실행되었다면 태스크 2에서 생성한 Amazon EventBridge 규칙이 정상적으로 동작하는 것입니다. 예약 가능한 경우 TableUnavailable 이벤트가 발행되지 않으므로 NotificationSender 함수는 실행되지 않습니다.
+> TableAvailabilityChecker 함수가 자동으로 실행되었다면 태스크 2에서 생성한 Amazon Amazon EventBridge 규칙이 정상적으로 동작하는 것입니다. 예약 가능한 경우 TableUnavailable 이벤트가 발행되지 않으므로 NotificationSender 함수는 실행되지 않습니다.
 
 만약 로그가 표시되지 않는다면 다음 문제 해결 방법을 시도합니다.
 
@@ -488,7 +488,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 >
 > **증상**: Monitor 탭에서 "View Amazon CloudWatch Logs" 링크를 클릭해도 로그 스트림이 표시되지 않습니다.
 >
-> **원인**: Amazon EventBridge 규칙이 올바르게 설정되지 않았거나, AWS Lambda 함수 권한이 부족합니다.
+> **원인**: Amazon Amazon EventBridge 규칙이 올바르게 설정되지 않았거나, AWS Lambda 함수 권한이 부족합니다.
 >
 > **해결**:
 >
@@ -506,7 +506,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 96. **Invocations** 메트릭에서 규칙이 트리거된 횟수를 확인합니다.
 
 > [!NOTE]
-> Invocations 메트릭이 1 이상이면 Amazon EventBridge 규칙이 정상적으로 동작한 것입니다. Amazon CloudWatch 메트릭은 1-2분의 지연이 있을 수 있으므로 메트릭이 표시되지 않으면 1-2분 대기 후 페이지를 새로고침합니다.
+> Invocations 메트릭이 1 이상이면 Amazon Amazon EventBridge 규칙이 정상적으로 동작한 것입니다. Amazon CloudWatch 메트릭은 1-2분의 지연이 있을 수 있으므로 메트릭이 표시되지 않으면 1-2분 대기 후 페이지를 새로고침합니다.
 
 ### 느슨한 결합 확인
 
@@ -516,10 +516,10 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 100.  함수 코드에서 다른 AWS Lambda 함수를 직접 호출하는 코드가 없음을 확인합니다.
 
 > [!TIP]
-> ReservationProcessor 함수는 EventBridge에 이벤트만 발행하고, 다른 Lambda 함수를 직접 호출하지 않습니다:
+> ReservationProcessor 함수는 Amazon EventBridge에 이벤트만 발행하고, 다른 Lambda 함수를 직접 호출하지 않습니다:
 >
 > ```python
-> # EventBridge에 ReservationCreated 이벤트 발행
+> # Amazon EventBridge에 ReservationCreated 이벤트 발행
 > response = eventbridge.put_events(
 >     Entries=[{
 >         'Source': 'reservation.service',
@@ -530,7 +530,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 > )
 > ```
 >
-> TableAvailabilityChecker나 NotificationSender를 직접 호출하는 코드가 없습니다. EventBridge 규칙이 이벤트를 라우팅하는 방식으로 느슨하게 결합되어 있습니다.
+> TableAvailabilityChecker나 NotificationSender를 직접 호출하는 코드가 없습니다. Amazon EventBridge 규칙이 이벤트를 라우팅하는 방식으로 느슨하게 결합되어 있습니다.
 
 > [!CONCEPT] 느슨한 결합 (Loose Coupling)
 > 이 실습에서 구현한 아키텍처는 느슨한 결합의 좋은 예시입니다:
@@ -567,7 +567,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 
 ### 태스크 설명
 
-restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니다. partySize=4인 예약을 요청하면 TableAvailabilityChecker 함수가 TableUnavailable 이벤트를 발행하고, 태스크 3에서 생성한 Amazon EventBridge 규칙이 이 이벤트를 감지하여 NotificationSender 함수를 트리거합니다.
+restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니다. partySize=4인 예약을 요청하면 TableAvailabilityChecker 함수가 TableUnavailable 이벤트를 발행하고, 태스크 3에서 생성한 Amazon Amazon EventBridge 규칙이 이 이벤트를 감지하여 NotificationSender 함수를 트리거합니다.
 
 > [!IMPORTANT]
 > **비동기 처리 이해하기:**
@@ -664,7 +664,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 138. 로그에서 "Notification sent" 메시지를 확인합니다.
 
 > [!NOTE]
-> NotificationSender 함수가 자동으로 실행되었다면 태스크 3에서 생성한 Amazon EventBridge 규칙이 정상적으로 동작하는 것입니다.
+> NotificationSender 함수가 자동으로 실행되었다면 태스크 3에서 생성한 Amazon Amazon EventBridge 규칙이 정상적으로 동작하는 것입니다.
 >
 > 이 실습에서는 Amazon SNS 이메일 구독을 설정하지 않으므로 실제 이메일은 수신되지 않습니다. 알림 발송 여부는 NotificationSender 함수의 Amazon CloudWatch 로그로 확인합니다.
 
@@ -1069,7 +1069,7 @@ def lambda_handler(event, context):
 
 **2. 이벤트 수신 (Event Consumption):**
 
-Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거합니다.
+Amazon Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거합니다.
 
 ```python
 def lambda_handler(event, context):
@@ -1100,7 +1100,7 @@ AWS Lambda 함수가 Amazon EventBridge에 이벤트를 발행하려면 다음 �
 }
 ```
 
-Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거하려면 다음 권한이 자동으로 추가됩니다:
+Amazon Amazon EventBridge 규칙이 AWS Lambda 함수를 트리거하려면 다음 권한이 자동으로 추가됩니다:
 
 ```json
 {

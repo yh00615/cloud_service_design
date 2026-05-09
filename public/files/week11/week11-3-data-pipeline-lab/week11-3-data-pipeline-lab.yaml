@@ -1,14 +1,28 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Week 11-3: AWS Glue Data Pipeline Construction Lab Environment'
 
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Environment Settings (Keep Default)'
+        Parameters:
+          - EnvironmentName
+          - ProjectTag
+          - WeekTag
+          - CreatedByTag
+
 Parameters:
   StudentId:
     Type: String
-    Description: Student ID or unique identifier (lowercase, numbers, hyphens only, e.g., 20240001 or student01)
-    AllowedPattern: ^[a-z0-9-]+$
-    MinLength: 5
-    MaxLength: 20
-    ConstraintDescription: Only lowercase letters, numbers, and hyphens allowed (5-20 characters)
+    Default: '20240001'
+    Description: Student ID or unique identifier (lowercase letters and numbers only, e.g., 20240001 or student01)
+    AllowedPattern: ^[a-z0-9]{5,20}$
+    ConstraintDescription: Only lowercase letters and numbers allowed (5-20 characters, no hyphens or special characters)
 
   EnvironmentName:
     Type: String
@@ -47,8 +61,6 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      VersioningConfiguration:
-        Status: Enabled
       NotificationConfiguration:
         EventBridgeConfiguration:
           EventBridgeEnabled: true
@@ -75,8 +87,6 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      VersioningConfiguration:
-        Status: Enabled
       Tags:
         - Key: Name
           Value: !Sub '${EnvironmentName}-Scripts'
@@ -221,9 +231,9 @@ Resources:
           import json
           import boto3
           import os
-          
+
           glue = boto3.client('glue')
-          
+
           def handler(event, context):
               crawler_name = os.environ['CRAWLER_NAME']
               
@@ -370,9 +380,9 @@ Resources:
           import json
           import boto3
           import cfnresponse
-          
+
           s3 = boto3.client('s3')
-          
+
           # 샘플 거래 데이터
           SAMPLE_TRANSACTIONS = """transaction_id,customer_id,product_id,amount,transaction_date,region
           1001,C001,P100,49.99,2024-01-15,Seoul
@@ -385,7 +395,7 @@ Resources:
           1008,C006,P101,99.99,2024-01-18,Incheon
           1009,C003,P105,79.99,2024-01-18,Seoul
           1010,C007,P100,49.99,2024-01-19,Daejeon"""
-          
+
           def handler(event, context):
               try:
                   if event['RequestType'] == 'Create':
@@ -468,5 +478,5 @@ Outputs:
   SampleDataLocation:
     Description: Sample data location
     Value: !Sub |
-      샘플 데이터가 자동으로 업로드되었습니다:
-      - 거래 데이터: s3://${DataBucket}/raw/transactions.csv
+      Sample data has been automatically uploaded:
+      - Transaction data: s3://${DataBucket}/raw/transactions.csv
