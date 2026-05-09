@@ -71,6 +71,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week9-2-cicd-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-task0-step8-cloudformation.png" alt="CloudFormation 템플릿 업로드 후 Next" class="guide-img-md" />
+
 9. **Stack name**에 `week9-2-codebuild-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **CodeCommitRepositoryName**: `cicd-demo-repo`
@@ -79,6 +82,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **ProjectTag**: `AWS-Lab`
     - **WeekTag**: `9-2`
 11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-task0-step11-parameters.png" alt="CloudFormation Parameters 설정" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -106,6 +112,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 18. **Outputs** 탭을 선택합니다.
+
+    <img src="/images/week9/9-2-task0-step18-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 19. 출력값들을 확인하고 메모장에 복사합니다:
     - `ECRRepositoryUri`: Amazon ECR 리포지토리 URI (예: `123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/cicd-demo-app`)
     - `CodeCommitRepositoryName`: CodeCommit 리포지토리 이름 (예: `cicd-demo-repo`)
@@ -154,6 +163,8 @@ cd ~/codebuild-lab
 pip install --user git-remote-codecommit
 ```
 
+<img src="/images/week9/9-2-task1-step24-cloudshell.png" alt="git-remote-codecommit 설치" class="guide-img-md" />
+
 > [!TIP]
 > git-remote-codecommit은 AWS IAM 자격 증명을 사용하여 CodeCommit에 인증하는 Git 헬퍼입니다. CloudShell에는 AWS CLI가 사전 설치되어 있어 별도 설정이 필요 없으며, `--user` 플래그는 사용자 레벨에 패키지를 설치하여 권한 문제를 방지합니다.
 
@@ -162,6 +173,8 @@ pip install --user git-remote-codecommit
 ```bash
 git clone codecommit::ap-northeast-2://<repository-name>
 ```
+
+<img src="/images/week9/9-2-task1-step25-docker-version.png" alt="CodeCommit 리포지토리 복제" class="guide-img-md" />
 
 > [!NOTE]
 > `<repository-name>`은 태스크 0의 Outputs 탭에서 확인한 `CodeCommitRepositoryName` 값으로 대체합니다.
@@ -177,6 +190,8 @@ git clone codecommit::ap-northeast-2://<repository-name>
 cd <repository-name>
 ```
 
+<img src="/images/week9/9-2-task1-step26-cd-repo.png" alt="리포지토리 디렉토리 이동" class="guide-img-md" />
+
 > [!TIP]
 > `<repository-name>`은 리포지토리 이름으로 대체합니다. 예: `cd cicd-demo-repo`
 
@@ -186,6 +201,8 @@ cd <repository-name>
 git config user.name "Your Name"
 git config user.email "your.email@example.com"
 ```
+
+<img src="/images/week9/9-2-task1-step27-git-config.png" alt="Git 사용자 정보 설정" class="guide-img-md" />
 
 28. AWS CloudShell 우측 상단의 **Actions** 드롭다운을 클릭한 후 `Upload file`을 선택합니다.
 
@@ -197,11 +214,16 @@ git config user.email "your.email@example.com"
 30. `app.js` 파일을 선택합니다.
 31. [[Open]] 또는 [[열기]] 버튼을 클릭하여 업로드를 시작합니다.
 
+    <img src="/images/week9/9-2-task1-step31-upload.png" alt="CloudShell 파일 업로드" class="guide-img-md" />
+
 > [!NOTE]
 > 파일을 연속으로 빠르게 업로드하면 "Too Many Requests" 오류가 발생할 수 있습니다. 이 경우 몇 초 기다린 후 다시 시도합니다.
 
 32. 업로드가 완료되면 같은 방법으로 `package.json` 파일을 업로드합니다.
 33. 마지막으로 `Dockerfile` 파일을 업로드합니다.
+
+    <img src="/images/week9/9-2-task1-step33-verify.png" alt="파일 업로드 완료" class="guide-img-md" />
+
 34. 업로드가 완료되면 다음 명령어를 실행하여 파일을 리포지토리 디렉토리로 이동합니다:
 
 ```bash
@@ -216,6 +238,8 @@ mv ~/app.js ~/package.json ~/Dockerfile .
 ```bash
 ls -la
 ```
+
+<img src="/images/week9/9-2-task1-step35-ls.png" alt="파일 목록 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -238,6 +262,8 @@ git add .
 ```bash
 git status
 ```
+
+<img src="/images/week9/9-2-task1-step38-git-push.png" alt="git status 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -273,6 +299,8 @@ git commit -m "Add application code and Dockerfile"
 git push origin main
 ```
 
+<img src="/images/week9/9-2-task1-step41-git-push.png" alt="git push 실행 결과" class="guide-img-md" />
+
 > [!TIP]
 > 기본 브랜치가 `master`로 생성된 경우 다음 명령어로 `main`으로 변경할 수 있습니다:
 >
@@ -298,7 +326,12 @@ git push origin main
 42. 푸시가 성공적으로 완료되었는지 확인합니다.
 43. CodeCommit 콘솔로 이동합니다.
 44. 생성한 리포지토리를 선택합니다.
+
+    <img src="/images/week9/9-2-task1-step43-codecommit.png" alt="CodeCommit 리포지토리 선택" class="guide-img-md" />
+
 45. **Code** 탭에서 3개의 파일이 모두 표시되는지 확인합니다.
+
+    <img src="/images/week9/9-2-task1-step45-codecommit-files.png" alt="CodeCommit 파일 목록 확인" class="guide-img-md" />
 
 > [!TIP]
 > 각 파일을 클릭하여 내용을 확인할 수 있습니다. 특히 `Dockerfile`은 다음 태스크에서 AWS CodeBuild가 이미지를 빌드하는 데 사용하는 중요한 파일입니다.
@@ -325,6 +358,8 @@ buildspec.yml은 AWS CodeBuild가 빌드를 수행하는 방법을 정의하는 
 pwd
 ```
 
+<img src="/images/week9/9-2-task2-step46-dockerfile.png" alt="현재 디렉토리 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -341,17 +376,24 @@ cd ~/codebuild-lab/<repository-name>
 49. 파일 선택 창이 열리면 압축 해제한 폴더로 이동합니다.
 50. `buildspec.yml` 파일을 선택합니다.
 51. [[Open]] 또는 [[열기]] 버튼을 클릭하여 업로드를 시작합니다.
+
+    <img src="/images/week9/9-2-task2-step51-upload.png" alt="buildspec.yml 파일 업로드" class="guide-img-md" />
+
 52. 업로드가 완료되면 다음 명령어를 실행하여 파일을 리포지토리 디렉토리로 이동합니다:
 
 ```bash
 mv ~/buildspec.yml .
 ```
 
+<img src="/images/week9/9-2-task2-step52-docker-build.png" alt="buildspec.yml 이동" class="guide-img-md" />
+
 53. 파일이 정상적으로 복사되었는지 확인합니다:
 
 ```bash
 ls -la buildspec.yml
 ```
+
+<img src="/images/week9/9-2-task2-step53-docker-images.png" alt="buildspec.yml 파일 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -364,6 +406,8 @@ ls -la buildspec.yml
 ```bash
 cat buildspec.yml
 ```
+
+<img src="/images/week9/9-2-task2-step54-buildspec.png" alt="buildspec.yml 내용 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -439,6 +483,8 @@ git add buildspec.yml
 git status
 ```
 
+<img src="/images/week9/9-2-task2-step57-git-push.png" alt="git status - buildspec.yml 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -469,6 +515,8 @@ git commit -m "Add buildspec.yml for AWS CodeBuild"
 git push origin main
 ```
 
+<img src="/images/week9/9-2-task2-step60-git-push2.png" alt="git push 실행" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -486,6 +534,9 @@ git push origin main
 62. CodeCommit 콘솔로 이동합니다.
 63. 생성한 리포지토리를 선택합니다.
 64. **Code** 탭에서 `buildspec.yml` 파일이 표시되는지 확인합니다.
+
+    <img src="/images/week9/9-2-task2-step64-codecommit-buildspec.png" alt="CodeCommit에서 buildspec.yml 확인" class="guide-img-md" />
+
 65. `buildspec.yml` 파일을 클릭하여 내용을 확인합니다.
 
 ✅ **태스크 완료**: buildspec.yml이 분석되고 CodeCommit에 푸시되었습니다.
@@ -516,11 +567,15 @@ git push origin main
 | `Week`      | `9-2`     |
 | `CreatedBy` | `Student` |
 
+<img src="/images/week9/9-2-task3-step71-project-config.png" alt="Project configuration 및 Tags 설정" class="guide-img-md" />
+
 ### Source
 
 72. **Source provider**에서 `AWS CodeCommit`을 선택합니다.
 73. **Repository**에서 `cicd-demo-repo`를 선택합니다.
 74. **Branch**에서 `main`을 선택합니다.
+
+    <img src="/images/week9/9-2-task3-step74-source.png" alt="Source 설정 - CodeCommit 리포지토리 및 브랜치" class="guide-img-md" />
 
 > [!NOTE]
 > 태스크 1에서 브랜치 이름을 `main`으로 변경하지 않은 경우 `master`를 선택합니다.
@@ -538,22 +593,30 @@ git push origin main
 79. **Image**에서 최신 버전을 선택합니다 (예: `aws/codebuild/amazonlinux-x86_64-standard:6.0`).
 80. **Image version**은 `Always use the latest image for this runtime version`을 유지합니다 (기본값).
 
-### Service role
+### Service role (Environment 섹션 내)
 
 81. **Service role**에서 `Existing service role`을 선택합니다.
+
+    <img src="/images/week9/9-2-task3-step81-service-role.png" alt="Service role - Existing service role 선택" class="guide-img-md" />
+
 82. **Role ARN**에서 태스크 0의 Outputs에서 확인한 `CodeBuildRoleArn` 값을 선택합니다.
 83. `Allow AWS CodeBuild to modify this service role so it can be used with this build project` 체크박스를 **해제**합니다.
+
+    <img src="/images/week9/9-2-task3-step83-environment.png" alt="Service role 체크박스 해제" class="guide-img-md" />
 
 > [!NOTE]
 > AWS CloudFormation이 생성한 역할의 정책이 변경되지 않도록 하는 모범 사례입니다.
 
-### Additional configuration (Environment 섹션 하단)
+### Additional configuration (Environment 섹션 내)
 
 84. **Additional configuration**을 펼칩니다.
 85. **Privileged**를 체크합니다.
 
 > [!IMPORTANT]
 > Docker 이미지를 빌드하려면 **Privileged** 옵션을 반드시 활성화해야 합니다.
+
+> [!NOTE]
+> **Compute**는 기본값 `4 vCPUs, 8 GiB memory`를 유지합니다. Docker 이미지 빌드에 충분한 사양입니다.
 
 86. **Environment variables** 섹션에서 [[Add environment variable]] 버튼을 클릭하여 첫 번째 환경 변수를 추가합니다:
     - **Name**: `IMAGE_REPO_NAME`
@@ -564,6 +627,8 @@ git push origin main
     - **Value**: `app`
     - **Type**: `Plaintext`
 88. 2개의 환경 변수가 모두 올바르게 입력되었는지 확인합니다.
+
+    <img src="/images/week9/9-2-task3-step88-env-vars.png" alt="Environment variables 설정 완료" class="guide-img-md" />
 
 > [!NOTE]
 > `AWS_ACCOUNT_ID`는 buildspec.yml 내에서 `aws sts get-caller-identity` 명령으로 자동 조회하므로 별도 환경 변수 설정이 필요 없습니다.
@@ -590,6 +655,8 @@ git push origin main
 
 91. [[Create build project]] 버튼을 클릭합니다.
 
+    <img src="/images/week9/9-2-task3-step91-create.png" alt="Create build project 클릭" class="guide-img-md" />
+
 ✅ **태스크 완료**: AWS CodeBuild 프로젝트가 생성되었습니다.
 
 ## 태스크 4: 빌드 실행 및 검증
@@ -600,14 +667,25 @@ git push origin main
 
 92. AWS CodeBuild 콘솔에서 생성한 프로젝트를 선택합니다.
 93. [[Start build]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-task4-step93-start-build.png" alt="CodeBuild Start build 클릭" class="guide-img-md" />
+
 94. **Start build** 페이지에서 기본값을 유지하고 [[Start build]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 빌드에 3-5분이 소요됩니다. 대기하는 동안 다음 단계에서 빌드 로그를 확인하여 각 단계가 정상적으로 실행되는지 모니터링합니다.
 
 95. **Build logs** 탭을 선택합니다.
+
+    <img src="/images/week9/9-2-task4-step95-build-logs.png" alt="Build logs 탭 선택" class="guide-img-md" />
+
 96. 빌드 로그가 실시간으로 표시되는지 확인합니다.
+
+    <img src="/images/week9/9-2-task4-step96-build-log-detail.png" alt="빌드 로그 실시간 표시" class="guide-img-md" />
+
 97. **PRE_BUILD** 단계의 로그를 확인합니다:
+
+    <img src="/images/week9/9-2-task4-step97-build-succeeded.png" alt="PRE_BUILD 단계 로그" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -644,6 +722,10 @@ git push origin main
 
 99. **BUILD** 단계의 로그를 확인합니다:
 
+    <img src="/images/week9/9-2-task4-step99-ecr-image.png" alt="BUILD 단계 로그" class="guide-img-md" />
+
+    <img src="/images/week9/9-2-task4-step99-ecr-detail.png" alt="BUILD 단계 상세" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -677,6 +759,8 @@ git push origin main
 > 로그에서 "naming to ... done" 및 "Phase complete: BUILD State: SUCCEEDED" 메시지가 표시되면 정상입니다.
 
 101. **POST_BUILD** 단계의 로그를 확인합니다:
+
+     <img src="/images/week9/9-2-task4-step101-image-tag.png" alt="POST_BUILD 단계 로그" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -718,6 +802,8 @@ git push origin main
 
 103. 로그 하단에서 최종 빌드 상태를 확인합니다:
 
+     <img src="/images/week9/9-2-task4-step103-image-detail.png" alt="최종 빌드 상태 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -750,7 +836,13 @@ git push origin main
 > 빌드 상태가 "Succeeded"로 변경될 때까지 기다립니다.
 
 105. Amazon ECR 콘솔로 이동합니다.
+
+     <img src="/images/week9/9-2-task4-step105-ecr-console.png" alt="Amazon ECR 콘솔" class="guide-img-md" />
+
 106. 생성한 Amazon ECR 리포지토리를 선택합니다.
+
+     <img src="/images/week9/9-2-task4-step106-ecr-images.png" alt="ECR 리포지토리 이미지 확인" class="guide-img-md" />
+
 107. 빌드된 Docker 이미지가 푸시되었는지 확인합니다.
 108. 이미지 태그를 확인합니다: `latest` 태그와 Git 커밋 해시 태그 (예: `a1b2c3d`)가 표시됩니다.
 
@@ -788,6 +880,8 @@ git push origin main
    - **Tag value**: `9-2`
 6. [[Search resources]] 버튼을 클릭합니다.
 
+    <img src="/images/week9/9-2-cleanup-step6-tageditor.png" alt="Tag Editor 리소스 검색 결과" class="guide-img-md" />
+
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
 
@@ -814,6 +908,8 @@ aws ecr batch-delete-image \
   --image-ids file:///dev/stdin
 ```
 
+<img src="/images/week9/9-2-cleanup-step7-ecr-delete.png" alt="ECR 이미지 삭제 실행" class="guide-img-md" />
+
 > [!NOTE]
 > 이미지가 정상적으로 삭제되면 `imageIds`와 `failures` 목록이 출력됩니다.
 > 다음 명령어로 이미지가 모두 삭제되었는지 확인합니다:
@@ -832,6 +928,8 @@ aws codebuild delete-project \
   --region ap-northeast-2
 ```
 
+<img src="/images/week9/9-2-cleanup-step8-codebuild-delete.png" alt="CodeBuild 프로젝트 삭제 실행" class="guide-img-sm" />
+
 > [!NOTE]
 > 정상적으로 삭제되면 별도 출력 없이 완료됩니다.
 
@@ -847,10 +945,18 @@ aws codebuild delete-project \
 11. 모든 이미지를 선택합니다 (체크박스 클릭).
 12. [[Delete]] 버튼을 클릭합니다.
 13. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-cleanup-step13-ecr-console-delete.png" alt="ECR 이미지 삭제 확인" class="guide-img-md" />
+
 14. AWS CodeBuild 콘솔의 왼쪽 메뉴에서 **Build projects**를 선택합니다.
 15. `week9-2-container-build` 빌드 프로젝트를 선택합니다.
 16. **Actions** > `Delete build project`를 선택합니다.
+
+    <img src="/images/week9/9-2-cleanup-step16-codebuild-delete.png" alt="CodeBuild 프로젝트 삭제" class="guide-img-md" />
+
 17. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-cleanup-step17-confirm-delete.png" alt="CodeBuild 삭제 확인" class="guide-img-md" />
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
@@ -859,6 +965,8 @@ aws codebuild delete-project \
 20. [[Delete stack]] 버튼을 클릭합니다.
 21. 확인 창에서 스택 이름 `week9-2-codebuild-stack`을 입력합니다.
 22. [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-cleanup-step22-stack-delete.png" alt="CloudFormation 스택 삭제" class="guide-img-md" />
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 Amazon ECR 리포지토리, CodeCommit 리포지토리, AWS IAM 역할 등 모든 리소스가 자동으로 삭제됩니다.
@@ -876,6 +984,8 @@ aws codebuild delete-project \
     - **Tag value**: `9-2`
 28. [[Search resources]] 버튼을 클릭합니다.
 
+    <img src="/images/week9/9-2-cleanup-step28-tageditor-confirm.png" alt="Tag Editor 최종 삭제 확인" class="guide-img-md" />
+
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 > 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
@@ -890,7 +1000,12 @@ aws codebuild delete-project \
 31. 검색창에 `week9-2`를 입력합니다.
 32. `/aws/codebuild/week9-2-container-build` 로그 그룹의 체크박스를 선택합니다.
 33. **Actions** > `Delete log group(s)`를 선택합니다.
+
+    <img src="/images/week9/9-2-cleanup-step33-loggroup-delete.png" alt="CloudWatch Log Group 삭제" class="guide-img-md" />
+
 34. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week9/9-2-cleanup-step34-loggroup-confirm.png" alt="Log Group 삭제 확인" class="guide-img-sm" />
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
