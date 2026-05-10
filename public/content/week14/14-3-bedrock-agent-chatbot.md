@@ -618,7 +618,7 @@ def cancel_reservation(params):
 이 태스크에서는 QuickTable 챗봇의 핵심인 Amazon Bedrock Agent를 생성합니다.
 
 > [!NOTE]
-> Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.
+> Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.  
 > Anthropic Claude 모델은 처음 사용 시 일회성 **Use case details** 양식 제출이 필요하지만, 14-1 실습에서 이미 완료한 경우 추가 제출 없이 바로 사용할 수 있습니다.
 
 51. Amazon Bedrock 콘솔로 이동합니다.
@@ -635,9 +635,9 @@ def cancel_reservation(params):
 58. **Select model**에서 최신 Claude 모델을 선택합니다 (예: `Anthropic Claude Sonnet 4.6` 또는 `Anthropic Claude Opus 4.6`).
 
 > [!NOTE]
-> AWS 콘솔 UI는 지속적으로 업데이트됩니다.
-> "Select model" 대신 "Choose model" 또는 다른 이름으로 표시될 수 있습니다.
-> 기본적으로 Amazon Bedrock Agents에 최적화된 모델만 표시됩니다.
+> AWS 콘솔 UI는 지속적으로 업데이트됩니다.  
+> "Select model" 대신 "Choose model" 또는 다른 이름으로 표시될 수 있습니다.  
+> 기본적으로 Amazon Bedrock Agents에 최적화된 모델만 표시됩니다.  
 > 모든 모델을 보려면 "Amazon Bedrock Agents optimized" 체크를 해제합니다.
 >
 > **권장 모델 (2026년 3월 기준)**:
@@ -685,7 +685,7 @@ def cancel_reservation(params):
 67. **Action group type**에서 `Define with function details`를 선택합니다.
 
 > [!NOTE]
-> AWS 콘솔 UI는 지속적으로 업데이트됩니다.
+> AWS 콘솔 UI는 지속적으로 업데이트됩니다.  
 > "Define with function details" 옵션이 보이지 않는 경우:
 >
 > - "Define with API schemas" 대신 사용 가능한 옵션을 선택합니다
@@ -695,8 +695,8 @@ def cancel_reservation(params):
 69. **AWS Lambda function**에서 `BedrockAgentReservationHandler`를 선택합니다.
 
 > [!NOTE]
-> AWS Lambda 함수를 선택하면 Amazon Bedrock Agent가 AWS Lambda를 호출할 수 있도록 리소스 기반 정책이 자동으로 추가됩니다.
-> 자동 추가가 실패하는 경우, AWS Lambda 콘솔의 Configuration > Permissions > Resource-based policy statements에서 수동으로 추가해야 합니다.
+> AWS Lambda 함수를 선택하면 Amazon Bedrock Agent가 AWS Lambda를 호출할 수 있도록 리소스 기반 정책이 자동으로 추가됩니다.  
+> 자동 추가가 실패하는 경우, AWS Lambda 콘솔의 Configuration > Permissions > Resource-based policy statements에서 수동으로 추가해야 합니다.  
 > 참고 섹션에서 리소스 기반 정책 예시를 확인할 수 있습니다.
 
 70. **Action group functions** 섹션에서 [[Add function]] 버튼을 클릭합니다.
@@ -759,8 +759,8 @@ def cancel_reservation(params):
 76. **Knowledge bases** 섹션에서 [[Add]] 버튼을 클릭합니다 (Week 14-2 완료 시).
 
 > [!IMPORTANT]
-> 이 단계는 Week 14-2를 완료한 경우에만 수행합니다.
-> Week 14-2에서 생성한 Knowledge Base를 연결하여 레스토랑 정보 질문에 답변할 수 있도록 합니다.
+> 이 단계는 Week 14-2를 완료한 경우에만 수행합니다.  
+> Week 14-2에서 생성한 Knowledge Base를 연결하여 레스토랑 정보 질문에 답변할 수 있도록 합니다.  
 > 14-2 실습을 완료하지 않았다면 이 단계(75-79)를 건너뛰고 80번으로 이동합니다.
 
 77. **Select knowledge base**에서 `quicktable-restaurant-kb`를 선택합니다 (14-2에서 생성).
@@ -794,7 +794,7 @@ def cancel_reservation(params):
 > Agent 준비에 30초-1분이 소요됩니다. 이 과정에서 Agent의 프롬프트와 Action Group이 최적화됩니다. 준비가 완료되면 오른쪽에 **Test** 패널이 표시됩니다.
 
 > [!IMPORTANT]
-> Action Group, Knowledge Base, 또는 Instructions를 수정한 경우 반드시 [[Prepare]] 버튼을 다시 클릭해야 변경사항이 반영됩니다.
+> Action Group, Knowledge Base, 또는 Instructions를 수정한 경우 반드시 [[Prepare]] 버튼을 다시 클릭해야 변경사항이 반영됩니다.  
 > Prepare를 실행하지 않으면 이전 버전의 Agent가 계속 사용됩니다.
 
 83. Test 패널의 입력창에 다음 메시지를 입력합니다:
@@ -829,7 +829,7 @@ def cancel_reservation(params):
 87. Agent가 예약을 생성하고 예약 번호를 제공하는지 확인합니다.
 
 > [!NOTE]
-> Agent가 한 번에 모든 정보를 추출하지 못하고 하나씩 물어볼 수 있습니다.
+> Agent가 한 번에 모든 정보를 추출하지 못하고 하나씩 물어볼 수 있습니다.  
 > 생성형 AI의 특성상 실제 응답은 아래 예시와 다를 수 있으며, 대화가 더 길어질 수 있습니다.
 
 > [!OUTPUT]
@@ -860,8 +860,8 @@ def cancel_reservation(params):
 91. Agent가 예약 정보를 정확히 조회하는지 확인합니다.
 
 > [!NOTE]
-> 예약 번호는 UUID 기반으로 생성되므로 실제 응답의 예약 번호는 위 예시와 다릅니다.
-> 또한 생성형 AI의 특성상 날짜 해석이 다를 수 있습니다 (예: "2월 15일" → "2026-02-15" 또는 "2024-02-15").
+> 예약 번호는 UUID 기반으로 생성되므로 실제 응답의 예약 번호는 위 예시와 다릅니다.  
+> 또한 생성형 AI의 특성상 날짜 해석이 다를 수 있습니다 (예: "2월 15일" → "2026-02-15" 또는 "2024-02-15").  
 > 실제 저장된 날짜는 Amazon DynamoDB 테이블에서 확인할 수 있습니다.
 
 92. **Show trace** 토글을 활성화합니다.
@@ -890,8 +890,8 @@ def cancel_reservation(params):
 97. 예약 번호를 입력하고 취소가 정상적으로 처리되는지 확인합니다.
 
 > [!NOTE]
-> `cancel_reservation` 함수는 예약이 존재하지 않아도 성공 응답을 반환합니다.
-> 이는 Amazon DynamoDB의 `update_item` 동작 특성 때문입니다.
+> `cancel_reservation` 함수는 예약이 존재하지 않아도 성공 응답을 반환합니다.  
+> 이는 Amazon DynamoDB의 `update_item` 동작 특성 때문입니다.  
 > 프로덕션 환경에서는 예약 존재 여부를 먼저 확인하는 로직을 추가해야 합니다.
 
 98. Knowledge Base 연동을 테스트합니다 (14-2 완료 시):
@@ -961,8 +961,8 @@ def cancel_reservation(params):
 117. **Timeout**을 `30` 초로 변경합니다.
 
 > [!NOTE]
-> Amazon Bedrock Agent 호출은 응답 생성에 시간이 걸립니다 (일반적으로 5-30초).
-> AWS Lambda 기본 타임아웃(3초)으로는 부족하므로 최소 30초 이상으로 설정해야 합니다.
+> Amazon Bedrock Agent 호출은 응답 생성에 시간이 걸립니다 (일반적으로 5-30초).  
+> AWS Lambda 기본 타임아웃(3초)으로는 부족하므로 최소 30초 이상으로 설정해야 합니다.  
 > Agent가 Knowledge Base를 검색하거나 여러 Action을 수행하는 경우 더 긴 시간이 필요할 수 있습니다.
 
 118. [[Save]] 버튼을 클릭합니다.
@@ -1052,7 +1052,7 @@ def lambda_handler(event, context):
 - [[Add permissions]] 클릭
 
 > [!NOTE]
-> 프로덕션 환경에서는 `bedrock:InvokeAgent` 권한만 포함하는 커스텀 정책을 사용해야 합니다.
+> 프로덕션 환경에서는 `bedrock:InvokeAgent` 권한만 포함하는 커스텀 정책을 사용해야 합니다.  
 > 참고 섹션에서 최소 권한 정책 예시를 확인할 수 있습니다.
 
 125. 왼쪽 메뉴에서 **Environment variables**를 선택합니다.
@@ -1083,7 +1083,7 @@ def lambda_handler(event, context):
 > 별칭 상세 페이지에서 "Alias ID" 필드의 값을 복사하여 사용합니다.
 
 > [!TIP]
-> `BEDROCK_REGION` 환경 변수를 명시적으로 설정하면 AWS Lambda 함수가 다른 리전에서 실행되더라도 올바른 리전의 Amazon Bedrock Agent를 호출할 수 있습니다.
+> `BEDROCK_REGION` 환경 변수를 명시적으로 설정하면 AWS Lambda 함수가 다른 리전에서 실행되더라도 올바른 리전의 Amazon Bedrock Agent를 호출할 수 있습니다.  
 > `AWS_REGION`은 AWS Lambda의 예약 환경 변수이므로 사용하지 않습니다.
 
 129. [[Save]] 버튼을 클릭합니다.
@@ -1111,8 +1111,8 @@ def lambda_handler(event, context):
 ```
 
 > [!NOTE]
-> 테스트 이벤트의 날짜는 실습 당일 이후 날짜로 변경합니다.
-> 위 예시는 2026-02-20으로 설정되어 있습니다.
+> 테스트 이벤트의 날짜는 실습 당일 이후 날짜로 변경합니다.  
+> 위 예시는 2026-02-20으로 설정되어 있습니다.  
 > 과거 날짜로 예약을 생성하면 실제 시스템에서는 거부될 수 있습니다.
 
 137. [[Save]] 버튼을 클릭합니다.
@@ -1172,61 +1172,125 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 
 ### 단계 2: 리소스 삭제
 
-### Amazon Bedrock Agent 삭제
+#### 옵션 1: AWS CLI로 삭제
 
-7. AWS Management Console에 로그인한 후 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
-8. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
-9. `QuickTableAssistant` Agent를 선택합니다.
-10. [[Delete]] 버튼을 클릭합니다.
-11. 확인 창에서 `delete`를 입력합니다.
-12. [[Delete]] 버튼을 클릭합니다.
+> [!TIP]
+> AWS CLI 명령어에 익숙하거나 빠른 삭제를 원하는 경우 이 방법을 사용합니다.
+>
+> 콘솔 방식이 더 편하다면 아래 [옵션 2](#option-2)를 참고합니다.
+
+7. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
+8. Amazon Bedrock Agent를 삭제합니다:
+
+```bash
+# Agent ID 확인
+AGENT_ID=$(aws bedrock-agent list-agents --query "agentSummaries[?agentName=='QuickTableAssistant'].agentId" --output text)
+echo "Agent ID: ${AGENT_ID}"
+
+# Agent 삭제 (별칭과 버전도 함께 삭제됨)
+aws bedrock-agent delete-agent --agent-id ${AGENT_ID} --skip-resource-in-use-check
+```
+
+9. AWS Lambda 함수를 삭제합니다:
+
+```bash
+aws lambda delete-function --function-name BedrockAgentReservationHandler
+aws lambda delete-function --function-name BedrockAgentInvoker
+```
+
+10. Amazon DynamoDB 테이블을 삭제합니다:
+
+```bash
+aws dynamodb delete-table --table-name RestaurantReservations
+```
+
+11. Amazon CloudWatch Log Group을 삭제합니다:
+
+```bash
+aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentReservationHandler 2>/dev/null
+aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentInvoker 2>/dev/null
+```
+
+12. AWS IAM 역할을 삭제합니다:
+
+```bash
+# Bedrock Agent 역할 삭제
+BEDROCK_ROLE=$(aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForAgents_')].RoleName" --output text)
+if [ -n "${BEDROCK_ROLE}" ]; then
+  aws iam detach-role-policy --role-name ${BEDROCK_ROLE} --policy-arn arn:aws:iam::aws:policy/AmazonBedrockFullAccess 2>/dev/null
+  aws iam delete-role --role-name ${BEDROCK_ROLE}
+  echo "Deleted: ${BEDROCK_ROLE}"
+fi
+```
+
+> [!NOTE]
+> AWS Lambda 함수의 실행 역할은 함수 삭제 시 자동으로 삭제되지 않습니다.
+> AWS IAM 콘솔에서 `BedrockAgentReservationHandler-role-`과 `BedrockAgentInvoker-role-`로 시작하는 역할을 수동으로 삭제합니다.
+
+13. 옵션 1 완료 후 아래 **단계 3: 삭제 확인**으로 이동합니다.
+
+#### 옵션 2: AWS 콘솔에서 삭제
+
+> [!TIP]
+> AWS 콘솔 방식을 선호하거나 각 단계를 확인하면서 삭제하고 싶은 경우 이 방법을 사용합니다.
+>
+> AWS CLI 명령어에 익숙한 경우 위 [옵션 1](#option-1)을 참고합니다.
+
+**Amazon Bedrock Agent 삭제**
+
+14. 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
+15. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
+16. `QuickTableAssistant` Agent를 선택합니다.
+17. [[Delete]] 버튼을 클릭합니다.
+18. 확인 창에서 `delete`를 입력합니다.
+19. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Agent를 삭제하면 모든 별칭과 버전도 함께 삭제됩니다.
 
-### AWS Lambda 함수 삭제
+**AWS Lambda 함수 삭제**
 
-13. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
-14. `BedrockAgentReservationHandler` 함수를 선택합니다.
-15. **Actions** > `Delete`를 선택합니다.
-16. 확인 창에서 `delete`를 입력합니다.
-17. [[Delete]] 버튼을 클릭합니다.
-18. 같은 방식으로 `BedrockAgentInvoker` 함수도 삭제합니다.
-
-### Amazon DynamoDB 테이블 삭제
-
-19. AWS Management Console에 로그인한 후 상단 검색창에 `DynamoDB`을 입력하고 선택합니다.
-20. 왼쪽 메뉴에서 **Tables**를 선택합니다.
-21. `RestaurantReservations` 테이블을 선택합니다.
-22. [[Delete]] 버튼을 클릭합니다.
-23. 확인 창에서 `confirm`을 입력합니다.
+20. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
+21. `BedrockAgentReservationHandler` 함수를 선택합니다.
+22. **Actions** > `Delete`를 선택합니다.
+23. 확인 창에서 `delete`를 입력합니다.
 24. [[Delete]] 버튼을 클릭합니다.
+25. 같은 방식으로 `BedrockAgentInvoker` 함수도 삭제합니다.
 
-### AWS IAM 역할 삭제
+**Amazon DynamoDB 테이블 삭제**
 
-25. AWS Management Console에 로그인한 후 상단 검색창에 `IAM`을 입력하고 선택합니다.
-26. 왼쪽 메뉴에서 **Roles**를 선택합니다.
-27. 검색창에 `BedrockAgent`를 입력합니다.
-28. Amazon Bedrock Agent가 생성한 역할들을 선택합니다.
+26. 상단 검색창에 `DynamoDB`를 입력하고 선택합니다.
+27. 왼쪽 메뉴에서 **Tables**를 선택합니다.
+28. `RestaurantReservations` 테이블을 선택합니다.
 29. [[Delete]] 버튼을 클릭합니다.
-30. 확인 창에서 역할 이름을 입력합니다.
+30. 확인 창에서 `confirm`을 입력합니다.
 31. [[Delete]] 버튼을 클릭합니다.
-32. 같은 방식으로 AWS Lambda 함수의 실행 역할들도 삭제합니다.
+
+**AWS IAM 역할 삭제**
+
+32. 상단 검색창에 `IAM`을 입력하고 선택합니다.
+33. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+34. 검색창에 `BedrockAgent`를 입력합니다.
+35. Amazon Bedrock Agent가 생성한 역할들을 선택합니다.
+36. [[Delete]] 버튼을 클릭합니다.
+37. 확인 창에서 역할 이름을 입력합니다.
+38. [[Delete]] 버튼을 클릭합니다.
+39. 같은 방식으로 AWS Lambda 함수의 실행 역할들도 삭제합니다.
 
 > [!NOTE]
-> AWS IAM 역할 이름은 `AmazonBedrockExecutionRoleForAgents_` 또는 `BedrockAgentReservationHandler-role-` 형식입니다.
+> AWS IAM 역할 이름은 `AmazonBedrockExecutionRoleForAgents_` 또는 `BedrockAgentReservationHandler-role-` 형식입니다.  
 > 역할을 삭제하기 전에 다른 Agent나 AWS Lambda 함수에서 사용 중인지 확인합니다.
 
-### Amazon CloudWatch Log Group 삭제
+**Amazon CloudWatch Log Group 삭제**
 
-33. AWS Management Console에 로그인한 후 상단 검색창에 `CloudWatch`을 입력하고 선택합니다.
-34. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-35. 검색창에 `/aws/lambda/BedrockAgent`를 입력합니다.
-36. 다음 로그 그룹들을 선택합니다:
+40. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+41. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+42. 검색창에 `BedrockAgent`를 입력합니다.
+43. 다음 로그 그룹들을 선택합니다:
     - `/aws/lambda/BedrockAgentReservationHandler`
     - `/aws/lambda/BedrockAgentInvoker`
-37. **Actions** > `Delete log group(s)`를 선택합니다.
-38. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+44. **Actions** > `Delete log group(s)`를 선택합니다.
+45. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Amazon CloudWatch Log Group은 자동으로 생성되며, 삭제하지 않으면 로그 저장 비용이 계속 발생합니다.
@@ -1234,47 +1298,47 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
 ### Week 14-2 리소스 삭제 (Knowledge Base 연결 시)
 
 > [!IMPORTANT]
-> Week 14-2에서 생성한 Knowledge Base와 OpenSearch Serverless 컬렉션을 삭제하지 않았다면 반드시 삭제합니다.
+> Week 14-2에서 생성한 Knowledge Base와 OpenSearch Serverless 컬렉션을 삭제하지 않았다면 반드시 삭제합니다.  
 > OpenSearch Serverless는 시간당 $0.48 (월 $346) 비용이 계속 발생합니다.
 
-39. Amazon Bedrock 콘솔로 이동합니다.
-40. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
-41. `quicktable-restaurant-kb`를 선택합니다.
-42. [[Delete]] 버튼을 클릭합니다.
-43. 확인 창에서 `delete`를 입력합니다.
-44. [[Delete]] 버튼을 클릭합니다.
-45. AWS Management Console에 로그인한 후 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
-46. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
-47. Knowledge Base와 연결된 컬렉션을 선택합니다.
+46. Amazon Bedrock 콘솔로 이동합니다.
+47. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
+48. `quicktable-restaurant-kb`를 선택합니다.
+49. [[Delete]] 버튼을 클릭합니다.
+50. 확인 창에서 `delete`를 입력합니다.
+51. [[Delete]] 버튼을 클릭합니다.
+52. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
+53. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
+54. Knowledge Base와 연결된 컬렉션을 선택합니다.
 
 > [!NOTE]
-> Quick create로 생성된 OpenSearch Serverless 컬렉션은 `bedrock-knowledge-base-` 접두사로 시작하는 이름을 가질 수 있습니다.
+> Quick create로 생성된 OpenSearch Serverless 컬렉션은 `bedrock-knowledge-base-` 접두사로 시작하는 이름을 가질 수 있습니다.  
 > 컬렉션 이름을 확인한 후 선택합니다.
 
-48. [[Delete]] 버튼을 클릭합니다.
-49. 확인 창에서 `confirm`을 입력합니다.
-50. [[Delete]] 버튼을 클릭합니다.
+55. [[Delete]] 버튼을 클릭합니다.
+56. 확인 창에서 `confirm`을 입력합니다.
+57. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> Knowledge Base를 삭제하면 Amazon S3 버킷의 문서는 삭제되지 않습니다.
+> Knowledge Base를 삭제하면 Amazon S3 버킷의 문서는 삭제되지 않습니다.  
 > Amazon S3 버킷도 삭제하려면 Amazon S3 콘솔에서 `quicktable-kb-documents-YOUR-INITIALS` 버킷을 삭제합니다.
 
 ### 단계 3: 삭제 확인
 
-51. `Resource Groups & Tag Editor`로 이동합니다.
-52. Tag key: `Week`, Tag value: `14-3`으로 검색합니다.
-53. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+58. `Resource Groups & Tag Editor`로 이동합니다.
+59. Tag key: `Week`, Tag value: `14-3`으로 검색합니다.
+60. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
 
-- [Amazon Bedrock Agents 개요](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents.html)
-- [Amazon Bedrock Agents Action Groups](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-action-groups.html)
-- [Amazon Bedrock Agents Knowledge Bases](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/knowledge-base.html)
+- [Amazon Bedrock Agents 개요](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html)
+- [Amazon Bedrock Agent Action Group 정의](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-action-create.html)
+- [Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
 - [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)
 - [Amazon Bedrock 요금](https://aws.amazon.com/ko/bedrock/pricing/)
-- [AWS Lambda와 Amazon Bedrock 통합](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-lambda.html)
+- [Amazon Bedrock Agent의 AWS Lambda 함수 구성](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-lambda.html)
 
 ## 📚 참고: Amazon Bedrock Agent 핵심 개념
 
@@ -1682,7 +1746,7 @@ for event in response.get('completion', []):
 ```
 
 > [!NOTE]
-> 위 정책들은 특정 리소스에만 접근할 수 있도록 제한하여 보안을 강화합니다.
+> 위 정책들은 특정 리소스에만 접근할 수 있도록 제한하여 보안을 강화합니다.  
 > `YOUR_ACCOUNT_ID`는 실제 AWS 계정 ID로 대체해야 합니다.
 
 ### OpenAPI 스키마를 사용한 Action Group 정의

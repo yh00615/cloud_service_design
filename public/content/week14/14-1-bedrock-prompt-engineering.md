@@ -505,7 +505,7 @@ Amazon Bedrock은 **사용한 만큼만 과금**되는 토큰 기반 요금제�
 
 ## 추가 학습 리소스
 
-- [Amazon Bedrock 사용자 가이드](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/what-is-bedrock.html)
+- [Amazon Bedrock 사용자 가이드](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html)
 - [프롬프트 엔지니어링 가이드](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
 - [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)
 
