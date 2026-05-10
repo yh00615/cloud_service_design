@@ -1,0 +1,340 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Week 14-3: Amazon Bedrock Agent Chatbot Lab Environment'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Environment Settings (Keep Default)'
+        Parameters:
+          - ProjectTag
+          - WeekTag
+          - CreatedByTag
+
+Parameters:
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID or unique identifier (lowercase letters and numbers only, e.g., 20240001 or student01)
+    AllowedPattern: ^[a-z0-9]{5,20}$
+    ConstraintDescription: Only lowercase letters and numbers allowed (5-20 characters)
+
+  ProjectTag:
+    Type: String
+    Default: 'AWS-Lab'
+    Description: Project tag value
+
+  WeekTag:
+    Type: String
+    Default: '14-3'
+    Description: Week tag value
+
+  CreatedByTag:
+    Type: String
+    Default: 'CloudFormation'
+    Description: CreatedBy tag value
+
+Resources:
+  # DynamoDB Table
+  ReservationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: RestaurantReservations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: reservationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: reservationId
+          KeyType: HASH
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Execution Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'BedrockAgentReservationHandler-role-${StudentId}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource: !GetAtt ReservationsTable.Arn
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Lambda Function - Bedrock Agent Reservation Handler
+  ReservationHandlerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: BedrockAgentReservationHandler
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          from datetime import datetime
+
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ.get('TABLE_NAME', 'RestaurantReservations'))
+
+          def lambda_handler(event, context):
+              print(f"Received event: {json.dumps(event)}")
+              action_group = event.get('actionGroup', '')
+              function = event.get('function', '')
+              parameters = event.get('parameters', [])
+              params = {p['name']: p['value'] for p in parameters}
+
+              if function == 'get_reservation':
+                  result = get_reservation(params)
+              elif function == 'create_reservation':
+                  result = create_reservation(params)
+              elif function == 'list_reservations':
+                  result = list_reservations(params)
+              elif function == 'cancel_reservation':
+                  result = cancel_reservation(params)
+              else:
+                  result = {'error': f'Unknown function: {function}'}
+
+              response = {
+                  'messageVersion': '1.0',
+                  'response': {
+                      'actionGroup': action_group,
+                      'function': function,
+                      'functionResponse': {
+                          'responseBody': {
+                              'TEXT': {
+                                  'body': json.dumps(result, ensure_ascii=False)
+                              }
+                          }
+                      }
+                  }
+              }
+              return response
+
+          def get_reservation(params):
+              reservation_id = params.get('reservationId')
+              try:
+                  response = table.get_item(Key={'reservationId': reservation_id})
+                  if 'Item' in response:
+                      item = response['Item']
+                      return {
+                          'success': True,
+                          'reservation': {
+                              'reservationId': item['reservationId'],
+                              'customerName': item['customerName'],
+                              'date': item['date'],
+                              'time': item['time'],
+                              'partySize': int(item['partySize']),
+                              'status': item['status']
+                          }
+                      }
+                  else:
+                      return {'success': False, 'message': f'Reservation {reservation_id} not found.'}
+              except Exception as e:
+                  return {'success': False, 'error': str(e)}
+
+          def create_reservation(params):
+              import uuid
+              reservation_id = f"RES{str(uuid.uuid4())[:8].upper()}"
+              customer_name = params.get('customerName')
+              date = params.get('date')
+              time_val = params.get('time')
+              party_size = int(params.get('partySize', 2))
+              try:
+                  table.put_item(Item={
+                      'reservationId': reservation_id,
+                      'customerName': customer_name,
+                      'date': date,
+                      'time': time_val,
+                      'partySize': party_size,
+                      'status': 'confirmed',
+                      'createdAt': datetime.now().isoformat()
+                  })
+                  return {
+                      'success': True,
+                      'message': f'{customer_name} reservation confirmed.',
+                      'reservation': {
+                          'reservationId': reservation_id,
+                          'customerName': customer_name,
+                          'date': date,
+                          'time': time_val,
+                          'partySize': party_size,
+                          'status': 'confirmed'
+                      }
+                  }
+              except Exception as e:
+                  return {'success': False, 'error': str(e)}
+
+          def list_reservations(params):
+              date = params.get('date')
+              try:
+                  if date:
+                      response = table.scan(
+                          FilterExpression='#d = :date',
+                          ExpressionAttributeNames={'#d': 'date'},
+                          ExpressionAttributeValues={':date': date}
+                      )
+                  else:
+                      response = table.scan()
+                  items = response.get('Items', [])
+                  reservations = [{
+                      'reservationId': item['reservationId'],
+                      'customerName': item['customerName'],
+                      'date': item['date'],
+                      'time': item['time'],
+                      'partySize': int(item['partySize']),
+                      'status': item['status']
+                  } for item in items]
+                  return {'success': True, 'count': len(reservations), 'reservations': reservations}
+              except Exception as e:
+                  return {'success': False, 'error': str(e)}
+
+          def cancel_reservation(params):
+              reservation_id = params.get('reservationId')
+              try:
+                  table.update_item(
+                      Key={'reservationId': reservation_id},
+                      UpdateExpression='SET #status = :status',
+                      ExpressionAttributeNames={'#status': 'status'},
+                      ExpressionAttributeValues={':status': 'cancelled'}
+                  )
+                  return {'success': True, 'message': f'Reservation {reservation_id} cancelled.'}
+              except Exception as e:
+                  return {'success': False, 'error': str(e)}
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectTag
+        - Key: Week
+          Value: !Ref WeekTag
+        - Key: CreatedBy
+          Value: !Ref CreatedByTag
+
+  # Custom Resource to insert sample data
+  SampleDataFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'week14-3-SampleDataUploader-${StudentId}'
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReservationsTable
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          import cfnresponse
+
+          dynamodb = boto3.resource('dynamodb')
+          table = dynamodb.Table(os.environ.get('TABLE_NAME', 'RestaurantReservations'))
+
+          SAMPLE_DATA = [
+              {
+                  'reservationId': 'RES001',
+                  'customerName': 'Kim Cheolsu',
+                  'date': '2026-02-15',
+                  'time': '19:00',
+                  'partySize': 4,
+                  'status': 'confirmed'
+              },
+              {
+                  'reservationId': 'RES002',
+                  'customerName': 'Lee Younghee',
+                  'date': '2026-02-16',
+                  'time': '18:30',
+                  'partySize': 2,
+                  'status': 'confirmed'
+              },
+              {
+                  'reservationId': 'RES003',
+                  'customerName': 'Park Minsu',
+                  'date': '2026-02-17',
+                  'time': '20:00',
+                  'partySize': 6,
+                  'status': 'confirmed'
+              }
+          ]
+
+          def lambda_handler(event, context):
+              try:
+                  if event['RequestType'] in ['Create', 'Update']:
+                      for item in SAMPLE_DATA:
+                          table.put_item(Item=item)
+                      print(f"Inserted {len(SAMPLE_DATA)} sample reservations")
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': str(e)})
+
+  SampleDataUpload:
+    Type: Custom::SampleData
+    DependsOn: ReservationsTable
+    Properties:
+      ServiceToken: !GetAtt SampleDataFunction.Arn
+
+  # Bedrock Agent가 Lambda를 호출할 수 있도록 리소스 기반 정책 추가
+  BedrockAgentLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ReservationHandlerFunction
+      Action: lambda:InvokeFunction
+      Principal: bedrock.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+
+Outputs:
+  ReservationsTableName:
+    Description: DynamoDB Table Name
+    Value: !Ref ReservationsTable
+
+  ReservationHandlerFunctionName:
+    Description: Lambda Function Name (for Bedrock Agent Action Group)
+    Value: !Ref ReservationHandlerFunction
+
+  ReservationHandlerFunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt ReservationHandlerFunction.Arn
+
+  LambdaExecutionRoleName:
+    Description: Lambda Execution Role Name
+    Value: !Ref LambdaExecutionRole
