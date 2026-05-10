@@ -144,10 +144,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 >
 > <img src="/images/week1/1-1-task0-step19-stack-complete.png" alt="CloudFormation 스택 생성 완료 상태" class="guide-img-md" />
-> 18. **Outputs** 탭을 선택합니다.
-> 19. 출력값들을 확인하고 메모장에 복사합니다:
 
+18. **Outputs** 탭을 선택합니다.
     <img src="/images/week1/1-1-task0-step21-outputs.png" alt="CloudFormation 스택 Outputs 탭의 출력값" class="guide-img-md" />
+19. 출력값들을 확인하고 메모장에 복사합니다:
     - `GetReservationFunctionName`: QuickTable 예약 조회 AWS Lambda 함수 이름
     - `LogsBucketName`: QuickTable 로그 버킷 이름 (예: quicktable-logs-a1b2c3d4e5f6)
     - `ReservationsBucketName`: QuickTable 예약 데이터 버킷 이름 (예: quicktable-reservations-a1b2c3d4e5f6)
