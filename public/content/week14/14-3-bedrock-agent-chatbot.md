@@ -21,599 +21,135 @@ prerequisites:
 > **리전 설정 필수**: 이 실습은 **Week 14-2와 동일한 리전**에서 진행합니다.
 >
 > - **권장 리전**: Asia Pacific (Seoul) ap-northeast-2
-> - Week 14-2에서 생성한 Knowledge Base를 연결하려면 같은 리전을 사용해야 합니다
-> - Amazon Bedrock Agent는 모든 모델이 지원되는 리전에서 사용합니다
+> - Week 14-2에서 생성한 Knowledge Base를 연결하려면 같은 리전을 사용해야 합니다.
+> - Amazon Bedrock Agent는 모든 모델이 지원되는 리전에서 사용합니다.
 
 이 실습에서는 Amazon Bedrock Agent를 사용하여 QuickTable 레스토랑 예약 시스템의 지능형 챗봇을 구축합니다. 고객이 자연어로 대화하며 예약을 관리할 수 있는 AI 어시스턴트를 완성합니다. AWS Lambda 함수를 Action Group으로 연결하여 예약 조회, 생성, 취소 등의 실제 작업을 수행하고, Week 14-2에서 생성한 Knowledge Base를 통합하여 레스토랑 정보 질문에도 답변할 수 있도록 합니다. 대화형 AI의 핵심 개념과 프롬프트 엔지니어링 기법을 학습합니다.
 
 > [!CONCEPT] Amazon Bedrock Agent 아키텍처
 > Amazon Bedrock Agent는 자연어 요청을 이해하고 자율적으로 작업을 수행하는 AI 에이전트입니다.
 >
-> - **ReAct 프롬프팅**: Reasoning(추론) + Acting(행동)을 반복하여 복잡한 작업을 단계별로 수행합니다
-> - **Action Group**: AWS Lambda 함수와 연결하여 실제 작업(예약 조회, 생성, 취소)을 수행합니다
-> - **Knowledge Base**: RAG(Retrieval-Augmented Generation)를 통해 외부 문서 기반으로 답변합니다
-> - **에이전트 흐름**: 사용자 요청 → 의도 파악 → Action Group 호출 또는 Knowledge Base 검색 → 응답 생성
+> - **ReAct 프롬프팅**: Reasoning(추론) + Acting(행동)을 반복하여 복잡한 작업을 단계별로 수행합니다.
+> - **Action Group**: AWS Lambda 함수와 연결하여 실제 작업(예약 조회, 생성, 취소)을 수행합니다.
+> - **Knowledge Base**: RAG(Retrieval-Augmented Generation)를 통해 외부 문서 기반으로 답변합니다.
+> - **에이전트 흐름**: 사용자 요청 → 의도 파악 → Action Group 호출 또는 Knowledge Base 검색 → 응답 생성.
 
 > [!DOWNLOAD]
 > [week14-3-bedrock-agent-lab.zip](/files/week14/week14-3-bedrock-agent-lab.zip)
 >
-> - `bedrock_agent_lambda.py` - Amazon Bedrock Agent 예약 관리 AWS Lambda 함수 (태스크 2에서 AWS Lambda 함수 코드로 사용, 상세한 주석 및 DocString 포함)
+> - `week14-3-bedrock-agent-lab.yaml` - AWS CloudFormation 템플릿 (태스크 0에서 Amazon DynamoDB 테이블, AWS Lambda 함수, AWS IAM 역할, 샘플 데이터 자동 생성).
+> - `bedrock_agent_lambda.py` - Amazon Bedrock Agent 예약 관리 AWS Lambda 함수 (상세한 주석 및 DocString 포함, 참고용).
 >
 > **관련 태스크:**
 >
-> - 태스크 2: AWS Lambda 함수를 생성하여 예약 관리 기능 구현 (bedrock_agent_lambda.py를 참고하여 Amazon Bedrock Agent Action Group 핸들러 및 예약 관리 로직 구현)
+> - 태스크 0: 실습 환경 구축 (AWS CloudFormation 템플릿으로 Amazon DynamoDB, AWS Lambda, AWS IAM 역할, 샘플 데이터 자동 생성).
+> - 태스크 1: 생성된 리소스 확인 (Amazon DynamoDB 테이블, AWS Lambda 함수 코드 확인).
 
 > [!WARNING]
 > 이 실습에서 생성하는 리소스는 실습 종료 후 반드시 삭제해야 합니다.
 
-## 태스크 1: Amazon DynamoDB 테이블을 생성하여 QuickTable 예약 데이터 저장
+## 태스크 0: 실습 환경 구축
 
-이 태스크에서는 QuickTable 챗봇이 관리할 예약 데이터를 저장할 Amazon DynamoDB 테이블을 생성합니다.
+이 태스크에서는 AWS CloudFormation을 사용하여 Amazon Bedrock Agent에 필요한 기반 리소스를 자동으로 생성합니다. Amazon DynamoDB 테이블, AWS Lambda 함수, AWS IAM 역할, 샘플 예약 데이터가 자동으로 구성됩니다.
 
-1. AWS Management Console에 로그인한 후 상단 검색창에 `DynamoDB`을 입력하고 선택합니다.
-2. [[Create table]] 버튼을 클릭합니다.
-3. **Table name**에 `RestaurantReservations`를 입력합니다.
-4. **Partition key**에 `reservationId`를 입력합니다.
-5. **Data type**은 `String`을 선택합니다.
-6. **Table settings**에서 `Customize settings`를 선택합니다.
-7. **Read/write capacity settings**에서 `On-demand`를 선택합니다.
-8. **Encryption at rest**는 `Owned by Amazon DynamoDB`를 선택합니다.
-9. 아래로 스크롤하여 **Tags - optional** 섹션을 확인합니다.
-10. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+1. 다운로드한 `week14-3-bedrock-agent-lab.zip` 파일의 압축을 해제합니다.
+2. `week14-3-bedrock-agent-lab.yaml` 파일을 확인합니다.
+3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
+5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
+6. **Specify template**에서 `Upload a template file`을 선택합니다.
+7. [[Choose file]] 버튼을 클릭한 후 `week14-3-bedrock-agent-lab.yaml` 파일을 선택합니다.
+8. [[Next]] 버튼을 클릭합니다.
+   <img src="/images/week14/14-3-task0-step8-next.png" alt="Next 버튼 클릭" class="guide-img-md" />
 
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `14-3`    |
-| `CreatedBy` | `Student` |
+9. **Stack name**에 `week14-3-bedrock-agent-stack`을 입력합니다.
+10. **Parameters** 섹션에서 다음을 확인합니다:
+    - **StudentId**: 본인의 학번 또는 고유 식별자를 입력합니다 (예: `20240001` 또는 `student01`)
+    - **ProjectTag**: `AWS-Lab` (기본값 유지)
+    - **WeekTag**: `14-3` (기본값 유지)
+    - **CreatedByTag**: `CloudFormation` (기본값 유지)
 
-11. [[Create table]] 버튼을 클릭합니다.
+> [!WARNING]
+> **StudentId는 반드시 본인의 학번으로 변경하세요.** 기본값(`20240001`)을 그대로 사용하면 다른 학생과 리소스 이름이 충돌할 수 있습니다.
+
+11. [[Next]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task0-step11-next.png" alt="Next 버튼 클릭" class="guide-img-md" />
+
+12. **Configure stack options** 페이지에서 아래로 스크롤합니다.
+13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources with custom names`를 선택합니다.
+14. [[Submit]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task0-step14-capabilities.png" alt="Capabilities 체크 후 Submit" class="guide-img-md" />
 
 > [!NOTE]
-> 테이블 생성에 10-20초가 소요됩니다. 상태가 "Active"로 변경될 때까지 기다립니다.
+> 스택 생성에 2-3분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.  
+> **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 
-12. 생성된 테이블을 클릭합니다.
-13. **Actions** > `Create item`을 선택합니다.
-14. **Attributes** 섹션에서 다음 값을 입력합니다:
-    - **reservationId**: `RES001`
-15. [[Add new attribute]] 버튼을 클릭합니다.
-16. `String`을 선택합니다.
-17. **Attribute name**에 `customerName`을 입력합니다.
-18. **Value**에 `김철수`를 입력합니다.
-19. 같은 방식으로 다음 속성들을 추가합니다:
-    - `date` (String): `2026-02-15`
-    - `time` (String): `19:00`
-    - `partySize` (Number): `4`
-    - `status` (String): `confirmed`
-20. [[Create item]] 버튼을 클릭합니다.
-21. 같은 방식으로 다음 샘플 예약 데이터를 추가합니다:
+15. **Outputs** 탭을 선택합니다.
 
-**예약 2:**
+    <img src="/images/week14/14-3-task0-step15.png" alt="Outputs 탭 선택" class="guide-img-md" />
 
-- `reservationId` (String): `RES002`
-- `customerName` (String): `이영희`
-- `date` (String): `2026-02-16`
-- `time` (String): `18:30`
-- `partySize` (Number): `2`
-- `status` (String): `confirmed`
+16. 출력값들을 확인하고 메모장에 복사합니다:
+    - `ReservationsTableName`: Amazon DynamoDB 테이블 이름
+    - `ReservationHandlerFunctionName`: AWS Lambda 함수 이름 (Agent Action Group에서 사용)
+    - `ReservationHandlerFunctionArn`: AWS Lambda 함수 ARN
 
-**예약 3:**
+✅ **태스크 완료**: AWS CloudFormation으로 실습 환경이 구축되었습니다.
 
-- `reservationId` (String): `RES003`
-- `customerName` (String): `박민수`
-- `date` (String): `2026-02-17`
-- `time` (String): `20:00`
-- `partySize` (Number): `6`
-- `status` (String): `confirmed`
+## 태스크 1: 생성된 리소스 확인
 
-✅ **태스크 완료**: Amazon DynamoDB 테이블이 생성되고 샘플 데이터가 추가되었습니다.
+이 태스크에서는 AWS CloudFormation이 생성한 리소스를 확인합니다. Amazon DynamoDB 테이블의 샘플 데이터와 AWS Lambda 함수 코드를 검토합니다.
 
-## 태스크 2: AWS Lambda 함수를 생성하여 QuickTable 예약 관리 기능 구현
+### 태스크 1.1: Amazon DynamoDB 테이블 확인
 
-이 태스크에서는 QuickTable 챗봇이 예약을 조회하고 생성할 수 있도록 AWS Lambda 함수를 생성합니다.
+17. 상단 검색창에 `DynamoDB`를 입력하고 선택합니다.
+18. 왼쪽 메뉴에서 **Tables**를 선택합니다.
+19. `RestaurantReservations` 테이블을 클릭합니다.
+20. **Explore table items** 버튼을 클릭합니다.
 
-22. AWS Management Console에 로그인한 후 상단 검색창에 `Lambda`을 입력하고 선택합니다.
-23. [[Create function]] 버튼을 클릭합니다.
-24. **Author from scratch**를 선택합니다.
-25. **Function name**에 `BedrockAgentReservationHandler`를 입력합니다.
-26. **Runtime**에서 `Python 3.13`를 선택합니다.
-27. **Architecture**는 `x86_64`를 선택합니다.
-28. [[Create function]] 버튼을 클릭합니다.
-29. **Code** 탭에서 기본 코드를 모두 삭제합니다.
-30. 다음 코드를 복사하여 붙여넣습니다:
+    <img src="/images/week14/14-3-task1-step20.png" alt="Explore table items" class="guide-img-md" />
 
-> [!TIP]
-> 다운로드한 `bedrock_agent_lambda.py` 파일의 코드를 참고할 수 있습니다. 파일에는 상세한 주석과 DocString이 포함되어 있어 코드 이해에 도움이 됩니다.
+21. 샘플 예약 데이터 3건이 자동으로 생성되었는지 확인합니다:
+    - `RES001` - Kim Cheolsu (2026-02-15, 19:00, 4명)
+    - `RES002` - Lee Younghee (2026-02-16, 18:30, 2명)
+    - `RES003` - Park Minsu (2026-02-17, 20:00, 6명)
 
-```python
-"""
-QuickTable Amazon Bedrock Agent 예약 관리 AWS Lambda 함수
+    <img src="/images/week14/14-3-task1-step21.png" alt="샘플 예약 데이터 3건 확인" class="guide-img-md" />
 
-이 AWS Lambda 함수는 Amazon Bedrock Agent의 Action Group으로 동작하며,
-QuickTable 레스토랑 예약 시스템의 예약 관리 기능을 제공합니다.
+### 태스크 1.2: AWS Lambda 함수 확인
 
-주요 기능:
-- 예약 조회 (get_reservation)
-- 예약 생성 (create_reservation)
-- 예약 목록 조회 (list_reservations)
-- 예약 취소 (cancel_reservation)
+22. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
+23. `BedrockAgentReservationHandler` 함수를 클릭합니다.
+24. **Code** 탭에서 함수 코드를 확인합니다.
 
-환경 변수:
-- TABLE_NAME: Amazon DynamoDB 테이블 이름 (기본값: RestaurantReservations)
-"""
-
-import json
-import boto3
-import os
-from datetime import datetime
-from decimal import Decimal
-
-# Amazon DynamoDB 리소스 초기화
-# 환경 변수에서 테이블 이름을 가져오거나 기본값 사용
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ.get('TABLE_NAME', 'RestaurantReservations'))
-
-def lambda_handler(event, context):
-    """
-    AWS Lambda 함수의 메인 핸들러
-
-    Amazon Bedrock Agent로부터 요청을 받아 적절한 함수로 라우팅하고,
-    결과를 Amazon Bedrock Agent 응답 형식으로 반환합니다.
-
-    Args:
-        event (dict): Amazon Bedrock Agent로부터 전달된 이벤트 객체
-            - agent (dict): Agent 정보 (name, id, alias, version)
-            - actionGroup (str): Action Group 이름
-            - function (str): 호출할 함수 이름
-            - parameters (list): 함수 파라미터 목록
-            - sessionId (str): 세션 ID
-            - sessionAttributes (dict): 세션 속성
-        context (object): AWS Lambda 실행 컨텍스트
-
-    Returns:
-        dict: Amazon Bedrock Agent 응답 형식의 딕셔너리
-            - messageVersion (str): 메시지 버전 (1.0)
-            - response (dict): 응답 객체
-                - actionGroup (str): Action Group 이름
-                - function (str): 실행된 함수 이름
-                - functionResponse (dict): 함수 실행 결과
-
-    Security Note:
-        이벤트 로그에 사용자 입력이 포함될 수 있습니다.
-        프로덕션 환경에서는 개인정보(PII)가 Amazon CloudWatch Logs에 기록되지 않도록 주의해야 합니다.
-
-    Example:
-        >>> event = {
-        ...     'actionGroup': 'ReservationActions',
-        ...     'function': 'get_reservation',
-        ...     'parameters': [{'name': 'reservationId', 'value': 'RES001'}]
-        ... }
-        >>> lambda_handler(event, {})
-        {
-            'messageVersion': '1.0',
-            'response': {
-                'actionGroup': 'ReservationActions',
-                'function': 'get_reservation',
-                'functionResponse': {...}
-            }
-        }
-    """
-    # 디버깅을 위한 이벤트 로깅
-    # 주의: 사용자 입력이 포함될 수 있으므로 프로덕션에서는 민감 정보 마스킹 필요
-    print(f"Received event: {json.dumps(event)}")
-
-    # Amazon Bedrock Agent에서 전달된 정보 추출
-    agent = event.get('agent', {})  # Agent 정보 (선택사항)
-    action_group = event.get('actionGroup', '')  # Action Group 이름
-    function = event.get('function', '')  # 호출할 함수 이름
-    parameters = event.get('parameters', [])  # 파라미터 리스트
-
-    # 파라미터를 딕셔너리로 변환
-    # [{'name': 'key', 'value': 'val'}] → {'key': 'val'}
-    params = {p['name']: p['value'] for p in parameters}
-
-    # 디버깅을 위한 함수 호출 정보 로깅
-    print(f"Action: {action_group}, Function: {function}")
-    print(f"Parameters: {params}")
-
-    # 함수 라우팅: 함수 이름에 따라 적절한 핸들러 호출
-    if function == 'get_reservation':
-        result = get_reservation(params)
-    elif function == 'create_reservation':
-        result = create_reservation(params)
-    elif function == 'list_reservations':
-        result = list_reservations(params)
-    elif function == 'cancel_reservation':
-        result = cancel_reservation(params)
-    else:
-        # 알 수 없는 함수 이름인 경우 오류 반환
-        result = {
-            'error': f'Unknown function: {function}'
-        }
-
-    # Amazon Bedrock Agent 응답 형식으로 변환
-    # Agent는 이 형식을 파싱하여 사용자에게 응답 생성
-    response = {
-        'messageVersion': '1.0',  # 메시지 버전 (필수)
-        'response': {
-            'actionGroup': action_group,  # Action Group 이름 (필수)
-            'function': function,  # 실행된 함수 이름 (필수)
-            'functionResponse': {
-                'responseBody': {
-                    'TEXT': {
-                        # 결과를 JSON 문자열로 변환
-                        # ensure_ascii=False: 한글 유지
-                        'body': json.dumps(result, ensure_ascii=False)
-                    }
-                }
-            }
-        }
-    }
-
-    # 디버깅을 위한 응답 로깅
-    print(f"Response: {json.dumps(response, ensure_ascii=False)}")
-    return response
-
-def get_reservation(params):
-    """
-    예약 번호로 예약 정보를 조회합니다.
-
-    Args:
-        params (dict): 함수 파라미터
-            - reservationId (str): 조회할 예약 번호 (예: RES001)
-
-    Returns:
-        dict: 조회 결과
-            성공 시:
-                - success (bool): True
-                - reservation (dict): 예약 정보
-                    - reservationId (str): 예약 번호
-                    - customerName (str): 고객 이름
-                    - date (str): 예약 날짜 (YYYY-MM-DD)
-                    - time (str): 예약 시간 (HH:MM)
-                    - partySize (int): 인원수
-                    - status (str): 예약 상태 (confirmed/cancelled)
-            실패 시:
-                - success (bool): False
-                - message (str): 오류 메시지
-                - error (str): 예외 메시지 (예외 발생 시)
-
-    Example:
-        >>> get_reservation({'reservationId': 'RES001'})
-        {
-            'success': True,
-            'reservation': {
-                'reservationId': 'RES001',
-                'customerName': '김철수',
-                'date': '2024-02-15',
-                'time': '19:00',
-                'partySize': 4,
-                'status': 'confirmed'
-            }
-        }
-    """
-    # 파라미터에서 예약 번호 추출
-    reservation_id = params.get('reservationId')
-
-    try:
-        # Amazon DynamoDB에서 예약 정보 조회
-        # get_item: Primary Key로 단일 항목 조회 (빠름)
-        response = table.get_item(Key={'reservationId': reservation_id})
-
-        # 조회 결과 확인
-        if 'Item' in response:
-            # 예약이 존재하는 경우
-            item = response['Item']
-            return {
-                'success': True,
-                'reservation': {
-                    'reservationId': item['reservationId'],
-                    'customerName': item['customerName'],
-                    'date': item['date'],
-                    'time': item['time'],
-                    'partySize': int(item['partySize']),  # Decimal → int 변환
-                    'status': item['status']
-                }
-            }
-        else:
-            # 예약이 존재하지 않는 경우
-            return {
-                'success': False,
-                'message': f'예약 번호 {reservation_id}를 찾을 수 없습니다.'
-            }
-    except Exception as e:
-        # 예외 발생 시 오류 반환
-        return {
-            'success': False,
-            'error': str(e)
-        }
-
-def create_reservation(params):
-    """
-    새로운 예약을 생성합니다.
-
-    Args:
-        params (dict): 함수 파라미터
-            - customerName (str): 고객 이름
-            - date (str): 예약 날짜 (YYYY-MM-DD)
-            - time (str): 예약 시간 (HH:MM)
-            - partySize (str|int): 인원수 (기본값: 2)
-
-    Returns:
-        dict: 생성 결과
-            성공 시:
-                - success (bool): True
-                - message (str): 성공 메시지
-                - reservation (dict): 생성된 예약 정보
-            실패 시:
-                - success (bool): False
-                - error (str): 예외 메시지
-
-    Example:
-        >>> create_reservation({
-        ...     'customerName': '김철수',
-        ...     'date': '2024-02-15',
-        ...     'time': '19:00',
-        ...     'partySize': '4'
-        ... })
-        {
-            'success': True,
-            'message': '김철수님의 예약이 완료되었습니다.',
-            'reservation': {
-                'reservationId': 'RESABC12345',
-                'customerName': '김철수',
-                'date': '2024-02-15',
-                'time': '19:00',
-                'partySize': 4,
-                'status': 'confirmed'
-            }
-        }
-    """
-    import uuid
-
-    # 고유한 예약 번호 생성
-    # RES + UUID 앞 8자리 (대문자)
-    # 예: RESABC12345
-    reservation_id = f"RES{str(uuid.uuid4())[:8].upper()}"
-
-    # 파라미터에서 예약 정보 추출
-    customer_name = params.get('customerName')
-    date = params.get('date')
-    time = params.get('time')
-    party_size = int(params.get('partySize', 2))  # 기본값: 2명
-
-    try:
-        # Amazon DynamoDB에 예약 정보 저장
-        # put_item: 새 항목 생성 또는 기존 항목 덮어쓰기
-        table.put_item(Item={
-            'reservationId': reservation_id,  # Primary Key
-            'customerName': customer_name,
-            'date': date,
-            'time': time,
-            'partySize': party_size,
-            'status': 'confirmed',  # 초기 상태: 확정
-            'createdAt': datetime.now().isoformat()  # 생성 시간 (ISO 8601 형식)
-        })
-
-        # 성공 응답 반환
-        return {
-            'success': True,
-            'message': f'{customer_name}님의 예약이 완료되었습니다.',
-            'reservation': {
-                'reservationId': reservation_id,
-                'customerName': customer_name,
-                'date': date,
-                'time': time,
-                'partySize': party_size,
-                'status': 'confirmed'
-            }
-        }
-    except Exception as e:
-        # 예외 발생 시 오류 반환
-        return {
-            'success': False,
-            'error': str(e)
-        }
-
-def list_reservations(params):
-    """
-    예약 목록을 조회합니다.
-
-    특정 날짜의 예약만 조회하거나 모든 예약을 조회할 수 있습니다.
-
-    Args:
-        params (dict): 함수 파라미터
-            - date (str, optional): 조회할 날짜 (YYYY-MM-DD)
-                                   지정하지 않으면 모든 예약 조회
-
-    Returns:
-        dict: 조회 결과
-            성공 시:
-                - success (bool): True
-                - count (int): 예약 개수
-                - reservations (list): 예약 목록
-            실패 시:
-                - success (bool): False
-                - error (str): 예외 메시지
-
-    Note:
-        - 날짜 필터링은 scan 연산을 사용하므로 성능이 낮습니다
-        - 프로덕션 환경에서는 GSI (Global Secondary Index)를 사용해야 합니다
-
-    Example:
-        >>> list_reservations({'date': '2024-02-15'})
-        {
-            'success': True,
-            'count': 3,
-            'reservations': [
-                {'reservationId': 'RES001', 'customerName': '김철수', ...},
-                {'reservationId': 'RES002', 'customerName': '이영희', ...},
-                {'reservationId': 'RES003', 'customerName': '박민수', ...}
-            ]
-        }
-    """
-    # 파라미터에서 날짜 추출 (선택사항)
-    date = params.get('date')
-
-    try:
-        if date:
-            # 특정 날짜의 예약 조회
-            # scan: 전체 테이블 스캔 (느림, 비용 높음)
-            # FilterExpression: 스캔 후 필터링
-            # 주의: 프로덕션에서는 GSI 사용 권장
-            response = table.scan(
-                FilterExpression='#d = :date',
-                # ExpressionAttributeNames: 예약어 회피
-                # 'date'는 Amazon DynamoDB 예약어이므로 #d로 대체
-                ExpressionAttributeNames={'#d': 'date'},
-                ExpressionAttributeValues={':date': date}
-            )
-        else:
-            # 모든 예약 조회
-            # scan: 전체 테이블 스캔
-            response = table.scan()
-
-        # 조회 결과에서 항목 추출
-        items = response.get('Items', [])
-
-        # 각 항목을 표준 형식으로 변환
-        reservations = [
-            {
-                'reservationId': item['reservationId'],
-                'customerName': item['customerName'],
-                'date': item['date'],
-                'time': item['time'],
-                'partySize': int(item['partySize']),  # Decimal → int 변환
-                'status': item['status']
-            }
-            for item in items
-        ]
-
-        # 성공 응답 반환
-        return {
-            'success': True,
-            'count': len(reservations),
-            'reservations': reservations
-        }
-    except Exception as e:
-        # 예외 발생 시 오류 반환
-        return {
-            'success': False,
-            'error': str(e)
-        }
-
-def cancel_reservation(params):
-    """
-    예약을 취소합니다.
-
-    예약 상태를 'cancelled'로 변경합니다.
-    실제로 항목을 삭제하지 않고 상태만 변경하여 이력을 유지합니다.
-
-    Args:
-        params (dict): 함수 파라미터
-            - reservationId (str): 취소할 예약 번호
-
-    Returns:
-        dict: 취소 결과
-            성공 시:
-                - success (bool): True
-                - message (str): 성공 메시지
-            실패 시:
-                - success (bool): False
-                - error (str): 예외 메시지
-
-    Note:
-        - 예약이 존재하지 않아도 update_item은 성공합니다
-        - 실제 환경에서는 예약 존재 여부를 먼저 확인해야 합니다
-
-    Example:
-        >>> cancel_reservation({'reservationId': 'RES001'})
-        {
-            'success': True,
-            'message': '예약 번호 RES001가 취소되었습니다.'
-        }
-    """
-    # 파라미터에서 예약 번호 추출
-    reservation_id = params.get('reservationId')
-
-    try:
-        # Amazon DynamoDB에서 예약 상태 업데이트
-        # update_item: 특정 속성만 업데이트 (효율적)
-        table.update_item(
-            Key={'reservationId': reservation_id},  # Primary Key
-            # UpdateExpression: 업데이트할 속성 지정
-            # SET: 속성 값 설정
-            UpdateExpression='SET #status = :status',
-            # ExpressionAttributeNames: 예약어 회피
-            # 'status'는 Amazon DynamoDB 예약어이므로 #status로 대체
-            ExpressionAttributeNames={'#status': 'status'},
-            # ExpressionAttributeValues: 업데이트할 값
-            ExpressionAttributeValues={':status': 'cancelled'}
-        )
-
-        # 성공 응답 반환
-        return {
-            'success': True,
-            'message': f'예약 번호 {reservation_id}가 취소되었습니다.'
-        }
-    except Exception as e:
-        # 예외 발생 시 오류 반환
-        return {
-            'success': False,
-            'error': str(e)
-        }
-```
-
-31. [[Deploy]] 버튼을 클릭합니다.
+    <img src="/images/week14/14-3-task1-step24.png" alt="Lambda 함수 코드 확인" class="guide-img-md" />
 
 > [!NOTE]
-> 배포가 완료될 때까지 기다립니다.
+> AWS Lambda 함수는 다음 4가지 기능을 제공합니다:
+>
+> - `get_reservation`: 예약 번호로 예약 정보 조회.
+> - `create_reservation`: 새로운 예약 생성.
+> - `list_reservations`: 예약 목록 조회 (날짜 필터 가능).
+> - `cancel_reservation`: 예약 취소 (상태를 cancelled로 변경).
+>
+> 다운로드한 `bedrock_agent_lambda.py` 파일에 상세한 주석과 DocString이 포함되어 있으니 참고합니다.
 
-✅ **태스크 완료**: AWS Lambda 함수가 생성되고 코드가 배포되었습니다.
+25. **Configuration** 탭 > **Environment variables**에서 `TABLE_NAME`이 `RestaurantReservations`로 설정되어 있는지 확인합니다.
 
-## 태스크 3: AWS Lambda 실행 역할에 Amazon DynamoDB 권한 추가
+    <img src="/images/week14/14-3-task1-step25.png" alt="Environment variables 확인" class="guide-img-md" />
 
-이 태스크에서는 AWS Lambda 함수가 Amazon DynamoDB 테이블에 접근할 수 있도록 권한을 추가합니다.
+26. **Configuration** 탭 > **Permissions**에서 **Execution role** 섹션의 역할 이름 링크를 클릭하여 AWS IAM 콘솔로 이동합니다.
 
-32. **Configuration** 탭을 선택합니다.
-33. 왼쪽 메뉴에서 **Permissions**를 선택합니다.
-34. **Execution role** 섹션에서 역할 이름을 클릭합니다.
-35. AWS IAM 역할 페이지에서 [[Add permissions]] 버튼을 클릭합니다.
-36. `Attach policies`를 선택합니다.
-37. 검색창에 `DynamoDB`를 입력합니다.
-38. `AmazonDynamoDBFullAccess` 정책을 체크합니다.
+    <img src="/images/week14/14-3-task1-step26.png" alt="Permissions에서 역할 이름 클릭" class="guide-img-md" />
 
-> [!NOTE]
-> 프로덕션 환경에서는 특정 테이블에만 접근할 수 있는 커스텀 정책을 사용해야 합니다.
+27. **Permissions policies** 섹션에서 `DynamoDBAccess` 인라인 정책이 포함되어 있는지 확인합니다.
 
-39. [[Add permissions]] 버튼을 클릭합니다.
-40. AWS Lambda 콘솔로 이동합니다.
-41. `BedrockAgentReservationHandler` 함수를 선택합니다.
-42. **Configuration** 탭을 선택합니다.
-43. 왼쪽 메뉴에서 **Environment variables**를 선택합니다.
-44. [[Edit]] 버튼을 클릭합니다.
-45. [[Add environment variable]] 버튼을 클릭하여 다음 환경 변수를 추가합니다:
+    <img src="/images/week14/14-3-task1-step27.png" alt="DynamoDBAccess 인라인 정책 확인" class="guide-img-md" />
 
-| 변수명       | 값                       | 설명                        |
-| ------------ | ------------------------ | --------------------------- |
-| `TABLE_NAME` | `RestaurantReservations` | Amazon DynamoDB 테이블 이름 |
+✅ **태스크 완료**: 생성된 리소스를 확인했습니다. Amazon DynamoDB 테이블에 샘플 데이터가 있고, AWS Lambda 함수가 예약 관리 기능을 제공합니다.
 
-46. [[Save]] 버튼을 클릭합니다.
-47. 왼쪽 메뉴에서 **Tags**를 선택합니다.
-48. [[Manage tags]] 버튼을 클릭합니다.
-49. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
-
-| Key         | Value     |
-| ----------- | --------- |
-| `Project`   | `AWS-Lab` |
-| `Week`      | `14-3`    |
-| `CreatedBy` | `Student` |
-
-50. [[Save changes]] 버튼을 클릭합니다.
-
-✅ **태스크 완료**: AWS Lambda 함수에 Amazon DynamoDB 권한이 추가되고 환경 변수가 설정되었습니다.
-
-## 태스크 4: QuickTable Amazon Bedrock Agent 생성
+## 태스크 2: QuickTable Amazon Bedrock Agent 생성
 
 이 태스크에서는 QuickTable 챗봇의 핵심인 Amazon Bedrock Agent를 생성합니다.
 
@@ -621,174 +157,219 @@ def cancel_reservation(params):
 > Amazon Bedrock에서는 모든 서버리스 Foundation Model에 대한 액세스가 자동으로 활성화되어 있습니다.  
 > Anthropic Claude 모델은 처음 사용 시 일회성 **Use case details** 양식 제출이 필요하지만, 14-1 실습에서 이미 완료한 경우 추가 제출 없이 바로 사용할 수 있습니다.
 
-51. Amazon Bedrock 콘솔로 이동합니다.
-52. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
-53. [[Create Agent]] 버튼을 클릭합니다.
-54. **Agent name**에 `QuickTableAssistant`를 입력합니다.
-55. **Agent description**에 `QuickTable 레스토랑 예약을 관리하는 AI 어시스턴트`를 입력합니다.
-56. [[Create]] 버튼을 클릭합니다.
+28. Amazon Bedrock 콘솔로 이동합니다.
+29. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
+30. [[Create Agent]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task2-step30.png" alt="Create Agent 버튼 클릭" class="guide-img-md" />
+
+31. **Agent name**에 `QuickTableAssistant`를 입력합니다.
+32. **Agent description**에 `QuickTable 레스토랑 예약을 관리하는 AI 어시스턴트`를 입력합니다.
+33. [[Create]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task2-step33.png" alt="Agent 생성 - Create 클릭" class="guide-img-sm" />
 
 > [!NOTE]
 > Agent가 생성되고 Agent builder 페이지로 자동 이동합니다.
 
-57. **Agent resource role**을 `Create and use a new service role`로 선택합니다.
-58. **Select model**에서 최신 Claude 모델을 선택합니다 (예: `Anthropic Claude Sonnet 4.6` 또는 `Anthropic Claude Opus 4.6`).
+> [!TIP]
+> Agent builder에 다시 접근하려면: Amazon Bedrock 콘솔 > **Build** > **Agents** > `QuickTableAssistant` 클릭 > [[Edit in Agent Builder]] 버튼을 클릭합니다.
+
+34. **Agent resource role**을 `Create and use a new service role`로 선택합니다.
+35. **Select model**을 클릭하고, **Bedrock Agents optimized** 체크박스를 **해제**한 후 **Anthropic** 카테고리에서 `Claude Sonnet 4.6`을 선택합니다.
+36. **Inference**에서 `On-demand`를 선택하고 [[Apply]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task2-step36.png" alt="모델 선택 및 Apply" class="guide-img-md" />
+
+> [!IMPORTANT]
+> **Bedrock Agents optimized** 체크가 기본 활성화되어 있습니다. 체크 상태에서 표시되는 모델(Claude 3.5 Sonnet 등)은 AWS Marketplace 구독이 필요하여 권한 오류가 발생할 수 있습니다.  
+> **반드시 체크를 해제**하고 Claude 4.x 모델을 선택하세요. 이 모델들은 별도 구독 없이 바로 사용 가능합니다.
 
 > [!NOTE]
-> AWS 콘솔 UI는 지속적으로 업데이트됩니다.  
-> "Select model" 대신 "Choose model" 또는 다른 이름으로 표시될 수 있습니다.  
-> 기본적으로 Amazon Bedrock Agents에 최적화된 모델만 표시됩니다.  
-> 모든 모델을 보려면 "Amazon Bedrock Agents optimized" 체크를 해제합니다.
+> **권장 모델 (Bedrock Agents optimized 해제 시)**:
 >
-> **권장 모델 (2026년 3월 기준)**:
+> - **Claude Sonnet 4.6**: 성능과 비용의 균형 (권장).
+> - **Claude Haiku 4.5**: 빠른 응답 속도, 저렴한 비용.
 >
-> - **Claude Sonnet 4.6**: 성능과 비용의 균형 (권장, 2026년 2월 출시)
-> - **Claude Opus 4.6**: 최고 성능, 복잡한 대화에 최적 (2026년 2월 출시)
-> - **Claude Haiku 4.5**: 빠른 응답 속도, 저렴한 비용
->
-> 한국어 대화의 경우 Claude Sonnet 4.6 또는 Claude Opus 4.6이 권장됩니다.
+> ⚠️ 모델 목록은 지속적으로 업데이트됩니다. 위 정보는 2026년 5월 기준이며, 최신 모델은 [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)를 참고합니다.
 
-59. **Instructions for the Agent** 섹션에 다음 프롬프트를 입력합니다:
+37. **Instructions for the Agent** 섹션에 다음 프롬프트를 입력합니다:
 
 ```
 당신은 QuickTable 레스토랑 예약 시스템을 관리하는 친절한 AI 어시스턴트입니다.
 
 주요 역할:
-60. 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
-61. 예약 번호로 기존 예약을 조회합니다.
-62. 특정 날짜의 예약 목록을 확인합니다.
-63. 예약 취소 요청을 처리합니다.
+- 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
+- 예약 번호로 기존 예약을 조회합니다.
+- 특정 날짜의 예약 목록을 확인합니다.
+- 예약 취소 요청을 처리합니다.
 
 대화 규칙:
-- 항상 정중하고 친절하게 응답합니다
-- 예약 생성 시 고객 이름, 날짜, 시간, 인원수를 반드시 확인합니다
-- 날짜는 YYYY-MM-DD 형식으로 저장합니다
-- 시간은 HH:MM 형식(24시간)으로 저장합니다
-- 예약이 완료되면 예약 번호를 안내합니다
-- 정보가 부족하면 고객에게 추가 정보를 요청합니다
+- 항상 정중하고 친절하게 응답합니다.
+- 예약 생성 시 고객 이름, 날짜, 시간, 인원수를 반드시 확인합니다.
+- 날짜는 YYYY-MM-DD 형식으로 저장합니다.
+- 시간은 HH:MM 형식(24시간)으로 저장합니다.
+- 예약이 완료되면 예약 번호를 안내합니다.
+- 정보가 부족하면 고객에게 추가 정보를 요청합니다.
 
 응답 스타일:
-- 간결하고 명확하게 답변합니다
-- 이모지를 적절히 사용하여 친근감을 표현합니다
-- 예약 정보는 구조화된 형식으로 제공합니다
+- 간결하고 명확하게 답변합니다.
+- 이모지를 적절히 사용하여 친근감을 표현합니다.
+- 예약 정보는 구조화된 형식으로 제공합니다.
 ```
 
-64. [[Next]] 버튼을 클릭합니다.
+<img src="/images/week14/14-3-task2-step37.png" alt="Instructions for the Agent 입력" class="guide-img-md" />
 
-> [!NOTE]
-> Agent builder에서 Action groups, Knowledge bases, Guardrails 등을 설정할 수 있습니다.
+38. 상단의 [[Save]] 버튼을 클릭합니다.
 
-65. **Action groups** 섹션에서 [[Add]] 버튼을 클릭합니다.
-66. **Action group details**에서 다음을 입력합니다:
+> [!IMPORTANT]
+> 모델 선택과 Instructions 입력 후 반드시 [[Save]]를 클릭하여 저장합니다. 저장하지 않고 다른 화면으로 이동하면 설정이 초기화될 수 있습니다.
+
+39. 아래로 스크롤하여 **Action groups** 섹션에서 [[Add]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task2-step39.png" alt="Action groups Add 버튼 클릭" class="guide-img-md" />
+
+40. **Action group details**에서 다음을 입력합니다:
     - **Action group name**: `QuickTableReservationActions`
     - **Action group description**: `QuickTable 예약 관리 기능`
-67. **Action group type**에서 `Define with function details`를 선택합니다.
+41. **Action group type**에서 `Define with function details`를 선택합니다.
+
+    <img src="/images/week14/14-3-task2-step41.png" alt="Action group type 선택" class="guide-img-md" />
 
 > [!NOTE]
 > AWS 콘솔 UI는 지속적으로 업데이트됩니다.  
 > "Define with function details" 옵션이 보이지 않는 경우:
 >
-> - "Define with API schemas" 대신 사용 가능한 옵션을 선택합니다
-> - 또는 OpenAPI 스키마 파일을 업로드하는 방식을 사용할 수 있습니다 (참고 섹션 참조)
+> - "Define with API schemas" 대신 사용 가능한 옵션을 선택합니다.
+> - 또는 OpenAPI 스키마 파일을 업로드하는 방식을 사용할 수 있습니다 (참고 섹션 참조).
 
-68. **Action group invocation**에서 `Select an existing AWS Lambda function`을 선택합니다.
-69. **AWS Lambda function**에서 `BedrockAgentReservationHandler`를 선택합니다.
+42. **Action group invocation** 섹션에서 **Select how to define the Lambda function**을 `Select an existing Lambda function`으로 선택합니다.
+43. **Select Lambda function** 드롭다운에서 `BedrockAgentReservationHandler`를 선택합니다.
+
+    <img src="/images/week14/14-3-task2-step43.png" alt="Lambda 함수 선택" class="guide-img-md" />
 
 > [!NOTE]
 > AWS Lambda 함수를 선택하면 Amazon Bedrock Agent가 AWS Lambda를 호출할 수 있도록 리소스 기반 정책이 자동으로 추가됩니다.  
 > 자동 추가가 실패하는 경우, AWS Lambda 콘솔의 Configuration > Permissions > Resource-based policy statements에서 수동으로 추가해야 합니다.  
 > 참고 섹션에서 리소스 기반 정책 예시를 확인할 수 있습니다.
 
-70. **Action group functions** 섹션에서 [[Add function]] 버튼을 클릭합니다.
+44. **Action group function 1** 섹션에서 다음을 입력합니다:
 
 **함수 1: get_reservation**
 
-- **Function name**: `get_reservation`
-- **Function description**: `예약 번호로 예약 정보를 조회합니다`
+- **Name**: `get_reservation`
+- **Description**: `예약 번호로 예약 정보를 조회합니다`
+- **Enable confirmation of action group function**: `Disabled` (기본값 유지)
 - **Parameters**: [[Add parameter]] 버튼을 클릭하여 다음 파라미터를 추가합니다:
 
-| Parameter Name  | Type   | Required | Description            |
-| --------------- | ------ | -------- | ---------------------- |
-| `reservationId` | string | ✅ 필수  | 예약 번호 (예: RES001) |
+> [!TIP]
+> 파라미터 추가 후 각 셀(Name, Description, Type, Required)의 연필(✏️) 아이콘을 클릭하여 값을 편집합니다.  
+> Required는 `True`로 변경하면 필수 파라미터가 됩니다.
 
-71. [[Add function]] 버튼을 다시 클릭하여 두 번째 함수를 추가합니다:
+| Parameter Name  | Type   | Required | Description              |
+| --------------- | ------ | -------- | ------------------------ |
+| `reservationId` | string | ✅ 필수  | `예약 번호 (예: RES001)` |
+
+<img src="/images/week14/14-3-task2-step44.png" alt="get_reservation 함수 설정" class="guide-img-md" />
+
+45. [[Add action group function]] 버튼을 클릭하여 두 번째 함수를 추가합니다:
 
 **함수 2: create_reservation**
 
 - **Function name**: `create_reservation`
 - **Function description**: `새로운 예약을 생성합니다`
+- **Enable confirmation of action group function**: `Disabled` (기본값 유지)
 - **Parameters**: [[Add parameter]] 버튼을 클릭하여 다음 파라미터들을 하나씩 추가합니다:
 
-| Parameter Name | Type    | Required | Description                    |
-| -------------- | ------- | -------- | ------------------------------ |
-| `customerName` | string  | ✅ 필수  | 고객 이름                      |
-| `date`         | string  | ✅ 필수  | 예약 날짜 (YYYY-MM-DD 형식)    |
-| `time`         | string  | ✅ 필수  | 예약 시간 (HH:MM 형식, 24시간) |
-| `partySize`    | integer | ✅ 필수  | 예약 인원수                    |
+| Parameter Name | Type    | Required | Description                      |
+| -------------- | ------- | -------- | -------------------------------- |
+| `customerName` | string  | ✅ 필수  | `고객 이름`                      |
+| `date`         | string  | ✅ 필수  | `예약 날짜 (YYYY-MM-DD 형식)`    |
+| `time`         | string  | ✅ 필수  | `예약 시간 (HH:MM 형식, 24시간)` |
+| `partySize`    | integer | ✅ 필수  | `예약 인원수`                    |
 
-72. [[Add function]] 버튼을 다시 클릭하여 세 번째 함수를 추가합니다:
+<img src="/images/week14/14-3-task2-step45.png" alt="create_reservation 함수 설정" class="guide-img-md" />
+
+46. [[Add action group function]] 버튼을 클릭하여 세 번째 함수를 추가합니다:
 
 **함수 3: list_reservations**
 
 - **Function name**: `list_reservations`
 - **Function description**: `예약 목록을 조회합니다`
+- **Enable confirmation of action group function**: `Disabled` (기본값 유지)
 - **Parameters**: [[Add parameter]] 버튼을 클릭하여 다음 파라미터를 추가합니다:
 
-| Parameter Name | Type   | Required | Description                                                   |
-| -------------- | ------ | -------- | ------------------------------------------------------------- |
-| `date`         | string | ❌ 선택  | 조회할 날짜 (YYYY-MM-DD 형식, 지정하지 않으면 모든 예약 조회) |
+| Parameter Name | Type   | Required | Description                                                     |
+| -------------- | ------ | -------- | --------------------------------------------------------------- |
+| `date`         | string | ❌ 선택  | `조회할 날짜 (YYYY-MM-DD 형식, 지정하지 않으면 모든 예약 조회)` |
 
-73. 마지막으로 네 번째 함수를 추가합니다:
+<img src="/images/week14/14-3-task2-step46.png" alt="list_reservations 함수 설정" class="guide-img-md" />
+
+47. [[Add action group function]] 버튼을 클릭하여 네 번째 함수를 추가합니다:
 
 **함수 4: cancel_reservation**
 
 - **Function name**: `cancel_reservation`
 - **Function description**: `예약을 취소합니다`
+- **Enable confirmation of action group function**: `Disabled` (기본값 유지)
 - **Parameters**: [[Add parameter]] 버튼을 클릭하여 다음 파라미터를 추가합니다:
 
-| Parameter Name  | Type   | Required | Description                   |
-| --------------- | ------ | -------- | ----------------------------- |
-| `reservationId` | string | ✅ 필수  | 취소할 예약 번호 (예: RES001) |
+| Parameter Name  | Type   | Required | Description                     |
+| --------------- | ------ | -------- | ------------------------------- |
+| `reservationId` | string | ✅ 필수  | `취소할 예약 번호 (예: RES001)` |
 
-74. 모든 함수 추가가 완료되면 [[Create]] 버튼을 클릭합니다.
-75. Action group이 추가되었는지 확인합니다.
+<img src="/images/week14/14-3-task2-step47.png" alt="cancel_reservation 함수 설정" class="guide-img-md" />
+
+48. 모든 함수 추가가 완료되면 [[Create]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task2-step48-create.png" alt="Action group Create 버튼 클릭" class="guide-img-md" />
+
+49. Action group이 추가되었는지 확인합니다.
 
 > [!NOTE]
 > Action group 생성 후 Agent builder 페이지로 이동합니다.
 
-76. **Knowledge bases** 섹션에서 [[Add]] 버튼을 클릭합니다 (Week 14-2 완료 시).
+50. **Knowledge bases** 섹션에서 [[Add]] 버튼을 클릭합니다 (Week 14-2 완료 시).
+
+    <img src="/images/week14/14-3-task2-step50-kb-add.png" alt="Knowledge bases 섹션 Add 버튼" class="guide-img-md" />
 
 > [!IMPORTANT]
 > 이 단계는 Week 14-2를 완료한 경우에만 수행합니다.  
 > Week 14-2에서 생성한 Knowledge Base를 연결하여 레스토랑 정보 질문에 답변할 수 있도록 합니다.  
-> 14-2 실습을 완료하지 않았다면 이 단계(75-79)를 건너뛰고 80번으로 이동합니다.
+> 14-2 실습을 완료하지 않았다면 이 단계(50-54)를 건너뛰고 55번으로 이동합니다.
 
-77. **Select knowledge base**에서 `quicktable-restaurant-kb`를 선택합니다 (14-2에서 생성).
-78. **Knowledge base instructions for Agent**에 다음을 입력합니다:
+51. **Select knowledge base**에서 `quicktable-restaurant-kb`를 선택합니다 (14-2에서 생성).
+52. **Knowledge base instructions for Agent**에 다음을 입력합니다:
 
 ```
 이 Knowledge Base는 QuickTable 레스토랑의 메뉴, 가격, 영업 시간, 위치, FAQ 정보를 포함합니다.
 고객이 메뉴, 가격, 영업 시간, 위치, 주차, 특별 서비스 등에 대해 질문하면 이 Knowledge Base를 검색하여 답변합니다.
 ```
 
-79. [[Add]] 버튼을 클릭합니다.
-80. Knowledge base가 추가되었는지 확인합니다.
+53. [[Add]] 버튼을 클릭합니다.
+    <img src="/images/week14/14-3-task2-step53-kb-create.png" alt="Knowledge base Add 버튼 클릭" class="guide-img-md" />
+
+54. Knowledge base가 추가되었는지 확인합니다.
+
+    <img src="/images/week14/14-3-task2-step54-kb-added.png" alt="Knowledge base 추가 확인" class="guide-img-md" />
 
 > [!NOTE]
 > Knowledge Base를 연결하면 Agent가 예약 관리뿐만 아니라 레스토랑 정보 질문에도 답변할 수 있습니다.
 
-81. 페이지 상단의 [[Save]] 버튼을 클릭합니다.
+55. 페이지 상단의 [[Save]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Agent 설정이 저장됩니다. 이제 Agent를 준비하고 테스트할 수 있습니다.
 
 ✅ **태스크 완료**: Amazon Bedrock Agent가 생성되고 Action Group이 설정되었습니다.
 
-## 태스크 5: Agent 준비 및 테스트
+## 태스크 3: Agent 준비 및 테스트
 
 이 태스크에서는 Agent를 준비하고 테스트 콘솔에서 대화를 시도합니다.
 
-82. Agent 상세 페이지에서 [[Prepare]] 버튼을 클릭합니다.
+56. Agent 상세 페이지에서 [[Prepare]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task3-step56-prepare.png" alt="Agent Prepare 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > Agent 준비에 30초-1분이 소요됩니다. 이 과정에서 Agent의 프롬프트와 Action Group이 최적화됩니다. 준비가 완료되면 오른쪽에 **Test** 패널이 표시됩니다.
@@ -797,14 +378,28 @@ def cancel_reservation(params):
 > Action Group, Knowledge Base, 또는 Instructions를 수정한 경우 반드시 [[Prepare]] 버튼을 다시 클릭해야 변경사항이 반영됩니다.  
 > Prepare를 실행하지 않으면 이전 버전의 Agent가 계속 사용됩니다.
 
-83. Test 패널의 입력창에 다음 메시지를 입력합니다:
+> [!TROUBLESHOOTING]
+> **문제**: 테스트 시 "Access denied when calling Bedrock" 에러가 발생합니다.
+>
+> **원인**: Agent 서비스 역할의 모델 호출 정책에 현재 선택한 모델이 포함되지 않은 경우입니다. Agent 생성 시점과 모델 선택 시점이 다르면 발생할 수 있습니다.
+>
+> **해결**:
+>
+> 1. AWS IAM 콘솔로 이동합니다.
+> 2. `AmazonBedrockExecutionRoleForAgents_` 로 시작하는 역할을 찾습니다.
+> 3. `AmazonBedrockAgentBedrockFoundationModelPolicy_` 정책을 클릭합니다.
+> 4. [[Edit]] 버튼을 클릭하고 Resource의 모델 ARN을 `arn:aws:bedrock:ap-northeast-2::foundation-model/*`로 변경합니다.
+> 5. 또는 기존 역할을 삭제하고 Agent builder에서 `Create and use a new service role`을 다시 선택한 후 [[Save]]합니다.
+
+57. Test 패널의 입력창에 다음 메시지를 입력합니다:
 
 ```
-안녕합니다! 2월 15일 저녁 7시에 4명 예약하고 싶습니다.
+안녕하세요! 2월 15일 저녁 7시에 4명 예약하고 싶습니다.
 ```
 
-84. Enter 키를 누르거나 전송 버튼을 클릭합니다.
-85. Agent의 응답을 확인합니다.
+58. [[Run]] 버튼을 클릭합니다.
+59. Agent의 응답을 확인합니다.
+    <img src="/images/week14/14-3-task3-step59-response.png" alt="Agent 예약 응답 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 > Agent 응답 예시:
@@ -813,20 +408,22 @@ def cancel_reservation(params):
 > 안녕합니다! 😊 예약을 도와드리겠습니다.
 >
 > 예약 정보를 확인합니다:
-> - 날짜: 2024-02-15
+> - 날짜: 2026-02-15
 > - 시간: 19:00
 > - 인원: 4명
 >
 > 고객님의 성함을 알려주시겠어요?
 > ```
 
-86. 다음 메시지를 입력합니다:
+60. 다음 메시지를 입력합니다:
+
+    <img src="/images/week14/14-3-task3-step60-input.png" alt="김철수 이름 입력" class="guide-img-sm" />
 
 ```
 김철수입니다.
 ```
 
-87. Agent가 예약을 생성하고 예약 번호를 제공하는지 확인합니다.
+61. Agent가 예약을 생성하고 예약 번호를 제공하는지 확인합니다.
 
 > [!NOTE]
 > Agent가 한 번에 모든 정보를 추출하지 못하고 하나씩 물어볼 수 있습니다.  
@@ -840,38 +437,44 @@ def cancel_reservation(params):
 >
 > 📋 예약 정보:
 > - 예약 번호: RESABC12345
-> - 고객명: 김철수
-> - 날짜: 2024-02-15
+> - 고객명: 김철수.
+> - 날짜: 2026-02-15
 > - 시간: 19:00
 > - 인원: 4명
-> - 상태: 확정
+> - 상태: 확정.
 >
 > 예약 번호를 꼭 기억합니다!
 > ```
 
-88. 예약 조회를 테스트합니다:
+62. 예약 조회를 테스트합니다:
+
+    <img src="/images/week14/14-3-task3-step62-query.png" alt="예약 조회 테스트" class="guide-img-sm" />
 
 ```
 방금 만든 예약 정보를 확인하고 싶어요.
 ```
 
-89. Agent가 예약 번호를 요청하는지 확인합니다.
-90. 이전에 받은 예약 번호를 입력합니다.
-91. Agent가 예약 정보를 정확히 조회하는지 확인합니다.
+63. Agent가 예약 번호를 요청하는지 확인합니다.
+64. 이전에 받은 예약 번호를 입력합니다.
+65. Agent가 예약 정보를 정확히 조회하는지 확인합니다.
 
 > [!NOTE]
 > 예약 번호는 UUID 기반으로 생성되므로 실제 응답의 예약 번호는 위 예시와 다릅니다.  
-> 또한 생성형 AI의 특성상 날짜 해석이 다를 수 있습니다 (예: "2월 15일" → "2026-02-15" 또는 "2024-02-15").  
+> 또한 생성형 AI의 특성상 날짜 해석이 다를 수 있습니다 (예: "2월 15일" → "2026-02-15" 또는 "2026-02-15").  
 > 실제 저장된 날짜는 Amazon DynamoDB 테이블에서 확인할 수 있습니다.
+>
+> <img src="/images/week14/14-3-task3-step65-dynamodb.png" alt="DynamoDB 테이블에서 예약 데이터 확인" class="guide-img-md" />
 
-92. **Show trace** 토글을 활성화합니다.
-93. 새로운 메시지를 입력합니다:
+66. **Show trace** 토글을 활성화합니다.
+67. 새로운 메시지를 입력합니다:
+
+    <img src="/images/week14/14-3-task3-step67-trace.png" alt="Show trace 활성화 후 메시지 입력" class="guide-img-sm" />
 
 ```
 2월 15일 예약 목록을 보여주세요.
 ```
 
-94. Trace 패널에서 Agent의 사고 과정을 확인합니다:
+68. Trace 패널에서 Agent의 사고 과정을 확인합니다:
     - **Pre-processing**: 사용자 입력 분석
     - **Orchestration**: 어떤 함수를 호출할지 결정
     - **Action invocation**: AWS Lambda 함수 호출
@@ -879,28 +482,36 @@ def cancel_reservation(params):
 
 > [!NOTE]
 > Trace를 통해 Agent가 어떻게 의사결정을 하는지 이해할 수 있습니다.
+>
+> <img src="/images/week14/14-3-task3-step68-trace-detail.png" alt="Trace 패널에서 Agent 사고 과정 확인" class="guide-img-md" />
 
-95. 예약 취소를 테스트합니다:
+69. 예약 취소를 테스트합니다:
 
 ```
 예약을 취소하고 싶어요.
 ```
 
-96. Agent가 예약 번호를 요청하는지 확인합니다.
-97. 예약 번호를 입력하고 취소가 정상적으로 처리되는지 확인합니다.
+70. Agent가 예약 번호를 요청하는지 확인합니다.
+71. 예약 번호를 입력하고 취소가 정상적으로 처리되는지 확인합니다.
+
+    <img src="/images/week14/14-3-task3-step71-cancel.png" alt="예약 취소 처리 확인" class="guide-img-sm" />
+
+    <img src="/images/week14/14-3-task3-step71-dynamodb-cancelled.png" alt="DynamoDB에서 예약 상태 cancelled 확인" class="guide-img-md" />
 
 > [!NOTE]
 > `cancel_reservation` 함수는 예약이 존재하지 않아도 성공 응답을 반환합니다.  
 > 이는 Amazon DynamoDB의 `update_item` 동작 특성 때문입니다.  
 > 프로덕션 환경에서는 예약 존재 여부를 먼저 확인하는 로직을 추가해야 합니다.
 
-98. Knowledge Base 연동을 테스트합니다 (14-2 완료 시):
+72. Knowledge Base 연동을 테스트합니다 (14-2 완료 시):
+
+    <img src="/images/week14/14-3-task3-step72-kb-test.png" alt="Knowledge Base 연동 테스트" class="guide-img-sm" />
 
 ```
 안심 스테이크 가격이 얼마인가요?
 ```
 
-99. Agent가 Knowledge Base를 검색하여 메뉴 가격을 답변하는지 확인합니다.
+73. Agent가 Knowledge Base를 검색하여 메뉴 가격을 답변하는지 확인합니다.
 
 > [!OUTPUT]
 > Agent 응답 예시:
@@ -910,64 +521,93 @@ def cancel_reservation(params):
 > 미디엄 레어로 추천되며, 감자 퓨레와 구운 야채가 포함되어 있습니다.
 > ```
 
-100. 추가 질문을 테스트합니다:
+74. 추가 질문을 테스트합니다:
+
+    <img src="/images/week14/14-3-task3-step74-parking.png" alt="주차 정보 질문 테스트" class="guide-img-sm" />
 
 ```
 주차가 가능한가요?
 ```
 
-101. Agent가 Knowledge Base에서 주차 정보를 검색하여 답변하는지 확인합니다.
+75. Agent가 Knowledge Base에서 주차 정보를 검색하여 답변하는지 확인합니다.
 
 ✅ **태스크 완료**: Agent가 정상적으로 작동하며 예약 관리 기능을 수행합니다.
 
-## 태스크 6: Agent 별칭 생성 및 배포
+## 태스크 4: Agent 별칭 생성 및 배포
 
 이 태스크에서는 Agent의 버전을 관리하고 프로덕션 환경에 배포하기 위한 별칭을 생성합니다.
 
-102. Agent 상세 페이지 상단에서 **Aliases** 탭을 선택합니다.
-103. [[Create alias]] 버튼을 클릭합니다.
-104. **Alias details**에서 다음을 입력합니다:
+76. Agent 상세 페이지 상단에서 **Aliases** 탭을 선택합니다.
 
+    <img src="/images/week14/14-3-task4-step76-aliases.png" alt="Agent Aliases 탭 선택" class="guide-img-md" />
 
+77. [[Create alias]] 버튼을 클릭합니다.
+78. 다음을 입력합니다:
     - **Alias name**: `production`
-    - **Alias description**: `프로덕션 환경용 Agent`
+    - **Description**: `Production Agent for QuickTable`
+    - **Associate a version**: `Create a new version and associate it to this alias` 선택 (기본값)
+79. [[Create alias]] 버튼을 클릭합니다.
 
-105. **Version** 섹션에서 `Create a new version`을 선택합니다.
-106. [[Create alias]] 버튼을 클릭합니다.
+    <img src="/images/week14/14-3-task4-step79-create-alias.png" alt="Create alias 버튼 클릭" class="guide-img-sm" />
 
 > [!NOTE]
 > 별칭 생성이 완료될 때까지 기다립니다. 별칭을 사용하면 Agent의 여러 버전을 관리하고 안전하게 배포할 수 있습니다.
 
-107. 생성된 별칭을 클릭합니다.
-108. **Alias ARN**을 복사하여 메모장에 저장합니다.
+80. Agent Details 페이지의 **Aliases** 테이블에서 **Alias ID**를 확인하고 메모장에 복사합니다 (예: `45NSBQU1IN`).
+
+    <img src="/images/week14/14-3-task4-step80-alias-id.png" alt="Aliases 테이블에서 Alias ID 확인" class="guide-img-md" />
 
 > [!NOTE]
-> 이 ARN은 애플리케이션에서 Agent를 호출할 때 사용됩니다.
+> 이 Alias ID는 태스크 5에서 AWS Lambda 함수로 Agent를 호출할 때 사용됩니다.  
+> Agent ID는 Agent Details 페이지 상단의 **Agent overview** 섹션에서 확인할 수 있습니다.
 
 ✅ **태스크 완료**: Agent 별칭이 생성되고 배포되었습니다.
 
-## 태스크 7: AWS Lambda 함수로 Agent 호출 테스트
+## 태스크 5: AWS Lambda 함수로 Agent 호출 테스트
 
 이 태스크에서는 AWS Lambda 함수를 생성하여 프로그래밍 방식으로 Agent를 호출하는 방법을 학습합니다.
 
-109. AWS Lambda 콘솔로 이동합니다.
-110. [[Create function]] 버튼을 클릭합니다.
-111. **Function name**에 `BedrockAgentInvoker`를 입력합니다.
-112. **Runtime**에서 `Python 3.13`를 선택합니다.
-113. [[Create function]] 버튼을 클릭합니다.
-114. 함수 생성이 완료되면 **Configuration** 탭을 선택합니다.
-115. 왼쪽 메뉴에서 **General configuration**을 선택합니다.
-116. [[Edit]] 버튼을 클릭합니다.
-117. **Timeout**을 `30` 초로 변경합니다.
+81. AWS Lambda 콘솔로 이동합니다.
+82. [[Create function]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task5-step82-create-function.png" alt="Lambda Create function 페이지" class="guide-img-md" />
+
+83. **Function name**에 `BedrockAgentInvoker`를 입력합니다.
+84. **Runtime**에서 `Python 3.13`를 선택합니다.
+85. [[Create function]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task5-step85-create.png" alt="Create function 버튼 클릭" class="guide-img-md" />
+
+86. 함수 생성이 완료되면 "Getting started" 모달이 표시되면 [[Dismiss]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task5-step86-dismiss.png" alt="Getting started 모달 Dismiss" class="guide-img-sm" />
+
+87. **Configuration** 탭을 선택합니다.
+88. 왼쪽 메뉴에서 **General configuration**을 선택합니다.
+89. [[Edit]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task5-step89-edit-timeout.png" alt="General configuration Edit 버튼" class="guide-img-md" />
+
+90. **Timeout**을 `30` 초로 변경합니다.
 
 > [!NOTE]
 > Amazon Bedrock Agent 호출은 응답 생성에 시간이 걸립니다 (일반적으로 5-30초).  
 > AWS Lambda 기본 타임아웃(3초)으로는 부족하므로 최소 30초 이상으로 설정해야 합니다.  
 > Agent가 Knowledge Base를 검색하거나 여러 Action을 수행하는 경우 더 긴 시간이 필요할 수 있습니다.
 
-118. [[Save]] 버튼을 클릭합니다.
-119. **Code** 탭을 선택합니다.
-120. 코드 편집기에 다음 코드를 입력합니다:
+91. [[Save]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-task5-step91-save-timeout.png" alt="Timeout 30초 설정 후 Save" class="guide-img-md" />
+
+92. **Code** 탭을 선택합니다.
+93. 코드 편집기의 기본 코드를 삭제하고 다음 코드를 입력합니다:
+
+> [!NOTE]
+> 이 코드는 Amazon Bedrock Agent를 프로그래밍 방식으로 호출하는 AWS Lambda 함수입니다.
+>
+> - 환경 변수에서 Agent ID와 Alias ID를 가져옵니다.
+> - `invoke_agent` API로 Agent에 메시지를 전송합니다.
+> - 스트리밍 응답을 수집하여 JSON으로 반환합니다.
 
 ```python
 import json
@@ -1002,7 +642,7 @@ def lambda_handler(event, context):
 
     # 이벤트에서 세션 ID와 사용자 입력 추출
     session_id = event.get('session_id', 'test-session-001')
-    user_input = event.get('input', '안녕합니다')
+    user_input = event.get('input', '안녕하세요')
 
     try:
         # Amazon Bedrock Agent 호출
@@ -1042,22 +682,36 @@ def lambda_handler(event, context):
         }
 ```
 
-121. [[Deploy]] 버튼을 클릭합니다.
-122. **Configuration** 탭을 선택합니다.
-123. 왼쪽 메뉴에서 **Permissions**를 선택합니다.
-124. 실행 역할에 Amazon Bedrock 권한을 추가합니다:
+94. [[Deploy]] 버튼을 클릭합니다.
+    <img src="/images/week14/14-3-task5-step94-deploy.png" alt="Lambda 함수 Deploy 버튼 클릭" class="guide-img-md" />
 
-- [[Add permissions]] > `Attach policies`
-- `AmazonBedrockFullAccess` 검색 및 체크
-- [[Add permissions]] 클릭
+95. **Configuration** 탭을 선택합니다.
+96. 왼쪽 메뉴에서 **Permissions**를 선택합니다.
+97. **Execution role** 섹션에서 역할 이름 링크를 클릭하여 AWS IAM 콘솔로 이동합니다.
+
+    <img src="/images/week14/14-3-task5-step97-execution-role.png" alt="Execution role 링크 클릭" class="guide-img-md" />
+
+98. [[Add permissions]] > `Attach policies`를 선택합니다.
+
+    <img src="/images/week14/14-3-task5-step98-add-permissions.png" alt="Add permissions > Attach policies 선택" class="guide-img-md" />
+
+99. `AmazonBedrockFullAccess`를 검색하고 체크합니다.
+100.  [[Add permissions]] 버튼을 클릭합니다.
+
+      <img src="/images/week14/14-3-task5-step100-attach-policy.png" alt="AmazonBedrockFullAccess 정책 선택" class="guide-img-md" />
+
+      <img src="/images/week14/14-3-task5-step100-policy-attached.png" alt="정책 연결 완료 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 프로덕션 환경에서는 `bedrock:InvokeAgent` 권한만 포함하는 커스텀 정책을 사용해야 합니다.  
 > 참고 섹션에서 최소 권한 정책 예시를 확인할 수 있습니다.
 
-125. 왼쪽 메뉴에서 **Environment variables**를 선택합니다.
-126. [[Edit]] 버튼을 클릭합니다.
-127. [[Add environment variable]] 버튼을 클릭하여 다음 환경 변수들을 추가합니다:
+101. AWS Lambda 콘솔로 돌아와 `BedrockAgentInvoker` 함수를 선택합니다.
+102. 왼쪽 메뉴에서 **Environment variables**를 선택합니다.
+103. [[Edit]] 버튼을 클릭합니다.
+     <img src="/images/week14/14-3-task5-step103-env-edit.png" alt="Environment variables Edit 버튼" class="guide-img-md" />
+
+104. [[Add environment variable]] 버튼을 클릭하여 다음 환경 변수들을 추가합니다:
 
 | 변수명           | 값               | 설명                                                                  |
 | ---------------- | ---------------- | --------------------------------------------------------------------- |
@@ -1065,7 +719,9 @@ def lambda_handler(event, context):
 | `AGENT_ALIAS_ID` | (별칭 ID 입력)   | 별칭 ID (별칭 상세 페이지에서 확인, ARN이 아닌 ID만 입력)             |
 | `BEDROCK_REGION` | `ap-northeast-2` | Amazon Bedrock Agent가 배포된 리전                                    |
 
-128. [[Save]] 버튼을 클릭합니다.
+105. [[Save]] 버튼을 클릭합니다.
+     <img src="/images/week14/14-3-task5-step105-env-save.png" alt="환경 변수 입력 후 Save" class="guide-img-md" />
+     <img src="/images/week14/14-3-task5-step105-env-saved.png" alt="환경 변수 저장 완료" class="guide-img-md" />
 
 > [!IMPORTANT]
 > `AGENT_ALIAS_ID`는 별칭 ARN 전체가 아닌 ID 부분만 입력합니다.
@@ -1073,7 +729,7 @@ def lambda_handler(event, context):
 > **올바른 예시**:
 >
 > - 별칭 ARN: `arn:aws:bedrock:ap-northeast-2:123456789012:agent-alias/ABCDEFGHIJ/TSTALIASID`
-> - 입력할 값: `TSTALIASID` (ARN의 마지막 부분만)
+> - 입력할 값: `TSTALIASID` (ARN의 마지막 부분만).
 >
 > **잘못된 예시**:
 >
@@ -1086,9 +742,11 @@ def lambda_handler(event, context):
 > `BEDROCK_REGION` 환경 변수를 명시적으로 설정하면 AWS Lambda 함수가 다른 리전에서 실행되더라도 올바른 리전의 Amazon Bedrock Agent를 호출할 수 있습니다.  
 > `AWS_REGION`은 AWS Lambda의 예약 환경 변수이므로 사용하지 않습니다.
 
-129. [[Save]] 버튼을 클릭합니다.
-130. [[Manage tags]] 버튼을 클릭합니다.
-131. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
+106. 왼쪽 메뉴에서 **Tags**를 선택합니다.
+107. [[Manage tags]] 버튼을 클릭합니다.
+     <img src="/images/week14/14-3-task5-step107-manage-tags.png" alt="Manage tags 버튼 클릭" class="guide-img-md" />
+
+108. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
 | ----------- | --------- |
@@ -1096,12 +754,11 @@ def lambda_handler(event, context):
 | `Week`      | `14-3`    |
 | `CreatedBy` | `Student` |
 
-132. [[Save changes]] 버튼을 클릭합니다.
+109. [[Save]] 버튼을 클릭합니다.
+     <img src="/images/week14/14-3-task5-step109-tags-save.png" alt="태그 저장" class="guide-img-md" />
 
-133. **Test** 탭을 선택합니다.
-134. [[Test]] 버튼을 클릭합니다.
-135. **Event name**에 `TestEvent`를 입력합니다.
-136. 다음 테스트 이벤트를 입력합니다:
+110. **Test** 탭을 선택합니다.
+111. **Event JSON** 섹션의 기본 내용을 삭제하고 다음 테스트 이벤트를 입력합니다:
 
 ```json
 {
@@ -1110,14 +767,11 @@ def lambda_handler(event, context):
 }
 ```
 
-> [!NOTE]
-> 테스트 이벤트의 날짜는 실습 당일 이후 날짜로 변경합니다.  
-> 위 예시는 2026-02-20으로 설정되어 있습니다.  
-> 과거 날짜로 예약을 생성하면 실제 시스템에서는 거부될 수 있습니다.
+112. [[Test]] 버튼을 클릭하여 함수를 실행합니다.
+     <img src="/images/week14/14-3-task5-step112-test.png" alt="Lambda Test 버튼 클릭" class="guide-img-md" />
 
-137. [[Save]] 버튼을 클릭합니다.
-138. [[Test]] 버튼을 클릭하여 함수를 실행합니다.
-139. 실행 결과를 확인합니다.
+113. 실행 결과를 확인합니다.
+     <img src="/images/week14/14-3-task5-step113-result.png" alt="Lambda 실행 결과 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 > 실행 결과 예시:
@@ -1134,19 +788,31 @@ def lambda_handler(event, context):
 
 ✅ **태스크 완료**: AWS Lambda 함수로 Agent를 프로그래밍 방식으로 호출했습니다.
 
+### 태스크 5.1: Amazon DynamoDB에서 예약 데이터 확인
+
+114. 상단 검색창에 `DynamoDB`를 입력하고 선택합니다.
+115. 왼쪽 메뉴에서 **Tables**를 선택합니다.
+116. `RestaurantReservations` 테이블을 클릭합니다.
+117. [[Explore table items]] 버튼을 클릭합니다.
+118. 태스크 3과 태스크 5에서 생성한 예약 데이터가 추가되었는지 확인합니다.
+     <img src="/images/week14/14-3-task5-step118-dynamodb-items.png" alt="DynamoDB 테이블에서 예약 데이터 확인" class="guide-img-md" />
+
+> [!NOTE]
+> 초기 샘플 데이터(RES001~RES003) 외에 Agent 테스트에서 생성한 예약이 추가로 표시됩니다.
+
 ## 마무리
 
 다음을 성공적으로 수행했습니다:
 
-- Amazon DynamoDB 테이블을 생성하고 QuickTable 예약 데이터를 저장했습니다.
-- AWS Lambda 함수로 QuickTable 예약 관리 기능을 구현했습니다.
+- AWS CloudFormation으로 Amazon DynamoDB 테이블과 AWS Lambda 함수를 자동 생성했습니다.
 - Amazon Bedrock Agent를 생성하고 QuickTable Action Group을 설정했습니다.
 - Week 14-2에서 생성한 Knowledge Base를 Agent에 연결했습니다.
 - Agent를 테스트하고 대화형 QuickTable 예약 시스템을 확인했습니다.
 - Agent 별칭을 생성하여 프로덕션 환경에 배포했습니다.
 - AWS Lambda 함수로 Agent를 프로그래밍 방식으로 호출했습니다.
 
-Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickTable 레스토랑 예약 시스템이 완성되었습니다. 고객은 자연어로 대화하며 예약을 생성하고 관리할 수 있으며, 레스토랑 정보에 대한 질문에도 답변받을 수 있습니다.
+Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickTable 레스토랑 예약 시스템이 완성되었습니다.  
+고객은 자연어로 대화하며 예약을 생성하고 관리할 수 있으며, 레스토랑 정보에 대한 질문에도 답변받을 수 있습니다.
 
 # 🗑️ 리소스 정리
 
@@ -1163,6 +829,7 @@ Week 14-2에서 구축한 Knowledge Base와 14-3의 Agent를 결합하여 QuickT
    - **Tag key**: `Week`
    - **Tag value**: `14-3`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week14/14-3-cleanup-step6.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > 이 실습에서 생성한 모든 리소스가 표시됩니다.
@@ -1191,43 +858,76 @@ echo "Agent ID: ${AGENT_ID}"
 aws bedrock-agent delete-agent --agent-id ${AGENT_ID} --skip-resource-in-use-check
 ```
 
-9. AWS Lambda 함수를 삭제합니다:
+<img src="/images/week14/14-3-cleanup-step8.png" alt="CloudShell에서 Agent 삭제 CLI 실행" class="guide-img-md" />
+
+> [!NOTE]
+> 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws bedrock-agent list-agents --query "agentSummaries[?agentName=='QuickTableAssistant']" --output text
+> ```
+>
+> 출력이 없으면 삭제 완료입니다.
+
+9. AWS Lambda 함수를 삭제합니다 (수동 생성분):
 
 ```bash
-aws lambda delete-function --function-name BedrockAgentReservationHandler
 aws lambda delete-function --function-name BedrockAgentInvoker
 ```
 
-10. Amazon DynamoDB 테이블을 삭제합니다:
+<img src="/images/week14/14-3-cleanup-step9.png" alt="Lambda 함수 삭제 CLI 실행" class="guide-img-md" />
 
-```bash
-aws dynamodb delete-table --table-name RestaurantReservations
-```
+> [!NOTE]
+> 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws lambda get-function --function-name BedrockAgentInvoker
+> ```
+>
+> `ResourceNotFoundException` 오류가 나오면 삭제 완료입니다.
 
-11. Amazon CloudWatch Log Group을 삭제합니다:
-
-```bash
-aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentReservationHandler 2>/dev/null
-aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentInvoker 2>/dev/null
-```
-
-12. AWS IAM 역할을 삭제합니다:
+10. AWS IAM 역할을 삭제합니다:
 
 ```bash
 # Bedrock Agent 역할 삭제
-BEDROCK_ROLE=$(aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForAgents_')].RoleName" --output text)
-if [ -n "${BEDROCK_ROLE}" ]; then
-  aws iam detach-role-policy --role-name ${BEDROCK_ROLE} --policy-arn arn:aws:iam::aws:policy/AmazonBedrockFullAccess 2>/dev/null
-  aws iam delete-role --role-name ${BEDROCK_ROLE}
-  echo "Deleted: ${BEDROCK_ROLE}"
+BEDROCK_ROLES=$(aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForAgents_')].RoleName" --output text)
+for ROLE in ${BEDROCK_ROLES}; do
+  POLICIES=$(aws iam list-attached-role-policies --role-name ${ROLE} --query "AttachedPolicies[*].PolicyArn" --output text)
+  for POLICY in ${POLICIES}; do
+    aws iam detach-role-policy --role-name ${ROLE} --policy-arn ${POLICY}
+  done
+  INLINE=$(aws iam list-role-policies --role-name ${ROLE} --query "PolicyNames" --output text)
+  for P in ${INLINE}; do
+    aws iam delete-role-policy --role-name ${ROLE} --policy-name ${P}
+  done
+  aws iam delete-role --role-name ${ROLE}
+  echo "Deleted: ${ROLE}"
+done
+
+# BedrockAgentInvoker 역할 삭제
+INVOKER_ROLE=$(aws iam list-roles --query "Roles[?starts_with(RoleName,'BedrockAgentInvoker-role-')].RoleName" --output text)
+if [ -n "${INVOKER_ROLE}" ]; then
+  POLICIES=$(aws iam list-attached-role-policies --role-name ${INVOKER_ROLE} --query "AttachedPolicies[*].PolicyArn" --output text)
+  for POLICY in ${POLICIES}; do
+    aws iam detach-role-policy --role-name ${INVOKER_ROLE} --policy-arn ${POLICY}
+  done
+  aws iam delete-role --role-name ${INVOKER_ROLE}
+  echo "Deleted: ${INVOKER_ROLE}"
 fi
 ```
 
-> [!NOTE]
-> AWS Lambda 함수의 실행 역할은 함수 삭제 시 자동으로 삭제되지 않습니다.
-> AWS IAM 콘솔에서 `BedrockAgentReservationHandler-role-`과 `BedrockAgentInvoker-role-`로 시작하는 역할을 수동으로 삭제합니다.
+<img src="/images/week14/14-3-cleanup-step10.png" alt="IAM 역할 삭제 CLI 실행" class="guide-img-md" />
 
-13. 옵션 1 완료 후 아래 **단계 3: 삭제 확인**으로 이동합니다.
+> [!NOTE]
+> 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForAgents_') || starts_with(RoleName,'BedrockAgentInvoker-role-')].RoleName" --output text
+> ```
+>
+> 출력이 없으면 삭제 완료입니다.
+
+11. 옵션 1 완료 후 아래 **단계 2: AWS CloudFormation 스택 삭제**로 이동합니다.
 
 #### 옵션 2: AWS 콘솔에서 삭제
 
@@ -1238,107 +938,176 @@ fi
 
 **Amazon Bedrock Agent 삭제**
 
-14. 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
-15. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
-16. `QuickTableAssistant` Agent를 선택합니다.
+12. 상단 검색창에 `Bedrock`을 입력하고 선택합니다.
+13. 왼쪽 메뉴에서 **Build** > **Agents**를 선택합니다.
+14. `QuickTableAssistant` Agent를 선택합니다.
+15. [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step15.png" alt="Agent Delete 버튼 클릭" class="guide-img-md" />
+
+16. 확인 창에서 `delete`를 입력합니다.
 17. [[Delete]] 버튼을 클릭합니다.
-18. 확인 창에서 `delete`를 입력합니다.
-19. [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step17.png" alt="Agent 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > Agent를 삭제하면 모든 별칭과 버전도 함께 삭제됩니다.
 
-**AWS Lambda 함수 삭제**
+**AWS Lambda 함수 삭제 (수동 생성분)**
 
-20. 상단 검색창에 `Lambda`를 입력하고 선택합니다.
-21. `BedrockAgentReservationHandler` 함수를 선택합니다.
-22. **Actions** > `Delete`를 선택합니다.
-23. 확인 창에서 `delete`를 입력합니다.
-24. [[Delete]] 버튼을 클릭합니다.
-25. 같은 방식으로 `BedrockAgentInvoker` 함수도 삭제합니다.
+18. AWS Lambda 콘솔로 이동하여 왼쪽 메뉴에서 **Functions**를 선택합니다.
+19. `BedrockAgentInvoker` 함수의 체크박스를 선택합니다.
+20. **Actions** > `Delete`를 선택합니다.
 
-**Amazon DynamoDB 테이블 삭제**
+    <img src="/images/week14/14-3-cleanup-step20.png" alt="Lambda 함수 삭제" class="guide-img-md" />
 
-26. 상단 검색창에 `DynamoDB`를 입력하고 선택합니다.
-27. 왼쪽 메뉴에서 **Tables**를 선택합니다.
-28. `RestaurantReservations` 테이블을 선택합니다.
-29. [[Delete]] 버튼을 클릭합니다.
-30. 확인 창에서 `confirm`을 입력합니다.
-31. [[Delete]] 버튼을 클릭합니다.
+21. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
-**AWS IAM 역할 삭제**
+    <img src="/images/week14/14-3-cleanup-step21.png" alt="Lambda 함수 삭제 확인" class="guide-img-sm" />
 
-32. 상단 검색창에 `IAM`을 입력하고 선택합니다.
-33. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+> [!NOTE]
+> `BedrockAgentReservationHandler` 함수는 AWS CloudFormation 스택 삭제 시 자동으로 삭제됩니다.
+
+**AWS IAM 역할 삭제 (Amazon Bedrock Agent 역할)**
+
+22. 상단 검색창에 `IAM`을 입력하고 선택합니다.
+23. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+24. 검색창에 `Bedrock`을 입력합니다.
+25. 다음 역할들을 선택합니다:
+    - `BedrockAgentInvoker-role-` 로 시작하는 역할
+    - `AmazonBedrockExecutionRoleForAgents_` 로 시작하는 역할
+26. [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step26.png" alt="IAM 역할 Delete 클릭" class="guide-img-md" />
+
+27. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step27.png" alt="IAM 역할 삭제 확인" class="guide-img-sm" />
+
+> [!NOTE]
+> 역할 1개 삭제 시 확인 창에서 **역할 이름**을 입력합니다. 여러 개 동시 삭제 시 `delete`를 입력합니다.  
+> `BedrockAgentReservationHandler-role-` 역할은 AWS CloudFormation 스택 삭제 시 자동으로 삭제됩니다.  
+> `AmazonBedrockExecutionRoleForKnowledgeBase_` 역할은 Week 14-2 리소스 삭제 시 함께 삭제합니다.
+
+### 단계 2: AWS CloudFormation 스택 삭제
+
+28. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+29. `week14-3-bedrock-agent-stack` 스택을 선택합니다.
+30. [[Delete stack]] 버튼을 클릭합니다.
+31. 확인 창에서 스택 이름 `week14-3-bedrock-agent-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step31.png" alt="CloudFormation 스택 삭제 확인" class="guide-img-sm" />
+
+> [!NOTE]
+> 스택 삭제에 1-2분이 소요됩니다.  
+> AWS CloudFormation 스택을 삭제하면 다음 리소스가 자동으로 삭제됩니다:
+>
+> - Amazon DynamoDB 테이블 (`RestaurantReservations`)
+> - AWS Lambda 함수 (`BedrockAgentReservationHandler`)
+> - AWS IAM 역할 (AWS Lambda 실행 역할)
+
+### 단계 3: Amazon CloudWatch Log Group 삭제
+
+32. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+33. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
 34. 검색창에 `BedrockAgent`를 입력합니다.
-35. Amazon Bedrock Agent가 생성한 역할들을 선택합니다.
-36. [[Delete]] 버튼을 클릭합니다.
-37. 확인 창에서 역할 이름을 입력합니다.
-38. [[Delete]] 버튼을 클릭합니다.
-39. 같은 방식으로 AWS Lambda 함수의 실행 역할들도 삭제합니다.
-
-> [!NOTE]
-> AWS IAM 역할 이름은 `AmazonBedrockExecutionRoleForAgents_` 또는 `BedrockAgentReservationHandler-role-` 형식입니다.  
-> 역할을 삭제하기 전에 다른 Agent나 AWS Lambda 함수에서 사용 중인지 확인합니다.
-
-**Amazon CloudWatch Log Group 삭제**
-
-40. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-41. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-42. 검색창에 `BedrockAgent`를 입력합니다.
-43. 다음 로그 그룹들을 선택합니다:
-    - `/aws/lambda/BedrockAgentReservationHandler`
+35. 다음 로그 그룹들을 선택합니다:
     - `/aws/lambda/BedrockAgentInvoker`
-44. **Actions** > `Delete log group(s)`를 선택합니다.
-45. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+    - `/aws/lambda/BedrockAgentReservationHandler`
+    - `/aws/lambda/week14-3-SampleDataUploader-{StudentId}`
+36. **Actions** > `Delete log group(s)`를 선택합니다.
 
-> [!NOTE]
-> Amazon CloudWatch Log Group은 자동으로 생성되며, 삭제하지 않으면 로그 저장 비용이 계속 발생합니다.
+    <img src="/images/week14/14-3-cleanup-step36.png" alt="Actions > Delete log group(s) 선택" class="guide-img-md" />
+
+37. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step37.png" alt="로그 그룹 삭제 확인" class="guide-img-sm" />
+
+> [!WARNING]
+> Amazon CloudWatch Log Group은 AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
+> [!TIP]
+> AWS CLI로 삭제하려면 CloudShell에서 다음 명령어를 실행합니다 (`${STUDENT_ID}`를 본인 학번으로 변경):
+>
+> ```bash
+> STUDENT_ID="20240001"
+> aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentInvoker
+> aws logs delete-log-group --log-group-name /aws/lambda/BedrockAgentReservationHandler
+> aws logs delete-log-group --log-group-name /aws/lambda/week14-3-SampleDataUploader-${STUDENT_ID} 2>/dev/null
+> ```
+>
+> 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws logs describe-log-groups --log-group-name-prefix /aws/lambda/BedrockAgent --query "logGroups[*].logGroupName" --output text
+> aws logs describe-log-groups --log-group-name-prefix /aws/lambda/week14-3 --query "logGroups[*].logGroupName" --output text
+> ```
+>
+> 출력이 없으면 삭제 완료입니다.
+>
+> <img src="/images/week14/14-3-cleanup-log-cli.png" alt="CloudWatch Log Group CLI 삭제" class="guide-img-md" />
 
 ### Week 14-2 리소스 삭제 (Knowledge Base 연결 시)
 
-> [!IMPORTANT]
-> Week 14-2에서 생성한 Knowledge Base와 OpenSearch Serverless 컬렉션을 삭제하지 않았다면 반드시 삭제합니다.  
-> OpenSearch Serverless는 시간당 $0.48 (월 $346) 비용이 계속 발생합니다.
+> [!WARNING]
+> Week 14-2에서 생성한 Knowledge Base와 Amazon OpenSearch Serverless 컬렉션을 삭제하지 않았다면 **반드시 즉시 삭제**합니다.  
+> Amazon OpenSearch Serverless는 사용하지 않아도 컬렉션이 존재하는 동안 지속적으로 비용이 부과됩니다. 삭제하지 않으면 매월 상당한 비용이 발생합니다.
 
-46. Amazon Bedrock 콘솔로 이동합니다.
-47. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
-48. `quicktable-restaurant-kb`를 선택합니다.
+> [!TIP]
+> Week 14-2 실습 가이드의 리소스 정리 섹션에서 상세한 삭제 절차를 확인할 수 있습니다: [Week 14-2 리소스 정리](/week/14/session/2#cleanup)
+
+38. Amazon Bedrock 콘솔로 이동합니다.
+39. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
+40. `quicktable-restaurant-kb`를 선택합니다.
+41. [[Delete]] 버튼을 클릭합니다.
+42. 확인 창에서 `delete`를 입력합니다.
+43. [[Delete]] 버튼을 클릭합니다.
+44. 상단 검색창에 `OpenSearch`를 입력하고 선택합니다.
+45. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
+46. Knowledge Base와 연결된 컬렉션을 선택합니다.
+
+> [!NOTE]
+> Quick create로 생성된 Amazon OpenSearch Serverless 컬렉션은 `bedrock-knowledge-base-` 접두사로 시작하는 이름을 가질 수 있습니다.
+
+47. [[Delete]] 버튼을 클릭합니다.
+48. 확인 창에서 `confirm`을 입력합니다.
 49. [[Delete]] 버튼을 클릭합니다.
-50. 확인 창에서 `delete`를 입력합니다.
-51. [[Delete]] 버튼을 클릭합니다.
-52. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
-53. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
-54. Knowledge Base와 연결된 컬렉션을 선택합니다.
+50. Amazon S3 콘솔에서 `quicktable-kb-documents-{StudentId}` 버킷을 찾습니다.
+51. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+52. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+53. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+54. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 > [!NOTE]
-> Quick create로 생성된 OpenSearch Serverless 컬렉션은 `bedrock-knowledge-base-` 접두사로 시작하는 이름을 가질 수 있습니다.  
-> 컬렉션 이름을 확인한 후 선택합니다.
+> AWS IAM 콘솔에서 `AmazonBedrockExecutionRoleForKnowledgeBase_` 로 시작하는 역할도 삭제합니다.
 
-55. [[Delete]] 버튼을 클릭합니다.
-56. 확인 창에서 `confirm`을 입력합니다.
-57. [[Delete]] 버튼을 클릭합니다.
+### 최종 삭제 확인 (Tag Editor 활용)
+
+55. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+56. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+57. **Regions**에서 `ap-northeast-2`를 선택합니다.
+58. **Resource types**에서 `All supported resource types`를 선택합니다.
+59. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `14-3`
+60. [[Search resources]] 버튼을 클릭합니다.
+
+    <img src="/images/week14/14-3-cleanup-step60-search.png" alt="Tag Editor 검색 결과 확인" class="guide-img-md" />
 
 > [!NOTE]
-> Knowledge Base를 삭제하면 Amazon S3 버킷의 문서는 삭제되지 않습니다.  
-> Amazon S3 버킷도 삭제하려면 Amazon S3 콘솔에서 `quicktable-kb-documents-YOUR-INITIALS` 버킷을 삭제합니다.
-
-### 단계 3: 삭제 확인
-
-58. `Resource Groups & Tag Editor`로 이동합니다.
-59. Tag key: `Week`, Tag value: `14-3`으로 검색합니다.
-60. 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
+> 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.  
+> 삭제 직후에는 일부 리소스가 잠시 남아있을 수 있으나, 시간이 지나면 자동으로 사라집니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
 ## 추가 학습 리소스
 
-- [Amazon Bedrock Agents 개요](https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html)
-- [Amazon Bedrock Agent Action Group 정의](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-action-create.html)
-- [Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
-- [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)
-- [Amazon Bedrock 요금](https://aws.amazon.com/ko/bedrock/pricing/)
-- [Amazon Bedrock Agent의 AWS Lambda 함수 구성](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-lambda.html)
+- [Amazon Bedrock Agents 개요](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents.html).
+- [Amazon Bedrock Agents Action Groups](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-action-groups.html).
+- [Amazon Bedrock Agents Knowledge Bases](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/knowledge-base.html).
+- [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview).
+- [Amazon Bedrock 요금](https://aws.amazon.com/ko/bedrock/pricing/).
+- [AWS Lambda와 Amazon Bedrock 통합](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/agents-lambda.html).
 
 ## 📚 참고: Amazon Bedrock Agent 핵심 개념
 
@@ -1348,45 +1117,45 @@ Amazon Bedrock Agent는 다음 구성 요소로 이루어져 있습니다:
 
 **기반 모델 (Foundation Model)**
 
-- QuickTable Agent의 두뇌 역할을 하는 대규모 언어 모델입니다
-- Claude 3 Sonnet, Haiku 등 다양한 모델 선택 가능합니다
-- 사용자 입력을 이해하고 적절한 응답을 생성합니다
+- QuickTable Agent의 두뇌 역할을 하는 대규모 언어 모델입니다.
+- Claude Sonnet 4.6, Haiku 4.5 등 다양한 모델 선택 가능합니다.
+- 사용자 입력을 이해하고 적절한 응답을 생성합니다.
 
 **Instructions (지침)**
 
-- Agent의 역할과 행동 방식을 정의합니다
-- 대화 스타일, 응답 형식, 제약사항 등을 명시합니다
-- 프롬프트 엔지니어링의 핵심 요소입니다
+- Agent의 역할과 행동 방식을 정의합니다.
+- 대화 스타일, 응답 형식, 제약사항 등을 명시합니다.
+- 프롬프트 엔지니어링의 핵심 요소입니다.
 
 **Action Groups (액션 그룹)**
 
-- Agent가 수행할 수 있는 작업들의 집합입니다
-- AWS Lambda 함수와 연결되어 실제 작업을 실행합니다
-- OpenAPI 스키마 또는 함수 정의로 작업을 명시합니다
+- Agent가 수행할 수 있는 작업들의 집합입니다.
+- AWS Lambda 함수와 연결되어 실제 작업을 실행합니다.
+- OpenAPI 스키마 또는 함수 정의로 작업을 명시합니다.
 
 **Knowledge Bases (지식 베이스)**
 
-- Agent가 참조할 수 있는 문서 저장소입니다
-- RAG (Retrieval-Augmented Generation) 방식으로 동작합니다
-- Amazon S3에 저장된 문서를 벡터화하여 검색합니다
+- Agent가 참조할 수 있는 문서 저장소입니다.
+- RAG (Retrieval-Augmented Generation) 방식으로 동작합니다.
+- Amazon S3에 저장된 문서를 벡터화하여 검색합니다.
 
 ### Action Group vs Knowledge Base
 
 **Action Group 사용 시기:**
 
-- 데이터베이스 조회/수정이 필요한 경우
-- 외부 API 호출이 필요한 경우
-- 실시간 데이터 처리가 필요한 경우
-- 트랜잭션 작업이 필요한 경우
+- 데이터베이스 조회/수정이 필요한 경우.
+- 외부 API 호출이 필요한 경우.
+- 실시간 데이터 처리가 필요한 경우.
+- 트랜잭션 작업이 필요한 경우.
 
 **예시**: 예약 생성, 주문 처리, 결제 실행
 
 **Knowledge Base 사용 시기:**
 
-- 문서 기반 질의응답이 필요한 경우
-- 정적 정보 검색이 필요한 경우
-- 컨텍스트가 많은 답변이 필요한 경우
-- 자주 변경되지 않는 정보를 다루는 경우
+- 문서 기반 질의응답이 필요한 경우.
+- 정적 정보 검색이 필요한 경우.
+- 컨텍스트가 많은 답변이 필요한 경우.
+- 자주 변경되지 않는 정보를 다루는 경우.
 
 **예시**: FAQ 답변, 제품 설명서 검색, 정책 안내
 
@@ -1404,10 +1173,10 @@ Amazon Bedrock Agent는 다음 구성 요소로 이루어져 있습니다:
 
 ```
 주요 역할:
-54. 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
-55. 예약 번호로 기존 예약을 조회합니다.
-56. 특정 날짜의 예약 목록을 확인합니다.
-57. 예약 취소 요청을 처리합니다.
+- 고객의 예약 요청을 받아 새로운 예약을 생성합니다.
+- 예약 번호로 기존 예약을 조회합니다.
+- 특정 날짜의 예약 목록을 확인합니다.
+- 예약 취소 요청을 처리합니다.
 ```
 
 **3. 대화 규칙 명시**
@@ -1432,20 +1201,20 @@ Amazon Bedrock Agent는 다음 구성 요소로 이루어져 있습니다:
 
 **세션 ID (Session ID)**
 
-- 대화의 연속성을 유지하는 고유 식별자입니다
-- 같은 세션 ID로 여러 요청을 보내면 이전 대화를 기억합니다
-- 새로운 대화를 시작하려면 새로운 세션 ID를 사용합니다
+- 대화의 연속성을 유지하는 고유 식별자입니다.
+- 같은 세션 ID로 여러 요청을 보내면 이전 대화를 기억합니다.
+- 새로운 대화를 시작하려면 새로운 세션 ID를 사용합니다.
 
 **컨텍스트 윈도우**
 
-- Agent는 최근 대화 내역을 기억합니다
-- Claude 3 Sonnet: 최대 200K 토큰 (약 150,000 단어)
-- 긴 대화에서는 중요한 정보를 요약하여 전달합니다
+- Agent는 최근 대화 내역을 기억합니다.
+- Claude Sonnet 4.6: 최대 200K 토큰 (약 150,000 단어).
+- 긴 대화에서는 중요한 정보를 요약하여 전달합니다.
 
 **세션 속성 (Session Attributes)**
 
-- 세션 간 유지해야 할 정보를 저장합니다
-- 사용자 선호도, 임시 데이터 등을 저장할 수 있습니다
+- 세션 간 유지해야 할 정보를 저장합니다.
+- 사용자 선호도, 임시 데이터 등을 저장할 수 있습니다.
 
 ### AWS Lambda 통합 패턴
 
@@ -1471,7 +1240,7 @@ Amazon Bedrock Agent는 다음 구성 요소로 이루어져 있습니다:
     {
       "name": "date",
       "type": "string",
-      "value": "2024-02-15"
+      "value": "2026-02-15"
     },
     {
       "name": "time",
@@ -1524,58 +1293,60 @@ except Exception as e:
 
 ### 비용 최적화 전략
 
-**1. 모델 선택 최적화 (2026년 3월 기준)**
+**1. 모델 선택 최적화**
 
-- **Claude Haiku 4.5**: 빠른 응답, 저렴한 비용 (간단한 작업)
-- **Claude Sonnet 4.6**: 균형잡힌 성능 (일반적인 작업, 권장)
-- **Claude Opus 4.6**: 최고 성능 (복잡한 작업)
+> ⚠️ 아래 모델 정보는 2026년 5월 기준이며, AWS는 지속적으로 새로운 모델을 추가합니다. 최신 모델 목록은 [Amazon Bedrock 콘솔](https://console.aws.amazon.com/bedrock/)의 Model catalog 또는 [Claude 모델 개요](https://docs.anthropic.com/en/docs/about-claude/models/overview)를 참고합니다.
+
+- **Claude Sonnet 4.6**: 성능과 비용의 균형 (권장, Bedrock Agents optimized 해제 필요).
+- **Claude Haiku 4.5**: 빠른 응답, 저렴한 비용 (Bedrock Agents optimized 해제 필요).
+- **Claude Opus 4.x**: 최고 성능 (복잡한 작업, Bedrock Agents optimized 해제 필요).
 
 **2. 프롬프트 최적화**
 
-- 불필요한 지침 제거하여 토큰 수 감소
-- 간결하고 명확한 표현 사용
-- 예시는 필요한 경우에만 포함
+- 불필요한 지침 제거하여 토큰 수 감소.
+- 간결하고 명확한 표현 사용.
+- 예시는 필요한 경우에만 포함.
 
 **3. 캐싱 활용**
 
-- 자주 사용되는 응답은 Amazon DynamoDB에 캐싱
-- 동일한 질문에 대해 Agent 호출 최소화
-- TTL 설정으로 오래된 캐시 자동 삭제
+- 자주 사용되는 응답은 Amazon DynamoDB에 캐싱.
+- 동일한 질문에 대해 Agent 호출 최소화.
+- TTL 설정으로 오래된 캐시 자동 삭제.
 
 **4. 배치 처리**
 
-- 여러 작업을 하나의 요청으로 묶어 처리
-- 불필요한 왕복 통신 최소화
+- 여러 작업을 하나의 요청으로 묶어 처리.
+- 불필요한 왕복 통신 최소화.
 
 ### 프로덕션 환경 권장사항
 
 **1. 보안**
 
-- AWS IAM 역할에 최소 권한 원칙 적용
-- AWS Lambda 함수에 Amazon VPC 엔드포인트 사용
-- 민감한 정보는 AWS Secrets Manager에 저장
-- API 키와 자격증명은 환경 변수로 관리
+- AWS IAM 역할에 최소 권한 원칙 적용.
+- AWS Lambda 함수에 Amazon VPC 엔드포인트 사용.
+- 민감한 정보는 AWS Secrets Manager에 저장.
+- API 키와 자격증명은 환경 변수로 관리.
 
 **2. 모니터링**
 
-- Amazon CloudWatch Logs로 Agent 대화 기록
-- AWS Lambda 함수 성능 메트릭 추적
-- 오류율과 응답 시간 모니터링
-- Amazon CloudWatch Alarms로 이상 징후 감지
+- Amazon CloudWatch Logs로 Agent 대화 기록.
+- AWS Lambda 함수 성능 메트릭 추적.
+- 오류율과 응답 시간 모니터링.
+- Amazon CloudWatch Alarms로 이상 징후 감지.
 
 **3. 확장성**
 
-- AWS Lambda 동시 실행 제한 설정
-- Amazon DynamoDB Amazon EC2 Auto Scaling 활성화
-- Agent 별칭으로 버전 관리
-- 트래픽 증가에 대비한 용량 계획
+- AWS Lambda 동시 실행 제한 설정.
+- Amazon DynamoDB Amazon EC2 Auto Scaling 활성화.
+- Agent 별칭으로 버전 관리.
+- 트래픽 증가에 대비한 용량 계획.
 
 **4. 테스트**
 
-- 단위 테스트: AWS Lambda 함수 로직 검증
-- 통합 테스트: Agent와 AWS Lambda 연동 확인
-- 부하 테스트: 동시 사용자 처리 능력 검증
-- A/B 테스트: 프롬프트 최적화
+- 단위 테스트: AWS Lambda 함수 로직 검증.
+- 통합 테스트: Agent와 AWS Lambda 연동 확인.
+- 부하 테스트: 동시 사용자 처리 능력 검증.
+- A/B 테스트: 프롬프트 최적화.
 
 ### 멀티턴 대화 처리
 
@@ -1598,10 +1369,10 @@ Agent: [create_reservation 함수 호출]
 
 **컨텍스트 유지 전략**
 
-- 이전 대화에서 수집한 정보를 기억
-- 부족한 정보만 추가로 요청
-- 사용자가 정보를 수정하면 업데이트
-- 대화가 길어지면 중요 정보 요약
+- 이전 대화에서 수집한 정보를 기억.
+- 부족한 정보만 추가로 요청.
+- 사용자가 정보를 수정하면 업데이트.
+- 대화가 길어지면 중요 정보 요약.
 
 ### 오류 처리 및 재시도 전략
 
@@ -1629,16 +1400,16 @@ def invoke_agent_with_retry(agent_id, alias_id, session_id, input_text, max_retr
 
 **2. AWS Lambda 타임아웃**
 
-- AWS Lambda 함수 타임아웃을 충분히 설정 (최소 30초)
-- 긴 작업은 AWS Step Functions로 분리
-- 비동기 처리 패턴 고려
+- AWS Lambda 함수 타임아웃을 충분히 설정 (최소 30초).
+- 긴 작업은 AWS Step Functions로 분리.
+- 비동기 처리 패턴 고려.
 
 **3. Agent 응답 오류**
 
-- Agent가 잘못된 함수를 호출하는 경우
-- 파라미터가 누락되거나 잘못된 경우
-- 프롬프트를 더 명확하게 수정
-- 함수 설명을 더 상세하게 작성
+- Agent가 잘못된 함수를 호출하는 경우.
+- 파라미터가 누락되거나 잘못된 경우.
+- 프롬프트를 더 명확하게 수정.
+- 함수 설명을 더 상세하게 작성.
 
 ### 고급 기능
 
@@ -1663,22 +1434,22 @@ for event in response.get('completion', []):
 
 **2. Trace 분석**
 
-- Agent의 사고 과정을 단계별로 확인
-- 어떤 함수를 호출했는지 추적
-- 프롬프트 최적화에 활용
-- 디버깅 및 문제 해결에 유용
+- Agent의 사고 과정을 단계별로 확인.
+- 어떤 함수를 호출했는지 추적.
+- 프롬프트 최적화에 활용.
+- 디버깅 및 문제 해결에 유용.
 
 **3. 멀티 Action Group**
 
-- 여러 AWS Lambda 함수를 Action Group으로 연결
-- 각 Action Group은 독립적인 기능 제공
-- 예: 예약 관리 + 메뉴 조회 + 리뷰 관리
+- 여러 AWS Lambda 함수를 Action Group으로 연결.
+- 각 Action Group은 독립적인 기능 제공.
+- 예: 예약 관리 + 메뉴 조회 + 리뷰 관리.
 
 **4. Knowledge Base 통합**
 
-- Action Group과 Knowledge Base 동시 사용
-- 문서 검색 + 실시간 작업 처리
-- RAG 기반 질의응답 + 트랜잭션 처리
+- Action Group과 Knowledge Base 동시 사용.
+- 문서 검색 + 실시간 작업 처리.
+- RAG 기반 질의응답 + 트랜잭션 처리.
 
 ### 최소 권한 정책 예시
 
@@ -1789,7 +1560,7 @@ paths:
                   type: string
                   format: date
                   description: 예약 날짜 (YYYY-MM-DD)
-                  example: '2024-02-15'
+                  example: '2026-02-15'
                 time:
                   type: string
                   description: 예약 시간 (HH:MM)
@@ -1859,11 +1630,11 @@ paths:
 
 **OpenAPI 스키마의 장점**
 
-- **표준화**: OpenAPI 3.0 표준 준수로 다른 도구와 호환
-- **재사용**: 기존 API 문서를 그대로 사용 가능
-- **검증**: 스키마 기반 자동 검증으로 오류 방지
-- **문서화**: API 문서가 자동으로 생성됨
-- **버전 관리**: Git으로 스키마 버전 관리 가능
+- **표준화**: OpenAPI 3.0 표준 준수로 다른 도구와 호환.
+- **재사용**: 기존 API 문서를 그대로 사용 가능.
+- **검증**: 스키마 기반 자동 검증으로 오류 방지.
+- **문서화**: API 문서가 자동으로 생성됨.
+- **버전 관리**: Git으로 스키마 버전 관리 가능.
 
 ### 문제 해결 가이드
 
@@ -1873,9 +1644,9 @@ paths:
 
 **원인**:
 
-- 함수 설명이 불명확하여 Agent가 언제 호출해야 할지 모름
-- 프롬프트에 함수 사용 지침이 부족함
-- 사용자 입력이 함수 호출 조건을 만족하지 않음
+- 함수 설명이 불명확하여 Agent가 언제 호출해야 할지 모름.
+- 프롬프트에 함수 사용 지침이 부족함.
+- 사용자 입력이 함수 호출 조건을 만족하지 않음.
 
 **해결**:
 
@@ -1890,9 +1661,9 @@ paths:
 
 **원인**:
 
-- AWS Lambda 함수가 잘못된 형식으로 응답을 반환함
-- JSON 직렬화 오류
-- 응답 구조가 Amazon Bedrock Agent 요구사항과 맞지 않음
+- AWS Lambda 함수가 잘못된 형식으로 응답을 반환함.
+- JSON 직렬화 오류.
+- 응답 구조가 Amazon Bedrock Agent 요구사항과 맞지 않음.
 
 **해결**:
 
@@ -1924,8 +1695,8 @@ return {
 
 **원인**:
 
-- Amazon Bedrock Agent에 AWS Lambda 함수 호출 권한이 없음
-- AWS Lambda 함수에 리소스 기반 정책이 설정되지 않음
+- Amazon Bedrock Agent에 AWS Lambda 함수 호출 권한이 없음.
+- AWS Lambda 함수에 리소스 기반 정책이 설정되지 않음.
 
 **해결**:
 
@@ -1950,9 +1721,9 @@ aws lambda add-permission \
 
 **원인**:
 
-- 문서 청킹이 적절하지 않음
-- 임베딩 모델이 한국어를 잘 지원하지 않음
-- 검색 쿼리가 모호함
+- 문서 청킹이 적절하지 않음.
+- 임베딩 모델이 한국어를 잘 지원하지 않음.
+- 검색 쿼리가 모호함.
 
 **해결**:
 
@@ -1967,10 +1738,10 @@ aws lambda add-permission \
 
 **원인**:
 
-- AWS Lambda 함수 콜드 스타트
-- Amazon DynamoDB 쿼리 최적화 부족
-- Knowledge Base 검색 시간
-- 프롬프트가 너무 길어 토큰 처리 시간 증가
+- AWS Lambda 함수 콜드 스타트.
+- Amazon DynamoDB 쿼리 최적화 부족.
+- Knowledge Base 검색 시간.
+- 프롬프트가 너무 길어 토큰 처리 시간 증가.
 
 **해결**:
 
@@ -1978,7 +1749,7 @@ aws lambda add-permission \
 - Amazon DynamoDB 테이블에 적절한 인덱스를 생성합니다.
 - Knowledge Base 검색 결과 수를 줄입니다 (기본 5개 → 3개).
 - 프롬프트를 간결하게 수정하여 토큰 수를 줄입니다.
-- 더 빠른 모델(Claude 3 Haiku)을 사용합니다.
+- 더 빠른 모델(Claude Haiku 4.5)을 사용합니다.
 
 ### 추가 모범 사례
 

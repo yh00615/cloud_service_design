@@ -46,7 +46,7 @@ prerequisites:
 2. 오른쪽 상단에서 현재 리전이 `Asia Pacific (Seoul) ap-northeast-2`인지 확인합니다.
 3. [[Create bucket]] 버튼을 클릭합니다.
 
-    <img src="/images/week2/2-1-task1-step2-region-check.png" alt="AWS 콘솔 리전 확인" class="guide-img-md" />
+<img src="/images/week2/2-1-task1-step2-region-check.png" alt="AWS 콘솔 리전 확인" class="guide-img-md" />
 
 4. **Bucket name**에 `iam-condition-lab-YOUR-INITIALS-12345`를 입력합니다.
 
@@ -66,12 +66,12 @@ prerequisites:
 | `Week`      | `2-1`     |
 | `CreatedBy` | `Student` |
 
-7. 페이지 하단의 [[Create bucket]] 버튼을 클릭합니다.
+7.  페이지 하단의 [[Create bucket]] 버튼을 클릭합니다.
+
+    <img src="/images/week2/2-1-task1-step8-bucket-region.png" alt="S3 버킷 생성 화면" class="guide-img-sm" />
 
 > [!NOTE]
 > 나머지 설정은 기본값을 유지합니다.
-
-    <img src="/images/week2/2-1-task1-step8-bucket-region.png" alt="S3 버킷 생성 화면" class="guide-img-sm" />
 
 > [!NOTE]
 > 버킷 생성은 즉시 완료되며 별도의 대기 시간이 없습니다. 버킷 목록 페이지로 자동 이동합니다.
@@ -165,57 +165,60 @@ prerequisites:
 
 16. **JSON** 탭을 선택합니다.
 17. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다:
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Sid": "AllowListBucketWithoutMFA",
-         "Effect": "Allow",
-         "Action": [
-           "s3:ListAllMyBuckets",
-           "s3:ListBucket",
-           "s3:GetBucketLocation"
-         ],
-         "Resource": "*"
-       },
-       {
-         "Sid": "AllowS3WriteWithMFA",
-         "Effect": "Allow",
-         "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
-         "Resource": "*",
-         "Condition": {
-           "BoolIfExists": {
-             "aws:MultiFactorAuthPresent": "true"
-           }
-         }
-       },
-       {
-         "Sid": "DenyS3ActionsWithoutMFA",
-         "Effect": "Deny",
-         "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
-         "Resource": "*",
-         "Condition": {
-           "BoolIfExists": {
-             "aws:MultiFactorAuthPresent": "false"
-           }
-         }
-       }
-     ]
-   }
-   ```
-   > [!NOTE]
-   > 이 정책은 버킷 목록 조회는 허용하고, 객체 업로드/삭제는 MFA 인증이 있을 때만 허용합니다. MFA 없이 쓰기 작업을 시도하면 Deny가 적용됩니다.
-   >
-   > **Allow와 Deny 구조 설명**:
-   >
-   > - **AllowListBucketWithoutMFA** Statement는 MFA 없이도 버킷 목록 조회를 허용합니다.
-   > - **AllowS3WriteWithMFA** Statement는 MFA가 있을 때 Amazon S3 쓰기 작업을 허용합니다. 이 Statement가 없으면 condition-test-user는 다른 Amazon S3 권한이 없으므로 MFA가 있어도 쓰기 작업을 수행할 수 없습니다.
-   > - **DenyS3ActionsWithoutMFA** Statement는 다른 정책에서 부여한 Amazon S3 권한도 MFA 없이는 차단합니다.
-   > - **Deny는 항상 Allow보다 우선**하므로, 다른 정책이 s3:\*를 허용하더라도 MFA 없이는 쓰기 작업이 차단됩니다.
-   > - 이 세 Statement를 함께 사용하면 "MFA가 있을 때만 Amazon S3 쓰기 작업이 가능하다"는 강력한 제한을 구현할 수 있습니다.
-   >
-   > **이 실습의 테스트 제한사항**: 태스크 8에서는 AWS IAM 사용자의 Access Key(장기 자격증명)를 사용하므로 `aws:MultiFactorAuthPresent` 키가 요청에 포함되지 않습니다. BoolIfExists는 키가 없을 때 조건을 true로 평가하지만, Deny Statement의 조건이 "false"를 요구하므로 결과적으로 Deny가 적용됩니다. 따라서 이 실습에서는 "MFA 없이 쓰기 차단"만 테스트하고, "MFA 있을 때 쓰기 허용"은 테스트하지 않습니다. MFA 있을 때의 동작을 테스트하려면 AWS STS GetSessionToken으로 임시 자격증명을 발급받거나, AWS 콘솔에 MFA 인증으로 로그인한 후 Amazon S3 콘솔에서 직접 파일을 업로드해야 합니다.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowListBucketWithoutMFA",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowS3WriteWithMFA",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
+      "Resource": "*",
+      "Condition": {
+        "BoolIfExists": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
+    },
+    {
+      "Sid": "DenyS3ActionsWithoutMFA",
+      "Effect": "Deny",
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:DeleteBucket"],
+      "Resource": "*",
+      "Condition": {
+        "BoolIfExists": {
+          "aws:MultiFactorAuthPresent": "false"
+        }
+      }
+    }
+  ]
+}
+```
+
+> [!NOTE]
+> 이 정책은 버킷 목록 조회는 허용하고, 객체 업로드/삭제는 MFA 인증이 있을 때만 허용합니다. MFA 없이 쓰기 작업을 시도하면 Deny가 적용됩니다.
+>
+> **Allow와 Deny 구조 설명**:
+>
+> - **AllowListBucketWithoutMFA** Statement는 MFA 없이도 버킷 목록 조회를 허용합니다.
+> - **AllowS3WriteWithMFA** Statement는 MFA가 있을 때 Amazon S3 쓰기 작업을 허용합니다. 이 Statement가 없으면 condition-test-user는 다른 Amazon S3 권한이 없으므로 MFA가 있어도 쓰기 작업을 수행할 수 없습니다.
+> - **DenyS3ActionsWithoutMFA** Statement는 다른 정책에서 부여한 Amazon S3 권한도 MFA 없이는 차단합니다.
+> - **Deny는 항상 Allow보다 우선**하므로, 다른 정책이 s3:\*를 허용하더라도 MFA 없이는 쓰기 작업이 차단됩니다.
+> - 이 세 Statement를 함께 사용하면 "MFA가 있을 때만 Amazon S3 쓰기 작업이 가능하다"는 강력한 제한을 구현할 수 있습니다.
+>
+> **이 실습의 테스트 제한사항**: 태스크 8에서는 AWS IAM 사용자의 Access Key(장기 자격증명)를 사용하므로 `aws:MultiFactorAuthPresent` 키가 요청에 포함되지 않습니다. BoolIfExists는 키가 없을 때 조건을 true로 평가하지만, Deny Statement의 조건이 "false"를 요구하므로 결과적으로 Deny가 적용됩니다. 따라서 이 실습에서는 "MFA 없이 쓰기 차단"만 테스트하고, "MFA 있을 때 쓰기 허용"은 테스트하지 않습니다. MFA 있을 때의 동작을 테스트하려면 AWS STS GetSessionToken으로 임시 자격증명을 발급받거나, AWS 콘솔에 MFA 인증으로 로그인한 후 Amazon S3 콘솔에서 직접 파일을 업로드해야 합니다.
+
 18. [[Next]] 버튼을 클릭합니다.
 
     <img src="/images/week2/2-1-task2-step6-next-button.png" alt="IAM 정책 JSON 입력 후 Next 버튼" class="guide-img-md" />
@@ -281,35 +284,35 @@ prerequisites:
 32. **JSON** 탭을 선택합니다.
 33. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다 (`YOUR_IP_ADDRESS`를 메모장의 IP로 변경):
 
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Sid": "AllowFromSpecificIP",
-         "Effect": "Allow",
-         "Action": "s3:*",
-         "Resource": "*",
-         "Condition": {
-           "IpAddress": {
-             "aws:SourceIp": ["YOUR_IP_ADDRESS/32"]
-           }
-         }
-       },
-       {
-         "Sid": "DenyFromOtherIPs",
-         "Effect": "Deny",
-         "Action": "s3:*",
-         "Resource": "*",
-         "Condition": {
-           "NotIpAddress": {
-             "aws:SourceIp": ["YOUR_IP_ADDRESS/32"]
-           }
-         }
-       }
-     ]
-   }
-   ```
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowFromSpecificIP",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": ["YOUR_IP_ADDRESS/32"]
+        }
+      }
+    },
+    {
+      "Sid": "DenyFromOtherIPs",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "NotIpAddress": {
+          "aws:SourceIp": ["YOUR_IP_ADDRESS/32"]
+        }
+      }
+    }
+  ]
+}
+```
 
 > [!IMPORTANT]
 > **필수 확인**: `YOUR_IP_ADDRESS`를 실제 IP 주소로 변경했는지 반드시 확인합니다. 플레이스홀더를 그대로 사용하면 모든 Amazon S3 접근이 차단됩니다.
@@ -390,49 +393,50 @@ prerequisites:
 40. [[Create policy]] 버튼을 다시 클릭합니다.
 41. **JSON** 탭을 선택합니다.
 42. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다 (`YYYY`를 현재 연도로 변경):
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Sid": "AllowDuringSpecificPeriod",
-         "Effect": "Allow",
-         "Action": "s3:*",
-         "Resource": "*",
-         "Condition": {
-           "DateGreaterThan": {
-             "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
-           },
-           "DateLessThan": {
-             "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
-           }
-         }
-       },
-       {
-         "Sid": "DenyOutsideSpecificPeriod",
-         "Effect": "Deny",
-         "Action": "s3:*",
-         "Resource": "*",
-         "Condition": {
-           "DateLessThan": {
-             "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
-           }
-         }
-       },
-       {
-         "Sid": "DenyAfterSpecificPeriod",
-         "Effect": "Deny",
-         "Action": "s3:*",
-         "Resource": "*",
-         "Condition": {
-           "DateGreaterThan": {
-             "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
-           }
-         }
-       }
-     ]
-   }
-   ```
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowDuringSpecificPeriod",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "DateGreaterThan": {
+          "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
+        },
+        "DateLessThan": {
+          "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
+        }
+      }
+    },
+    {
+      "Sid": "DenyOutsideSpecificPeriod",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "DateLessThan": {
+          "aws:CurrentTime": "YYYY-01-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "Sid": "DenyAfterSpecificPeriod",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "*",
+      "Condition": {
+        "DateGreaterThan": {
+          "aws:CurrentTime": "YYYY-12-31T23:59:59Z"
+        }
+      }
+    }
+  ]
+}
+```
 
 > [!IMPORTANT]
 > **필수 확인**: `YYYY`를 현재 연도로 변경했는지 반드시 확인합니다. 플레이스홀더를 그대로 사용하면 정책이 작동하지 않습니다.
@@ -493,30 +497,31 @@ prerequisites:
 49. [[Create policy]] 버튼을 다시 클릭합니다.
 50. **JSON** 탭을 선택합니다.
 51. 기존 정책 코드를 모두 삭제한 후 다음 정책을 입력합니다.(`YOUR_IP_ADDRESS`를 실제 IP로 변경):
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Sid": "AllowS3WithMultipleConditions",
-         "Effect": "Allow",
-         "Action": "s3:PutObject",
-         "Resource": "arn:aws:s3:::iam-condition-lab-*/*",
-         "Condition": {
-           "StringEquals": {
-             "s3:x-amz-server-side-encryption": "AES256"
-           },
-           "IpAddress": {
-             "aws:SourceIp": "YOUR_IP_ADDRESS/32"
-           },
-           "BoolIfExists": {
-             "aws:MultiFactorAuthPresent": "true"
-           }
-         }
-       }
-     ]
-   }
-   ```
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowS3WithMultipleConditions",
+      "Effect": "Allow",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::iam-condition-lab-*/*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-server-side-encryption": "AES256"
+        },
+        "IpAddress": {
+          "aws:SourceIp": "YOUR_IP_ADDRESS/32"
+        },
+        "BoolIfExists": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
+    }
+  ]
+}
+```
 
 > [!IMPORTANT]
 > **필수 확인**: `YOUR_IP_ADDRESS`를 실제 IP 주소로 변경했는지 반드시 확인합니다. 현재 IP는 `https://checkip.amazonaws.com`에서 확인할 수 있습니다.
@@ -703,7 +708,8 @@ aws configure --profile condition-test
     - **AWS Access Key ID**: 메모장에 저장한 Access Key 입력
     - **AWS Secret Access Key**: 메모장에 저장한 Secret Access Key 입력
     - **Default region name**: `ap-northeast-2` 입력
-   - **Default output format**: `json` 입력
+
+- **Default output format**: `json` 입력
 
     <img src="/images/week2/2-1-task7-step3-configure-profile.png" alt="AWS CLI 프로파일 구성 프롬프트" class="guide-img-md" />
 
@@ -770,7 +776,7 @@ aws s3 cp test.txt s3://iam-condition-lab-YOUR-INITIALS-12345/ --profile conditi
 > [!IMPORTANT]
 > **AccessDenied** 오류가 나와야 정상입니다. 이는 S3MFARequiredPolicy의 DenyS3ActionsWithoutMFA Statement가 MFA 없는 쓰기 작업을 차단했음을 의미합니다. 오류 메시지에 "with an explicit deny in an identity-based policy"라고 표시되어 정책의 Deny Statement가 작동했음을 확인할 수 있습니다.
 
-    <img src="/images/week2/2-1-task7-step4-upload-denied.png" alt="MFA 없이 S3 업로드 시도 시 AccessDenied 오류" class="guide-img-md" />
+  <img src="/images/week2/2-1-task7-step4-upload-denied.png" alt="MFA 없이 S3 업로드 시도 시 AccessDenied 오류" class="guide-img-md" />
 
 97. 버킷에서 객체 삭제를 시도합니다 (실패 예상):
 
@@ -784,7 +790,7 @@ aws s3 rm s3://iam-condition-lab-YOUR-INITIALS-12345/test.txt --profile conditio
 > delete failed: s3://iam-condition-lab-demo-12345/test.txt An error occurred (AccessDenied) when calling the DeleteObject operation: User: arn:aws:iam::123456789012:user/condition-test-user is not authorized to perform: s3:DeleteObject on resource: "arn:aws:s3:::iam-condition-lab-demo-12345/test.txt" with an explicit deny in an identity-based policy
 > ```
 
-    <img src="/images/week2/2-1-task7-step5-delete-denied.png" alt="MFA 없이 S3 삭제 시도 시 AccessDenied 오류" class="guide-img-md" />
+  <img src="/images/week2/2-1-task7-step5-delete-denied.png" alt="MFA 없이 S3 삭제 시도 시 AccessDenied 오류" class="guide-img-md" />
 
 > [!NOTE]
 > 삭제 작업도 MFA 없이는 차단됩니다.
@@ -813,23 +819,23 @@ aws s3 rm s3://iam-condition-lab-YOUR-INITIALS-12345/test.txt --profile conditio
 
 98. AWS IAM 콘솔로 이동합니다.
 99. 왼쪽 메뉴에서 **Users**를 선택합니다.
-100. 사용자 목록에서 `condition-test-user`를 검색합니다.
-101. `condition-test-user`를 클릭합니다.
-102. **Permissions** 탭을 선택합니다.
-103. [[Add permissions]] 드롭다운 버튼을 클릭합니다.
-104. 드롭다운 메뉴에서 `Add permissions`를 선택합니다.
-     <img src="/images/week2/2-1-task8-step7-add-permissions.png" alt="Add permissions 드롭다운 메뉴" class="guide-img-md" />
+100.  사용자 목록에서 `condition-test-user`를 검색합니다.
+101.  `condition-test-user`를 클릭합니다.
+102.  **Permissions** 탭을 선택합니다.
+103.  [[Add permissions]] 드롭다운 버튼을 클릭합니다.
+104.  드롭다운 메뉴에서 `Add permissions`를 선택합니다.
+      <img src="/images/week2/2-1-task8-step7-add-permissions.png" alt="Add permissions 드롭다운 메뉴" class="guide-img-md" />
 
-105. **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
-106. **Permissions policies** 섹션으로 스크롤합니다.
-107. 정책 검색창에 `S3IPRestrictionPolicy`를 입력합니다.
-108. `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
-109. [[Next]] 버튼을 클릭합니다.
-     <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 선택 후 Next 버튼" class="guide-img-md" />
+105.  **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
+106.  **Permissions policies** 섹션으로 스크롤합니다.
+107.  정책 검색창에 `S3IPRestrictionPolicy`를 입력합니다.
+108.  `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
+109.  [[Next]] 버튼을 클릭합니다.
+      <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 선택 후 Next 버튼" class="guide-img-md" />
 
-110. [[Add permissions]] 버튼을 클릭합니다.
-     <img src="/images/week2/2-1-task8-step13-add-permissions.png" alt="Add permissions 버튼" class="guide-img-md" />
-     <img src="/images/week2/2-1-task8-step13-add-permissions-2.png" alt="정책 연결 완료 화면" class="guide-img-md" />
+110.  [[Add permissions]] 버튼을 클릭합니다.
+      <img src="/images/week2/2-1-task8-step13-add-permissions.png" alt="Add permissions 버튼" class="guide-img-md" />
+      <img src="/images/week2/2-1-task8-step13-add-permissions-2.png" alt="정책 연결 완료 화면" class="guide-img-md" />
 
 > [!NOTE]
 > 이제 condition-test-user에는 S3MFARequiredPolicy와 S3IPRestrictionPolicy 두 개의 정책이 연결되어 있습니다.
@@ -938,7 +944,7 @@ aws s3 ls --profile condition-test
 > YYYY-MM-DD HH:MM:SS iam-condition-lab-[이니셜]-[숫자]
 > ```
 
-     <img src="/images/week2/2-1-task8-step16-bucket-list.png" alt="CloudShell IP 추가 후 버킷 목록 조회 성공" class="guide-img-md" />
+  <img src="/images/week2/2-1-task8-step16-bucket-list.png" alt="CloudShell IP 추가 후 버킷 목록 조회 성공" class="guide-img-md" />
 
 > [!NOTE]
 > 현재 IP가 태스크 3에서 허용 목록에 추가되었으므로 접근이 성공합니다.
@@ -1002,8 +1008,8 @@ aws s3 ls --profile condition-test
 
 4. **Resource types**에서 `All supported resource types`를 선택합니다.
 5. **Tags** 섹션에서 다음을 입력합니다:
-    - **Tag key**: `Week`
-    - **Tag value**: `2-1`
+   - **Tag key**: `Week`
+   - **Tag value**: `2-1`
 6. [[Search resources]] 버튼을 클릭합니다.
 
 > [!OUTPUT]

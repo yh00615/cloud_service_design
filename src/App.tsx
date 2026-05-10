@@ -28,10 +28,24 @@ function AppContent() {
   const navigate = useNavigate();
   const [currentPath, setCurrentPath] = useState(location.pathname);
 
-  // 페이지 이동 시 스크롤을 상단으로 이동
+  // 페이지 이동 시 스크롤 처리
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    if (location.hash) {
+      // 해시 앵커가 있으면 해당 요소로 스크롤 (고정 헤더 높이 보정)
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.slice(1));
+        if (element) {
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     setCurrentPath(location.pathname);

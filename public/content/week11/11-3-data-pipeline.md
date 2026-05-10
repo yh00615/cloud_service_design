@@ -1152,6 +1152,19 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 67. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
 68. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
+### 단계 5: AWS Glue Assets 버킷 삭제 (선택)
+
+AWS Glue ETL Job을 실행하면 `aws-glue-assets-{AccountId}-{Region}` 형태의 Amazon S3 버킷이 자동으로 생성됩니다 (예: `aws-glue-assets-123456789012-ap-northeast-2`). 이 버킷은 AWS Glue 스크립트와 Spark UI 로그를 저장합니다.
+
+> [!NOTE]
+> 이 버킷은 다른 AWS Glue 작업에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS Glue를 사용하지 않는 경우에만 삭제합니다.
+
+69. Amazon S3 콘솔에서 `aws-glue-assets-`로 시작하는 버킷을 찾습니다.
+70. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+71. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+72. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+73. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+
 ## 추가 학습 리소스
 
 - [AWS Glue 개발자 가이드](https://docs.aws.amazon.com/ko_kr/glue/latest/dg/what-is-glue.html)
