@@ -24,13 +24,13 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 >
 > **기본 키 구성**:
 >
-> - **파티션 키(Partition Key)**: 데이터를 분산 저장하는 기준입니다. 높은 카디널리티(고유값이 많은)를 가진 속성을 선택합니다
-> - **정렬 키(Sort Key)**: 같은 파티션 내에서 데이터를 정렬합니다. 범위 쿼리(between, begins_with)가 가능합니다
+> - **파티션 키(Partition Key)**: 데이터를 분산 저장하는 기준입니다. 높은 카디널리티(고유값이 많은)를 가진 속성을 선택합니다.
+> - **정렬 키(Sort Key)**: 같은 파티션 내에서 데이터를 정렬합니다. 범위 쿼리(between, begins_with)가 가능합니다.
 >
 > **보조 인덱스**:
 >
-> - **LSI(Local Secondary Index)**: 같은 파티션 키 + 다른 정렬 키. 테이블 생성 시에만 추가 가능합니다
-> - **GSI(Global Secondary Index)**: 다른 파티션 키 + 다른 정렬 키. 테이블 생성 후에도 추가/삭제 가능합니다
+> - **LSI(Local Secondary Index)**: 같은 파티션 키 + 다른 정렬 키. 테이블 생성 시에만 추가 가능합니다.
+> - **GSI(Global Secondary Index)**: 다른 파티션 키 + 다른 정렬 키. 테이블 생성 후에도 추가/삭제 가능합니다.
 
 > [!DOWNLOAD]
 > [week5-3-dynamodb-lab.zip](/files/week5/week5-3-dynamodb-lab.zip)
@@ -54,9 +54,12 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 1. AWS Management Console에 로그인한 후 상단 검색창에 `DynamoDB`을 입력하고 선택합니다.
 2. 왼쪽 메뉴에서 **Tables**를 선택합니다.
 3. [[Create table]] 버튼을 클릭합니다.
+   <img src="/images/week5/5-3-task1-step3-console.png" alt="Create table 버튼 클릭" class="guide-img-md" />
+
 4. **Table name**에 `QuickTableReservations`를 입력합니다.
 5. **Partition key**에 `userId`를 입력한 후 타입에서 `String`을 선택합니다.
 6. **Sort key**에 `reservationId`를 입력한 후 타입에서 `String`을 선택합니다.
+   <img src="/images/week5/5-3-task1-step6-keys.png" alt="Partition key와 Sort key 설정" class="guide-img-md" />
 
 > [!NOTE]
 > 2025년 기준 Amazon DynamoDB 콘솔에서는 Sort key 입력 필드가 기본적으로 표시됩니다.
@@ -68,6 +71,8 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 > Default settings를 선택하면 LSI를 추가할 수 없습니다. LSI는 테이블 생성 시에만 추가 가능하므로 반드시 Customize settings를 선택합니다.
 
 8. **Table class**에서 `DynamoDB Standard`를 선택합니다 (기본값).
+   <img src="/images/week5/5-3-task1-step8-customize.png" alt="Customize settings 선택" class="guide-img-md" />
+
 9. **Read/write capacity settings**에서 **Capacity mode**를 `On-demand`로 선택합니다.
 10. **Secondary indexes** 섹션에서 [[Create local index]] 버튼을 클릭합니다.
 
@@ -75,7 +80,7 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 > LSI(Local Secondary Index)는 테이블 생성 시에만 추가할 수 있습니다. 테이블 생성 후에는 LSI를 추가하거나 삭제할 수 없습니다.
 
 11. **Sort key**에 `date`를 입력한 후 타입에서 `String`을 선택합니다.
-12. **Index name**이 `userId-date-index`로 자동 생성되었는지 확인합니다.
+12. **Index name**이 `date-index`로 자동 생성되었는지 확인합니다.
 
 > [!NOTE]
 > Index name은 파티션 키와 정렬 키를 조합하여 자동으로 생성됩니다.
@@ -83,12 +88,16 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 
 13. **Attribute projections**에서 `All`을 선택합니다.
 14. [[Create index]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task1-step14-create-1.png" alt="Create index 클릭" class="guide-img-md" />
+    <img src="/images/week5/5-3-task1-step14-create-2.png" alt="인덱스 생성 완료" class="guide-img-md" />
 
 > [!NOTE]
 > Attribute projections의 `All`은 모든 속성을 인덱스에 포함합니다. 이렇게 하면 인덱스 쿼리 시 추가 읽기 없이 모든 데이터를 가져올 수 있습니다.
 
 15. **Encryption at rest**에서 `AWS owned key`를 선택합니다 (기본값).
 16. **Deletion protection**은 체크하지 않습니다 (기본값).
+    <img src="/images/week5/5-3-task1-step16-tags.png" alt="Deletion protection 및 Tags 설정" class="guide-img-md" />
+
 17. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
@@ -98,9 +107,12 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 | `CreatedBy` | `Student` |
 
 18. [[Create table]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task1-step18-create-table.png" alt="Create table 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > 테이블 생성에 1-2분이 소요됩니다. 상태가 "Active"로 변경될 때까지 기다립니다.
+>
+> <img src="/images/week5/5-3-task1-step18-active.png" alt="테이블 Active 상태 확인" class="guide-img-md" />
 
 ✅ **태스크 완료**: Amazon DynamoDB 테이블과 LSI가 생성되었습니다.
 
@@ -127,7 +139,10 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 19. 다운로드한 `week5-3-dynamodb-lab.zip` 파일의 압축을 해제합니다.
 20. AWS Management Console 왼쪽 하단의 CloudShell 아이콘을 클릭합니다.
 21. AWS CloudShell 우측 상단의 **Actions** > **Upload file**을 선택합니다.
+    <img src="/images/week5/5-3-task2-step21-cloudshell.png" alt="CloudShell Actions Upload file" class="guide-img-sm" />
+
 22. `sample_reservations.json` 파일을 선택하여 업로드합니다.
+    <img src="/images/week5/5-3-task2-step22-batch-write.png" alt="CloudShell 파일 업로드" class="guide-img-md" />
 
 > [!NOTE]
 > CloudShell에 파일이 업로드되면 홈 디렉토리에 저장됩니다.
@@ -145,6 +160,8 @@ LSI(Local Secondary Index)와 GSI(Global Secondary Index)를 모두 생성하여
 ```bash
 aws dynamodb batch-write-item --request-items file://sample_reservations.json
 ```
+
+<img src="/images/week5/5-3-task2-step23-batch-write.png" alt="batch-write-item 실행 결과" class="guide-img-md" />
 
 > [!NOTE]
 > `batch-write-item` 명령어는 한 번에 최대 25개 항목을 처리할 수 있습니다.
@@ -171,6 +188,8 @@ aws dynamodb batch-write-item --request-items file://sample_reservations.json
 aws dynamodb scan --table-name QuickTableReservations --select COUNT --region ap-northeast-2
 ```
 
+<img src="/images/week5/5-3-task2-step24-scan.png" alt="scan COUNT 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -183,8 +202,11 @@ aws dynamodb scan --table-name QuickTableReservations --select COUNT --region ap
 25. Amazon DynamoDB 콘솔로 이동합니다.
 26. `QuickTableReservations` 테이블을 선택합니다.
 27. **Explore table items** 탭을 선택합니다.
+    <img src="/images/week5/5-3-task2-step27-items.png" alt="Explore table items 탭" class="guide-img-md" />
+
 28. **Scan or query items** 섹션에서 `Scan`을 선택합니다.
 29. [[Run]] 버튼을 클릭하여 모든 항목을 확인합니다.
+    <img src="/images/week5/5-3-task2-step29-item-detail.png" alt="Scan 결과 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 10개의 예약 항목이 표시됩니다. 이 데이터는 다음 태스크에서 쿼리 및 GSI 테스트에 사용됩니다.
@@ -192,8 +214,8 @@ aws dynamodb scan --table-name QuickTableReservations --select COUNT --region ap
 Scan 작업은 테이블의 모든 항목을 읽어오므로 주의가 필요합니다.
 
 > [!WARNING]
-> **Scan 사용 주의사항**: Scan은 테이블의 모든 항목을 읽어오므로 대용량 테이블에서는 비용이 많이 발생하고 성능이 저하됩니다.
-> 프로덕션 환경에서는 Query를 사용하여 파티션 키로 데이터를 조회하는 것을 권장합니다.
+> **Scan 사용 주의사항**: Scan은 테이블의 모든 항목을 읽어오므로 대용량 테이블에서는 비용이 많이 발생하고 성능이 저하됩니다.  
+> 프로덕션 환경에서는 Query를 사용하여 파티션 키로 데이터를 조회하는 것을 권장합니다.  
 > 이 실습에서는 소량의 데이터(10개)를 확인하기 위해 Scan을 사용합니다.
 
 ### 태스크 2.2: 콘솔에서 수동 입력 (선택사항)
@@ -226,6 +248,7 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 49. [[Add new attribute]] 버튼을 클릭합니다.
 50. **String**을 선택한 후 속성 이름에 `createdAt`, 값에 `2026-02-15T10:30:00.123456`을 입력합니다.
 51. [[Create item]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task5-step51-gsi.png" alt="Create item 클릭" class="guide-img-md" />
 
 > [!TIP]
 > 콘솔에서 항목을 입력할 때 우측 상단의 **JSON view** 버튼을 클릭하면 JSON 형식으로 직접 입력할 수 있습니다.
@@ -247,6 +270,8 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 > }
 > ```
 >
+> <img src="/images/week5/5-3-task2-step51-json-view.png" alt="일반 JSON view" class="guide-img-sm" />
+>
 > **DynamoDB JSON** (`View DynamoDB JSON` 토글 ON):
 >
 > ```json
@@ -264,6 +289,8 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 > }
 > ```
 >
+> <img src="/images/week5/5-3-task2-step51-dynamodb-json.png" alt="DynamoDB JSON view" class="guide-img-sm" />
+>
 > `sample_reservations.json` 파일에서 항목의 JSON을 복사하여 붙여넣으면 더 빠르게 입력할 수 있습니다.
 
 > [!NOTE]
@@ -280,6 +307,7 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 53. **Scan or query items** 섹션에서 `Query`를 선택합니다.
 54. **Partition key**에 `user-001`을 입력합니다.
 55. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task3-step55-query.png" alt="Query 결과 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 > user-001 사용자의 모든 예약(3개)이 표시됩니다.
@@ -289,6 +317,7 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 56. **Sort key** 섹션의 조건 드롭다운에서 `Equal to`를 선택합니다 (기본값).
 57. 값 입력 필드에 `res-20260315-001`을 입력합니다.
 58. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task3-step58-sortkey-query.png" alt="Sort key 조건 Query 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > 특정 예약 1개만 표시됩니다.
@@ -300,18 +329,20 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 이 태스크에서는 태스크 1에서 생성한 LSI(Local Secondary Index)를 사용하여 특정 사용자의 날짜 범위 예약을 조회합니다. LSI는 동일한 파티션 키(userId)를 사용하되, 다른 정렬 키(date)로 데이터를 정렬하여 날짜 기반 쿼리를 효율적으로 지원합니다.
 
 > [!NOTE]
-> 태스크 3에서 Sort key 조건을 추가한 경우, 이번 태스크를 시작하기 전에 조건을 초기화해야 합니다.
-> 페이지를 새로고침하거나 **Scan or query items** 섹션에서 `Scan`을 선택한 후 다시 `Query`를 선택하면 모든 조건이 초기화됩니다.
+> 태스크 3에서 Sort key 조건을 추가한 경우, 이번 태스크를 시작하기 전에 조건을 초기화해야 합니다.  
+> [[Run]] 버튼 옆의 [[Reset]] 버튼을 클릭하면 Scan 모드로 초기화됩니다. 이후 다시 `Query`를 선택합니다.
 
 59. **Explore table items** 탭을 선택합니다.
 60. **Scan or query items** 섹션에서 `Query`를 선택합니다.
-61. **Select a table or index** 드롭다운을 클릭하고 **Index** 섹션에서 `userId-date-index`를 선택합니다.
+61. **Select a table or index** 드롭다운을 클릭하고 **Index** 섹션에서 `date-index`를 선택합니다.
+    <img src="/images/week5/5-3-task4-step61-lsi-query.png" alt="LSI date-index 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 인덱스를 선택하면 Partition key가 `userId`, Sort key가 `date`로 자동 변경됩니다. LSI는 동일한 파티션 키(userId)를 사용하되, 정렬 키만 `reservationId`에서 `date`로 바뀝니다.
 
 62. **Partition key** (userId)에 `user-001`을 입력합니다.
 63. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task4-step63-lsi-result.png" alt="LSI 쿼리 결과 - 날짜순 정렬" class="guide-img-md" />
 
 > [!OUTPUT]
 > user-001 사용자의 모든 예약이 날짜 순서로 정렬되어 표시됩니다.
@@ -320,6 +351,7 @@ AWS CLI를 사용할 수 없는 경우 콘솔에서 수동으로 입력할 수 �
 65. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
 66. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
 67. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task4-step67-between-query.png" alt="Between 조건 쿼리 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > user-001 사용자의 2026년 3월 예약만 날짜 순서로 표시됩니다.
@@ -338,6 +370,8 @@ LSI는 동일한 파티션 키를 사용하므로 특정 사용자의 데이터�
 
 68. `QuickTableReservations` 테이블 상세 페이지에서 **Indexes** 탭을 선택합니다.
 69. **Global secondary indexes** 섹션에서 [[Create index]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task5-step69-gsi-create.png" alt="Create index 버튼 클릭" class="guide-img-md" />
+
 70. **Index name**에 `restaurantId-date-index`를 입력합니다.
 71. **Partition key**에 `restaurantId`를 입력한 후 타입에서 `String`을 선택합니다.
 72. **Sort key**에 `date`를 입력한 후 타입에서 `String`을 선택합니다.
@@ -347,9 +381,12 @@ LSI는 동일한 파티션 키를 사용하므로 특정 사용자의 데이터�
 > Index capacity는 테이블의 On-demand 모드를 따르므로 별도 설정이 필요 없습니다.
 
 74. [[Create index]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task5-step74-gsi-creating.png" alt="GSI 생성 진행 중" class="guide-img-md" />
 
 > [!NOTE]
-> GSI 생성에 1-2분이 소요됩니다. 상태가 "Active"로 변경될 때까지 기다립니다.
+> GSI 생성에 5-10분이 소요됩니다. 상태가 "Active"로 변경될 때까지 기다립니다.
+>
+> <img src="/images/week5/5-3-task5-step74-gsi-active.png" alt="GSI Active 상태 확인" class="guide-img-md" />
 
 GSI는 테이블 생성 후에도 유연하게 관리할 수 있습니다.
 
@@ -365,12 +402,14 @@ GSI는 테이블 생성 후에도 유연하게 관리할 수 있습니다.
 75. **Explore table items** 탭을 선택합니다.
 76. **Scan or query items** 섹션에서 `Query`를 선택합니다.
 77. **Select a table or index** 드롭다운을 클릭하고 **Index** 섹션에서 `restaurantId-date-index`를 선택합니다.
+    <img src="/images/week5/5-3-task6-step77-gsi-query.png" alt="GSI restaurantId-date-index 선택" class="guide-img-md" />
 
 > [!NOTE]
 > GSI를 선택하면 Partition key가 `restaurantId`, Sort key가 `date`로 자동 변경됩니다.
 
 78. **Partition key** (restaurantId)에 `restaurant-001`을 입력합니다.
 79. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task6-step79-gsi-result.png" alt="GSI 쿼리 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > restaurant-001 레스토랑의 모든 예약이 표시됩니다.
@@ -379,6 +418,7 @@ GSI는 테이블 생성 후에도 유연하게 관리할 수 있습니다.
 81. 시작 값 입력 필드에 `2026-03-01`을 입력합니다.
 82. 종료 값 입력 필드에 `2026-03-31`을 입력합니다.
 83. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task6-step83-gsi-between.png" alt="GSI Between 조건 쿼리 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > 2026년 3월의 restaurant-001 예약만 표시됩니다.
@@ -400,13 +440,18 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 
 > [!TIP]
 > 이전 태스크에서 인덱스를 선택한 상태라면 **Select a table or index** 드롭다운에서 **Table** 섹션의 `QuickTableReservations`를 선택하여 기본 테이블로 변경합니다.
+>
+> <img src="/images/week5/5-3-task6-step85-filter.png" alt="기본 테이블 선택" class="guide-img-sm" />
 
 86. **Partition key**에 `user-002`를 입력합니다.
 87. **Sort key** 섹션의 조건 드롭다운에서 `Equal to`를 선택합니다 (기본값).
 88. 값 입력 필드에 `res-20260318-001`을 입력합니다.
 89. [[Run]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task7-step89-query-item.png" alt="항목 조회 결과" class="guide-img-md" />
+
 90. 조회된 항목의 체크박스를 선택합니다.
 91. [[Actions]] 드롭다운에서 `Edit item`을 선택합니다.
+    <img src="/images/week5/5-3-task7-step91-edit-item.png" alt="Edit item 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 항목 편집 화면이 열립니다. 여기서 속성 값을 직접 수정할 수 있습니다.
@@ -414,6 +459,8 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 92. **status** 속성의 값 필드를 클릭합니다.
 93. 값을 `pending`에서 `confirmed`로 변경합니다.
 94. [[Save and close]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-task7-step94-save.png" alt="Save and close 클릭" class="guide-img-md" />
+    <img src="/images/week5/5-3-task7-step94-save-2.png" alt="항목 업데이트 완료" class="guide-img-md" />
 
 > [!NOTE]
 > user-002 사용자의 res-20260318-001 예약 상태를 pending에서 confirmed로 변경했습니다.
@@ -451,6 +498,7 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
    - **Tag key**: `Week`
    - **Tag value**: `5-3`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week5/5-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > 이 실습에서 생성한 Amazon DynamoDB 테이블이 표시됩니다.
@@ -475,11 +523,12 @@ GSI는 다른 파티션 키를 사용하여 더 유연한 쿼리가 가능합니
 
 7. Amazon DynamoDB 콘솔로 이동합니다.
 8. 왼쪽 메뉴에서 **Tables**를 선택합니다.
-9. `QuickTableReservations` 테이블을 선택합니다.
-10. **Actions** > `Delete table`을 선택합니다.
+9. `QuickTableReservations` 테이블의 체크박스를 선택합니다.
+10. 상단의 [[Delete]] 버튼을 클릭합니다.
 11. `Delete all CloudWatch alarms for QuickTableReservations` 체크박스가 선택되어 있는지 확인합니다.
 12. 확인 입력 필드에 `confirm`을 입력합니다.
 13. [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-cleanup-step13-delete-table.png" alt="Delete 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > Amazon DynamoDB 테이블 삭제는 즉시 완료됩니다. 모든 GSI와 LSI도 함께 삭제됩니다.
@@ -501,8 +550,20 @@ aws dynamodb delete-table \
   --table-name QuickTableReservations
 ```
 
+<img src="/images/week5/5-3-cleanup-step15-cli-delete.png" alt="CLI 테이블 삭제 결과" class="guide-img-md" />
+
 > [!NOTE]
 > 성공하면 테이블 정보가 JSON으로 출력됩니다. "ResourceNotFoundException" 오류가 나오면 이미 삭제된 것입니다.
+
+> [!TIP] CLI로 삭제 확인
+> CloudShell에서 다음 명령어로 테이블이 삭제되었는지 확인할 수 있습니다:
+>
+> ```bash
+> # 테이블 목록에서 확인
+> aws dynamodb list-tables --region ap-northeast-2 --query "TableNames[?contains(@, 'QuickTable')]"
+> ```
+>
+> 빈 배열 `[]`이 출력되면 삭제 완료입니다.
 
 ---
 
@@ -518,6 +579,7 @@ aws dynamodb delete-table \
     - **Tag key**: `Week`
     - **Tag value**: `5-3`
 21. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week5/5-3-cleanup-step21-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -619,13 +681,13 @@ QuickTable 레스토랑 예약 시스템을 위한 Amazon DynamoDB 테이블을 
 → userId = "user-001" AND reservationId = "res-20260315-001"
 
 쿼리: "user-001의 2026년 3월 예약 조회 (LSI 사용)"
-→ Index: userId-date-index
+→ Index: date-index
 → userId = "user-001" AND date BETWEEN "2026-03-01" AND "2026-03-31"
 ```
 
 > [!NOTE]
 > reservationId는 `res-20260315-001` 형식으로 날짜 뒤에 시퀀스 번호가 붙습니다.
-> 날짜 기반 범위 쿼리는 LSI(userId-date-index)를 사용하는 것이 정확합니다.
+> 날짜 기반 범위 쿼리는 LSI(date-index)를 사용하는 것이 정확합니다.
 
 ### GSI(Global Secondary Index) 설계
 
