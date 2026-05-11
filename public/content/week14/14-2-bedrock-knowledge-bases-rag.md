@@ -631,7 +631,35 @@ aws s3 rb s3://quicktable-kb-documents-${STUDENT_ID}
 > `STUDENT_ID`를 본인 학번으로 변경합니다.  
 > 삭제를 확인하려면 `aws s3 ls | grep quicktable-kb`를 실행합니다. 출력이 없으면 삭제 완료입니다.
 
-12. 옵션 1 완료 후 아래 **단계 3: 삭제 확인**으로 이동합니다.
+12. AWS IAM 역할을 삭제합니다:
+
+```bash
+# Knowledge Base 서비스 역할 삭제
+KB_ROLE=$(aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForKnowledgeBase_')].RoleName" --output text)
+if [ -n "${KB_ROLE}" ]; then
+  POLICIES=$(aws iam list-attached-role-policies --role-name ${KB_ROLE} --query "AttachedPolicies[*].PolicyArn" --output text)
+  for POLICY in ${POLICIES}; do
+    aws iam detach-role-policy --role-name ${KB_ROLE} --policy-arn ${POLICY}
+  done
+  INLINE=$(aws iam list-role-policies --role-name ${KB_ROLE} --query "PolicyNames" --output text)
+  for P in ${INLINE}; do
+    aws iam delete-role-policy --role-name ${KB_ROLE} --policy-name ${P}
+  done
+  aws iam delete-role --role-name ${KB_ROLE}
+  echo "Deleted: ${KB_ROLE}"
+fi
+```
+
+> [!NOTE]
+> 삭제를 확인하려면 다음 명령어를 실행합니다:
+>
+> ```bash
+> aws iam list-roles --query "Roles[?starts_with(RoleName,'AmazonBedrockExecutionRoleForKnowledgeBase_')].RoleName" --output text
+> ```
+>
+> 출력이 없으면 삭제 완료입니다.
+
+13. 옵션 1 완료 후 아래 **단계 3: 삭제 확인**으로 이동합니다.
 
 #### 옵션 2: AWS 콘솔에서 삭제
 
@@ -732,18 +760,30 @@ aws s3 rb s3://quicktable-kb-documents-${STUDENT_ID}
 43. 버킷 이름을 입력합니다.
 44. [[Delete bucket]] 버튼을 클릭합니다.
 
+**AWS IAM 역할 삭제**
+
+45. 상단 검색창에 `IAM`을 입력하고 선택합니다.
+46. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+47. 검색창에 `KnowledgeBase`를 입력합니다.
+48. `AmazonBedrockExecutionRoleForKnowledgeBase_` 로 시작하는 역할을 선택합니다.
+49. [[Delete]] 버튼을 클릭합니다.
+50. 확인 창에서 역할 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
+
+> [!NOTE]
+> Knowledge Base 생성 시 자동으로 생성된 IAM 역할입니다. Knowledge Base를 삭제해도 이 역할은 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
+
 ### 단계 3: 삭제 확인
 
-45. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-46. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-47. **Regions**에서 `ap-northeast-2`를 선택합니다.
-48. **Resource types**에서 `All supported resource types`를 선택합니다.
-49. **Tags** 섹션에서 다음을 입력합니다:
+51. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+52. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+53. **Regions**에서 `ap-northeast-2`를 선택합니다.
+54. **Resource types**에서 `All supported resource types`를 선택합니다.
+55. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `14-2`
-50. [[Search resources]] 버튼을 클릭합니다.
+56. [[Search resources]] 버튼을 클릭합니다.
 
-    <img src="/images/week14/14-2-cleanup-step50-verify.png" alt="삭제 확인 검색 결과" class="guide-img-md" />
+    <img src="/images/week14/14-2-cleanup-step56-verify.png" alt="삭제 확인 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.  
