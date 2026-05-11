@@ -33,7 +33,8 @@ prerequisites:
 
 ## 태스크 1: 스택 생성 (CREATE) - Amazon S3 버킷 스택
 
-이 태스크에서는 간단한 Amazon S3 버킷 템플릿을 사용하여 AWS CloudFormation 스택을 생성합니다. 스택 생성 과정에서 상태 변화(CREATE_IN_PROGRESS → CREATE_COMPLETE)를 관찰하고, 생성된 리소스를 확인합니다.
+이 태스크에서는 간단한 Amazon S3 버킷 템플릿을 사용하여 AWS CloudFormation 스택을 생성합니다.  
+스택 생성 과정에서 상태 변화(CREATE_IN_PROGRESS → CREATE_COMPLETE)를 관찰하고, 생성된 리소스를 확인합니다.
 
 > [!CONCEPT] 스택 생성 프로세스
 > AWS CloudFormation 스택 생성은 다음 단계로 진행됩니다:
@@ -65,7 +66,26 @@ prerequisites:
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Simple Amazon S3 bucket for AWS CloudFormation demo - CREATE lifecycle'
 
+# 콘솔에서 파라미터 입력 순서 및 그룹 지정
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Bucket Settings (Keep Default)'
+        Parameters:
+          - BucketPrefix
+
 Parameters:
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID or unique identifier (e.g., 20240001)
+    AllowedPattern: ^[a-z0-9]{5,20}$
+    ConstraintDescription: Only lowercase letters and numbers allowed (5-20 characters)
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
@@ -75,7 +95,8 @@ Resources:
   DemoBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
+      # StudentId를 접미사로 사용하여 버킷 이름 충돌 방지
+      BucketName: !Sub '${BucketPrefix}-${StudentId}'
 
 Outputs:
   BucketName:
@@ -89,16 +110,25 @@ Outputs:
 4. AWS Management Console 우측 상단에서 리전이 **Asia Pacific (Seoul) ap-northeast-2**인지 확인합니다.
 5. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 6. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-
-    <img src="/images/week6/6-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+   <img src="/images/week6/6-1-task2-step6-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 7. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 8. **Specify template**에서 `Upload a template file`을 선택합니다.
 9. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-create.yaml` 파일을 선택합니다.
 10. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task2-step10-console.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 11. **Stack name**에 `demo-s3-stack`을 입력합니다.
-12. **Parameters** 섹션에서 **BucketPrefix** 값을 확인합니다 (기본값 `cfn-demo-bucket` 사용).
+12. **Parameters** 섹션에서 다음 값을 확인합니다:
+    - **StudentId**: 본인의 학번으로 변경합니다 (예: `20240001`, 영문 소문자·숫자만 사용)
+    - **BucketPrefix**: `cfn-demo-bucket` (기본값 유지)
+
+> [!NOTE]
+> StudentId는 Amazon S3 버킷명에 접미사로 추가되어 다른 학생과의 리소스 충돌을 방지합니다 (예: `cfn-demo-bucket-20240001`).
+
 13. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task2-step13-next.png" alt="Stack name 입력 후 Next" class="guide-img-md" />
+
 14. **Configure stack options** 페이지에서 **Tags** 섹션을 찾습니다.
 15. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -109,19 +139,31 @@ Outputs:
 | `CreatedBy` | `CloudFormation` |
 
 16. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task2-step16-submit.png" alt="Tags 추가 후 Next" class="guide-img-md" />
+
 17. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week6/6-1-task2-step17-creating.png" alt="Review and create 확인" class="guide-img-md" />
+
 18. [[Submit]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task2-step18-submit.png" alt="Submit 버튼 클릭" class="guide-img-md" />
+
     > [!NOTE]
-    > 스택 생성에 1-2분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.
+    > 스택 생성에 1-2분이 소요됩니다. 상태가 "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경될 때까지 기다립니다.  
     > **Events** 탭에서 생성 과정을 확인할 수 있습니다.
     > AWS CloudFormation이 Amazon S3 버킷을 생성하는 과정을 실시간으로 관찰합니다.
     >
     > **스택 태그 자동 전파**: 스택에 추가한 태그(`Project`, `Week`, `CreatedBy`)는 스택이 생성하는 모든 리소스(Amazon S3 버킷)에 자동으로 전파됩니다.
+
 19. **Outputs** 탭을 선택합니다.
-20. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-123456789012`).
+    <img src="/images/week6/6-1-task2-step19-outputs.png" alt="Outputs 탭 확인" class="guide-img-md" />
+
+20. **BucketName** 값을 확인합니다 (예: `cfn-demo-bucket-20240001`).
 21. **Resources** 탭을 선택합니다.
+    <img src="/images/week6/6-1-task2-step21-resources.png" alt="Resources 탭 확인" class="guide-img-md" />
+
 22. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
 23. Amazon S3 콘솔에서 생성된 버킷을 확인합니다.
+    <img src="/images/week6/6-1-task2-step23-s3-bucket.png" alt="S3 버킷 확인" class="guide-img-md" />
 
 ✅ **태스크 완료**: 스택 생성(CREATE) 생명주기를 시연했습니다.
 
@@ -132,11 +174,11 @@ Outputs:
 > [!CONCEPT] 스택 업데이트 프로세스
 > AWS CloudFormation 스택 업데이트는 다음 단계로 진행됩니다:
 >
-> - **변경 사항 분석**: 새 템플릿과 기존 템플릿을 비교합니다
+> - **변경 사항 분석**: 새 템플릿과 기존 템플릿을 비교합니다.
 > - **Change set preview**: 어떤 리소스가 어떻게 변경되는지 미리 보여줍니다
-> - **리소스 업데이트**: AWS API를 호출하여 리소스를 수정합니다
-> - **상태 추적**: 각 리소스의 업데이트 상태를 모니터링합니다
-> - **완료**: 모든 리소스가 성공적으로 업데이트되면 스택 상태가 UPDATE_COMPLETE로 변경됩니다
+> - **리소스 업데이트**: AWS API를 호출하여 리소스를 수정합니다.
+> - **상태 추적**: 각 리소스의 업데이트 상태를 모니터링합니다.
+> - **완료**: 모든 리소스가 성공적으로 업데이트되면 스택 상태가 UPDATE_COMPLETE로 변경됩니다.
 >
 > **상태 변화:**
 >
@@ -147,10 +189,10 @@ Outputs:
 >
 > **Change set preview의 중요성:**
 >
-> - 실제 업데이트 전에 변경 사항을 확인합니다
-> - 어떤 리소스가 추가/수정/삭제되는지 표시합니다
+> - 실제 업데이트 전에 변경 사항을 확인합니다.
+> - 어떤 리소스가 추가/수정/삭제되는지 표시합니다.
 > - Replacement 여부를 명확히 보여줍니다 (데이터 손실 위험 파악)
-> - 프로덕션 환경에서 안전한 업데이트를 위해 필수적입니다
+> - 프로덕션 환경에서 안전한 업데이트를 위해 필수적입니다.
 
 ### 상세 단계
 
@@ -161,7 +203,26 @@ Outputs:
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
 
+# 콘솔에서 파라미터 입력 순서 및 그룹 지정
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Bucket Settings (Keep Default)'
+        Parameters:
+          - BucketPrefix
+
 Parameters:
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID or unique identifier (e.g., 20240001)
+    AllowedPattern: ^[a-z0-9]{5,20}$
+    ConstraintDescription: Only lowercase letters and numbers allowed (5-20 characters)
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
@@ -171,10 +232,11 @@ Resources:
   DemoBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
+      BucketName: !Sub '${BucketPrefix}-${StudentId}'
+      # 태스크 1에서 수동 추가한 태그를 코드로 관리
       Tags:
         - Key: Name
-          Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
+          Value: !Sub '${BucketPrefix}-${StudentId}'
         - Key: Project
           Value: AWS-Lab
         - Key: Week
@@ -192,8 +254,8 @@ Outputs:
 ```
 
 > [!NOTE]
-> 이 템플릿은 태스크 1에서 콘솔로 수동 추가한 태그들을 템플릿 코드에 직접 작성한 버전입니다.
-> 수동으로 관리하던 태그를 Infrastructure as Code 방식으로 전환하여 버전 관리와 재사용이 가능하도록 개선합니다.
+> 이 템플릿은 태스크 1에서 콘솔로 수동 추가한 태그들을 템플릿 코드에 직접 작성한 버전입니다.  
+> 수동으로 관리하던 태그를 Infrastructure as Code 방식으로 전환하여 버전 관리와 재사용이 가능하도록 개선합니다.  
 > 태그 값이 하드코딩되어 있어 간단하지만, 파라미터로 분리하면 재사용성을 더 높일 수 있습니다.
 >
 > 버킷 이름은 동일하므로 기존 버킷이 수정됩니다.
@@ -202,25 +264,35 @@ Outputs:
 27. `demo-s3-stack`을 선택합니다.
 28. [[Update stack]] 드롭다운을 클릭합니다.
 29. **Create a change set**을 선택합니다.
+    <img src="/images/week6/6-1-task3-step29-changeset.png" alt="Create a change set 선택" class="guide-img-md" />
 
 > [!NOTE]
 > **변경 세트(Change Set) 방식:**
 >
-> - 변경 세트를 먼저 생성하여 어떤 리소스가 어떻게 변경되는지 검토합니다
-> - 검토 후 문제가 없으면 변경 세트를 실행하여 실제 업데이트를 수행합니다
-> - 프로덕션 환경에서 안전한 업데이트를 위해 권장되는 방식입니다
+> - 변경 세트를 먼저 생성하여 어떤 리소스가 어떻게 변경되는지 검토합니다.
+> - 검토 후 문제가 없으면 변경 세트를 실행하여 실제 업데이트를 수행합니다.
+> - 프로덕션 환경에서 안전한 업데이트를 위해 권장되는 방식입니다.
 
 30. **Change set type**에서 `Standard change set`을 선택합니다.
 31. **Prerequisite - Prepare template**에서 `Replace existing template`을 선택합니다.
 32. **Specify template**에서 `Upload a template file`을 선택합니다.
 33. [[Choose file]] 버튼을 클릭한 후 `s3-bucket-update.yaml` 파일을 선택합니다.
 34. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task3-step34-execute.png" alt="Next 버튼 클릭" class="guide-img-md" />
+
 35. **Changeset name**에 `update-tags-changeset`을 입력합니다 (또는 자동 생성된 이름 사용).
-36. **Parameters** 섹션에서 기본값을 확인합니다:
-    - **BucketPrefix**: `cfn-demo-bucket`
+36. **Parameters** 섹션에서 기존 값을 확인합니다:
+    - **StudentId**: 태스크 1에서 입력한 값 유지
+    - **BucketPrefix**: `cfn-demo-bucket` (기존 값 유지)
 37. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task3-step37-next.png" alt="Parameters 확인 후 Next" class="guide-img-md" />
+
 38. **Configure change set options** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task3-step38-options.png" alt="Configure change set options Next" class="guide-img-md" />
+
 39. **Review change set** 페이지에서 설정을 확인합니다.
+    <img src="/images/week6/6-1-task3-step39-review.png" alt="Review change set 확인" class="guide-img-md" />
+
 40. [[Create change set]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -229,6 +301,8 @@ Outputs:
 41. 변경 세트가 생성되면 **Overview** 탭에서 다음 정보를 확인합니다:
     - **Change set status**: CREATE_COMPLETE (초록색)
     - **Execution status**: AVAILABLE
+      <img src="/images/week6/6-1-task3-step41-changeset-overview.png" alt="Change set Overview 확인" class="guide-img-md" />
+
 42. **Resource changes** 탭을 클릭합니다.
 43. 변경될 리소스 목록을 확인합니다:
     - **Logical ID**: `DemoBucket`
@@ -240,10 +314,12 @@ Outputs:
 > 구체적으로 어떤 속성이 어떻게 변경되는지 보려면 JSON changes 탭을 확인해야 합니다.
 
 44. **JSON changes** 탭을 클릭합니다.
+    <img src="/images/week6/6-1-task3-step44-json-changes.png" alt="JSON changes 탭 확인" class="guide-img-md" />
+
 45. JSON 형식으로 표시된 상세 변경 내용을 확인합니다:
     - **action**: `Modify`
     - **logicalResourceId**: `DemoBucket`
-    - **physicalResourceId**: 실제 버킷 이름 (예: cfn-demo-bucket-123456789012)
+    - **physicalResourceId**: 실제 버킷 이름 (예: cfn-demo-bucket-20240001)
     - **resourceType**: `AWS::S3::Bucket`
     - **replacement**: `False`
     - **scope**: `["Tags"]` (태그만 변경됨)
@@ -276,6 +352,7 @@ Outputs:
 47. 확인 대화상자가 나타나면 롤백 정책을 확인합니다:
     - **Behaviour on provisioning failure**: `Roll back all stack resources` (기본값, 선택됨)
     - **Delete newly created resources during a rollback**: `Use deletion policy` (기본값, 선택됨)
+      <img src="/images/week6/6-1-task3-step47-execute.png" alt="Execute changeset 확인 대화상자" class="guide-img-sm" />
 
 > [!CONCEPT] 변경 세트 실행 시 롤백 정책
 >
@@ -296,17 +373,21 @@ Outputs:
     > 스택 업데이트에 1-2분이 소요됩니다. 상태가 "UPDATE_IN_PROGRESS"에서 "UPDATE_COMPLETE"로 변경될 때까지 기다립니다.
     > **Events** 탭에서 업데이트 과정을 확인할 수 있습니다.
 49. **Resources** 탭을 선택합니다.
+    <img src="/images/week6/6-1-task3-step49-update-complete.png" alt="UPDATE_COMPLETE 상태 확인" class="guide-img-md" />
+
 50. **DemoBucket** 리소스의 **Physical ID**를 클릭합니다.
 51. Amazon S3 콘솔에서 **Properties** 탭을 선택합니다.
 52. 하단의 **Tags** 섹션으로 스크롤합니다.
+    <img src="/images/week6/6-1-task4-step52-tags.png" alt="S3 버킷 Tags 확인" class="guide-img-md" />
+
 53. 템플릿에 정의된 4개의 태그가 있는지 확인합니다:
-    - `Name: cfn-demo-bucket-123456789012`
+    - `Name: cfn-demo-bucket-20240001`
     - `Project: AWS-Lab`
     - `Week: 6-1`
     - `CreatedBy: CloudFormation`
 
 > [!NOTE]
-> 태스크 1에서는 콘솔에서 수동으로 스택 태그 3개(Project, Week, CreatedBy)를 추가했습니다.
+> 태스크 1에서는 콘솔에서 수동으로 스택 태그 3개(Project, Week, CreatedBy)를 추가했습니다.  
 > 태스크 2에서는 이 태그들을 YAML 파일 코드에 직접 작성하여 Infrastructure as Code 방식으로 전환했습니다.
 >
 > 이제 태그가 YAML 파일에 코드로 작성되어 있으므로 버전 관리가 가능하고, 동일한 파일로 여러 환경에 재사용할 수 있습니다.
@@ -345,10 +426,14 @@ Outputs:
 56. **Properties** 탭을 선택합니다.
 57. 하단의 **Tags** 섹션으로 스크롤합니다.
 58. [[Add new tag]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task4-step58-manual-tag.png" alt="S3 버킷에 수동 태그 추가" class="guide-img-md" />
+
 59. 다음 태그를 추가합니다:
     - **Key**: `ManualTag`
     - **Value**: `AddedManually`
 60. [[Save changes]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task4-step60-save-1.png" alt="Save changes 클릭" class="guide-img-md" />
+    <img src="/images/week6/6-1-task4-step60-save-2.png" alt="태그 저장 완료" class="guide-img-md" />
 
 > [!NOTE]
 > 이 태그는 AWS CloudFormation 템플릿에 정의되지 않았으므로 드리프트가 발생합니다.
@@ -360,6 +445,7 @@ Outputs:
 62. `demo-s3-stack`을 선택합니다.
 63. **Stack actions** 드롭다운을 클릭합니다.
 64. `Detect drift`를 선택합니다.
+    <img src="/images/week6/6-1-task4-step64-drift.png" alt="Detect drift 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 드리프트 감지가 즉시 시작되며 1-2분이 소요됩니다. AWS CloudFormation이 템플릿과 실제 리소스를 비교합니다.
@@ -367,21 +453,28 @@ Outputs:
 
 65. 페이지를 새로고침합니다.
 66. **Stack info** 탭에서 **Drift status**를 확인합니다.
+    <img src="/images/week6/6-1-task4-step66-drifted.png" alt="Drift status DRIFTED 확인" class="guide-img-md" />
+
 67. 상태가 "DRIFTED"로 표시되는지 확인합니다.
 
 #### 3단계: 드리프트 상세 정보 확인
 
 68. **Stack actions** 드롭다운을 클릭합니다.
 69. `View drift results`를 선택합니다.
+    <img src="/images/week6/6-1-task4-step69-drift-results.png" alt="View drift results 선택" class="guide-img-md" />
+
 70. **Resource drift status** 탭에서 드리프트가 발생한 리소스를 확인합니다.
 71. **DemoBucket** 리소스의 **Drift status**가 "DRIFTED"인지 확인합니다.
 72. **DemoBucket** 리소스를 선택합니다.
 73. [[View drift details]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-task4-step73-drift-details.png" alt="Drift details 확인" class="guide-img-md" />
+
 74. 드리프트 차이점을 확인합니다:
     - **Property**: `Tags.1`
     - **Change**: `ADD` (태그 추가됨)
     - **Expected value**: `-` (템플릿에 정의되지 않음)
     - **Current value**: `{"Key":"ManualTag","Value":"AddedManually"}`
+      <img src="/images/week6/6-1-task4-step74-drift-diff.png" alt="드리프트 차이점 상세" class="guide-img-md" />
 
 > [!NOTE]
 > **Details** 섹션에서는 Expected와 Actual의 전체 태그 배열을 JSON 형식으로 비교할 수 있습니다.
@@ -415,6 +508,8 @@ Outputs:
    - **Tag key**: `Week`
    - **Tag value**: `6-1`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week6/6-1-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
    > [!OUTPUT]
    > 이 실습에서 생성한 리소스가 표시됩니다.
 
@@ -443,6 +538,7 @@ Outputs:
 14. [[Delete stack]] 버튼을 클릭합니다.
 15. 확인 창에서 스택 이름 `demo-s3-stack`을 입력합니다.
 16. [[Delete stack]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-cleanup-step16-delete-stack.png" alt="Delete stack 확인" class="guide-img-md" />
 
     > [!NOTE]
     > 스택 삭제에 1-2분이 소요됩니다. 상태가 "DELETE_IN_PROGRESS"에서 삭제 완료될 때까지 기다립니다.
@@ -450,6 +546,8 @@ Outputs:
     > AWS CloudFormation이 Amazon S3 버킷을 삭제하는 과정을 실시간으로 관찰합니다.
 
 17. 페이지를 새로고침합니다.
+    <img src="/images/week6/6-1-cleanup-step17-deleting.png" alt="스택 삭제 진행 중" class="guide-img-md" />
+
     > [!OUTPUT]
     > 스택이 목록에서 사라졌는지 확인합니다. DELETE_COMPLETE 상태가 되면 스택이 자동으로 목록에서 제거됩니다.
     > 이는 스택과 모든 리소스가 성공적으로 삭제되었음을 의미합니다.
@@ -465,6 +563,8 @@ Outputs:
     - **Tag key**: `Week`
     - **Optional tag value**: `6-1`
 22. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-1-cleanup-step22-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
+
     > [!OUTPUT]
     > 검색 결과가 비어있는지 확인합니다. 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다.
 
@@ -543,8 +643,21 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 AWSTemplateFormatVersion: '2010-09-09'
 Description: '템플릿 설명'
 
+# 콘솔에서 파라미터 입력 순서 및 그룹 지정
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information'
+        Parameters:
+          - StudentId
+
 Parameters:
   # 사용자 입력값 정의
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID (e.g., 20240001)
   BucketPrefix:
     Type: String
     Default: my-bucket
@@ -555,7 +668,7 @@ Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
+      BucketName: !Sub '${BucketPrefix}-${StudentId}'
 
 Outputs:
   # 스택 생성 후 출력할 값
@@ -578,13 +691,13 @@ Outputs:
 
 **주요 내장 함수**
 
-| 함수      | 설명                      | 예시                                       |
-| --------- | ------------------------- | ------------------------------------------ |
-| `!Ref`    | 리소스 또는 파라미터 참조 | `!Ref MyBucket` → 버킷 이름                |
-| `!Sub`    | 문자열 치환               | `!Sub '${BucketPrefix}-${AWS::AccountId}'` |
-| `!GetAtt` | 리소스 속성 가져오기      | `!GetAtt MyBucket.Arn` → 버킷 ARN          |
-| `!Join`   | 문자열 결합               | `!Join ['-', [my, bucket, name]]`          |
-| `!Select` | 리스트에서 값 선택        | `!Select [0, !GetAZs '']` → 첫 번째 AZ     |
+| 함수      | 설명                      | 예시                                   |
+| --------- | ------------------------- | -------------------------------------- |
+| `!Ref`    | 리소스 또는 파라미터 참조 | `!Ref MyBucket` → 버킷 이름            |
+| `!Sub`    | 문자열 치환               | `!Sub '${BucketPrefix}-${StudentId}'`  |
+| `!GetAtt` | 리소스 속성 가져오기      | `!GetAtt MyBucket.Arn` → 버킷 ARN      |
+| `!Join`   | 문자열 결합               | `!Join ['-', [my, bucket, name]]`      |
+| `!Select` | 리스트에서 값 선택        | `!Select [0, !GetAZs '']` → 첫 번째 AZ |
 
 **예시: !Ref 함수**
 
@@ -607,13 +720,15 @@ Parameters:
   Environment:
     Type: String
     Default: dev
+  StudentId:
+    Type: String
 
 Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'app-${Environment}-${AWS::AccountId}'
-      # 결과: app-dev-123456789012
+      BucketName: !Sub 'app-${Environment}-${StudentId}'
+      # 결과: app-dev-20240001
 ```
 
 **예시: !GetAtt 함수**
@@ -698,7 +813,7 @@ Outputs:
 
 **주의사항**:
 
-- 스택 정책은 한 번 설정하면 제거할 수 없습니다
+- 스택 정책은 한 번 설정하면 제거할 수 없습니다.
 - 새로운 정책으로 덮어쓰거나 업데이트 시 임시로 재정의할 수 있습니다.
 - 스택 삭제는 정책과 무관하게 가능합니다.
 
