@@ -1,7 +1,25 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Amazon S3 bucket with tags for AWS CloudFormation demo - UPDATE lifecycle'
 
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Bucket Settings (Keep Default)'
+        Parameters:
+          - BucketPrefix
+
 Parameters:
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID or unique identifier (lowercase letters and numbers only, e.g., 20240001 or student01)
+    AllowedPattern: ^[a-z0-9]{5,20}$
+    ConstraintDescription: Only lowercase letters and numbers allowed (5-20 characters, no hyphens or special characters)
   BucketPrefix:
     Type: String
     Default: cfn-demo-bucket
@@ -11,10 +29,10 @@ Resources:
   DemoBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketPrefix}-${AWS::AccountId}'
+      BucketName: !Sub '${BucketPrefix}-${StudentId}'
       Tags:
         - Key: Name
-          Value: !Sub '${BucketPrefix}-${AWS::AccountId}'
+          Value: !Sub '${BucketPrefix}-${StudentId}'
         - Key: Project
           Value: AWS-Lab
         - Key: Week
