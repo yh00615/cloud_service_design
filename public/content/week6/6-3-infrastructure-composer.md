@@ -56,6 +56,7 @@ prerequisites:
 
 1. AWS Management Console에 로그인한 후 상단 검색창에 `Infrastructure Composer`을 입력하고 선택합니다.
 2. Home 페이지에서 [[Create project]] 버튼을 클릭합니다.
+   <img src="/images/week6/6-3-task1-step2-create-project.png" alt="Create project 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > Create project를 클릭하면 빈 캔버스가 열립니다. 프로젝트 이름이나 템플릿 형식을 별도로 설정하는 단계는 없습니다.
@@ -87,6 +88,7 @@ prerequisites:
 4. `DynamoDB table`을 찾아서 중앙 캔버스로 드래그합니다.
 5. 캔버스에 배치된 DynamoDB table 카드를 클릭하여 선택합니다.
 6. 카드 상단에 나타나는 **Details**를 클릭합니다.
+   <img src="/images/week6/6-3-task2-step6-dynamodb.png" alt="DynamoDB table Details 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > 카드를 클릭하면 상단에 Details | Group | Delete 버튼이 나타납니다. **Details**를 클릭하면 우측에 Resource properties 패널이 열립니다.
@@ -96,10 +98,13 @@ prerequisites:
 9. **Partition key type**에서 `String`을 선택합니다.
 10. **Sort key**와 **Expiry key** 체크박스는 선택하지 않습니다 (기본값 유지).
 11. [[Save]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task2-step11-save.png" alt="DynamoDB 설정 Save" class="guide-img-md" />
 
 > [!NOTE]
 > Enhanced components는 UI 폼으로 설정하므로 YAML 코드를 직접 작성할 필요가 없습니다.
 > 설정한 값은 Template 탭에서 자동으로 YAML 코드로 변환됩니다.
+>
+> <img src="/images/week6/6-3-task2-step11-template.png" alt="Template 탭에서 YAML 코드 확인" class="guide-img-md" />
 
 ✅ **태스크 완료**: Amazon DynamoDB 테이블이 추가되었습니다.
 
@@ -111,6 +116,8 @@ prerequisites:
 13. **Standard IaC resources** 섹션에서 `AWS::IAM::Role`을 찾아서 캔버스로 드래그합니다.
 14. Role 카드를 클릭하여 선택한 후 상단의 **Details**를 클릭합니다.
 15. **Logical ID**를 `ItemsFunctionRole`로 변경합니다.
+    <img src="/images/week6/6-3-task3-step15-role.png" alt="IAM Role Logical ID 변경" class="guide-img-md" />
+
 16. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -147,6 +154,8 @@ Policies:
 19. **Standard IaC resources** 섹션에서 `AWS::Lambda::Function`을 찾아서 캔버스로 드래그합니다.
 20. Function 카드를 클릭하여 선택한 후 상단의 **Details**를 클릭합니다.
 21. **Logical ID**를 `ItemsFunction`로 변경합니다.
+    <img src="/images/week6/6-3-task3-step21-lambda.png" alt="Lambda Function Logical ID 변경" class="guide-img-md" />
+
 22. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -193,6 +202,7 @@ Code:
 ```
 
 23. [[Save]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task3-step23-save.png" alt="Lambda Function Save" class="guide-img-md" />
 
 > [!NOTE]
 > Save 후 캔버스에서 `ItemsFunction` 카드 안에 `ItemsFunctionRole`과 `ItemsFunction`이 그룹화되어 표시됩니다.
@@ -208,6 +218,8 @@ Code:
 25. `AWS::ApiGateway::RestApi`를 찾아서 캔버스로 드래그합니다.
 26. RestApi 카드를 클릭하여 선택한 후 상단의 **Details**를 클릭합니다.
 27. **Logical ID**를 `ItemsApi`로 변경합니다.
+    <img src="/images/week6/6-3-task4-step27-api.png" alt="API Gateway Logical ID 변경" class="guide-img-md" />
+
 28. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -219,6 +231,8 @@ Name: Items API
 31. `AWS::ApiGateway::Resource`를 찾아서 캔버스로 드래그합니다.
 32. Resource 카드의 **Details**를 클릭합니다.
 33. **Logical ID**를 `ItemsApiResource`로 변경합니다.
+    <img src="/images/week6/6-3-task4-step33-resource.png" alt="API Resource Logical ID 변경" class="guide-img-md" />
+
 34. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -237,6 +251,8 @@ PathPart: items
 37. `AWS::ApiGateway::Method`를 찾아서 캔버스로 드래그합니다.
 38. Method 카드의 **Details**를 클릭합니다.
 39. **Logical ID**를 `ItemsApiMethod`로 변경합니다.
+    <img src="/images/week6/6-3-task4-step39-method.png" alt="API Method Logical ID 변경" class="guide-img-md" />
+
 40. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -255,6 +271,8 @@ Integration:
 43. `AWS::ApiGateway::Deployment`를 찾아서 캔버스로 드래그합니다.
 44. Deployment 카드의 **Details**를 클릭합니다.
 45. **Logical ID**를 `ItemsApiDeployment`로 변경합니다.
+    <img src="/images/week6/6-3-task4-step45-deployment.png" alt="API Deployment Logical ID 변경" class="guide-img-md" />
+
 46. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -267,6 +285,8 @@ StageName: prod
 49. `AWS::Lambda::Permission`을 찾아서 캔버스로 드래그합니다.
 50. Permission 카드의 **Details**를 클릭합니다.
 51. **Logical ID**를 `LambdaApiPermission`으로 변경합니다.
+    <img src="/images/week6/6-3-task4-step51-stage.png" alt="Lambda Permission Logical ID 변경" class="guide-img-md" />
+
 52. **Resource configuration**의 내용을 다음으로 교체합니다:
 
 ```yaml
@@ -277,6 +297,7 @@ SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ItemsApi}
 ```
 
 53. [[Save]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task4-step53-canvas.png" alt="모든 리소스 추가 후 캔버스" class="guide-img-md" />
 
 > [!NOTE]
 > 모든 리소스를 추가하면 캔버스에서 다음과 같이 그룹화됩니다:
@@ -297,6 +318,8 @@ ItemsApiDeployment:
   Properties:
 ```
 
+<img src="/images/week6/6-3-task4-step55-template.png" alt="Template 탭에서 DependsOn 추가" class="guide-img-md" />
+
 > [!NOTE]
 > `DependsOn`은 리소스 생성 순서를 명시적으로 지정합니다.
 > `ItemsApiDeployment`는 `ItemsApiMethod`가 생성된 후에 배포되어야 하므로 이 설정이 필요합니다.
@@ -313,6 +336,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Serverless REST API - Infrastructure Composer Lab
 ```
 
+<img src="/images/week6/6-3-task4-step56-version.png" alt="AWSTemplateFormatVersion 추가" class="guide-img-md" />
+
 > [!NOTE]
 > `AWSTemplateFormatVersion`과 `Description`은 선택사항이지만, Week 6-2에서 학습한 템플릿 기본 구조에 맞춰 추가합니다.
 
@@ -324,6 +349,8 @@ Outputs:
     Description: Amazon API Gateway endpoint URL
     Value: !Sub https://${ItemsApi}.execute-api.${AWS::Region}.amazonaws.com/prod/items
 ```
+
+<img src="/images/week6/6-3-task4-step57-outputs.png" alt="Outputs 섹션 추가" class="guide-img-md" />
 
 > [!IMPORTANT] Outputs 섹션 위치
 >
@@ -346,14 +373,18 @@ Outputs:
 60. 새 브라우저 탭에서 AWS Management Console 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 61. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week6/6-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+    <img src="/images/week6/6-3-task5-step61-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 62. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 63. **Specify template**에서 `Upload a template file`을 선택합니다.
 64. [[Choose file]] 버튼을 클릭한 후 다운로드한 YAML 파일을 선택합니다.
 65. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task5-step65-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 66. **Stack name**에 `infrastructure-composer-serverless-api`를 입력합니다.
 67. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task5-step67-next.png" alt="Stack name 입력 후 Next" class="guide-img-md" />
+
 68. **Configure stack options** 페이지가 열립니다.
 69. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -370,9 +401,14 @@ Outputs:
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
 72. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-task5-step72-next.png" alt="Capabilities 체크 후 Next" class="guide-img-md" />
+
 73. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week6/6-3-task5-step73-review.png" alt="Review and create 확인" class="guide-img-md" />
+
 74. [[Submit]] 버튼을 클릭합니다.
 75. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+    <img src="/images/week6/6-3-task5-step75-creating.png" alt="스택 생성 진행 중" class="guide-img-md" />
 
 > [!NOTE]
 > **Status** 열은 스택의 현재 상태를 보여줍니다:
@@ -384,6 +420,7 @@ Outputs:
 > 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다.
 
 76. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
+    <img src="/images/week6/6-3-task5-step76-complete.png" alt="CREATE_COMPLETE 상태 확인" class="guide-img-md" />
 
 ✅ **태스크 완료**: AWS CloudFormation 스택이 배포되었습니다.
 
@@ -393,6 +430,8 @@ Outputs:
 
 77. AWS CloudFormation 콘솔에서 `infrastructure-composer-serverless-api` 스택을 선택합니다.
 78. **Outputs** 탭을 선택합니다.
+    <img src="/images/week6/6-3-task6-step78-outputs.png" alt="Outputs 탭 확인" class="guide-img-md" />
+
 79. **Key**가 `ApiUrl`인 출력값의 URL을 복사합니다.
 
 > [!NOTE]
@@ -407,6 +446,8 @@ curl -w '\n' -X POST https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com
   -d '{"id": "item1", "name": "Sample Item", "description": "Created from Infrastructure Composer"}'
 ```
 
+<img src="/images/week6/6-3-task6-step81-post.png" alt="curl POST 실행 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -419,6 +460,8 @@ curl -w '\n' -X POST https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com
 curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
   | python3 -m json.tool
 ```
+
+<img src="/images/week6/6-3-task6-step82-get.png" alt="curl GET 실행 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -465,6 +508,8 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
    - **Tag key**: `Week`
    - **Tag value**: `6-3`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week6/6-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 7. 이 실습에서 생성한 리소스가 표시됩니다.
 
 > [!NOTE]
@@ -477,6 +522,8 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
 10. [[Delete stack]] 버튼을 클릭합니다.
 11. 확인 창에서 스택 이름 `infrastructure-composer-serverless-api`를 입력합니다.
 12. [[Delete stack]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-cleanup-step12-delete-stack.png" alt="Delete stack 확인" class="guide-img-md" />
+    <img src="/images/week6/6-3-cleanup-step12-delete-stack-2.png" alt="스택 삭제 진행" class="guide-img-md" />
 
 > [!NOTE]
 > 스택 삭제에 2-3분이 소요됩니다. AWS CloudFormation이 모든 리소스를 자동으로 삭제합니다.
@@ -494,6 +541,7 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
     - **Tag key**: `Week`
     - **Tag value**: `6-3`
 18. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-cleanup-step18-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -513,7 +561,9 @@ curl -s https://xxxxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/items \
 > AWS Lambda 함수가 실행되면 Amazon CloudWatch Log Group이 자동으로 생성됩니다. 함수 이름 뒤의 랜덤 문자열은 AWS CloudFormation이 자동으로 생성한 것입니다.
 
 23. **Actions** > `Delete log group(s)`를 선택합니다.
+    <img src="/images/week6/6-3-cleanup-step23-loggroup.png" alt="Delete log group 선택" class="guide-img-md" />
 24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-3-cleanup-step24-delete-loggroup.png" alt="Log Group 삭제 확인" class="guide-img-sm" />
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
