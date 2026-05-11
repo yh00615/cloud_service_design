@@ -88,13 +88,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week7-3-eks-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-
-    <img src="/images/week7/7-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+   <img src="/images/week7/7-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week7-3-eks-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+   <img src="/images/week7/7-3-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
 9. **Stack name**에 `week7-3-eks-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **ClusterName**: `my-eks-cluster`
@@ -107,6 +107,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 값을 변경하면 이후 태스크의 명령어와 일치하지 않을 수 있습니다.
 
 11. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task0-step11-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -123,18 +124,20 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task0-step17-submit.png" alt="Submit 버튼 클릭" class="guide-img-md" />
 
-> [!NOTE]
-> **Status** 열은 스택의 현재 상태를 보여줍니다:
->
-> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다.
-> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다.
-> - **CREATE_FAILED** (빨간색): 생성 중 오류가 발생했습니다. (Events 탭에서 원인 확인 필요)
->
-> VPC와 IAM 역할만 생성하므로 3-5분 내에 완료됩니다.
+    > [!NOTE]
+    > **Status** 열은 스택의 현재 상태를 보여줍니다:
+    >
+    > - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다.
+    > - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다.
+    > - **CREATE_FAILED** (빨간색): 생성 중 오류가 발생했습니다. (Events 탭에서 원인 확인 필요)
+    >
+    > VPC와 IAM 역할만 생성하므로 3-5분 내에 완료됩니다.
 
 18. 스택 상태가 **CREATE_COMPLETE**로 변경되면 **Outputs** 탭을 선택합니다.
 19. 출력값들을 확인하고 메모장에 복사합니다:
+    <img src="/images/week7/7-3-task0-step18-outputs.png" alt="Outputs 탭 확인" class="guide-img-md" />
     - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
     - `PublicSubnet1Id`: 퍼블릭 서브넷 1 ID
     - `PublicSubnet2Id`: 퍼블릭 서브넷 2 ID
@@ -153,6 +156,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 20. AWS Management Console 상단 검색창에 `EKS`를 입력하고 **Elastic Kubernetes Service**를 선택합니다.
 21. 왼쪽 메뉴에서 **Clusters**를 선택합니다.
 22. [[Create cluster]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step22-create-cluster.png" alt="Create cluster 버튼 클릭" class="guide-img-md" />
 
 ### Configuration options 선택
 
@@ -163,6 +167,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 이 실습에서는 Kubernetes 구성 요소를 직접 이해하기 위해 Custom configuration을 사용합니다.
 
 24. **EKS Auto Mode** 섹션에서 `Use EKS Auto Mode` 토글을 **비활성화**합니다.
+    <img src="/images/week7/7-3-task1-step24-auto-mode.png" alt="EKS Auto Mode 비활성화" class="guide-img-md" />
 
 > [!NOTE]
 > Custom configuration을 선택해도 EKS Auto Mode가 기본으로 활성화되어 있습니다.
@@ -182,9 +187,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 27. **Kubernetes version**에서 최신 버전을 선택합니다.
 28. **Upgrade policy**에서 `Standard support`를 선택합니다.
 
-> [!NOTE]
-> Standard Support를 선택해야 추가 비용이 발생하지 않습니다.
-> Extended Support는 Standard Support 기간 종료 후 추가 비용이 발생합니다.
+    <img src="/images/week7/7-3-task1-step28-upgrade-policy.png" alt="Upgrade policy 선택" class="guide-img-md" />
+
+    > [!NOTE]
+    > Standard Support를 선택해야 추가 비용이 발생하지 않습니다.
+    > Extended Support는 Standard Support 기간 종료 후 추가 비용이 발생합니다.
 
 29. 나머지 설정(**Control plane scaling tier**, **Cluster access**, **Envelope encryption**, **ARC Zonal shift**, **Deletion protection**)은 기본값을 유지합니다.
 30. **Tags** 섹션에서 [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
@@ -194,6 +201,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Project`   | `AWS-Lab` |
 | `Week`      | `7-3`     |
 | `CreatedBy` | `Student` |
+
+<img src="/images/week7/7-3-task1-step30-tags.png" alt="Tags 추가" class="guide-img-md" />
 
 31. [[Next]] 버튼을 클릭합니다.
 
@@ -213,11 +222,22 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 프로덕션 환경에서는 `Public and private` 또는 `Private`을 선택하여 접근을 제한해야 합니다.
 
 35. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step35-next.png" alt="Networking 설정 후 Next" class="guide-img-md" />
+
 36. **Configure observability** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step36-observability.png" alt="Configure observability Next" class="guide-img-md" />
+
 37. **Select add-ons** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step37-addons.png" alt="Select add-ons Next" class="guide-img-md" />
+
 38. **Configure selected add-ons settings** 페이지에서 기본값을 유지하고 [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step38-addons-settings.png" alt="Add-ons settings Next" class="guide-img-md" />
+
 39. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week7/7-3-task1-step39-review.png" alt="Review and create 확인" class="guide-img-md" />
+
 40. [[Create]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task1-step40-create.png" alt="Create 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > 클러스터 생성에 10-15분이 소요됩니다. 상태가 "Creating"에서 "**Active**"로 변경될 때까지 기다립니다.
@@ -232,6 +252,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 41. Amazon EKS 콘솔에서 `my-eks-cluster` 클러스터를 선택합니다.
 42. **Compute** 탭을 선택합니다.
 43. **Node groups** 섹션에서 [[Add node group]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task2-step43-add-nodegroup.png" alt="Add node group 버튼 클릭" class="guide-img-md" />
 
 ### Node group configuration
 
@@ -250,6 +271,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `CreatedBy` | `Student` |
 
 47. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task2-step47-next.png" alt="Node group configuration Next" class="guide-img-md" />
 
 ### Compute and scaling configuration
 
@@ -272,13 +294,19 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > **Capacity type**: `On-Demand`는 안정적인 인스턴스를 제공합니다. 비용 절감이 필요한 경우 `Spot`을 선택할 수 있지만, Spot 인스턴스는 언제든 중단될 수 있으므로 프로덕션 워크로드에는 주의가 필요합니다.
 
 54. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task2-step54-next.png" alt="Compute and scaling configuration Next" class="guide-img-md" />
 
 ### Networking
 
 55. **Subnets**에서 두 개의 퍼블릭 서브넷이 선택되어 있는지 확인합니다.
 56. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task2-step56-next.png" alt="Networking Next" class="guide-img-md" />
+
 57. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week7/7-3-task2-step57-review.png" alt="Review and create 확인" class="guide-img-md" />
 58. [[Create]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-task2-step58-create-1.png" alt="Create 버튼 클릭" class="guide-img-md" />
+    <img src="/images/week7/7-3-task2-step58-create-2.png" alt="노드 그룹 생성 중" class="guide-img-md" />
 
 > [!NOTE]
 > 노드 그룹 생성에 3-5분이 소요됩니다. 상태가 "Creating"에서 "**Active**"로 변경될 때까지 기다립니다.
@@ -304,6 +332,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 kubectl version --client
 ```
 
+<img src="/images/week7/7-3-task3-step60-cloudshell.png" alt="kubectl version 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -317,6 +347,8 @@ kubectl version --client
 aws eks update-kubeconfig --name my-eks-cluster --region ap-northeast-2
 ```
 
+<img src="/images/week7/7-3-task3-step61-kubeconfig.png" alt="kubeconfig 업데이트 완료" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -328,6 +360,8 @@ aws eks update-kubeconfig --name my-eks-cluster --region ap-northeast-2
 ```bash
 kubectl get nodes
 ```
+
+<img src="/images/week7/7-3-task3-step62-get-nodes.png" alt="kubectl get nodes 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -353,6 +387,8 @@ kubectl get nodes
 > ```
 >
 > 출력이 `ACTIVE`가 아니면 클러스터 생성이 완료될 때까지 기다립니다.
+>
+> <img src="/images/week7/7-3-task3-step62-troubleshooting.png" alt="클러스터 연결 오류 해결" class="guide-img-md" />
 
 ✅ **태스크 완료**: kubectl이 Amazon EKS 클러스터에 연결되었습니다.
 
@@ -370,6 +406,8 @@ kubectl get nodes
 kubectl run nginx-pod --image=nginx:1.28
 ```
 
+<img src="/images/week7/7-3-task4-step63-run-pod.png" alt="kubectl run nginx-pod 실행" class="guide-img-sm" />
+
 > [!OUTPUT]
 >
 > ```
@@ -381,6 +419,8 @@ kubectl run nginx-pod --image=nginx:1.28
 ```bash
 kubectl get pods
 ```
+
+<img src="/images/week7/7-3-task4-step64-get-pods.png" alt="kubectl get pods 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -395,6 +435,8 @@ kubectl get pods
 kubectl describe pod nginx-pod
 ```
 
+<img src="/images/week7/7-3-task4-step65-describe-pod.png" alt="kubectl describe pod 결과" class="guide-img-md" />
+
 > [!NOTE]
 > 출력에서 다음 항목을 확인합니다:
 >
@@ -408,6 +450,8 @@ kubectl describe pod nginx-pod
 ```bash
 kubectl logs nginx-pod
 ```
+
+<img src="/images/week7/7-3-task4-step66-logs.png" alt="kubectl logs nginx-pod 결과" class="guide-img-sm" />
 
 > [!NOTE]
 > nginx Pod에 아직 HTTP 요청이 없으므로 로그가 비어 있거나 기본 시작 로그만 표시될 수 있습니다.
@@ -429,6 +473,8 @@ kubectl exec -it nginx-pod -- /bin/bash
 nginx -v
 ```
 
+<img src="/images/week7/7-3-task4-step68-nginx-v.png" alt="nginx -v 버전 확인" class="guide-img-sm" />
+
 69. `exit` 명령어를 입력하여 Pod에서 나옵니다.
 
 ✅ **태스크 완료**: Kubernetes Pod를 생성하고 관리했습니다.
@@ -442,6 +488,8 @@ nginx -v
 ```bash
 kubectl create deployment nginx-deployment --image=nginx:1.28 --replicas=2
 ```
+
+<img src="/images/week7/7-3-task5-step70-create-deployment.png" alt="kubectl create deployment 실행" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -462,6 +510,8 @@ kubectl create deployment nginx-deployment --image=nginx:1.28 --replicas=2
 kubectl get deployments
 ```
 
+<img src="/images/week7/7-3-task5-step71-get-deployments.png" alt="kubectl get deployments 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -474,6 +524,8 @@ kubectl get deployments
 ```bash
 kubectl get pods
 ```
+
+<img src="/images/week7/7-3-task5-step72-get-pods.png" alt="kubectl get pods 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -490,6 +542,8 @@ kubectl get pods
 kubectl scale deployment nginx-deployment --replicas=3
 ```
 
+<img src="/images/week7/7-3-task5-step73-scale.png" alt="kubectl scale 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -502,11 +556,15 @@ kubectl scale deployment nginx-deployment --replicas=3
 kubectl get pods
 ```
 
+<img src="/images/week7/7-3-task5-step74-get-pods.png" alt="스케일링 후 Pod 목록 확인" class="guide-img-md" />
+
 75. Deployment의 상세 정보를 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-deployment
 ```
+
+<img src="/images/week7/7-3-task5-step75-describe.png" alt="kubectl describe deployment 결과" class="guide-img-md" />
 
 > [!NOTE]
 > **다음 태스크 준비**: 태스크 6에서는 선언형 방식으로 새로운 Deployment를 생성합니다.
@@ -517,6 +575,8 @@ kubectl describe deployment nginx-deployment
 ```bash
 kubectl delete deployment nginx-deployment
 ```
+
+<img src="/images/week7/7-3-task5-step76-delete-deployment.png" alt="kubectl delete deployment 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -530,6 +590,8 @@ kubectl delete deployment nginx-deployment
 kubectl delete pod nginx-pod
 ```
 
+<img src="/images/week7/7-3-task5-step77-delete-pod.png" alt="kubectl delete pod 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -541,6 +603,8 @@ kubectl delete pod nginx-pod
 ```bash
 kubectl get pods
 ```
+
+<img src="/images/week7/7-3-task5-step78-get-pods.png" alt="kubectl get pods - No resources found" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -602,6 +666,7 @@ spec:
 80. CloudShell에 파일을 업로드합니다:
     - CloudShell 우측 상단의 **Actions** > **Upload file**을 클릭합니다.
     - `nginx-deployment.yaml` 파일을 선택합니다.
+      <img src="/images/week7/7-3-task6-step80-upload-file.png" alt="CloudShell Upload file" class="guide-img-sm" />
 
 81. 업로드된 파일을 확인합니다:
 
@@ -609,11 +674,15 @@ spec:
 cat nginx-deployment.yaml
 ```
 
+<img src="/images/week7/7-3-task6-step81-upload.png" alt="cat nginx-deployment.yaml 결과" class="guide-img-sm" />
+
 82. YAML 파일을 사용하여 Deployment를 생성합니다:
 
 ```bash
 kubectl apply -f nginx-deployment.yaml
 ```
+
+<img src="/images/week7/7-3-task6-step82-apply.png" alt="kubectl apply 결과" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -627,6 +696,8 @@ kubectl apply -f nginx-deployment.yaml
 kubectl get deployments
 ```
 
+<img src="/images/week7/7-3-task6-step83-get-deployments.png" alt="kubectl get deployments 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -639,6 +710,8 @@ kubectl get deployments
 ```bash
 kubectl get pods -l app=nginx
 ```
+
+<img src="/images/week7/7-3-task6-step84-get-pods.png" alt="kubectl get pods 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -659,6 +732,8 @@ kubectl get pods -l app=nginx
 ```bash
 kubectl describe deployment nginx-app
 ```
+
+<img src="/images/week7/7-3-task6-step85-describe.png" alt="kubectl describe deployment nginx-app 결과" class="guide-img-md" />
 
 86. 롤링 업데이트 전략을 확인합니다:
 
@@ -699,6 +774,8 @@ kubectl get deployment nginx-app -o yaml | grep -A 3 "strategy:"
 kubectl describe deployment nginx-app | grep Image
 ```
 
+<img src="/images/week7/7-3-task7-step87-image.png" alt="현재 이미지 버전 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -710,6 +787,8 @@ kubectl describe deployment nginx-app | grep Image
 ```bash
 kubectl set image deployment/nginx-app nginx=nginx:1.29
 ```
+
+<img src="/images/week7/7-3-task7-step88-set-image.png" alt="kubectl set image 실행" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -736,6 +815,8 @@ kubectl set image deployment/nginx-app nginx=nginx:1.29
 kubectl rollout status deployment/nginx-app
 ```
 
+<img src="/images/week7/7-3-task7-step89-rollout-status.png" alt="rollout status 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -751,6 +832,8 @@ kubectl rollout status deployment/nginx-app
 kubectl describe deployment nginx-app | grep Image
 ```
 
+<img src="/images/week7/7-3-task7-step90-image-updated.png" alt="업데이트된 이미지 버전 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -762,6 +845,8 @@ kubectl describe deployment nginx-app | grep Image
 ```bash
 kubectl rollout history deployment/nginx-app
 ```
+
+<img src="/images/week7/7-3-task7-step91-rollout-history.png" alt="rollout history 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -782,11 +867,15 @@ kubectl rollout history deployment/nginx-app
 kubectl rollout history deployment/nginx-app --revision=2
 ```
 
+<img src="/images/week7/7-3-task7-step92-revision.png" alt="rollout history revision 2 상세" class="guide-img-sm" />
+
 93. 이전 버전으로 롤백합니다:
 
 ```bash
 kubectl rollout undo deployment/nginx-app
 ```
+
+<img src="/images/week7/7-3-task7-step93-undo.png" alt="kubectl rollout undo 실행" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -811,11 +900,15 @@ kubectl rollout undo deployment/nginx-app
 kubectl rollout status deployment/nginx-app
 ```
 
+<img src="/images/week7/7-3-task7-step94-rollout-status.png" alt="롤백 rollout status 확인" class="guide-img-md" />
+
 95. 이미지 버전이 1.28로 롤백되었는지 확인합니다:
 
 ```bash
 kubectl describe deployment nginx-app | grep Image
 ```
+
+<img src="/images/week7/7-3-task7-step95-image-rollback.png" alt="롤백 후 이미지 버전 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 >
@@ -828,6 +921,8 @@ kubectl describe deployment nginx-app | grep Image
 ```bash
 kubectl rollout history deployment/nginx-app
 ```
+
+<img src="/images/week7/7-3-task7-step96-history.png" alt="롤백 후 rollout history 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -882,6 +977,8 @@ kubectl rollout history deployment/nginx-app
 kubectl expose deployment nginx-app --type=LoadBalancer --port=80
 ```
 
+<img src="/images/week7/7-3-task8-step97-expose.png" alt="kubectl expose 실행" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -916,6 +1013,8 @@ spec:
 kubectl apply -f nginx-service.yaml
 ```
 
+<img src="/images/week7/7-3-task8-step100-apply-service.png" alt="kubectl apply -f nginx-service.yaml 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -932,6 +1031,8 @@ kubectl apply -f nginx-service.yaml
 ```bash
 kubectl get services
 ```
+
+<img src="/images/week7/7-3-task8-step101-get-services.png" alt="kubectl get services 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -950,6 +1051,8 @@ kubectl get services
 kubectl get service nginx-app -w
 ```
 
+<img src="/images/week7/7-3-task8-step102-watch.png" alt="kubectl get service -w 결과" class="guide-img-md" />
+
 > [!NOTE]
 > `-w` (watch) 옵션을 사용하면 상태 변경을 실시간으로 확인할 수 있습니다.
 > EXTERNAL-IP가 `<pending>`에서 실제 주소로 변경되면 Ctrl+C를 눌러 종료합니다.
@@ -960,12 +1063,16 @@ kubectl get service nginx-app -w
 kubectl describe service nginx-app
 ```
 
+<img src="/images/week7/7-3-task8-step103-describe-service.png" alt="kubectl describe service 결과" class="guide-img-md" />
+
 104. kubectl로 Load Balancer DNS 이름을 확인합니다:
 
 ```bash
 kubectl get service nginx-app \
   -o jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}'
 ```
+
+<img src="/images/week7/7-3-task8-step104-dns.png" alt="Load Balancer DNS 이름 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -978,17 +1085,22 @@ kubectl get service nginx-app \
 107. 인스턴스 목록에서 이름에 `my-node-group`이 포함된 워커 노드 인스턴스를 하나 선택합니다.
 108. 하단의 **Security** 탭을 선택합니다.
 109. **Security groups** 섹션에서 보안 그룹 링크 (예: `eks-cluster-sg-my-eks-cluster-xxxxx`)를 클릭합니다.
+     <img src="/images/week7/7-3-task8-step109-security-group.png" alt="Security groups 섹션에서 보안 그룹 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon EKS 워커 노드에 연결된 보안 그룹을 수정해야 LoadBalancer Service가 NodePort를 통해 Pod에 접근할 수 있습니다.
 
 110. 하단의 **Inbound rules** 탭을 선택합니다.
 111. [[Edit inbound rules]] 버튼을 클릭합니다.
+     <img src="/images/week7/7-3-task8-step111-edit-inbound.png" alt="Edit inbound rules 버튼 클릭" class="guide-img-md" />
+
 112. [[Add rule]] 버튼을 클릭합니다.
 113. **Type**에서 `Custom TCP`를 선택합니다.
 114. **Port range**에 `30000-32767`을 입력합니다.
 115. **Source**에서 `Anywhere-IPv4` (0.0.0.0/0)를 선택합니다.
 116. [[Save rules]] 버튼을 클릭합니다.
+     <img src="/images/week7/7-3-task8-step116-save-rules-1.png" alt="Save rules 버튼 클릭" class="guide-img-md" />
+     <img src="/images/week7/7-3-task8-step116-save-rules-2.png" alt="Inbound rules 저장 완료" class="guide-img-md" />
 
 > [!NOTE]
 > **학습 목적**: 이 단계는 Kubernetes Service와 AWS 보안 그룹의 관계를 이해하기 위한 학습 목적입니다.
@@ -1015,8 +1127,11 @@ kubectl get service nginx-app \
 > ```
 >
 > 이 명령어로 Load Balancer 연결 상태를 확인할 수 있습니다.
+>
+> <img src="/images/week7/7-3-task8-step116-curl-test.png" alt="curl 연결 테스트 결과" class="guide-img-md" />
 
 117. 웹 브라우저에서 EXTERNAL-IP 주소로 접속하여 nginx 기본 페이지를 확인합니다.
+     <img src="/images/week7/7-3-task8-step117-browser.png" alt="nginx 기본 페이지 확인" class="guide-img-sm" />
 
 ✅ **태스크 완료**: Kubernetes Service를 생성하고 외부에서 접근했습니다.
 
@@ -1053,6 +1168,7 @@ kubectl get service nginx-app \
    - **Tag key**: `Week`
    - **Tag value**: `7-3`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week7/7-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
@@ -1065,6 +1181,8 @@ kubectl get service nginx-app \
 ```bash
 kubectl delete service nginx-app
 ```
+
+<img src="/images/week7/7-3-cleanup-step8-delete-service.png" alt="kubectl delete service 결과" class="guide-img-sm" />
 
 > [!IMPORTANT]
 > Service 삭제 후 AWS Load Balancer가 완전히 삭제될 때까지 1-2분 대기합니다.
@@ -1086,6 +1204,8 @@ kubectl delete deployment nginx-deployment 2>/dev/null
 kubectl get all
 ```
 
+<img src="/images/week7/7-3-cleanup-step10-get-all.png" alt="kubectl get all 결과" class="guide-img-md" />
+
 > [!NOTE]
 > `kubernetes` ClusterIP Service만 남아있으면 정상입니다. Pod, Deployment, ReplicaSet이 남아있으면 해당 리소스를 추가로 삭제합니다.
 
@@ -1094,6 +1214,7 @@ kubectl get all
 11. AWS Management Console 상단 검색창에 `EC2`를 입력하고 선택합니다.
 12. 왼쪽 메뉴에서 **Load Balancers**를 선택합니다.
 13. `nginx-app`와 관련된 Load Balancer가 목록에서 사라졌는지 확인합니다.
+    <img src="/images/week7/7-3-cleanup-step13-lb-check.png" alt="Load Balancer 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > Load Balancer가 아직 남아있으면 선택 후 **Actions** > `Delete load balancer`를 선택하여 수동 삭제합니다.
@@ -1117,6 +1238,10 @@ aws eks delete-nodegroup \
   --region ap-northeast-2
 ```
 
+<img src="/images/week7/7-3-cleanup-step14-delete-nodegroup.png" alt="aws eks delete-nodegroup 실행" class="guide-img-md" />
+<img src="/images/week7/7-3-cleanup-step14-delete-nodegroup-2.png" alt="노드 그룹 삭제 진행" class="guide-img-md" />
+<img src="/images/week7/7-3-cleanup-step14-delete-nodegroup-3.png" alt="노드 그룹 삭제 확인" class="guide-img-md" />
+
 > [!NOTE]
 > 노드 그룹 삭제에 3-5분이 소요됩니다. 다음 명령어로 삭제 완료를 확인합니다:
 >
@@ -1134,6 +1259,9 @@ aws eks delete-cluster \
   --region ap-northeast-2
 ```
 
+<img src="/images/week7/7-3-cleanup-step15-delete-cluster.png" alt="aws eks delete-cluster 실행" class="guide-img-md" />
+<img src="/images/week7/7-3-cleanup-step15-delete-cluster-2.png" alt="클러스터 삭제 진행" class="guide-img-md" />
+
 > [!NOTE]
 > 클러스터 삭제에 5-10분이 소요됩니다. 노드 그룹이 완전히 삭제되지 않은 상태에서 클러스터 삭제를 시도하면 오류가 발생합니다.
 > 다음 명령어로 삭제 완료를 확인합니다:
@@ -1143,6 +1271,8 @@ aws eks delete-cluster \
 > ```
 >
 > "DELETING"이 출력되면 대기하고, "ResourceNotFoundException" 오류가 나오면 삭제 완료입니다.
+>
+> <img src="/images/week7/7-3-cleanup-step15-cluster-deleted.png" alt="클러스터 삭제 완료 확인" class="guide-img-md" />
 
 #### 옵션 2: AWS 콘솔에서 삭제
 
@@ -1157,6 +1287,7 @@ aws eks delete-cluster \
 19. **Node groups** 섹션에서 `my-node-group`을 선택합니다.
 20. [[Delete]] 버튼을 클릭합니다.
 21. 확인 창에서 `my-node-group`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-cleanup-step21-delete-nodegroup.png" alt="노드 그룹 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 노드 그룹 삭제에 3-5분이 소요됩니다. 노드 그룹이 완전히 삭제되어야 클러스터를 삭제할 수 있습니다.
@@ -1165,6 +1296,7 @@ aws eks delete-cluster \
 23. `my-eks-cluster`를 선택합니다.
 24. [[Delete cluster]] 버튼을 클릭합니다.
 25. 확인 창에서 `my-eks-cluster`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-cleanup-step25-delete-cluster.png" alt="클러스터 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 클러스터 삭제에 5-10분이 소요됩니다. 상태가 "Deleting"에서 완전히 사라질 때까지 기다립니다.
@@ -1176,6 +1308,8 @@ aws eks delete-cluster \
 28. [[Delete stack]] 버튼을 클릭합니다.
 29. 확인 창에서 스택 이름 `week7-3-eks-lab-stack`을 입력합니다.
 30. [[Delete stack]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-cleanup-step30-delete-stack.png" alt="Delete stack 버튼 클릭" class="guide-img-md" />
+    <img src="/images/week7/7-3-cleanup-step30-delete-stack-2.png" alt="스택 삭제 진행" class="guide-img-md" />
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 VPC, 서브넷, IAM 역할 등 모든 사전 인프라가 자동으로 삭제됩니다.
@@ -1201,6 +1335,7 @@ aws eks delete-cluster \
     - **Tag key**: `Week`
     - **Tag value**: `7-3`
 36. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week7/7-3-cleanup-step36-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
