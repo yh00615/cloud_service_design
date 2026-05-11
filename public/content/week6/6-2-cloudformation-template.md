@@ -429,12 +429,14 @@ Outputs:
 14. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 15. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week6/6-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+    <img src="/images/week6/6-2-task3-step15-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 16. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 17. **Specify template**에서 `Upload a template file`을 선택합니다.
 18. [[Choose file]] 버튼을 클릭하고 `vpc-ec2-template.yaml` 파일을 선택합니다.
 19. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-2-task3-step19-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 20. **Stack name**에 `lab-vpc-stack`을 입력합니다.
 21. **Parameters** 섹션에서 다음 값을 확인합니다:
     - **CreatedByTag**: `CloudFormation` (기본값 유지)
@@ -451,6 +453,8 @@ Outputs:
 > AWS IAM 역할에 `AmazonSSMManagedInstanceCore` 정책이 연결되어 있어 안전하게 인스턴스를 관리할 수 있습니다.
 
 22. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-2-task3-step22-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
+
 23. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -459,15 +463,18 @@ Outputs:
 24. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 25. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
-    <img src="/images/week6/6-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+    <img src="/images/week6/6-2-task3-step25-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
 
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
 
 26. [[Next]] 버튼을 클릭합니다.
 27. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week6/6-2-task3-step27-submit.png" alt="Review and create 확인" class="guide-img-md" />
+
 28. [[Submit]] 버튼을 클릭합니다.
 29. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+    <img src="/images/week6/6-2-task3-step29-creating.png" alt="스택 생성 진행 중" class="guide-img-md" />
 
 > [!NOTE]
 > **Status** 열은 스택의 현재 상태를 보여줍니다:
@@ -491,6 +498,8 @@ Outputs:
 
 31. `lab-vpc-stack`을 선택합니다.
 32. 하단의 **Resources** 탭을 선택합니다.
+    <img src="/images/week6/6-2-task3-step32-outputs.png" alt="Resources 탭 확인" class="guide-img-md" />
+
 33. 생성된 리소스 목록을 확인합니다:
 
 | Logical ID                  | Type                                  | Physical ID                                  |
@@ -534,6 +543,8 @@ Outputs:
 
 39. AWS CloudFormation 콘솔로 이동합니다.
 40. 하단의 **Outputs** 탭을 선택합니다.
+    <img src="/images/week6/6-2-task5-step40-outputs.png" alt="Outputs 탭 확인" class="guide-img-md" />
+
 41. 출력값을 확인합니다:
 
 | Key               | Value          | Export Name          |
@@ -562,6 +573,8 @@ Outputs:
 
 43. **Outputs** 탭에서 **WebServerURL** 값을 복사합니다.
 44. 새 브라우저 탭을 열고 복사한 URL을 붙여넣습니다.
+    <img src="/images/week6/6-2-task6-step44-browser.png" alt="웹 서버 테스트 페이지" class="guide-img-md" />
+
 45. "Hello from AWS CloudFormation!" 메시지가 표시되는지 확인합니다.
 
 > [!NOTE]
@@ -594,6 +607,8 @@ Outputs:
    - **Tag key**: `Week`
    - **Tag value**: `6-2`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week6/6-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+
 7. 이 실습에서 생성한 AWS CloudFormation 스택이 표시됩니다.
 
 > [!NOTE]
@@ -606,6 +621,8 @@ Outputs:
 10. [[Delete stack]] 버튼을 클릭합니다.
 11. 확인 창에서 스택 이름 `lab-vpc-stack`을 입력합니다.
 12. [[Delete stack]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-2-cleanup-step12-delete-stack-1.png" alt="Delete stack 확인" class="guide-img-md" />
+    <img src="/images/week6/6-2-cleanup-step12-delete-stack-2.png" alt="스택 삭제 진행" class="guide-img-md" />
 
 > [!NOTE]
 > 스택 삭제에 3-5분이 소요됩니다. AWS CloudFormation이 모든 리소스를 자동으로 삭제합니다.
@@ -623,6 +640,7 @@ Outputs:
     - **Tag key**: `Week`
     - **Tag value**: `6-2`
 18. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week6/6-2-cleanup-step18-tageditor-final.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
