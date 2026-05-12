@@ -95,7 +95,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-<img src="/images/week11/11-3-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week11/11-3-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
@@ -126,7 +126,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources with custom names`를 선택합니다.
 
-    <img src="/images/week11/11-3-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+    <img src="/images/week11/11-3-task0-step14-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
 
 14. [[Submit]] 버튼을 클릭합니다.
 
