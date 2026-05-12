@@ -98,7 +98,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 
 17. **Outputs** 탭을 선택합니다.
-    <img src="/images/week5/5-1-task0-step17-creating.png" alt="스택 생성 완료 및 Outputs 탭" class="guide-img-md" />
+    <img src="/images/week5/5-1-task0-step17-outputs.png" alt="스택 생성 완료 및 Outputs 탭" class="guide-img-md" />
 18. 출력값들을 확인하고 메모장에 복사합니다:
     - `VpcId`: Amazon VPC ID (예: vpc-0123456789abcdef0)
     - `PrivateSubnetAId`: 프라이빗 서브넷 A ID (ap-northeast-2a)
@@ -602,7 +602,7 @@ aws rds delete-db-instance \
   --skip-final-snapshot \
 ```
 
-<img src="/images/week5/5-1-cleanup-step28-cloudshell.png" alt="CloudShell 열기" class="guide-img-md" />
+<img src="/images/week5/5-1-cleanup-step28-delete-replica.png" alt="CloudShell 열기" class="guide-img-md" />
 
 29. Read Replica 삭제가 완료될 때까지 대기합니다 (약 5-10분 소요):
 
@@ -612,7 +612,7 @@ aws rds wait db-instance-deleted \
   --db-instance-identifier mysql-lab-replica
 ```
 
-<img src="/images/week5/5-1-cleanup-step29-delete-replica-cli.png" alt="Read Replica CLI 삭제 실행" class="guide-img-md" />
+<img src="/images/week5/5-1-cleanup-step29-wait.png" alt="Read Replica CLI 삭제 실행" class="guide-img-md" />
 
 > [!TIP] CLI로 확인
 >
@@ -631,7 +631,7 @@ aws rds delete-db-instance \
   --skip-final-snapshot \
 ```
 
-<img src="/images/week5/5-1-cleanup-step30-wait-deleted.png" alt="Primary CLI 삭제 실행" class="guide-img-md" />
+<img src="/images/week5/5-1-cleanup-step30-delete-primary.png" alt="Primary CLI 삭제 실행" class="guide-img-md" />
 
 31. Primary 인스턴스 삭제가 완료될 때까지 대기합니다 (약 5-10분 소요):
 
@@ -641,7 +641,7 @@ aws rds wait db-instance-deleted \
   --db-instance-identifier mysql-lab-instance
 ```
 
-<img src="/images/week5/5-1-cleanup-step31-delete-primary-cli.png" alt="Primary wait 완료" class="guide-img-md" />
+<img src="/images/week5/5-1-cleanup-step31-wait.png" alt="Primary wait 완료" class="guide-img-md" />
 
 > [!TIP] CLI로 확인
 >
