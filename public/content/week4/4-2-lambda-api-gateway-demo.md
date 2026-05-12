@@ -88,16 +88,23 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week4-2-quicktable-api-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-
-   <img src="/images/week4/4-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+   <img src="/images/week4/4-2-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week4-2-quicktable-api-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+   <img src="/images/week4/4-2-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 9. **Stack name**에 `week4-2-quicktable-api-lab-stack`을 입력합니다.
-10. **Parameters** 섹션에서 태그 관련 파라미터(`ProjectTag`, `WeekTag`, `CreatedByTag`)의 기본값을 확인합니다. 변경이 필요하면 수정합니다.
+10. **Parameters** 섹션에서 기본값을 확인합니다:
+    - **EnvironmentName**: `week4-2-quicktable-api` (기본값 유지)
+    - **ProjectTag**: `AWS-Lab` (기본값 유지)
+    - **WeekTag**: `4-2` (기본값 유지)
+    - **CreatedByTag**: `CloudFormation` (기본값 유지)
 11. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task0-step11-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -106,7 +113,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
 
-    <img src="/images/week4/4-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+    <img src="/images/week4/4-2-task0-step14-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
 
 > [!NOTE]
 > 이 체크박스는 AWS CloudFormation이 AWS IAM 역할을 생성할 수 있는 권한을 부여하는 것입니다. 체크하지 않으면 스택 생성이 실패합니다.
@@ -114,21 +121,25 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review and create** 페이지에서 설정을 확인합니다.
 17. [[Submit]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task0-step17-submit.png" alt="Submit 버튼 클릭" class="guide-img-md" />
+
 18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
 
 > [!NOTE]
 > **Status** 열은 스택의 현재 상태를 보여줍니다:
 >
-> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다
-> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다
+> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다.
+> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다.
 > - **CREATE_FAILED** (빨간색): 생성 중 오류가 발생했습니다 (Events 탭에서 원인 확인 필요)
 >
 > 스택 생성에 2-3분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
+    <img src="/images/week4/4-2-task0-step20-outputs.png" alt="Outputs 탭 확인" class="guide-img-md" />
+
 21. 출력값들을 확인하고 메모장에 복사합니다:
-    - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod)
+    - `ApiGatewayInvokeUrl`: Amazon API Gateway Invoke URL (예: `https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod`)
 
 > [!IMPORTANT]
 > 이 출력값은 태스크 4.1에서 환경 변수로 사용됩니다. 반드시 메모장에 저장합니다.
@@ -147,6 +158,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 22. AWS Management Console 상단 검색창에 `Cognito`을 입력하고 선택합니다.
 23. 왼쪽 메뉴에서 **User pools**를 선택합니다.
 24. [[Create user pool]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step24-cognito.png" alt="Create user pool 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > **Amazon Cognito 콘솔 UI 업데이트 (2026년):**
@@ -168,6 +180,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 29. **Required attributes for sign-up**에서 `Select attributes`를 클릭하고 `name`을 체크합니다.
 30. **Add a return URL - optional**은 비워둡니다.
 31. [[Create user directory]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step31-configure.png" alt="Create user directory 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon Cognito가 User Pool과 App Client를 자동으로 생성합니다. Password policy는 기본값(최소 8자, 대소문자·숫자·특수문자 포함)이 적용됩니다.
@@ -175,7 +188,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 버튼명이 "Create user directory" 또는 "Create your application"으로 표시될 수 있습니다.
 
 32. User Pool 생성이 완료될 때까지 기다립니다.
-33. Quick setup guide 화면이 나타나면 [[Go to overview]] 버튼을 클릭하여 User Pool 상세 페이지로 이동합니다.
+    <img src="/images/week4/4-2-task1-step32-review.png" alt="User Pool 생성 완료" class="guide-img-md" />
+33. Quick setup guide 화면이 나타나면 페이지 하단의 [[Go to overview]] 버튼을 클릭하여 User Pool 상세 페이지로 이동합니다.
 
 ### 태스크 1.3: App Client 인증 흐름 설정
 
@@ -184,8 +198,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 34. 왼쪽 메뉴에서 **App clients**를 선택합니다.
 35. `QuickTableApp`을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step35-auth-flow.png" alt="App Client 선택" class="guide-img-md" />
+
 36. [[Edit]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step36-edit.png" alt="Edit 버튼 클릭" class="guide-img-md" />
+
 37. **Authentication flows** 섹션에서 `Sign in with username and password: ALLOW_USER_PASSWORD_AUTH`를 체크합니다.
+    <img src="/images/week4/4-2-task1-step37-auth-check.png" alt="ALLOW_USER_PASSWORD_AUTH 체크" class="guide-img-md" />
 
 > [!IMPORTANT]
 > 이 설정을 활성화하지 않으면 태스크 4에서 `initiate-auth` 명령어가 "USER_PASSWORD_AUTH flow not enabled" 오류로 실패합니다.
@@ -196,6 +215,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 39. 왼쪽 메뉴에서 **Tags** (Settings 섹션)를 선택합니다.
 40. [[Manage tags]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step40-tags.png" alt="Manage tags 클릭" class="guide-img-md" />
+
 41. [[Add new tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
 | Key         | Value     |
@@ -204,7 +225,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `Week`      | `4-2`     |
 | `CreatedBy` | `Student` |
 
+<img src="/images/week4/4-2-task1-step41-tags-added.png" alt="태그 추가 완료" class="guide-img-md" />
+
 42. [[Save changes]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task1-step42-user-pool.png" alt="Save changes 클릭" class="guide-img-md" />
 
 ✅ **태스크 완료**: Amazon Cognito User Pool이 생성되었습니다.
 
@@ -213,8 +237,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 이 태스크에서는 생성된 Amazon Cognito User Pool의 ID와 App Client ID를 확인하여 Amazon API Gateway Authorizer 설정에 사용할 수 있도록 준비합니다.
 
 43. 왼쪽 메뉴에서 **Overview**를 선택합니다.
+    <img src="/images/week4/4-2-task2-step43-user-pool-id.png" alt="User Pool ID 확인" class="guide-img-md" />
+
 44. **User pool ID**를 복사하여 메모장에 저장합니다.
 45. 왼쪽 메뉴에서 **App clients**를 선택합니다.
+    <img src="/images/week4/4-2-task2-step45-app-client.png" alt="App clients 선택" class="guide-img-md" />
+
 46. `QuickTableApp`을 클릭합니다.
 47. **Client ID**를 복사하여 메모장에 저장합니다.
 
@@ -234,7 +262,11 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 48. 상단 검색창에 `API Gateway`을 입력하고 선택합니다.
 49. API 목록에서 `Week4-2-QuickTableAPI`를 선택합니다.
+    <img src="/images/week4/4-2-task3-step49-api-gateway.png" alt="API Gateway 선택" class="guide-img-md" />
+
 50. 왼쪽 메뉴에서 **Authorizers**를 선택합니다.
+    <img src="/images/week4/4-2-task3-step50-authorizers.png" alt="Authorizers 선택" class="guide-img-md" />
+
 51. [[Create authorizer]] 버튼을 클릭합니다.
 52. **Authorizer name**에 `CognitoAuthorizer`를 입력합니다.
 53. **Type**에서 `Cognito`를 선택합니다.
@@ -244,7 +276,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > User Pool 이름이 표시되지 않고 User Pool ID만 표시될 수 있습니다. 태스크 2에서 복사한 User Pool ID와 일치하는지 확인합니다.
 
 55. **Token source**에 `Authorization`을 입력합니다.
+    <img src="/images/week4/4-2-task3-step55-create-authorizer.png" alt="Authorizer 설정 완료" class="guide-img-md" />
+
 56. [[Create authorizer]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task3-step56-authorizer-created.png" alt="Authorizer 생성 완료" class="guide-img-md" />
 
 > [!NOTE]
 > Token source는 API 요청에서 JWT 토큰을 추출할 HTTP 헤더 이름입니다. "Authorization" 헤더에서 토큰을 가져옵니다.
@@ -254,24 +289,33 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 57. 왼쪽 메뉴에서 **Resources**를 선택합니다.
 58. `/reservations` 리소스를 확장합니다.
 59. `POST` 메서드를 선택합니다.
+    <img src="/images/week4/4-2-task3-step59-method-request.png" alt="POST 메서드 선택" class="guide-img-md" />
+
 60. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
 
 > [!TIP]
 > **Method Request Edit 버튼 위치**: POST 메서드를 선택하면 오른쪽에 메서드 실행 흐름이 표시됩니다. **Method Request** 박스 오른쪽 상단에 [[Edit]] 버튼이 있습니다. 만약 보이지 않으면 페이지를 아래로 스크롤하거나 브라우저 창을 확대합니다.
 
 61. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
+    <img src="/images/week4/4-2-task3-step61-authorizer-select.png" alt="CognitoAuthorizer 선택" class="guide-img-md" />
+
 62. [[Save]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task3-step62-save.png" alt="Save 클릭" class="guide-img-md" />
 
 ### 태스크 3.3: GET 메서드에 Authorizer 연결
 
 63. `/reservations` 리소스에서 `GET` 메서드를 선택합니다.
+    <img src="/images/week4/4-2-task3-step63-deploy.png" alt="GET 메서드 선택" class="guide-img-md" />
 64. **Method Request** 섹션에서 [[Edit]] 버튼을 클릭합니다.
 
 > [!TIP]
 > **Method Request Edit 버튼 위치**: GET 메서드를 선택하면 오른쪽에 메서드 실행 흐름이 표시됩니다. **Method Request** 박스 오른쪽 상단에 [[Edit]] 버튼이 있습니다. 만약 보이지 않으면 페이지를 아래로 스크롤하거나 브라우저 창을 확대합니다.
 
 65. **Authorization**에서 `CognitoAuthorizer`를 선택합니다.
+    <img src="/images/week4/4-2-task3-step65-deploy-confirm.png" alt="GET Authorization 설정" class="guide-img-md" />
+
 66. [[Save]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-task3-step66-save-get.png" alt="GET Save 클릭" class="guide-img-md" />
 
 ### 태스크 3.4: API 재배포
 
@@ -281,6 +325,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > **Deploy API 버튼 위치**: 화면 오른쪽 상단에 주황색 [[Deploy API]] 버튼이 있습니다. Resources 페이지에서 메서드를 선택한 상태에서 보입니다. 만약 보이지 않으면 페이지를 위로 스크롤하거나 브라우저 창을 확대합니다.
 
 68. **Stage**에서 `prod`를 선택합니다.
+    <img src="/images/week4/4-2-task3-step68-deploy-api.png" alt="Deploy API Stage 선택" class="guide-img-md" />
+
 69. [[Deploy]] 버튼을 클릭합니다.
 
 > [!IMPORTANT]
@@ -321,6 +367,8 @@ export API_URL="https://abc123.execute-api.ap-northeast-2.amazonaws.com/prod"
 export TEST_EMAIL="test@example.com"
 ```
 
+<img src="/images/week4/4-2-task4-step72-env-vars.png" alt="환경 변수 설정" class="guide-img-md" />
+
 > [!IMPORTANT]
 > `YOUR_CLIENT_ID`, `YOUR_USER_POOL_ID`, `API_URL`을 실제 값으로 변경합니다.
 > 환경 변수를 사용하면 이후 명령어에서 긴 값을 반복 입력하지 않아도 됩니다.
@@ -340,6 +388,8 @@ echo "API URL: $API_URL"
 echo "Test Email: $TEST_EMAIL"
 ```
 
+<img src="/images/week4/4-2-task4-step73-signup.png" alt="환경 변수 확인" class="guide-img-md" />
+
 ### 태스크 4.2: 사용자 생성 및 확인
 
 74. 다음 명령어로 사용자를 생성합니다:
@@ -353,12 +403,20 @@ aws cognito-idp sign-up \
   --region ap-northeast-2
 ```
 
+<img src="/images/week4/4-2-task4-step74-signup.png" alt="사용자 생성 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
 > {
 >   "UserConfirmed": false,
->   "UserSub": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+>   "CodeDeliveryDetails": {
+>     "Destination": "t***@e***",
+>     "DeliveryMedium": "EMAIL",
+>     "AttributeName": "email"
+>   },
+>   "UserSub": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+>   "Session": "AYABeK..."
 > }
 > ```
 
@@ -386,6 +444,8 @@ aws cognito-idp admin-confirm-sign-up \
   --region ap-northeast-2
 ```
 
+<img src="/images/week4/4-2-task4-step75-confirm.png" alt="사용자 확인 완료" class="guide-img-md" />
+
 > [!NOTE]
 > 이 명령어는 성공 시 출력이 없습니다. 오류 메시지가 표시되지 않으면 정상적으로 완료된 것입니다.
 
@@ -405,6 +465,8 @@ export ID_TOKEN=$(aws cognito-idp initiate-auth \
   --query 'AuthenticationResult.IdToken' \
   --output text)
 ```
+
+<img src="/images/week4/4-2-task4-step76-auth.png" alt="인증 토큰 획득" class="guide-img-md" />
 
 77. IdToken이 올바르게 저장되었는지 확인합니다:
 
@@ -441,6 +503,8 @@ curl -X POST $API_URL/reservations \
   -H "Content-Type: application/json" \
   -d '{"restaurantName": "강남 맛집", "date": "2026-03-20", "time": "18:00", "partySize": 4, "phoneNumber": "010-1234-5678"}'
 ```
+
+<img src="/images/week4/4-2-task5-step78-post.png" alt="POST 예약 생성 결과" class="guide-img-md" />
 
 > [!NOTE]
 > **날짜 형식 안내**: `"date": "2026-03-20"` 부분을 실제 날짜로 변경합니다.
@@ -498,6 +562,8 @@ curl -X GET $API_URL/reservations \
   | python3 -m json.tool
 ```
 
+<img src="/images/week4/4-2-task5-step79-get.png" alt="GET 예약 목록 조회 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -534,6 +600,8 @@ curl -X GET $API_URL/reservations \
 curl -X GET $API_URL/reservations; echo
 ```
 
+<img src="/images/week4/4-2-task5-step80-no-auth.png" alt="인증 없이 호출 - Unauthorized" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -551,6 +619,8 @@ curl -X GET $API_URL/reservations; echo
 curl -X GET $API_URL/reservations \
   -H "Authorization: invalid.token.here"; echo
 ```
+
+<img src="/images/week4/4-2-task5-step81-unauthorized.png" alt="잘못된 토큰 - Unauthorized" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -592,6 +662,7 @@ curl -X GET $API_URL/reservations \
    - **Tag key**: `Week`
    - **Tag value**: `4-2`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week4/4-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > 이 실습에서 생성한 AWS Lambda, Amazon DynamoDB, Amazon API Gateway, Amazon Cognito User Pool 등의 리소스가 표시됩니다. Amazon CloudWatch Logs는 태그가 없어 표시되지 않지만, 다음 단계에서 삭제합니다.
@@ -623,6 +694,8 @@ curl -X GET $API_URL/reservations \
 9. [[Delete]] 버튼을 클릭합니다.
 10. 확인 창에서 `Delete Cognito domain` 체크박스와 `Deactivate deletion protection` 체크박스를 모두 체크합니다.
 11. User Pool 이름을 입력합니다.
+    <img src="/images/week4/4-2-cleanup-step11-delete-userpool.png" alt="User Pool 삭제 확인" class="guide-img-md" />
+
 12. [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -636,7 +709,10 @@ curl -X GET $API_URL/reservations \
     - `/aws/lambda/Week4-2-CreateReservation`
     - `/aws/lambda/Week4-2-GetReservations`
 16. **Actions** > `Delete log group(s)`를 선택합니다.
+    <img src="/images/week4/4-2-cleanup-step16-delete-loggroup.png" alt="Delete log group 선택" class="guide-img-md" />
+
 17. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week4/4-2-cleanup-step17-delete-confirm.png" alt="Log Group 삭제 확인" class="guide-img-sm" />
 
 > [!NOTE]
 > Amazon CloudWatch Log Groups는 AWS Lambda 함수 실행 시 자동 생성되며, AWS CloudFormation 스택 삭제 시 자동으로 삭제되지 않으므로 수동 삭제가 필요합니다.
@@ -654,6 +730,8 @@ curl -X GET $API_URL/reservations \
 ```bash
 echo "User Pool ID: $USER_POOL_ID"
 ```
+
+<img src="/images/week4/4-2-cleanup-step19-cloudshell.png" alt="CloudShell 환경 변수 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 태스크 4.1에서 설정한 환경 변수가 유지되어 있으면 User Pool ID가 출력됩니다. CloudShell 세션이 타임아웃되어 비어있으면 다시 설정합니다: `export USER_POOL_ID="YOUR_USER_POOL_ID"`
@@ -689,6 +767,14 @@ aws cognito-idp delete-user-pool \
 echo "Amazon Cognito User Pool 삭제 완료"
 ```
 
+<img src="/images/week4/4-2-cleanup-step20-cli-cognito.png" alt="CLI Cognito 삭제 실행" class="guide-img-md" />
+
+> [!TIP] CLI로 삭제 확인
+>
+> ```bash
+> aws cognito-idp describe-user-pool --region ap-northeast-2 --user-pool-id $USER_POOL_ID 2>&1 | grep -q "ResourceNotFoundException" && echo "삭제 완료" || echo "삭제 진행 중"
+> ```
+
 21. 다음 명령어로 Amazon CloudWatch Log Groups를 삭제합니다:
 
 ```bash
@@ -711,6 +797,16 @@ else
 fi
 ```
 
+<img src="/images/week4/4-2-cleanup-step21-cli-loggroups.png" alt="CLI Log Groups 삭제 실행" class="guide-img-md" />
+
+> [!TIP] CLI로 삭제 확인
+>
+> ```bash
+> aws logs describe-log-groups --region ap-northeast-2 --log-group-name-prefix "/aws/lambda/Week4-2-" --query 'logGroups[].logGroupName' --output text
+> ```
+>
+> 결과가 비어있으면 삭제 완료입니다.
+
 > [!NOTE]
 > User Pool 삭제 시 Deletion protection 비활성화와 Domain 삭제가 선행되어야 합니다. 오류가 발생하면 콘솔에서 수동 삭제(옵션 1)를 사용합니다.
 
@@ -730,27 +826,18 @@ fi
 25. [[Delete stack]] 버튼을 클릭합니다.
 26. 확인 창에서 스택 이름 `week4-2-quicktable-api-lab-stack`을 입력합니다.
 27. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
+    <img src="/images/week4/4-2-cleanup-step26-delete-stack.png" alt="Delete stack 확인" class="guide-img-md" />
 
 > [!NOTE]
-> 확인 후 스택 목록 페이지로 이동합니다.
+> 스택 삭제에 3-5분이 소요됩니다. **Events** 탭에서 리소스 삭제 과정을 실시간으로 확인할 수 있습니다.
 
-28. `week4-2-quicktable-api-lab-stack` 스택의 **Status** 열을 확인합니다.
-
-> [!NOTE]
-> 스택 삭제가 시작되면 **Status**가 "DELETE_IN_PROGRESS"로 표시됩니다. AWS CloudFormation이 생성한 모든 리소스를 역순으로 삭제합니다.
-
-29. 스택을 클릭하여 상세 페이지로 이동합니다.
-30. **Events** 탭을 선택합니다.
-
-> [!NOTE]
-> **Events** 탭에는 리소스 삭제 과정이 실시간으로 표시됩니다. Amazon DynamoDB 테이블, AWS Lambda 함수, Amazon API Gateway, AWS IAM 역할 등이 순차적으로 삭제됩니다. 삭제에 3-5분이 소요됩니다.
-
-31. 스택 삭제가 완료될 때까지 기다립니다.
+28. 스택 삭제가 완료될 때까지 기다립니다.
+    <img src="/images/week4/4-2-cleanup-step28-stack-deleted.png" alt="스택 삭제 완료" class="guide-img-md" />
 
 > [!NOTE]
 > 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인하고, Amazon DynamoDB 테이블을 수동으로 삭제한 후 스택 삭제를 다시 시도합니다.
 
-32. 스택 목록 페이지로 돌아가서 `week4-2-quicktable-api-lab-stack` 스택이 목록에서 사라졌는지 확인합니다.
+29. 스택 목록 페이지로 돌아가서 `week4-2-quicktable-api-lab-stack` 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > 스택이 목록에 표시되지 않으면 성공적으로 삭제된 것입니다.
@@ -761,14 +848,14 @@ fi
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-33. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-34. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-35. **Regions**에서 `ap-northeast-2`를 선택합니다.
-36. **Resource types**에서 `All supported resource types`를 선택합니다.
-37. **Tags** 섹션에서 다음을 입력합니다:
+30. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+31. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+32. **Regions**에서 `ap-northeast-2`를 선택합니다.
+33. **Resource types**에서 `All supported resource types`를 선택합니다.
+34. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `4-2`
-38. [[Search resources]] 버튼을 클릭합니다.
+35. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -783,11 +870,11 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 > [!NOTE]
 > 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
 
-39. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
-40. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
-41. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-42. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
-43. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+36. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+37. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+38. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+39. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+40. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 

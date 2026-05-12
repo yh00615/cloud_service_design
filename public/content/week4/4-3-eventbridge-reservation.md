@@ -84,13 +84,13 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week4/4-3-task0-step5-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week4/4-3-task0-step5-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week4-3-quicktable-events-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
-    <img src="/images/week4/4-3-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+   <img src="/images/week4/4-3-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
 
 9. **Stack name**에 `week4-3-quicktable-events-lab-stack`을 입력합니다.
 10. **Parameters** 섹션에서 다음을 확인합니다:
@@ -443,7 +443,7 @@ eventbridge.put_events(
 
 ### 상세 단계
 
-70. AWS Lambda 콘솔로 이동합니다.
+70. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 71. `ReservationProcessor` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-ReservationProcessor`).
 
 > [!NOTE]
@@ -476,7 +476,7 @@ eventbridge.put_events(
 
 77. [[Test]] 버튼을 클릭합니다.
 78. 함수 실행이 완료됩니다.
-79. **Execution result** 섹션에서 실행 결과를 확인합니다.
+79. 테스트 실행 후 "Executing function: succeeded" 메시지를 확인하고 **Details**를 확장하여 실행 결과를 확인합니다.
     <img src="/images/week4/4-3-task4-step79-result.png" alt="Executing function succeeded" class="guide-img-md" />
 
 > [!OUTPUT]
@@ -504,7 +504,7 @@ eventbridge.put_events(
 > [!NOTE]
 > 이 메시지는 ReservationProcessor 함수가 Amazon EventBridge에 이벤트를 성공적으로 발행했음을 의미합니다.
 
-84. AWS Lambda 콘솔로 이동합니다.
+84. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 85. 검색창에 `TableAvailabilityChecker`를 입력하여 함수를 찾습니다.
 86. `TableAvailabilityChecker` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-TableAvailabilityChecker`).
 
@@ -565,7 +565,7 @@ Amazon CloudWatch Logs 콘솔에서 로그 스트림 목록이 표시됩니다.
 
 ### 느슨한 결합 확인
 
-97. AWS Lambda 콘솔로 이동합니다.
+97. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 98. `ReservationProcessor` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-ReservationProcessor`).
 99. **Code** 탭을 선택합니다.
     <img src="/images/week4/4-3-task5-step99-lambda-result.png" alt="Lambda Code 탭 확인" class="guide-img-md" />
@@ -648,7 +648,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 
 ### 상세 단계
 
-106. AWS Lambda 콘솔로 이동합니다.
+106. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 107. `ReservationProcessor` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-ReservationProcessor`).
 108. **Test** 탭을 선택합니다.
 109. **Test event action**에서 `Create new event`를 선택합니다.
@@ -675,7 +675,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
      <img src="/images/week4/4-3-task6-step113-test-unavailable.png" alt="Test 실행" class="guide-img-md" />
 
 114. 함수 실행이 완료됩니다.
-115. **Execution result** 섹션에서 실행 결과를 확인합니다.
+115. 테스트 실행 후 "Executing function: succeeded" 메시지를 확인하고 **Details**를 확장하여 실행 결과를 확인합니다.
 
 > [!OUTPUT]
 >
@@ -710,7 +710,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 > [!NOTE]
 > Amazon DynamoDB 테이블에 예약 데이터가 저장되어 있으면 ReservationProcessor 함수가 정상적으로 동작한 것입니다. 예약 불가 시나리오에서도 예약 데이터는 먼저 저장되고, 이후 TableAvailabilityChecker가 비동기적으로 가용성을 확인합니다.
 
-125. AWS Lambda 콘솔로 이동합니다.
+125. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 126. `TableAvailabilityChecker` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-TableAvailabilityChecker`).
 127. **Monitor** 탭을 선택합니다.
 128. **View Amazon CloudWatch Logs** 링크를 클릭합니다.
@@ -723,7 +723,7 @@ restaurant-003은 19:00 시간대에 3개의 예약 가능 슬롯만 있습니�
 > [!NOTE]
 > TableAvailabilityChecker 함수가 예약 불가를 판단하고 TableUnavailable 이벤트를 발행했습니다.
 
-132. AWS Lambda 콘솔로 이동합니다.
+132. AWS Lambda 콘솔의 **Functions** 탭으로 이동합니다.
 133. `NotificationSender` 함수를 선택합니다 (예: `week4-3-quicktable-events-lab-NotificationSender`).
      <img src="/images/week4/4-3-task6-step133-notification-sender.png" alt="NotificationSender 함수 선택" class="guide-img-md" />
 
@@ -804,7 +804,7 @@ Monitoring 탭에서는 규칙의 실행 통계를 확인할 수 있습니다.
    - **Tag key**: `Week`
    - **Tag value**: `4-3`
 6. [[Search resources]] 버튼을 클릭합니다.
-    <img src="/images/week4/4-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+   <img src="/images/week4/4-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 7. 이 실습에서 생성한 모든 리소스가 표시됩니다.
 
