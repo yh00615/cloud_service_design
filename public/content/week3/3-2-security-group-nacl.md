@@ -88,16 +88,23 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week3-2-security-group-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-
-    <img src="/images/week3/3-2-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+   <img src="/images/week3/3-2-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week3-2-security-group-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+   <img src="/images/week3/3-2-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 9. **Stack name**에 `week3-2-security-group-stack`을 입력합니다.
-10. **Parameters** 섹션에서 태그 관련 파라미터(`ProjectTag`, `WeekTag`, `CreatedByTag`)의 기본값을 확인합니다. 변경이 필요하면 수정합니다.
+10. **Parameters** 섹션에서 기본값을 확인합니다:
+    - **EnvironmentName**: `week3-2-security-group` (기본값 유지)
+    - **ProjectTag**: `AWS-Lab` (기본값 유지)
+    - **WeekTag**: `3-2` (기본값 유지)
+    - **CreatedByTag**: `CloudFormation` (기본값 유지)
 11. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task0-step11-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -105,7 +112,6 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
-
     <img src="/images/week3/3-2-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
 
 > [!NOTE]
@@ -119,18 +125,21 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > AWS CloudFormation 스택 목록 페이지로 자동 이동합니다.
 
 18. 스택 생성이 시작됩니다. 상태가 "CREATE_IN_PROGRESS"로 표시됩니다.
+    <img src="/images/week3/3-2-task0-step18-create-in-progress.png" alt="CloudFormation CREATE_IN_PROGRESS 상태" class="guide-img-md" />
 
 > [!NOTE]
 > **Status** 열은 스택의 현재 상태를 보여줍니다:
 >
-> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다
-> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다
+> - **CREATE_IN_PROGRESS** (파란색): AWS CloudFormation이 리소스를 생성하고 있습니다.
+> - **CREATE_COMPLETE** (초록색): 모든 리소스가 성공적으로 생성되었습니다.
 > - **CREATE_FAILED** (빨간색): 생성 중 오류가 발생했습니다 (Events 탭에서 원인 확인 필요)
 >
 > 스택 생성에 5-7분이 소요됩니다. **Events** 탭에서 생성 과정을 확인할 수 있습니다. 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 19. 상태가 "**CREATE_COMPLETE**"로 변경될 때까지 기다립니다.
 20. **Outputs** 탭을 선택합니다.
+    <img src="/images/week3/3-2-task0-step20-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 21. 출력값들을 확인하고 다음 5개 값을 메모장에 복사합니다:
     - `PrivateWebSubnetAId`: 프라이빗 Web 서브넷 A ID
     - `PrivateWebSubnetCId`: 프라이빗 Web 서브넷 C ID
@@ -157,6 +166,9 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - `week3-2-security-group-App-SG` (빈 규칙)
     - `week3-2-security-group-DB-SG` (빈 규칙)
 26. ALB-SG, Web-SG, App-SG, DB-SG를 각각 선택하고 하단의 **Inbound rules** 탭을 확인합니다.
+    <img src="/images/week3/3-2-task0-step26-inbound-rules.png" alt="보안 그룹 Inbound rules 탭 확인" class="guide-img-md" />
+    <img src="/images/week3/3-2-task0-step26-sg-filter.png" alt="보안 그룹 필터링 결과" class="guide-img-md" />
+    <img src="/images/week3/3-2-task0-step26-sg-list.png" alt="보안 그룹 목록 확인" class="guide-img-md" />
 
 > [!NOTE]
 > ALB-SG, Web-SG, App-SG, DB-SG의 인바운드 규칙이 비어 있습니다. 다음 태스크에서 학생이 직접 인바운드 규칙을 추가합니다.
@@ -176,6 +188,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 29. `week3-2-security-group-ALB-SG` 보안 그룹을 선택합니다.
 30. 하단의 **Inbound rules** 탭을 선택합니다.
 31. [[Edit inbound rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task1-step31-edit-inbound-rules.png" alt="Edit inbound rules 버튼 클릭" class="guide-img-md" />
+
 32. [[Add rule]] 버튼을 클릭합니다.
 33. 첫 번째 규칙을 설정합니다:
     - **Type**에서 `HTTP`를 선택합니다.
@@ -186,7 +200,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Type**에서 `HTTPS`를 선택합니다.
     - **Source**에서 `0.0.0.0/0`을 입력합니다.
     - **Description**에 `Allow HTTPS from internet`를 입력합니다.
+      <img src="/images/week3/3-2-task1-step35-add-rule.png" alt="ALB 보안 그룹 인바운드 규칙 추가" class="guide-img-md" />
+
 36. [[Save rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task1-step36-save-rules.png" alt="Save rules 버튼 클릭" class="guide-img-md" />
 
 ✅ **태스크 완료**: ALB 보안 그룹 인바운드 규칙이 구성되었습니다.
 
@@ -197,6 +214,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 37. `week3-2-security-group-Web-SG` 보안 그룹을 선택합니다.
 38. 하단의 **Inbound rules** 탭을 선택합니다.
 39. [[Edit inbound rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task2-step39-edit-inbound-rules.png" alt="Web-SG Edit inbound rules 버튼 클릭" class="guide-img-md" />
+
 40. [[Add rule]] 버튼을 클릭합니다.
 41. 첫 번째 규칙을 설정합니다:
     - **Type**에서 `HTTP`를 선택합니다.
@@ -212,6 +231,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Type**에서 `SSH`를 선택합니다.
     - **Source**에서 `My IP`를 선택합니다.
     - **Description**에 `Allow SSH from my IP`를 입력합니다.
+      <img src="/images/week3/3-2-task2-step45-ssh-rule.png" alt="Web-SG SSH 규칙 추가" class="guide-img-md" />
 
 > [!NOTE]
 > **"My IP" 동작 방식**: "My IP"는 현재 콘솔에 접속한 IP 주소를 자동으로 감지합니다. 카페, 학교 등 네트워크 환경이 변경되면 IP가 달라지므로 SSH 접근이 차단될 수 있습니다. 이 경우 보안 그룹 규칙을 업데이트해야 합니다.
@@ -239,6 +259,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > **이 실습의 목적**: 이 SSH 규칙은 보안 그룹 설정 방법을 학습하기 위한 것입니다. 실제 프로덕션 환경에서는 프라이빗 서브넷의 Amazon EC2에 직접 SSH 규칙을 추가하지 않고, Bastion Host나 Session Manager를 통해 접근합니다.
 
 46. [[Save rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task2-step46-save-rules.png" alt="Web-SG Save rules" class="guide-img-md" />
 
 ✅ **태스크 완료**: Web Tier 보안 그룹 인바운드 규칙이 구성되었습니다.
 
@@ -260,7 +281,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Type**에서 `SSH`를 선택합니다.
     - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `Web-SG`를 입력하여 `week3-2-security-group-Web-SG`를 찾아 선택합니다.
     - **Description**에 `Allow SSH from Web tier`를 입력합니다.
+      <img src="/images/week3/3-2-task3-step53-add-rule.png" alt="App-SG 인바운드 규칙 추가" class="guide-img-md" />
+
 54. [[Save rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task3-step54-save-rules.png" alt="App-SG Save rules" class="guide-img-md" />
 
 ✅ **태스크 완료**: App Tier 보안 그룹 인바운드 규칙이 구성되었습니다.
 
@@ -276,7 +300,10 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **Type**에서 `MySQL/Aurora`를 선택합니다.
     - **Source**에서 `Custom`을 선택한 후, 검색 필드에 `App-SG`를 입력하여 `week3-2-security-group-App-SG`를 찾아 선택합니다.
     - **Description**에 `Allow MySQL from App tier`를 입력합니다.
+      <img src="/images/week3/3-2-task4-step59-add-rule.png" alt="DB-SG MySQL 규칙 추가" class="guide-img-md" />
+
 60. [[Save rules]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task4-step60-save-rules.png" alt="DB-SG Save rules" class="guide-img-md" />
 
 > [!NOTE]
 > DB 계층은 App 계층에서만 접근 가능하도록 구성하여 보안을 강화합니다.
@@ -296,8 +323,12 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 62. 왼쪽 메뉴에서 **Instances**를 선택합니다.
 63. 검색창에 `week3-2-security-group-Web-Instance`를 입력합니다.
 64. `week3-2-security-group-Web-Instance` 인스턴스를 선택합니다.
+    <img src="/images/week3/3-2-task5-step64-select-instance.png" alt="Web Instance 선택" class="guide-img-md" />
+
 65. [[Connect]] 버튼을 클릭합니다.
 66. **Session Manager** 탭을 선택합니다.
+    <img src="/images/week3/3-2-task5-step66-session-manager.png" alt="Session Manager 탭 선택" class="guide-img-md" />
+
 67. [[Connect]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -314,6 +345,8 @@ aws ec2 describe-instances \
   --output text
 ```
 
+<img src="/images/week3/3-2-task5-step68-app-ip.png" alt="App 인스턴스 Private IP 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 > 예시: `10.0.21.xxx`
 
@@ -323,6 +356,8 @@ aws ec2 describe-instances \
 # App 서버 연결 테스트 (성공해야 함)
 curl http://10.0.21.xxx:8080
 ```
+
+<img src="/images/week3/3-2-task5-step69-curl-app.png" alt="App 서버 연결 테스트 성공" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -343,12 +378,16 @@ aws ec2 describe-instances \
   --output text
 ```
 
+<img src="/images/week3/3-2-task5-step70-db-ip.png" alt="DB 인스턴스 Private IP 확인" class="guide-img-md" />
+
 71. Web 서버에서 DB 서버(포트 3306)로 직접 연결을 시도합니다:
 
 ```bash
 # DB 서버 직접 연결 테스트 (실패해야 함)
 nc -zv 10.0.31.xxx 3306 -w 3
 ```
+
+<img src="/images/week3/3-2-task5-step71-nc-db.png" alt="DB 서버 연결 타임아웃" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -379,6 +418,8 @@ DB_IP=$(aws ec2 describe-instances \
 nc -zv $DB_IP 3306
 ```
 
+<img src="/images/week3/3-2-task5-step75-nc-db-success.png" alt="App에서 DB 연결 성공" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -393,6 +434,8 @@ nc -zv $DB_IP 3306
 # DB 서버에서 응답 받기
 echo "SELECT 1" | nc $DB_IP 3306
 ```
+
+<img src="/images/week3/3-2-task5-step76-db-response.png" alt="DB 서버 응답 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -419,6 +462,8 @@ echo "SELECT 1" | nc $DB_IP 3306
 
 77. 왼쪽 메뉴에서 **Network ACLs**를 선택합니다.
 78. [[Create network ACL]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task6-step78-create-nacl.png" alt="Create network ACL 버튼 클릭" class="guide-img-md" />
+
 79. **Name**에 `Public-NACL`을 입력합니다.
 80. **Amazon VPC**에서 AWS CloudFormation이 생성한 Amazon VPC를 선택합니다.
 
@@ -434,48 +479,52 @@ echo "SELECT 1" | nc $DB_IP 3306
 | `Week`      | `3-2`         |
 | `CreatedBy` | `Student`     |
 
+<img src="/images/week3/3-2-task6-step81-tags.png" alt="NACL 태그 추가" class="guide-img-md" />
+
 82. [[Create network ACL]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task6-step82-create-button.png" alt="Create network ACL 확인" class="guide-img-md" />
 
 ### 인바운드 규칙 설정
 
 83. 생성된 `Public-NACL`을 선택합니다.
 84. 하단의 **Inbound rules** 탭을 선택합니다.
+    <img src="/images/week3/3-2-task6-step84-inbound-rules.png" alt="Public-NACL Inbound rules 탭" class="guide-img-md" />
+
 85. [[Edit inbound rules]] 버튼을 클릭합니다.
 86. 다음 4개의 인바운드 규칙을 [[Add new rule]] 버튼을 클릭하여 순서대로 추가합니다:
 
     **규칙 1 - HTTP 트래픽 허용**
+    - Rule number: `100`
+    - Type: `HTTP (80)`
+    - Source: `0.0.0.0/0`
+    - Allow/Deny: `Allow`
 
-- Rule number: `100`
-- Type: `HTTP (80)`
-- Source: `0.0.0.0/0`
-- Allow/Deny: `Allow`
+    **규칙 2 - HTTPS 트래픽 허용**
+    - Rule number: `110`
+    - Type: `HTTPS (443)`
+    - Source: `0.0.0.0/0`
+    - Allow/Deny: `Allow`
 
-**규칙 2 - HTTPS 트래픽 허용**
+    **규칙 3 - SSH 트래픽 허용**
+    - Rule number: `120`
+    - Type: `SSH (22)`
+    - Source: `0.0.0.0/0`
+    - Allow/Deny: `Allow`
 
-- Rule number: `110`
-- Type: `HTTPS (443)`
-- Source: `0.0.0.0/0`
-- Allow/Deny: `Allow`
+    > [!WARNING]
+    > 이 실습에서는 편의를 위해 SSH를 전체 인터넷(0.0.0.0/0)에서 허용하지만, 프로덕션 환경에서는 반드시 특정 IP 주소 또는 IP 범위로 제한해야 합니다. 보안 그룹에서 "My IP"로 제한했더라도 NACL에서 전체 허용하면 보안이 약화됩니다.
 
-**규칙 3 - SSH 트래픽 허용**
+    **규칙 4 - 임시 포트 허용 (응답 트래픽용)**
+    - Rule number: `130`
+    - Type: `Custom TCP`
+    - Port range: `1024-65535`
+    - Source: `0.0.0.0/0`
+    - Allow/Deny: `Allow`
 
-- Rule number: `120`
-- Type: `SSH (22)`
-- Source: `0.0.0.0/0`
-- Allow/Deny: `Allow`
-
-> [!WARNING]
-> 이 실습에서는 편의를 위해 SSH를 전체 인터넷(0.0.0.0/0)에서 허용하지만, 프로덕션 환경에서는 반드시 특정 IP 주소 또는 IP 범위로 제한해야 합니다. 보안 그룹에서 "My IP"로 제한했더라도 NACL에서 전체 허용하면 보안이 약화됩니다.
-
-**규칙 4 - 임시 포트 허용 (응답 트래픽용)**
-
-- Rule number: `130`
-- Type: `Custom TCP`
-- Port range: `1024-65535`
-- Source: `0.0.0.0/0`
-- Allow/Deny: `Allow`
+    <img src="/images/week3/3-2-task6-step86-inbound-rules-added.png" alt="Public-NACL 인바운드 규칙 추가 완료" class="guide-img-md" />
 
 87. [[Save changes]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task6-step87-save-changes.png" alt="Save changes 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > **임시 포트 (Ephemeral Ports)**: 클라이언트가 서버에 요청을 보낼 때, 서버의 응답을 받기 위해 클라이언트 측에서 임시로 열리는 포트입니다 (1024-65535 범위). 예를 들어, 브라우저가 웹 서버(포트 80)에 접속할 때 브라우저는 자신의 임시 포트(예: 50234)를 열어서 응답을 받습니다. NACL은 Stateless이므로 응답 트래픽을 위해 이 포트 범위를 명시적으로 허용해야 합니다.
@@ -485,6 +534,8 @@ echo "SELECT 1" | nc $DB_IP 3306
 ### 아웃바운드 규칙 설정
 
 88. 하단의 **Outbound rules** 탭을 선택합니다.
+    <img src="/images/week3/3-2-task6-step88-outbound-rules.png" alt="Outbound rules 탭 선택" class="guide-img-md" />
+
 89. [[Edit outbound rules]] 버튼을 클릭합니다.
 90. 다음 3개의 아웃바운드 규칙을 [[Add new rule]] 버튼을 클릭하여 순서대로 추가합니다:
 
@@ -507,7 +558,10 @@ echo "SELECT 1" | nc $DB_IP 3306
     - Destination: `0.0.0.0/0`
     - Allow/Deny: `Allow`
 
+    <img src="/images/week3/3-2-task6-step90-outbound-rules-added.png" alt="Public-NACL 아웃바운드 규칙 추가 완료" class="guide-img-md" />
+
 91. [[Save changes]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task6-step91-save-changes.png" alt="Outbound rules Save changes" class="guide-img-md" />
 
 > [!NOTE]
 > **아웃바운드에 SSH(22)가 없는 이유**: 인바운드에서 SSH를 허용했지만 아웃바운드에는 SSH를 추가하지 않았습니다. 외부에서 SSH로 접속한 클라이언트의 응답은 임시 포트(1024-65535) 규칙으로 처리되므로 별도의 SSH 아웃바운드 규칙이 필요 없습니다. SSH 아웃바운드가 필요한 경우는 퍼블릭 서브넷에서 프라이빗 서브넷으로 SSH 접속할 때(Bastion Host)이지만, 이 실습에서는 Session Manager를 사용합니다.
@@ -536,41 +590,49 @@ echo "SELECT 1" | nc $DB_IP 3306
 | `CreatedBy` | `Student`      |
 
 97. [[Create network ACL]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-task7-step97-create-nacl.png" alt="Private-NACL 생성" class="guide-img-md" />
+
 98. 생성된 `Private-NACL`을 선택합니다.
 99. 하단의 **Inbound rules** 탭을 선택합니다.
 100.  [[Edit inbound rules]] 버튼을 클릭합니다.
 101.  [[Add new rule]] 버튼을 클릭합니다.
 102.  첫 번째 규칙을 설정합니다 (Amazon VPC 내부 트래픽):
 
-- Rule number: `100`
-- Type: `All traffic`
-- Source: `10.0.0.0/16`
-- Allow/Deny: `Allow`
+
+     - Rule number: `100`
+     - Type: `All traffic`
+     - Source: `10.0.0.0/16`
+     - Allow/Deny: `Allow`
 
 103. [[Add new rule]] 버튼을 다시 클릭합니다.
 104. 두 번째 규칙을 설정합니다 (임시 포트):
+     - Rule number: `110`
+     - Type: `Custom TCP`
+     - Port range: `1024-65535`
+     - Source: `0.0.0.0/0`
+     - Allow/Deny: `Allow`
 
-- Rule number: `110`
-- Type: `Custom TCP`
-- Port range: `1024-65535`
-- Source: `0.0.0.0/0`
-- Allow/Deny: `Allow`
+<img src="/images/week3/3-2-task7-step104-inbound-rules.png" alt="Private-NACL 인바운드 규칙 추가" class="guide-img-md" />
 
 > [!NOTE]
 > **Private NACL 인바운드 규칙 110의 용도**: 이 규칙은 NAT Gateway를 통해 인터넷으로 나간 트래픽의 응답을 받기 위한 것입니다. Private 서브넷의 인스턴스가 NAT Gateway를 통해 외부 API나 패키지 저장소에 접근할 때, 응답 트래픽은 임시 포트(1024-65535)로 돌아옵니다. 규칙 100에서 Amazon VPC 내부 트래픽(10.0.0.0/16)을 허용하지만, NAT Gateway를 거친 인터넷 응답은 0.0.0.0/0에서 오므로 별도 규칙이 필요합니다.
 
 105. [[Save changes]] 버튼을 클릭합니다.
+     <img src="/images/week3/3-2-task7-step105-save-changes.png" alt="Private-NACL 인바운드 Save changes" class="guide-img-md" />
+
 106. 하단의 **Outbound rules** 탭을 선택합니다.
 107. [[Edit outbound rules]] 버튼을 클릭합니다.
 108. [[Add new rule]] 버튼을 클릭합니다.
 109. 첫 번째 규칙을 설정합니다:
+     - Rule number: `100`
+     - Type: `All traffic`
+     - Destination: `0.0.0.0/0`
+     - Allow/Deny: `Allow`
 
-- Rule number: `100`
-- Type: `All traffic`
-- Destination: `0.0.0.0/0`
-- Allow/Deny: `Allow`
+<img src="/images/week3/3-2-task7-step109-outbound-rule.png" alt="Private-NACL 아웃바운드 규칙 추가" class="guide-img-md" />
 
 110. [[Save changes]] 버튼을 클릭합니다.
+     <img src="/images/week3/3-2-task7-step110-save-changes.png" alt="Private-NACL 아웃바운드 Save changes" class="guide-img-md" />
 
 > [!NOTE]
 > 이 실습에서는 편의를 위해 Private 서브넷의 아웃바운드를 전체 허용했습니다. 프로덕션 환경에서는 필요한 포트와 대상만 허용하는 것이 보안 모범 사례입니다. 예를 들어, HTTP/HTTPS(80, 443)와 데이터베이스 포트(3306, 5432)만 허용하도록 제한할 수 있습니다.
@@ -584,18 +646,24 @@ echo "SELECT 1" | nc $DB_IP 3306
 111. Amazon VPC 콘솔의 왼쪽 메뉴에서 **Network ACLs**를 선택합니다.
 112. `Public-NACL`을 선택합니다.
 113. **Actions** > `Edit subnet associations`를 선택합니다. (또는 상세보기 하단의 **Subnet associations** 탭에서 [[Edit subnet associations]] 버튼을 클릭합니다.)
+     <img src="/images/week3/3-2-task8-step113-edit-subnet-assoc.png" alt="Edit subnet associations 선택" class="guide-img-md" />
+     <img src="/images/week3/3-2-task8-step113-subnet-select.png" alt="서브넷 연결 선택" class="guide-img-md" />
+
 114. `week3-2-security-group-Public-Subnet-A`와 `week3-2-security-group-Public-Subnet-C`를 체크합니다.
+     <img src="/images/week3/3-2-task8-step114-public-subnets.png" alt="Public 서브넷 체크" class="guide-img-md" />
+
 115. [[Save changes]] 버튼을 클릭합니다.
 116. `Private-NACL`을 선택합니다.
 117. **Actions** > `Edit subnet associations`를 선택합니다.
 118. 프라이빗 서브넷 6개를 모두 체크합니다 (이름에 "Public"이 포함되지 않은 서브넷 전부):
+     - `week3-2-security-group-Web-Subnet-A`
+     - `week3-2-security-group-Web-Subnet-C`
+     - `week3-2-security-group-App-Subnet-A`
+     - `week3-2-security-group-App-Subnet-C`
+     - `week3-2-security-group-DB-Subnet-A`
+     - `week3-2-security-group-DB-Subnet-C`
 
-- `week3-2-security-group-Web-Subnet-A`
-- `week3-2-security-group-Web-Subnet-C`
-- `week3-2-security-group-App-Subnet-A`
-- `week3-2-security-group-App-Subnet-C`
-- `week3-2-security-group-DB-Subnet-A`
-- `week3-2-security-group-DB-Subnet-C`
+<img src="/images/week3/3-2-task8-step118-private-subnets.png" alt="Private 서브넷 6개 체크" class="guide-img-md" />
 
 119. [[Save changes]] 버튼을 클릭합니다.
 
@@ -622,6 +690,8 @@ APP_IP=$(aws ec2 describe-instances \
 curl http://$APP_IP:8080
 ```
 
+<img src="/images/week3/3-2-task9-step121-curl-app.png" alt="NACL 허용 상태에서 App 서버 연결 성공" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -639,14 +709,16 @@ curl http://$APP_IP:8080
 126. [[Edit inbound rules]] 버튼을 클릭합니다.
 127. [[Add new rule]] 버튼을 클릭합니다.
 128. 새 규칙을 설정합니다 (포트 8080 차단):
+     - Rule number: `50`
+     - Type: `Custom TCP`
+     - Port range: `8080`
+     - Source: `10.0.11.0/24` (Web Subnet A)
+     - Allow/Deny: `Deny`
 
-- Rule number: `50`
-- Type: `Custom TCP`
-- Port range: `8080`
-- Source: `10.0.11.0/24` (Web Subnet A)
-- Allow/Deny: `Deny`
+<img src="/images/week3/3-2-task9-step128-deny-rule.png" alt="NACL Deny 규칙 추가" class="guide-img-md" />
 
 129. [[Save changes]] 버튼을 클릭합니다.
+     <img src="/images/week3/3-2-task9-step129-save-changes.png" alt="NACL Deny 규칙 Save changes" class="guide-img-md" />
 
 > [!NOTE]
 > **NACL 규칙 평가 순서**: NACL은 규칙 번호가 낮은 순서대로 평가됩니다. 규칙 50(Deny)이 규칙 100(Allow)보다 먼저 평가되므로, Web 서브넷에서 App 서브넷의 8080 포트로 가는 트래픽이 차단됩니다.
@@ -658,6 +730,8 @@ curl http://$APP_IP:8080
 # App 서버 연결 재시도 (실패해야 함)
 curl http://$APP_IP:8080 --max-time 5
 ```
+
+<img src="/images/week3/3-2-task9-step131-curl-timeout.png" alt="NACL 차단으로 연결 타임아웃" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -682,6 +756,8 @@ curl http://$APP_IP:8080 --max-time 5
 # App 서버 연결 재시도 (성공해야 함)
 curl http://$APP_IP:8080
 ```
+
+<img src="/images/week3/3-2-task9-step136-curl-success.png" alt="NACL 규칙 제거 후 연결 성공" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -743,6 +819,7 @@ curl http://$APP_IP:8080
    - **Tag key**: `Week`
    - **Tag value**: `3-2`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week3/3-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > AWS CloudFormation 스택으로 생성된 VPC, 서브넷, 보안 그룹, EC2 인스턴스 등 모든 리소스가 표시됩니다. 수동으로 생성한 NACL도 `Week=3-2` 태그가 있어 함께 표시됩니다.
@@ -769,8 +846,12 @@ curl http://$APP_IP:8080
 8. 왼쪽 메뉴에서 **Network ACLs**를 선택합니다.
 9. `Public-NACL`을 선택합니다.
 10. 하단의 **Subnet associations** 탭을 선택합니다.
+    <img src="/images/week3/3-2-cleanup-step10-subnet-assoc.png" alt="Public-NACL Subnet associations 탭" class="guide-img-md" />
+
 11. [[Edit subnet associations]] 버튼을 클릭합니다.
 12. 모든 서브넷의 체크를 해제합니다.
+    <img src="/images/week3/3-2-cleanup-step12-uncheck-subnets.png" alt="Public-NACL 서브넷 체크 해제" class="guide-img-md" />
+
 13. [[Save changes]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -778,13 +859,20 @@ curl http://$APP_IP:8080
 
 14. `Private-NACL`을 선택합니다.
 15. 하단의 **Subnet associations** 탭을 선택합니다.
+    <img src="/images/week3/3-2-cleanup-step15-private-subnet-assoc.png" alt="Private-NACL Subnet associations 탭" class="guide-img-md" />
+
 16. [[Edit subnet associations]] 버튼을 클릭합니다.
 17. 모든 서브넷의 체크를 해제합니다.
+    <img src="/images/week3/3-2-cleanup-step17-uncheck-private.png" alt="Private-NACL 서브넷 체크 해제" class="guide-img-md" />
 18. [[Save changes]] 버튼을 클릭합니다.
-19. `Public-NACL`을 선택합니다.
+19. `Private-NACL`을 선택합니다.
 20. **Actions** > `Delete network ACL`을 선택합니다.
+    <img src="/images/week3/3-2-cleanup-step20-delete-private-nacl.png" alt="Private-NACL 삭제" class="guide-img-md" />
+
 21. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
-22. `Private-NACL`을 선택합니다.
+22. `Public-NACL`을 선택합니다.
+    <img src="/images/week3/3-2-cleanup-step22-delete-public-nacl.png" alt="Public-NACL 삭제" class="guide-img-md" />
+
 23. **Actions** > `Delete network ACL`을 선택합니다.
 24. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
@@ -812,6 +900,8 @@ VPC_ID=$(aws ec2 describe-vpcs \
 echo "VPC ID: $VPC_ID"
 ```
 
+<img src="/images/week3/3-2-cleanup-step26-vpc-id.png" alt="VPC ID 확인" class="guide-img-md" />
+
 27. VPC ID가 출력되는지 확인합니다.
 28. 사용자 정의 NACL을 찾습니다:
 
@@ -825,6 +915,8 @@ NACL_IDS=$(aws ec2 describe-network-acls \
 
 echo "삭제할 NACL: $NACL_IDS"
 ```
+
+<img src="/images/week3/3-2-cleanup-step28-nacl-ids.png" alt="삭제할 NACL ID 확인" class="guide-img-md" />
 
 29. NACL ID 2개가 출력되는지 확인합니다.
 30. NACL 서브넷 연결 해제 및 삭제를 실행합니다:
@@ -861,6 +953,8 @@ for NACL_ID in $NACL_IDS; do
 done
 ```
 
+<img src="/images/week3/3-2-cleanup-step30-delete-script.png" alt="NACL 삭제 스크립트 실행" class="guide-img-md" />
+
 31. 삭제가 완료되었는지 확인합니다:
 
 ```bash
@@ -871,6 +965,8 @@ aws ec2 describe-network-acls \
   --query 'NetworkAcls[*].NetworkAclId' \
   --output text
 ```
+
+<img src="/images/week3/3-2-cleanup-step31-verify.png" alt="NACL 삭제 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 출력이 비어있으면 모든 사용자 정의 NACL이 삭제된 것입니다.
@@ -890,31 +986,23 @@ aws ec2 describe-network-acls \
 
 35. [[Delete stack]] 버튼을 클릭합니다.
 36. 확인 창에서 스택 이름 `week3-2-security-group-stack`을 입력합니다.
+    <img src="/images/week3/3-2-cleanup-step36-delete-stack.png" alt="CloudFormation 스택 삭제 확인" class="guide-img-md" />
+
 37. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
 
 > [!NOTE]
 > 확인 후 스택 목록 페이지로 이동합니다.
 
-38. `week3-2-security-group-stack` 스택의 **Status** 열을 확인합니다.
+38. 스택 삭제가 완료될 때까지 기다립니다.
+    <img src="/images/week3/3-2-cleanup-step38-stack-deleted.png" alt="스택 삭제 완료" class="guide-img-md" />
 
 > [!NOTE]
-> 스택 삭제가 시작되면 **Status**가 "DELETE_IN_PROGRESS"로 표시됩니다. AWS CloudFormation이 생성한 모든 리소스를 역순으로 삭제합니다.
+> 스택 삭제에 5-7분이 소요됩니다. **Events** 탭에서 리소스 삭제 과정을 실시간으로 확인할 수 있습니다.
 
-39. 스택을 클릭하여 상세 페이지로 이동합니다.
-40. **Events** 탭을 선택합니다.
-
-> [!NOTE]
-> **Events** 탭에는 리소스 삭제 과정이 실시간으로 표시됩니다. EC2 인스턴스, IAM Role, 보안 그룹, 서브넷, VPC 등이 순차적으로 삭제됩니다. 삭제에 5-7분이 소요됩니다.
-
-41. 스택 삭제가 완료될 때까지 기다립니다.
+39. 스택 목록 페이지로 돌아가서 `week3-2-security-group-stack` 스택이 목록에서 사라졌는지 확인합니다.
 
 > [!NOTE]
 > 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인하고, 보안 그룹 간 참조 관계를 수동으로 제거한 후 스택 삭제를 다시 시도합니다.
-
-42. 스택 목록 페이지로 돌아가서 `week3-2-security-group-stack` 스택이 목록에서 사라졌는지 확인합니다.
-
-> [!NOTE]
-> 스택이 목록에 표시되지 않으면 성공적으로 삭제된 것입니다.
 
 ---
 
@@ -922,14 +1010,15 @@ aws ec2 describe-network-acls \
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-43. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-44. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-45. **Regions**에서 `ap-northeast-2`를 선택합니다.
-46. **Resource types**에서 `All supported resource types`를 선택합니다.
-47. **Tags** 섹션에서 다음을 입력합니다:
+40. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+41. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+42. **Regions**에서 `ap-northeast-2`를 선택합니다.
+43. **Resource types**에서 `All supported resource types`를 선택합니다.
+44. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `3-2`
-48. [[Search resources]] 버튼을 클릭합니다.
+45. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-2-cleanup-step45-tageditor-empty.png" alt="Tag Editor 검색 결과 비어있음" class="guide-img-md" />
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -944,11 +1033,11 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 > [!NOTE]
 > 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
 
-49. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
-50. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
-51. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-52. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
-53. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+46. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+47. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+48. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+49. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+50. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 
