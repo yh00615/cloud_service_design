@@ -741,6 +741,8 @@ kubectl describe deployment nginx-app
 kubectl get deployment nginx-app -o yaml | grep -A 3 "strategy:"
 ```
 
+<img src="/images/week7/7-3-task6-step86-strategy.png" alt="롤링 업데이트 전략 확인" class="guide-img-sm" />
+
 > [!OUTPUT]
 >
 > ```
