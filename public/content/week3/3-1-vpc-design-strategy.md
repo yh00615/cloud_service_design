@@ -79,16 +79,23 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 2. `week3-1-vpc-lab.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-
     <img src="/images/week3/3-1-task0-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week3-1-vpc-lab.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 9. **Stack name**에 `week3-1-vpc-stack`을 입력합니다.
-10. **Parameters** 섹션에서 태그 관련 파라미터(`ProjectTag`, `WeekTag`, `CreatedByTag`)의 기본값을 확인합니다. 변경이 필요하면 수정합니다.
+10. **Parameters** 섹션에서 기본값을 확인합니다:
+    - **EnvironmentName**: `week3-1-vpc` (기본값 유지)
+    - **ProjectTag**: `AWS-Lab` (기본값 유지)
+    - **WeekTag**: `3-1` (기본값 유지)
+    - **CreatedByTag**: `CloudFormation` (기본값 유지)
 11. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-task0-step11-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
@@ -96,7 +103,6 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 13. 페이지 하단의 **Capabilities** 섹션으로 스크롤합니다.
 14. `I acknowledge that AWS CloudFormation might create IAM resources with customised names` 체크박스를 선택합니다.
-
     <img src="/images/week3/3-1-task0-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
 
 > [!NOTE]
@@ -104,6 +110,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 15. [[Next]] 버튼을 클릭합니다.
 16. **Review and create** 페이지에서 설정을 확인합니다.
+    <img src="/images/week3/3-1-task0-step16-review.png" alt="Review and create 페이지" class="guide-img-md" />
+
 17. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -121,6 +129,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 20. `week3-1-vpc-stack` 스택을 클릭하여 상세 페이지로 이동합니다.
 21. **Events** 탭을 선택합니다.
+    <img src="/images/week3/3-1-task0-step21-events.png" alt="CloudFormation Events 탭" class="guide-img-md" />
 
 > [!NOTE]
 > **Events** 탭에는 리소스 생성 과정이 실시간으로 표시됩니다. 각 리소스의 상태가 "CREATE_IN_PROGRESS" → "CREATE_COMPLETE" 순서로 변경됩니다. Amazon VPC, 서브넷, NAT Gateway, Amazon EC2 인스턴스 등이 순차적으로 생성됩니다. 스택 생성에 5-7분이 소요됩니다. 대기하는 동안 이전 차시 내용을 복습하거나 다음 태스크를 미리 읽어봅니다.
@@ -128,6 +137,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 22. 페이지를 새로고침하여 최신 상태를 확인합니다.
 23. 페이지 상단의 **Status** 필드를 확인합니다.
 24. **Status**가 "**CREATE_COMPLETE**"로 변경될 때까지 22-23단계를 반복합니다.
+    <img src="/images/week3/3-1-task0-step24-create-complete.png" alt="CloudFormation CREATE_COMPLETE 상태" class="guide-img-md" />
 
 > [!NOTE]
 > 페이지 상단의 **Status** 필드는 전체 스택의 상태를 보여줍니다. "CREATE_IN_PROGRESS"에서 "CREATE_COMPLETE"로 변경되면 모든 리소스가 성공적으로 생성된 것입니다. 만약 "CREATE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인합니다.
@@ -157,10 +167,15 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 27. AWS Management Console에 로그인한 후 상단 검색창에 `VPC`을 입력하고 선택합니다.
 28. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 29. [[Create endpoint]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-task1-step29-create-endpoint.png" alt="Create endpoint 버튼 클릭" class="guide-img-md" />
+
 30. **Name tag**에 `week3-1-ssm-endpoint`를 입력합니다.
 31. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
+    <img src="/images/week3/3-1-task1-step31-aws-services.png" alt="AWS services 선택" class="guide-img-md" />
+
 32. **Services** 검색창에 `ssm`을 입력합니다.
 33. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.ssm`이고 **Type**이 `Interface`인 항목을 선택합니다.
+    <img src="/images/week3/3-1-task1-step33-ssm-service.png" alt="SSM Interface Endpoint 서비스 선택" class="guide-img-md" />
 
 > [!NOTE]
 > SSM Interface Endpoint는 AWS Systems Manager 서비스에 접근하기 위한 엔드포인트입니다. Session Manager를 사용하려면 이 엔드포인트가 필수입니다.
@@ -169,6 +184,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 35. **Subnets** 섹션으로 스크롤합니다.
 36. **Availability Zone**에서 `ap-northeast-2a`를 선택합니다.
 37. **Subnet ID**에서 메모장에 저장한 `PrivateSubnetAId`를 선택합니다.
+    <img src="/images/week3/3-1-task1-step37-subnet.png" alt="서브넷 선택" class="guide-img-md" />
 
 > [!NOTE]
 > Interface Endpoint는 선택한 서브넷에 ENI(Elastic Network Interface)를 생성합니다. 프라이빗 서브넷에 생성하여 인터넷을 거치지 않고 AWS 서비스에 접근합니다.
@@ -183,6 +199,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 42. **Policy** 섹션으로 스크롤합니다.
 43. **Full access**를 선택한 상태로 유지합니다.
+    <img src="/images/week3/3-1-task1-step43-full-access.png" alt="Full access 정책 선택" class="guide-img-md" />
+
 44. **Tags** 섹션으로 스크롤합니다.
 45. [[Add tag]] 버튼을 클릭한 후 다음 태그를 추가합니다:
 
@@ -193,8 +211,13 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 | `CreatedBy` | `Student` |
 
 46. [[Create endpoint]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-task1-step46-create.png" alt="Create endpoint 클릭" class="guide-img-md" />
+
 47. Endpoint 목록 페이지로 이동합니다.
+    <img src="/images/week3/3-1-task1-step47-endpoint-list.png" alt="Endpoint 목록 페이지" class="guide-img-md" />
+
 48. 생성한 `week3-1-ssm-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다.
+    <img src="/images/week3/3-1-task1-step48-available.png" alt="SSM Endpoint Available 상태" class="guide-img-md" />
 
 > [!NOTE]
 > Interface Endpoint 생성은 일반적으로 2-3분이 소요됩니다. 페이지를 새로고침하여 상태를 확인합니다.
@@ -210,6 +233,9 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 - **Name tag**: `week3-1-ssmmessages-endpoint`
 - **Services** 검색: `ssmmessages`
 - **Service Name**: `com.amazonaws.ap-northeast-2.ssmmessages` (Type: Interface)
+
+<img src="/images/week3/3-1-task1-2-ssmmessages.png" alt="SSM Messages Endpoint 서비스 선택" class="guide-img-md" />
+<img src="/images/week3/3-1-task1-2-ssmmessages-create.png" alt="SSM Messages Endpoint 생성" class="guide-img-md" />
 
 > [!NOTE]
 > SSM Messages Interface Endpoint는 Session Manager의 메시지 전송을 위한 엔드포인트입니다.
@@ -228,6 +254,9 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 - **Services** 검색: `ec2messages`
 - **Service Name**: `com.amazonaws.ap-northeast-2.ec2messages` (Type: Interface)
 
+<img src="/images/week3/3-1-task1-3-ec2messages.png" alt="EC2 Messages Endpoint 서비스 선택" class="guide-img-md" />
+<img src="/images/week3/3-1-task1-3-ec2messages-create.png" alt="EC2 Messages Endpoint 생성" class="guide-img-md" />
+
 > [!NOTE]
 > Amazon EC2 Messages Interface Endpoint는 Amazon EC2 인스턴스와 AWS Systems Manager 간의 통신을 위한 엔드포인트입니다. 3개의 Interface Endpoint가 모두 "Available" 상태가 되면 Session Manager를 사용할 수 있습니다.
 
@@ -236,6 +265,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 ✅ **하위 태스크 완료**: Amazon EC2 Messages Interface Endpoint가 생성되었습니다.
 
 ✅ **태스크 완료**: AWS Systems Manager용 Interface Endpoint 3개가 생성되었습니다.
+
+<img src="/images/week3/3-1-task1-complete.png" alt="Interface Endpoint 3개 생성 완료" class="guide-img-md" />
 
 ## 태스크 2: Amazon S3 Gateway Endpoint 생성
 
@@ -249,8 +280,11 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 51. [[Create endpoint]] 버튼을 클릭합니다.
 52. **Name tag**에 `week3-1-s3-endpoint`를 입력합니다.
 53. **Type** 섹션에서 **Select a category** 아래의 `AWS services`를 선택합니다.
+    <img src="/images/week3/3-1-task2-step53-aws-services.png" alt="AWS services 선택" class="guide-img-md" />
+
 54. **Services** 검색창에 `s3`를 입력합니다.
 55. 검색 결과에서 **Service Name**이 `com.amazonaws.ap-northeast-2.s3`이고 **Type**이 `Gateway`인 항목을 선택합니다.
+    <img src="/images/week3/3-1-task2-step55-s3-gateway.png" alt="S3 Gateway Endpoint 서비스 선택" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon S3는 Gateway Endpoint와 Interface Endpoint를 모두 지원합니다. Gateway Endpoint는 무료이므로 비용 효율적입니다.
@@ -262,6 +296,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 57. **Route tables** 섹션으로 스크롤합니다.
 58. 메모장에 저장한 `PrivateRouteTableAId`에 해당하는 라우팅 테이블을 체크합니다.
+    <img src="/images/week3/3-1-task2-step58-route-table.png" alt="라우팅 테이블 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 라우팅 테이블 이름에 "Private"가 포함되어 있는지 확인합니다. Gateway Endpoint는 선택한 라우팅 테이블에 자동으로 라우팅 규칙을 추가합니다.
@@ -282,8 +317,11 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 | `CreatedBy` | `Student` |
 
 63. [[Create endpoint]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-task2-step63-create.png" alt="S3 Gateway Endpoint 생성" class="guide-img-md" />
+
 64. Endpoint 목록 페이지로 이동합니다.
 65. 생성한 `week3-1-s3-endpoint`의 **Status**가 "Available"로 변경될 때까지 기다립니다.
+    <img src="/images/week3/3-1-task2-step65-available.png" alt="S3 Gateway Endpoint Available" class="guide-img-md" />
 
 > [!NOTE]
 > Gateway Endpoint 생성은 일반적으로 1-2분 내에 완료됩니다. 페이지를 새로고침하여 상태를 확인합니다.
@@ -296,6 +334,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 66. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
 67. Endpoint 목록에서 `week3-1-ssm-endpoint` (Interface Endpoint)를 클릭합니다.
+    <img src="/images/week3/3-1-task3-step67-interface-details.png" alt="Interface Endpoint Details 탭" class="guide-img-md" />
+
 68. **Details** 탭에서 다음 정보를 확인합니다:
     - **Status**: Available
     - **Endpoint type**: Interface
@@ -309,6 +349,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 69. 왼쪽 메뉴에서 **Endpoints**를 선택하여 목록으로 이동합니다.
 70. `week3-1-s3-endpoint` (Gateway Endpoint)를 클릭합니다.
+    <img src="/images/week3/3-1-task3-step70-gateway-details.png" alt="Gateway Endpoint Details 탭" class="guide-img-md" />
+
 71. **Details** 탭에서 다음 정보를 확인합니다:
     - **Status**: Available
     - **Endpoint type**: Gateway
@@ -344,9 +386,13 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 이 태스크에서는 Amazon VPC Endpoint가 라우팅 테이블에 자동으로 추가되었는지 확인합니다.
 
 74. Amazon VPC 콘솔에서 왼쪽 메뉴에서 **Route tables**를 선택합니다.
+    <img src="/images/week3/3-1-task4-step74-route-tables.png" alt="Route tables 메뉴" class="guide-img-md" />
+
 75. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 서브넷 라우팅 테이블을 찾습니다.
 76. 해당 라우팅 테이블을 클릭합니다.
 77. 하단의 **Routes** 탭을 선택합니다.
+    <img src="/images/week3/3-1-task4-step77-routes.png" alt="Routes 탭 라우팅 규칙 확인" class="guide-img-md" />
+
 78. 라우팅 규칙 목록에서 Amazon S3 Gateway Endpoint가 자동으로 추가한 규칙을 찾습니다.
 79. **Destination** 열에서 `pl-`로 시작하는 항목을 찾습니다.
 80. 해당 항목의 **Target** 열에서 `vpce-`로 시작하는 항목을 확인합니다.
@@ -380,6 +426,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 86. 메모장에 저장한 EC2InstanceId를 확인합니다.
 87. 검색창에 EC2InstanceId를 입력하여 인스턴스를 찾습니다.
 88. 해당 인스턴스의 체크박스를 선택합니다.
+    <img src="/images/week3/3-1-task5-step88-select-instance.png" alt="EC2 인스턴스 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 인스턴스 이름에 "week3-1"이 포함되어 있고, **Instance state**가 "Running"으로 표시되어야 합니다.
@@ -391,6 +438,7 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 
 90. [[Connect]] 버튼을 클릭합니다.
 91. **Session Manager** 탭을 선택합니다.
+    <img src="/images/week3/3-1-task5-step91-session-manager.png" alt="Session Manager 탭 선택" class="guide-img-md" />
 
 > [!NOTE]
 > Session Manager를 사용하면 SSH 키 없이도 Amazon EC2 인스턴스에 안전하게 접속할 수 있습니다. AWS IAM 역할을 통해 인증되며, 모든 세션이 CloudTrail에 기록됩니다.
@@ -405,6 +453,8 @@ Amazon VPC Endpoint(Interface Endpoint, Gateway Endpoint)는 태스크 1-2에서
 ```bash
 aws s3 ls
 ```
+
+<img src="/images/week3/3-1-task5-step93-s3-ls.png" alt="S3 버킷 목록 확인" class="guide-img-md" />
 
 94. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
 
@@ -424,6 +474,8 @@ aws s3 ls
 ```bash
 curl -I https://www.google.com
 ```
+
+<img src="/images/week3/3-1-task5-step95-curl-google.png" alt="인터넷 연결 확인" class="guide-img-md" />
 
 96. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
 
@@ -457,17 +509,22 @@ NAT Gateway 경로를 제거하여 Amazon VPC Endpoint만으로 Amazon S3에 접
 103.  **Destination**이 `0.0.0.0/0`이고 **Target**이 NAT Gateway(`nat-`로 시작)인 라우팅 규칙을 찾습니다.
 104.  [[Edit routes]] 버튼을 클릭합니다.
 105.  **Destination**이 `0.0.0.0/0`인 라우팅 규칙 오른쪽의 [[Remove]] 버튼을 클릭합니다.
+      <img src="/images/week3/3-1-task5-step105-remove-route.png" alt="NAT Gateway 경로 제거" class="guide-img-md" />
+      <img src="/images/week3/3-1-task5-step105-edit-routes.png" alt="Edit routes 화면" class="guide-img-md" />
 
 > [!IMPORTANT]
 > NAT Gateway 경로를 제거하면 인터넷 접근이 차단됩니다. 하지만 Amazon VPC Endpoint 경로(pl-xxx → vpce-xxx)는 그대로 유지되므로 Amazon S3 접근은 가능해야 합니다.
 
 106. [[Save changes]] 버튼을 클릭합니다.
+     <img src="/images/week3/3-1-task5-step106-save-changes.png" alt="Save changes 클릭" class="guide-img-md" />
 107. Session Manager 창으로 이동합니다.
 108. 다음 명령어를 실행하여 인터넷 연결이 차단되었는지 확인합니다:
 
 ```bash
 curl -I --max-time 5 https://www.google.com
 ```
+
+<img src="/images/week3/3-1-task5-step108-curl-timeout.png" alt="인터넷 연결 타임아웃" class="guide-img-md" />
 
 109. 연결 타임아웃 오류가 발생하는지 확인합니다.
 
@@ -485,6 +542,8 @@ curl -I --max-time 5 https://www.google.com
 ```bash
 aws s3 ls
 ```
+
+<img src="/images/week3/3-1-task5-step110-s3-ls-success.png" alt="VPC Endpoint로 S3 접근 성공" class="guide-img-md" />
 
 111. Amazon S3 버킷 목록이 정상적으로 표시되는지 확인합니다.
 
@@ -517,17 +576,21 @@ aws s3 ls
 118. **Destination**에 `0.0.0.0/0`을 입력합니다.
 119. **Target**에서 `NAT Gateway`를 선택합니다.
 120. 드롭다운에서 메모장에 저장한 NatGatewayId를 선택합니다.
+     <img src="/images/week3/3-1-task5-step120-nat-gateway.png" alt="NAT Gateway 선택" class="guide-img-md" />
 
 > [!NOTE]
 > NAT Gateway ID는 `nat-`로 시작합니다. 메모장에 저장한 값을 참고하여 선택합니다.
 
 121. [[Save changes]] 버튼을 클릭합니다.
+     <img src="/images/week3/3-1-task5-step121-save-changes.png" alt="경로 복원 Save changes" class="guide-img-md" />
 122. Session Manager 창으로 이동합니다.
 123. 다음 명령어를 실행하여 인터넷 연결이 복원되었는지 확인합니다:
 
 ```bash
 curl -I https://www.google.com
 ```
+
+<img src="/images/week3/3-1-task5-step123-curl-restored.png" alt="인터넷 연결 복원 확인" class="guide-img-md" />
 
 124. HTTP 응답 헤더가 정상적으로 수신되는지 확인합니다.
 
@@ -577,23 +640,13 @@ curl -I https://www.google.com
    - **Tag key**: `Week`
    - **Tag value**: `3-1`
 6. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
-> Tag Editor에서 `Week=3-1` 태그로 검색하면 AWS CloudFormation으로 생성된 리소스(VPC, 서브넷, NAT Gateway, EC2 등)가 표시됩니다.
-> 단, Amazon VPC Endpoint는 Tag Editor에서 지원하지 않아 검색 결과에 표시되지 않습니다. Endpoint는 VPC 콘솔에서 직접 확인하고 삭제해야 합니다.
-
-#### AWS CloudFormation으로 생성한 리소스 확인 (Name 태그)
-
-7. **Tags** 섹션을 초기화하고 다음을 입력합니다:
-   - **Tag key**: `Name`
-   - **Optional tag value**에 `week3-1`을 입력합니다.
-8. [[Search resources]] 버튼을 클릭합니다.
-
-> [!NOTE]
-> AWS CloudFormation 스택으로 생성된 Amazon VPC, 서브넷, NAT Gateway, Amazon EC2 인스턴스 등 모든 리소스가 표시됩니다. 리소스 이름이 `week3-1-`로 시작하는 것들이 이 실습에서 생성된 리소스입니다.
+> AWS CloudFormation 스택으로 생성된 VPC, 서브넷, NAT Gateway, EC2 인스턴스 등 모든 리소스가 표시됩니다. 단, Amazon VPC Endpoint는 Tag Editor에서 지원하지 않아 검색 결과에 표시되지 않습니다. Endpoint는 VPC 콘솔에서 직접 확인하고 삭제해야 합니다.
 
 > [!TIP]
-> Tag Editor는 리소스 확인 용도로만 사용하며, 실제 삭제는 다음 단계에서 수행합니다. 두 가지 태그 검색을 통해 수동 생성 리소스와 AWS CloudFormation 생성 리소스를 모두 파악할 수 있습니다.
+> Tag Editor는 리소스 확인 용도로만 사용하며, 실제 삭제는 다음 단계에서 수행합니다.
 
 ---
 
@@ -610,19 +663,22 @@ curl -I https://www.google.com
 
 **Amazon VPC Endpoint 삭제**
 
-9. Amazon VPC 콘솔로 이동합니다.
-10. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
-11. 다음 4개의 엔드포인트를 모두 선택합니다:
-    - `week3-1-ssm-endpoint`
-    - `week3-1-ssmmessages-endpoint`
-    - `week3-1-ec2messages-endpoint`
-    - `week3-1-s3-endpoint`
+7. Amazon VPC 콘솔로 이동합니다.
+8. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
+9. 다음 4개의 엔드포인트를 모두 선택합니다:
+   - `week3-1-ssm-endpoint`
+   - `week3-1-ssmmessages-endpoint`
+   - `week3-1-ec2messages-endpoint`
+   - `week3-1-s3-endpoint`
 
 > [!NOTE]
 > 4개의 엔드포인트를 모두 선택하려면 각 엔드포인트의 체크박스를 클릭합니다. 모두 선택되면 상단의 **Actions** 버튼이 활성화됩니다.
 
-12. **Actions** > `Delete Amazon VPC endpoints`를 선택합니다.
-13. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+10. **Actions** > `Delete Amazon VPC endpoints`를 선택합니다.
+    <img src="/images/week3/3-1-cleanup-step10-endpoints.png" alt="VPC Endpoints 선택" class="guide-img-md" />
+
+11. 확인 창에서 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-cleanup-step11-delete-endpoints.png" alt="Delete VPC endpoints 확인" class="guide-img-md" />
 
 > [!NOTE]
 > Amazon VPC Endpoint 삭제는 즉시 완료됩니다. Interface Endpoint 3개와 Gateway Endpoint 1개가 모두 삭제됩니다.
@@ -634,8 +690,8 @@ curl -I https://www.google.com
 >
 > 콘솔 방식이 더 편하다면 위 [옵션 1](#option-1)을 참고합니다.
 
-14. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
-15. CloudShell이 열리면 다음 명령어를 실행합니다:
+12. AWS Management Console 상단의 CloudShell 아이콘을 클릭합니다.
+13. CloudShell이 열리면 다음 명령어를 실행합니다:
 
 ```bash
 # Week 3-1 태그가 있는 Amazon VPC Endpoint 찾기
@@ -649,8 +705,11 @@ ENDPOINT_IDS=$(aws ec2 describe-vpc-endpoints \
 echo $ENDPOINT_IDS
 ```
 
-16. 출력된 Endpoint ID 목록(vpce-로 시작하는 4개)을 확인합니다.
-17. 다음 명령어를 실행하여 Amazon VPC Endpoint를 삭제합니다:
+<img src="/images/week3/3-1-cleanup-step13-cli-find.png" alt="Endpoint ID 목록 확인" class="guide-img-md" />
+<img src="/images/week3/3-1-cleanup-step13-cli-delete.png" alt="Endpoint 삭제 실행" class="guide-img-md" />
+
+14. 출력된 Endpoint ID 목록(vpce-로 시작하는 4개)을 확인합니다.
+15. 다음 명령어를 실행하여 Amazon VPC Endpoint를 삭제합니다:
 
 ```bash
 # Amazon VPC Endpoint 삭제
@@ -665,14 +724,18 @@ else
 fi
 ```
 
+<img src="/images/week3/3-1-cleanup-step15-cli-verify.png" alt="Endpoint 삭제 결과" class="guide-img-md" />
+
 > [!NOTE]
 > 스크립트는 `Week=3-1` 태그가 있는 모든 Amazon VPC Endpoint를 자동으로 찾아 삭제합니다. `Unsuccessful` 배열이 비어있으면 모든 Endpoint가 정상 삭제된 것입니다.
 
+<img src="/images/week3/3-1-cleanup-step15-note-verify.png" alt="Endpoint 삭제 확인" class="guide-img-md" />
+
 **삭제 확인**
 
-18. Amazon VPC 콘솔로 이동합니다.
-19. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
-20. 검색창에 `week3-1`을 입력하여 Endpoint가 남아있지 않은지 확인합니다.
+16. Amazon VPC 콘솔로 이동합니다.
+17. 왼쪽 메뉴에서 **Endpoints**를 선택합니다.
+18. 검색창에 `week3-1`을 입력하여 Endpoint가 남아있지 않은지 확인합니다.
 
 > [!NOTE]
 > 4개의 Endpoint가 모두 목록에서 사라졌으면 삭제가 완료된 것입니다. 삭제 직후 잠시 "Deleting" 상태로 표시될 수 있으나, 새로고침하면 사라집니다.
@@ -683,40 +746,35 @@ fi
 
 마지막으로 AWS CloudFormation 스택을 삭제하여 나머지 모든 리소스를 정리합니다.
 
-21. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
-22. 스택 목록에서 `week3-1-vpc-stack` 스택을 검색합니다.
-23. `week3-1-vpc-stack` 스택의 체크박스를 선택합니다.
+19. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+20. 스택 목록에서 `week3-1-vpc-stack` 스택을 검색합니다.
+21. `week3-1-vpc-stack` 스택의 체크박스를 선택합니다.
 
 > [!NOTE]
 > 스택이 선택되면 체크박스에 체크 표시가 나타나고, 상단의 [[Delete stack]] 버튼이 활성화됩니다.
 
-24. [[Delete stack]] 버튼을 클릭합니다.
-25. 확인 창에서 스택 이름 `week3-1-vpc-stack`을 입력합니다.
-26. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
+22. [[Delete stack]] 버튼을 클릭합니다.
+    <img src="/images/week3/3-1-cleanup-step22-delete-stack.png" alt="Delete stack 버튼 클릭" class="guide-img-md" />
+
+23. 확인 창에서 스택 이름 `week3-1-vpc-stack`을 입력합니다.
+    <img src="/images/week3/3-1-cleanup-step23-confirm.png" alt="스택 이름 입력" class="guide-img-md" />
+
+24. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
+    <img src="/images/week3/3-1-cleanup-step24-delete-confirm.png" alt="Delete stack 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 확인 후 스택 목록 페이지로 이동합니다.
 
-27. `week3-1-vpc-stack` 스택의 **Status** 열을 확인합니다.
+25. 스택 삭제가 완료될 때까지 기다립니다.
 
 > [!NOTE]
-> 스택 삭제가 시작되면 **Status**가 "DELETE_IN_PROGRESS"로 표시됩니다. AWS CloudFormation이 생성한 모든 리소스를 역순으로 삭제합니다.
+> 스택 삭제에 5-7분이 소요됩니다. **Events** 탭에서 리소스 삭제 과정을 실시간으로 확인할 수 있습니다.
 
-28. 스택을 클릭하여 상세 페이지로 이동합니다.
-29. **Events** 탭을 선택합니다.
-
-> [!NOTE]
-> **Events** 탭에는 리소스 삭제 과정이 실시간으로 표시됩니다. Amazon EC2 인스턴스, NAT Gateway, 서브넷, Amazon VPC 등이 순차적으로 삭제됩니다. 삭제에 5-7분이 소요됩니다.
-
-30. 스택 삭제가 완료될 때까지 기다립니다.
+26. 스택 목록 페이지로 돌아가서 `week3-1-vpc-stack` 스택이 목록에서 사라졌는지 확인합니다.
+    <img src="/images/week3/3-1-cleanup-step26-stack-deleted.png" alt="스택 삭제 완료" class="guide-img-md" />
 
 > [!NOTE]
 > 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인하고, 수동으로 리소스를 삭제한 후 스택 삭제를 다시 시도합니다.
-
-31. 스택 목록 페이지로 돌아가서 `week3-1-vpc-stack` 스택이 목록에서 사라졌는지 확인합니다.
-
-> [!NOTE]
-> 스택이 목록에 표시되지 않으면 성공적으로 삭제된 것입니다. 삭제 완료까지 5-7분이 소요됩니다.
 
 ---
 
@@ -724,14 +782,14 @@ fi
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-32. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-33. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-34. **Regions**에서 `ap-northeast-2`를 선택합니다.
-35. **Resource types**에서 `All supported resource types`를 선택합니다.
-36. **Tags** 섹션에서 다음을 입력합니다:
+27. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+28. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+29. **Regions**에서 `ap-northeast-2`를 선택합니다.
+30. **Resource types**에서 `All supported resource types`를 선택합니다.
+31. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `3-1`
-37. [[Search resources]] 버튼을 클릭합니다.
+32. [[Search resources]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
@@ -746,11 +804,11 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 > [!NOTE]
 > 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
 
-38. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
-39. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
-40. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-41. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
-42. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+33. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+34. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+35. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+36. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+37. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 
