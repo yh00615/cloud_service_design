@@ -65,8 +65,8 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 5. **Description**에 `QuickTable 레스토랑 예약 시스템 3-Tier 아키텍처 평가`를 입력합니다.
 6. **Review owner**에 본인의 이름을 입력합니다.
 7. **Environment**에서 `Production`을 선택합니다.
-8. 아래로 스크롤하여 **Regions** 섹션으로 이동합니다.
-9. **AWS Regions** 드롭다운을 클릭한 후 `Asia Pacific (Seoul) ap-northeast-2`를 선택합니다.
+8. 아래로 스크롤하여 **Regions** 섹션으로 이동합니다. **AWS Regions** 체크박스를 체크합니다.
+9. **Choose regions** 드롭다운을 클릭한 후 `Asia Pacific (Seoul) ap-northeast-2`를 선택합니다.
    <img src="/images/week1/1-2-task1-step9-region-selection.png" alt="Regions 섹션에서 AWS Region 선택" class="guide-img-md" />
 
 > [!NOTE]
@@ -115,7 +115,7 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 이 태스크에서는 운영 우수성(Operational Excellence) 원칙을 평가합니다. 운영 우수성은 시스템을 효과적으로 운영하고 모니터링하며, 지속적으로 개선하는 능력을 의미합니다.
 
 22. 워크로드 상세 페이지에서 [[Start reviewing]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-2-task2-step1-start-reviewing.png" alt="워크로드 상세 페이지의 Start reviewing 버튼" class="guide-img-md" />
+    <img src="/images/week1/1-2-task2-step1-start-reviewing.png" alt="워크로드 상세 페이지의 Start reviewing 버튼" class="guide-img-md" />
 
 > [!NOTE]
 > 처음 평가를 시작하는 경우 [[Start reviewing]] 버튼이 표시됩니다. 이미 일부 평가가 진행된 경우에는 [[Continue reviewing]] 버튼으로 표시됩니다.
@@ -393,14 +393,14 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 59. 아래로 스크롤하여 **Lenses** 섹션을 확인합니다.
 60. **Lenses** 테이블에서 **AWS Well-Architected Framework** 렌즈를 클릭합니다.
-   <img src="/images/week1/1-2-task6-step6-lens-overview.png" alt="Lenses 테이블에서 AWS Well-Architected Framework 렌즈 선택" class="guide-img-md" />
+    <img src="/images/week1/1-2-task6-step6-lens-overview.png" alt="Lenses 테이블에서 AWS Well-Architected Framework 렌즈 선택" class="guide-img-md" />
 
 > [!NOTE]
 > **마일스톤(Milestone)**: 워크로드 상세 페이지의 **Milestones** 탭에서 특정 시점의 평가 상태를 스냅샷으로 저장할 수 있습니다.
 
 61. **Overview** 탭에서 전체 평가 결과를 확인합니다.
 62. **Lens overview** 섹션에서 각 원칙별 답변 개수와 위험 수준을 확인합니다.
-   <img src="/images/week1/1-2-task6-step6-pillars.png" alt="Lens overview 섹션의 각 원칙별 평가 결과" class="guide-img-md" />
+    <img src="/images/week1/1-2-task6-step6-pillars.png" alt="Lens overview 섹션의 각 원칙별 평가 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > **예상 출력** (답변에 따라 결과가 다르게 표시됩니다):
@@ -442,10 +442,10 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 > 💡 초기 단계 스타트업 시스템 특성상 High risk 항목이 다수 식별되는 것이 정상입니다. Infrastructure as Code 미도입, 공식 Runbook 부재, AWS WAF 미적용 등 개선 영역이 많습니다.
 
 63. **Next risk to address** 섹션에서 다음으로 해결해야 할 위험 항목을 확인합니다.
-   <img src="/images/week1/1-2-task6-step7-next-risk.png" alt="Next risk to address 섹션에서 다음 위험 항목 확인" class="guide-img-md" />
+    <img src="/images/week1/1-2-task6-step7-next-risk.png" alt="Next risk to address 섹션에서 다음 위험 항목 확인" class="guide-img-md" />
 
 64. 위험 항목을 클릭하여 상세 내용과 권장 개선 사항을 확인합니다.
-   <img src="/images/week1/1-2-task6-step8-risk-detail.png" alt="위험 항목의 상세 내용과 개선 권장 사항" class="guide-img-md" />
+    <img src="/images/week1/1-2-task6-step8-risk-detail.png" alt="위험 항목의 상세 내용과 개선 권장 사항" class="guide-img-md" />
 
 65. **Improvement plan** 탭을 선택합니다.
 66. 개선이 필요한 위험 항목 목록을 확인합니다.
@@ -472,7 +472,7 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 69. 왼쪽 메뉴에서 **Workloads**를 선택합니다.
 70. 워크로드 목록에서 `quicktable-web-application`을 선택합니다.
 71. 상단의 [[Generate report]] 버튼을 클릭합니다.
-   <img src="/images/week1/1-2-task7-step3-generate-report.png" alt="워크로드 목록에서 Generate report 버튼 클릭" class="guide-img-md" />
+    <img src="/images/week1/1-2-task7-step3-generate-report.png" alt="워크로드 목록에서 Generate report 버튼 클릭" class="guide-img-md" />
 
 > [!NOTE]
 > **보고서 생성 위치**:
@@ -549,7 +549,7 @@ Week 1-3에서 작성할 QuickTable 아키텍처 다이어그램의 설계 원�
 
 7. [[Delete]] 버튼을 클릭하여 삭제를 확정합니다.
 
-    <img src="/images/week1/1-2-cleanup-step2-confirm-delete.png" alt="워크로드 삭제 확인 창" class="guide-img-sm" />
+<img src="/images/week1/1-2-cleanup-step2-confirm-delete.png" alt="워크로드 삭제 확인 창" class="guide-img-sm" />
 
 ### 단계 3: 삭제 확인
 
