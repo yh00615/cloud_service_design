@@ -71,14 +71,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
 
-    <img src="/images/week12/12-3-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+<img src="/images/week12/12-3-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week12-3-waf-api-protection.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
 
-    <img src="/images/week12/12-3-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
+<img src="/images/week12/12-3-task0-step8-upload.png" alt="CloudFormation 템플릿 파일 업로드" class="guide-img-md" />
 
 9. **Stack name**에 `week12-3-waf-api-protection-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
@@ -349,7 +349,7 @@ curl -s -X POST $API_URL/reservations \
 > **Recommended**와 **Essentials**는 사전 구성된 규칙 패키지입니다. 이 실습에서는 학습 목적으로 `You build it`을 선택하여 규칙을 직접 추가합니다.
 > `You build it`은 추가하는 규칙 수에 따라 예상 비용이 증가합니다. 실습은 짧은 시간만 사용하고 바로 삭제하므로 실제 청구 금액은 미미합니다.
 
-41. 오른쪽 **Add rules** 패널에서 `AWS-managed rule group`을 선택합니다.
+41. 오른쪽 **Add rules** 패널에서 `AWS-managed rule group`을 선택하고 [[Next]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-task2-step41-sqldatabase.png" alt="AWS-managed rule group 선택" class="guide-img-md" />
 
@@ -368,8 +368,6 @@ curl -s -X POST $API_URL/reservations \
 
 44. 다시 [[Add rule]] 버튼을 클릭합니다.
 
-    <img src="/images/week12/12-3-task2-step48-addrule.png" alt="Add rule 클릭" class="guide-img-sm" />
-
 45. `AWS-managed rule group`을 선택합니다.
 
     <img src="/images/week12/12-3-task2-rule-list.png" alt="AWS-managed rule group 목록" class="guide-img-sm" />
@@ -386,8 +384,6 @@ curl -s -X POST $API_URL/reservations \
 > **Core rule set (CRS)** (700 WCU)는 OWASP Top 10에 포함된 일반적인 웹 취약점을 방어합니다. XSS, 파일 포함(File Inclusion), 경로 탐색(Path Traversal) 등의 공격 패턴을 탐지합니다.
 
 48. 다시 [[Add rule]] 버튼을 클릭합니다.
-
-    <img src="/images/week12/12-3-task2-step48-addrule.png" alt="Add rule 클릭" class="guide-img-sm" />
 
 49. `AWS-managed rule group`을 선택합니다.
 
@@ -739,7 +735,7 @@ curl -s -X GET $API_URL/reservations | jq .
    - **Tag value**: `12-3`
 6. [[Search resources]] 버튼을 클릭합니다.
 
-    <img src="/images/week12/12-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
+<img src="/images/week12/12-3-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!NOTE]
 > Tag Editor는 리소스를 찾는 용도로만 사용됩니다. 실제 삭제는 다음 단계에서 수행합니다.
@@ -800,23 +796,28 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 10. 상단 검색창에 `WAF`를 입력하고 **WAF & Shield**를 선택합니다.
 11. 왼쪽 메뉴에서 **Protection packs (web ACLs)**를 선택합니다.
 12. `QuickTable-WAF-WebACL`을 선택합니다.
-13. [[Actions]] 드롭다운에서 **Delete protection pack (web ACL)**을 선택합니다.
+13. **Associated AWS resources** 탭을 선택하고, 연결된 API Gateway 리소스가 있으면 선택 후 [[Disassociate]] 버튼을 클릭하여 연결을 해제합니다.
+
+> [!NOTE]
+> Web ACL에 연결된 AWS 리소스가 있으면 삭제가 실패합니다. 반드시 연결을 먼저 해제해야 합니다.
+
+14. [[Actions]] 드롭다운에서 **Delete protection pack (web ACL)**을 선택합니다.
 
     <img src="/images/week12/12-3-cleanup-step13-actions.png" alt="Actions 드롭다운에서 Delete 선택" class="guide-img-md" />
 
-14. 확인 창에 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
+15. 확인 창에 `delete`를 입력하고 [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-cleanup-step14-delete.png" alt="delete 입력 후 삭제" class="guide-img-sm" />
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-15. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
-16. `week12-3-waf-api-protection-stack` 스택을 선택합니다.
-17. [[Delete stack]] 버튼을 클릭합니다.
+16. 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+17. `week12-3-waf-api-protection-stack` 스택을 선택합니다.
+18. [[Delete stack]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-cleanup-step17-delete-stack.png" alt="Delete stack 버튼" class="guide-img-md" />
 
-18. 확인 창에서 스택 이름 `week12-3-waf-api-protection-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
+19. 확인 창에서 스택 이름 `week12-3-waf-api-protection-stack`을 입력하고 [[Delete stack]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-cleanup-step18-confirm.png" alt="스택 삭제 확인" class="guide-img-sm" />
 
@@ -825,17 +826,17 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 
 ### 단계 4: Amazon CloudWatch Log Group 삭제
 
-19. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
-20. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
-21. 검색창에 `Week12-3`을 입력합니다.
-22. 다음 로그 그룹의 체크박스를 선택합니다:
+20. 상단 검색창에 `CloudWatch`를 입력하고 선택합니다.
+21. 왼쪽 메뉴에서 **Logs** > **Log Management**를 선택합니다.
+22. 검색창에 `Week12-3`을 입력합니다.
+23. 다음 로그 그룹의 체크박스를 선택합니다:
     - `/aws/lambda/Week12-3-CreateReservation`
     - `/aws/lambda/Week12-3-GetReservations`
-23. **Actions** > `Delete log group(s)`를 선택합니다.
+24. **Actions** > `Delete log group(s)`를 선택합니다.
 
     <img src="/images/week12/12-3-cleanup-step23-loggroup.png" alt="Delete log group 선택" class="guide-img-md" />
 
-24. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+25. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-cleanup-step24-delete.png" alt="Delete 확인" class="guide-img-sm" />
 
@@ -864,14 +865,14 @@ aws wafv2 delete-web-acl --name QuickTable-WAF-WebACL --scope REGIONAL --id $WEB
 
 모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
 
-25. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-26. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-27. **Regions**에서 `ap-northeast-2`를 선택합니다.
-28. **Resource types**에서 `All supported resource types`를 선택합니다.
-29. **Tags** 섹션에서 다음을 입력합니다:
+26. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+27. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+28. **Regions**에서 `ap-northeast-2`를 선택합니다.
+29. **Resource types**에서 `All supported resource types`를 선택합니다.
+30. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `12-3`
-30. [[Search resources]] 버튼을 클릭합니다.
+31. [[Search resources]] 버튼을 클릭합니다.
 
     <img src="/images/week12/12-3-cleanup-step30-tageditor.png" alt="Tag Editor 최종 확인" class="guide-img-md" />
 
