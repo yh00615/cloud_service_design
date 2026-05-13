@@ -815,19 +815,19 @@ aws s3 rm s3://iam-condition-lab-{StudentId}/test.txt --profile condition-test
 97. 왼쪽 메뉴에서 **Users**를 선택합니다.
 98. 사용자 목록에서 `condition-test-user`를 검색합니다.
 99. `condition-test-user`를 클릭합니다.
-100.  **Permissions** 탭을 선택합니다.
-101.  [[Add permissions]] 드롭다운 버튼을 클릭합니다.
-102.  드롭다운 메뉴에서 `Add permissions`를 선택합니다.
+100. **Permissions** 탭을 선택합니다.
+101. [[Add permissions]] 드롭다운 버튼을 클릭합니다.
+102. 드롭다운 메뉴에서 `Add permissions`를 선택합니다.
       <img src="/images/week2/2-1-task8-step7-add-permissions.png" alt="Add permissions 드롭다운 메뉴" class="guide-img-md" />
 
-103.  **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
-104.  **Permissions policies** 섹션으로 스크롤합니다.
-105.  정책 검색창에 `S3IPRestrictionPolicy`를 입력합니다.
-106.  `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
-107.  [[Next]] 버튼을 클릭합니다.
+103. **Permissions options** 섹션에서 `Attach policies directly` 라디오 버튼을 선택합니다.
+104. **Permissions policies** 섹션으로 스크롤합니다.
+105. 정책 검색창에 `S3IPRestrictionPolicy`를 입력합니다.
+106. `S3IPRestrictionPolicy` 정책 왼쪽의 체크박스를 선택합니다.
+107. [[Next]] 버튼을 클릭합니다.
       <img src="/images/week2/2-1-task8-step12-next-button.png" alt="정책 선택 후 Next 버튼" class="guide-img-md" />
 
-108.  [[Add permissions]] 버튼을 클릭합니다.
+108. [[Add permissions]] 버튼을 클릭합니다.
       <img src="/images/week2/2-1-task8-step13-add-permissions.png" alt="Add permissions 버튼" class="guide-img-md" />
       <img src="/images/week2/2-1-task8-step13-add-permissions-2.png" alt="정책 연결 완료 화면" class="guide-img-md" />
 

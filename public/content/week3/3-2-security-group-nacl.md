@@ -594,11 +594,9 @@ echo "SELECT 1" | nc $DB_IP 3306
 
 98. 생성된 `Private-NACL`을 선택합니다.
 99. 하단의 **Inbound rules** 탭을 선택합니다.
-100.  [[Edit inbound rules]] 버튼을 클릭합니다.
-101.  [[Add new rule]] 버튼을 클릭합니다.
-102.  첫 번째 규칙을 설정합니다 (Amazon VPC 내부 트래픽):
-
-
+100. [[Edit inbound rules]] 버튼을 클릭합니다.
+101. [[Add new rule]] 버튼을 클릭합니다.
+102. 첫 번째 규칙을 설정합니다 (Amazon VPC 내부 트래픽):
      - Rule number: `100`
      - Type: `All traffic`
      - Source: `10.0.0.0/16`

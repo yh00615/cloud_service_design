@@ -696,7 +696,7 @@ def lambda_handler(event, context):
     <img src="/images/week14/14-3-task5-step98-add-permissions.png" alt="Add permissions > Attach policies 선택" class="guide-img-md" />
 
 99. `AmazonBedrockFullAccess`를 검색하고 체크합니다.
-100.  [[Add permissions]] 버튼을 클릭합니다.
+100. [[Add permissions]] 버튼을 클릭합니다.
 
       <img src="/images/week14/14-3-task5-step100-attach-policy.png" alt="AmazonBedrockFullAccess 정책 선택" class="guide-img-md" />
 

@@ -22,7 +22,7 @@ prerequisites:
 >
 > **권장 이유**:
 >
-> - 모든 Amazon Bedrock 모델(Claude Sonnet 4.6, Titan Text Embeddings V2 등)이 지원됩니다
+> - 모든 Amazon Bedrock 모델(Claude Sonnet 4.6, Titan Embeddings G2 - Text v2.0 등)이 지원됩니다
 > - Amazon OpenSearch Serverless가 서울 리전에서 지원됩니다
 > - Knowledge Base와 Agent 통합 시 같은 리전을 사용해야 합니다
 > - Week 14-3 Agent와 같은 리전에서 통합해야 합니다
@@ -223,20 +223,23 @@ Knowledge Base는 문서를 자동으로 처리하여 벡터 데이터베이스�
 > Chunking strategy는 Default 외에 Fixed size, Hierarchical, Semantic, No chunking을 선택할 수 있습니다.
 > 이 실습에서는 Default chunking을 사용합니다.
 
-37. **Embeddings model**에서 `Titan Text Embeddings V2`를 선택합니다.
+37. **Embeddings model**에서 [[Select model]] 버튼을 클릭합니다. Select model 모달에서 다음을 선택합니다:
+    - **Categories**: `Amazon`
+    - **Models**: `Titan Embeddings G2 - Text v2.0`
+    - **Inference**: `On-demand`
+    - [[Apply]] 버튼을 클릭합니다.
 
-    <img src="/images/week14/14-2-task2-step37-embeddings.png" alt="Titan Text Embeddings V2 선택" class="guide-img-md" />
+    <img src="/images/week14/14-2-task2-step37-embeddings.png" alt="Titan Embeddings G2 - Text v2.0 선택" class="guide-img-md" />
 
     <img src="/images/week14/14-2-task2-step37-vector-store.png" alt="Vector store 설정" class="guide-img-sm" />
 
 > [!CONCEPT] 임베딩 모델 선택
 > Amazon Bedrock은 여러 임베딩 모델을 제공합니다:
 >
-> - **Titan Text Embeddings V2** (권장): Amazon 자체 모델, 다국어 지원 개선, 벡터 차원 설정 가능 (256/512/1024), OpenSearch Serverless와 호환성 우수
+> - **Titan Embeddings G2 - Text v2.0** (권장): Amazon 자체 모델, 다국어 지원 개선, 벡터 차원 설정 가능 (256/512/1024), OpenSearch Serverless와 호환성 우수
 > - **Cohere Embed Multilingual v3**: 다국어 지원 우수, 한국어 임베딩 품질 높음
-> - **Titan Embeddings G1 - Text**: 이전 세대, 영어 중심
 >
-> 이 실습에서는 OpenSearch Serverless 벡터 스토어와의 차원 호환성을 위해 Titan Text Embeddings V2를 사용합니다.
+> 이 실습에서는 OpenSearch Serverless 벡터 스토어와의 차원 호환성을 위해 Titan Embeddings G2 - Text v2.0을 사용합니다.
 
 38. **Vector store** 섹션에서 다음을 설정합니다:
     - **Vector store creation method**: `Quick create a new vector store - Recommended` 선택 (기본값)
@@ -670,15 +673,15 @@ fi
 
 **Amazon Bedrock Knowledge Base 삭제**
 
-13. Amazon Bedrock 콘솔로 이동합니다.
-14. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
-15. `quicktable-restaurant-kb`를 선택합니다.
-16. [[Delete]] 버튼을 클릭합니다.
+14. Amazon Bedrock 콘솔로 이동합니다.
+15. 왼쪽 메뉴에서 **Build** > **Knowledge bases**를 선택합니다.
+16. `quicktable-restaurant-kb`를 선택합니다.
+17. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step16-delete-kb.png" alt="Knowledge Base Delete 버튼 클릭" class="guide-img-md" />
 
-17. `delete`를 입력하여 삭제를 확인합니다.
-18. [[Delete]] 버튼을 클릭합니다.
+18. `delete`를 입력하여 삭제를 확인합니다.
+19. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step18-confirm-delete.png" alt="삭제 확인" class="guide-img-sm" />
 
@@ -691,14 +694,14 @@ fi
 
 **Amazon OpenSearch Serverless 컬렉션 삭제**
 
-19. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
-20. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
-21. Knowledge Base와 연결된 컬렉션이 남아있다면 선택 후 [[Delete]] 버튼을 클릭합니다.
+20. 상단 검색창에 `OpenSearch`을 입력하고 선택합니다.
+21. 왼쪽 메뉴에서 **Serverless** > **Collections**를 선택합니다.
+22. Knowledge Base와 연결된 컬렉션이 남아있다면 선택 후 [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step21-delete-collection.png" alt="OpenSearch Serverless 컬렉션 삭제" class="guide-img-md" />
 
-22. 확인 창에서 `confirm`을 입력합니다.
-23. [[Delete]] 버튼을 클릭합니다.
+23. 확인 창에서 `confirm`을 입력합니다.
+24. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step23-confirm-collection.png" alt="컬렉션 삭제 확인" class="guide-img-sm" />
 
@@ -712,30 +715,30 @@ fi
 > Knowledge Base 생성 시 OpenSearch Serverless에 보안 정책이 자동으로 생성됩니다.
 > Knowledge Base를 삭제하거나 생성에 실패해도 이 정책들은 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
 
-24. 왼쪽 메뉴에서 **Serverless** > **Security** > **Data access policies**를 선택합니다.
-25. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
-26. [[Delete]] 버튼을 클릭합니다.
+25. 왼쪽 메뉴에서 **Serverless** > **Security** > **Data access policies**를 선택합니다.
+26. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+27. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step26-delete-data-policy.png" alt="Data access policy 삭제" class="guide-img-md" />
 
-27. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+28. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step27-confirm-data-policy.png" alt="Data access policy 삭제 확인" class="guide-img-sm" />
 
-28. 왼쪽 메뉴에서 **Encryption policies**를 선택합니다.
-29. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
-30. [[Delete]] 버튼을 클릭합니다.
+29. 왼쪽 메뉴에서 **Encryption policies**를 선택합니다.
+30. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+31. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step30-delete-encryption.png" alt="Encryption policy 삭제" class="guide-img-md" />
 
-31. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
-32. 왼쪽 메뉴에서 **Network policies**를 선택합니다.
-33. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
-34. [[Delete]] 버튼을 클릭합니다.
+32. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+33. 왼쪽 메뉴에서 **Network policies**를 선택합니다.
+34. `bedrock-knowledge-base-` 로 시작하는 정책을 선택합니다.
+35. [[Delete]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step34-delete-network.png" alt="Network policy 삭제" class="guide-img-md" />
 
-35. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
+36. 확인 창에서 `confirm`을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!TIP]
 > CLI로 보안 정책이 남아있는지 확인하려면 다음 명령어를 실행합니다:
@@ -750,38 +753,38 @@ fi
 
 **Amazon S3 버킷 삭제**
 
-36. Amazon S3 콘솔로 이동합니다.
-37. `quicktable-kb-documents-{StudentId}` 버킷을 선택합니다. (예: `quicktable-kb-documents-20240001`)
-38. [[Empty]] 버튼을 클릭합니다.
-39. `permanently delete`를 입력합니다.
-40. [[Empty]] 버튼을 클릭합니다.
-41. 버킷을 선택합니다.
-42. [[Delete]] 버튼을 클릭합니다.
-43. 버킷 이름을 입력합니다.
-44. [[Delete bucket]] 버튼을 클릭합니다.
+37. Amazon S3 콘솔로 이동합니다.
+38. `quicktable-kb-documents-{StudentId}` 버킷을 선택합니다. (예: `quicktable-kb-documents-20240001`)
+39. [[Empty]] 버튼을 클릭합니다.
+40. `permanently delete`를 입력합니다.
+41. [[Empty]] 버튼을 클릭합니다.
+42. 버킷을 선택합니다.
+43. [[Delete]] 버튼을 클릭합니다.
+44. 버킷 이름을 입력합니다.
+45. [[Delete bucket]] 버튼을 클릭합니다.
 
 **AWS IAM 역할 삭제**
 
-45. 상단 검색창에 `IAM`을 입력하고 선택합니다.
-46. 왼쪽 메뉴에서 **Roles**를 선택합니다.
-47. 검색창에 `KnowledgeBase`를 입력합니다.
-48. `AmazonBedrockExecutionRoleForKnowledgeBase_` 로 시작하는 역할을 선택합니다.
-49. [[Delete]] 버튼을 클릭합니다.
-50. 확인 창에서 역할 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
+46. 상단 검색창에 `IAM`을 입력하고 선택합니다.
+47. 왼쪽 메뉴에서 **Roles**를 선택합니다.
+48. 검색창에 `KnowledgeBase`를 입력합니다.
+49. `AmazonBedrockExecutionRoleForKnowledgeBase_` 로 시작하는 역할을 선택합니다.
+50. [[Delete]] 버튼을 클릭합니다.
+51. 확인 창에서 역할 이름을 입력하고 [[Delete]] 버튼을 클릭합니다.
 
 > [!NOTE]
 > Knowledge Base 생성 시 자동으로 생성된 IAM 역할입니다. Knowledge Base를 삭제해도 이 역할은 자동으로 삭제되지 않으므로 수동으로 삭제해야 합니다.
 
 ### 단계 3: 삭제 확인
 
-51. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
-52. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
-53. **Regions**에서 `ap-northeast-2`를 선택합니다.
-54. **Resource types**에서 `All supported resource types`를 선택합니다.
-55. **Tags** 섹션에서 다음을 입력합니다:
+52. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+53. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+54. **Regions**에서 `ap-northeast-2`를 선택합니다.
+55. **Resource types**에서 `All supported resource types`를 선택합니다.
+56. **Tags** 섹션에서 다음을 입력합니다:
     - **Tag key**: `Week`
     - **Tag value**: `14-2`
-56. [[Search resources]] 버튼을 클릭합니다.
+57. [[Search resources]] 버튼을 클릭합니다.
 
     <img src="/images/week14/14-2-cleanup-step56-verify.png" alt="삭제 확인 검색 결과" class="guide-img-md" />
 
@@ -850,7 +853,7 @@ fi
 
 **Embedding Model (임베딩 모델):**
 
-- Titan Text Embeddings V2: Amazon 자체 모델, 다국어 지원 개선, 벡터 차원 설정 가능 (256/512/1024), OpenSearch Serverless와 호환성 우수 (권장)
+- Titan Embeddings G2 - Text v2.0: Amazon 자체 모델, 다국어 지원 개선, 벡터 차원 설정 가능 (256/512/1024), OpenSearch Serverless와 호환성 우수 (권장)
 - Cohere Embed Multilingual v3: 다국어 지원 우수, 한국어 임베딩 품질 높음
 - Titan Embeddings G1: 이전 세대, 영어 중심
 - 벡터 차원: 1024 (Titan V2 기본값), 1024 (Cohere Multilingual v3)
@@ -933,7 +936,7 @@ fi
 
 **임베딩 비용:**
 
-- Titan Text Embeddings V2: 1,000 토큰당 $0.00002
+- Titan Embeddings G2 - Text v2.0: 1,000 토큰당 $0.00002
 - Cohere Embed Multilingual v3: 1,000 토큰당 $0.0001
 - 100만 토큰 처리 시 Titan V2는 약 $0.02, Cohere는 약 $0.10
 
