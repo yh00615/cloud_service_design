@@ -42,6 +42,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/IAMReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSCloudShellFullAccess
+        - arn:aws:iam::aws:policy/IAMUserChangePassword
       Tags:
         - Key: Project
           Value: !Ref ProjectTag
