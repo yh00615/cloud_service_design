@@ -2,17 +2,36 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Week 1-1 Tag Editor Lab - QuickTable Restaurant Reservation System Resources for Tag Management Practice'
 
 Parameters:
+  StudentId:
+    Type: String
+    Default: '20240001'
+    Description: Student ID (used for unique S3 bucket naming)
+    AllowedPattern: ^[a-z0-9]+$
+    ConstraintDescription: Only lowercase letters and numbers allowed
+
   WeekTag:
     Type: String
     Default: '1-1'
     Description: Week tag value for all resources (students will add Project and CreatedBy tags manually)
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: 'Student Information (Required)'
+        Parameters:
+          - StudentId
+      - Label:
+          default: 'Tag Settings (Keep Default)'
+        Parameters:
+          - WeekTag
 
 Resources:
   # S3 Bucket 1: QuickTable Reservations Bucket
   ReservationsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'quicktable-reservations-${AWS::AccountId}'
+      BucketName: !Sub 'quicktable-reservations-${StudentId}'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -26,7 +45,7 @@ Resources:
   LogsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'quicktable-logs-${AWS::AccountId}'
+      BucketName: !Sub 'quicktable-logs-${StudentId}'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true

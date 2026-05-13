@@ -538,11 +538,11 @@ AWS Config Remediation이 SNS 알림을 전송하려면 SSM Automation이 사용
 
     <img src="/images/week12/12-2-task7-step99-next.png" alt="Use case 선택 후 Next" class="guide-img-md" />
 
-100.  **Role name**에 `config-remediation-sns-role`을 입력합니다.
-101.  [[Create role]] 버튼을 클릭합니다.
+100. **Role name**에 `config-remediation-sns-role`을 입력합니다.
+101. [[Create role]] 버튼을 클릭합니다.
       <img src="/images/week12/12-2-task7-step101-permissions.png" alt="Permissions policies 선택 후 Next" class="guide-img-md" />
 
-102.  생성된 역할을 클릭하여 **ARN**을 복사합니다 (형식: `arn:aws:iam::{계정ID}:role/config-remediation-sns-role`).
+102. 생성된 역할을 클릭하여 **ARN**을 복사합니다 (형식: `arn:aws:iam::{계정ID}:role/config-remediation-sns-role`).
 
 > [!NOTE]
 > 이 실습에서는 편의상 `AmazonSNSFullAccess` 정책을 사용합니다.

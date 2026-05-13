@@ -503,12 +503,12 @@ NAT Gateway 경로를 제거하여 Amazon VPC Endpoint만으로 Amazon S3에 접
 
 98. Amazon VPC 콘솔로 이동합니다.
 99. 왼쪽 메뉴에서 **Route tables**를 선택합니다.
-100.  검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 라우팅 테이블을 찾습니다.
-101.  해당 라우팅 테이블을 선택합니다.
-102.  하단의 **Routes** 탭을 선택합니다.
-103.  **Destination**이 `0.0.0.0/0`이고 **Target**이 NAT Gateway(`nat-`로 시작)인 라우팅 규칙을 찾습니다.
-104.  [[Edit routes]] 버튼을 클릭합니다.
-105.  **Destination**이 `0.0.0.0/0`인 라우팅 규칙 오른쪽의 [[Remove]] 버튼을 클릭합니다.
+100. 검색창에 메모장에 저장한 `PrivateRouteTableAId`를 입력하여 프라이빗 라우팅 테이블을 찾습니다.
+101. 해당 라우팅 테이블을 선택합니다.
+102. 하단의 **Routes** 탭을 선택합니다.
+103. **Destination**이 `0.0.0.0/0`이고 **Target**이 NAT Gateway(`nat-`로 시작)인 라우팅 규칙을 찾습니다.
+104. [[Edit routes]] 버튼을 클릭합니다.
+105. **Destination**이 `0.0.0.0/0`인 라우팅 규칙 오른쪽의 [[Remove]] 버튼을 클릭합니다.
       <img src="/images/week3/3-1-task5-step105-remove-route.png" alt="NAT Gateway 경로 제거" class="guide-img-md" />
       <img src="/images/week3/3-1-task5-step105-edit-routes.png" alt="Edit routes 화면" class="guide-img-md" />
 
