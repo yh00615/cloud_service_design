@@ -56,12 +56,14 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 2. `week2-2-iam-role-assumerole.yaml` 파일을 확인합니다.
 3. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
 4. [[Create stack]] 드롭다운을 클릭한 후 **With new resources (standard)**를 선택합니다.
-    <img src="/images/week2/2-2-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
+   <img src="/images/week2/2-2-task0-step4-create-stack.png" alt="CloudFormation Create stack 드롭다운에서 With new resources (standard) 선택" class="guide-img-md" />
 
 5. **Prerequisite - Prepare template**에서 `Choose an existing template`를 선택합니다.
 6. **Specify template**에서 `Upload a template file`을 선택합니다.
 7. [[Choose file]] 버튼을 클릭한 후 `week2-2-iam-role-assumerole.yaml` 파일을 선택합니다.
 8. [[Next]] 버튼을 클릭합니다.
+   <img src="/images/week2/2-2-task0-step8-next.png" alt="CloudFormation Next 버튼 클릭" class="guide-img-md" />
+
 9. **Stack name**에 `week2-2-iam-role-stack`을 입력합니다.
 10. **Parameters** 섹션에서 기본값을 확인합니다:
     - **LabUserPassword**: `ChangeMe123!` (기본값 유지 또는 원하는 비밀번호로 변경)
@@ -69,14 +71,20 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
     - **WeekTag**: `2-2` (기본값 유지)
     - **CreatedByTag**: `CloudFormation` (기본값 유지)
 11. [[Next]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-task0-step11-next.png" alt="Parameters 설정 후 Next" class="guide-img-md" />
+
 12. **Configure stack options** 페이지가 열립니다.
 
 > [!NOTE]
 > 태그는 Parameters에서 설정한 값이 리소스와 스택 태그에 자동으로 적용됩니다. 필요에 따라 Tags 섹션에서 추가 태그를 넣을 수도 있습니다.
 
 13. **Capabilities** 섹션에서 `I acknowledge that AWS CloudFormation might create AWS IAM resources`를 체크합니다.
+    <img src="/images/week2/2-2-task0-step13-capabilities.png" alt="CloudFormation Capabilities 체크박스" class="guide-img-md" />
+
 14. [[Next]] 버튼을 클릭합니다.
 15. **Review** 페이지에서 설정을 확인합니다.
+    <img src="/images/week2/2-2-task0-step15-review.png" alt="Review 페이지" class="guide-img-md" />
+
 16. [[Submit]] 버튼을 클릭합니다.
 
 > [!NOTE]
@@ -85,6 +93,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 대기하는 동안 다음 태스크를 미리 읽어봅니다.
 
 17. **Outputs** 탭을 선택합니다.
+    <img src="/images/week2/2-2-task0-step17-outputs.png" alt="CloudFormation Outputs 탭" class="guide-img-md" />
+
 18. 출력값들을 확인하고 메모장에 복사합니다:
     - `LabUserName`: lab-user
     - `LabUserConsoleLoginUrl`: 콘솔 로그인 URL
@@ -109,6 +119,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 19. AWS Management Console에 로그인한 후 상단 검색창에 `IAM`을 입력하고 선택합니다.
 20. 왼쪽 메뉴에서 **Roles**를 선택합니다.
 21. [[Create role]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-task1-step21-create-role.png" alt="Create role 버튼 클릭" class="guide-img-md" />
+
 22. **Trusted entity type**에서 `AWS account`를 선택합니다.
 
 > [!NOTE]
@@ -127,6 +139,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 > 현재 계정을 선택하는 옵션을 선택합니다.
 
 24. **Account ID**에 현재 계정 ID가 표시되는지 확인합니다.
+    <img src="/images/week2/2-2-task1-step24-this-account.png" alt="This account 선택 및 Account ID 확인" class="guide-img-md" />
 
 > [!NOTE]
 > **Account ID** 필드에 12자리 숫자가 자동으로 표시됩니다. 이는 현재 로그인한 AWS 계정의 ID입니다.
@@ -146,6 +159,7 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 27. **Permissions policies** 검색창에 `S3`를 입력합니다.
 28. 검색 결과에서 `AmazonS3ReadOnlyAccess` 정책을 찾습니다.
 29. `AmazonS3ReadOnlyAccess` 정책 왼쪽의 체크박스를 선택합니다.
+    <img src="/images/week2/2-2-task2-step29-s3readonly.png" alt="AmazonS3ReadOnlyAccess 정책 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 체크박스를 선택하면 체크 표시가 나타나고, 화면 하단에 "1 policy selected"라고 표시됩니다.
@@ -194,12 +208,15 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 | `CreatedBy` | `Student` |
 
 38. [[Create role]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-task2-step38-create-role.png" alt="Create role 클릭" class="guide-img-md" />
+
 39. 역할 생성이 완료되면 **Roles** 페이지로 자동 이동합니다.
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole created"라는 성공 메시지가 표시됩니다.
 
 40. 역할 목록에서 `S3ReadOnlyRole`을 검색하여 생성된 역할을 확인합니다.
+    <img src="/images/week2/2-2-task2-step40-role-created.png" alt="S3ReadOnlyRole 생성 확인" class="guide-img-md" />
 
 > [!NOTE]
 > 역할 목록에서 **Role name** 열에 `S3ReadOnlyRole`이 표시됩니다. 이 역할을 클릭하면 상세 정보를 확인할 수 있습니다.
@@ -213,6 +230,8 @@ AWS CloudFormation 스택은 다음 리소스를 생성합니다:
 41. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
 42. 검색 결과에서 `S3ReadOnlyRole`을 클릭합니다.
 43. 역할 상세 페이지가 열립니다.
+    <img src="/images/week2/2-2-task3-step43-role-detail.png" alt="S3ReadOnlyRole 상세 페이지" class="guide-img-md" />
+
 44. 페이지 상단의 **Summary** 섹션을 확인합니다.
 45. **ARN** 필드를 찾습니다.
 
@@ -246,6 +265,8 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 
 53. 사용자 상세 페이지에서 **Permissions** 탭을 선택합니다.
 54. **Permissions policies** 섹션에서 [[Add permissions]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-task4-step54-inline-policy.png" alt="Add permissions > Create inline policy" class="guide-img-md" />
+
 55. 드롭다운 메뉴가 나타나면 [[Create inline policy]]를 선택합니다.
 56. **Specify permissions** 페이지가 열립니다.
 57. **JSON** 탭 또는 토글을 선택합니다.
@@ -295,6 +316,11 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 4. JSON 문법 검증: 중괄호, 대괄호, 쉼표, 따옴표가 올바른지 확인합니다
 
 59. JSON 편집기에서 `YOUR_ACCOUNT_ID` 부분을 찾아 실제 계정 ID로 교체합니다.
+    <img src="/images/week2/2-2-task4-step59-json-policy.png" alt="JSON 정책 편집기" class="guide-img-md" />
+
+> [!TIP]
+> **계정 ID 확인 방법**: AWS Management Console 오른쪽 상단의 계정 이름을 클릭하면 드롭다운에 12자리 계정 ID가 표시됩니다. 옆의 복사 아이콘을 클릭하면 클립보드에 복사됩니다.
+
 60. 정책이 올바르게 작성되었는지 확인합니다.
 
 > [!TIP]
@@ -316,6 +342,8 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 61. [[Next]] 버튼을 클릭합니다.
 62. **Review and create** 페이지로 이동합니다.
 63. **Policy name**에 `AssumeS3ReadOnlyRolePolicy`를 입력합니다.
+    <img src="/images/week2/2-2-task4-step63-policy-name.png" alt="Policy name 입력" class="guide-img-md" />
+
 64. [[Create policy]] 버튼을 클릭합니다.
 65. 정책 생성이 완료되면 사용자의 **Permissions** 탭으로 자동 이동합니다.
 
@@ -323,6 +351,7 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 화면 상단에 녹색 배너로 "Policy AssumeS3ReadOnlyRolePolicy created"라는 성공 메시지가 표시됩니다.
 
 66. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 추가되었는지 확인합니다.
+    <img src="/images/week2/2-2-task4-step66-policy-created.png" alt="인라인 정책 추가 확인" class="guide-img-md" />
 
 > [!NOTE]
 > **Permissions policies** 섹션에 `AssumeS3ReadOnlyRolePolicy`가 표시되고, **Policy Type** 열에 "Customer inline"으로 표시됩니다. 이는 사용자에게 직접 연결된 인라인 정책임을 의미합니다.
@@ -333,6 +362,12 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 
 이 태스크에서는 **lab-user로 로그인한 시크릿 창**에서 **AWS CloudShell**을 사용하여 **AssumeRole API**를 호출하고 **임시 자격증명**을 획득합니다. **AssumeRole**은 **STS**(Security Token Service)의 API로, 역할을 맡으면 **AccessKeyId**, **SecretAccessKey**, **SessionToken**으로 구성된 임시 자격증명을 받습니다. 이 자격증명은 기본 1시간 동안 유효하며, 역할의 Maximum session duration 설정에서 최대 12시간까지 연장할 수 있습니다.
 
+> [!NOTE]
+> 이 실습에서 생성한 역할은 Maximum session duration을 변경하지 않았으므로 최대 세션 시간은 1시간입니다.  
+> 역할 설정에서 Maximum session duration을 늘리면 최대 12시간까지 연장할 수 있습니다.
+
+67. **lab-user로 로그인한 시크릿 창**에서 AWS Management Console 상단 오른쪽의 AWS CloudShell 아이콘을 클릭합니다.
+
 > [!IMPORTANT]
 > 이 태스크는 **lab-user로 로그인한 시크릿 창**에서 진행합니다.
 >
@@ -340,12 +375,9 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 > 2. 태스크 0의 Outputs에서 복사한 `LabUserConsoleLoginUrl`로 접속합니다.
 > 3. 사용자 이름: `lab-user`, 비밀번호: 태스크 0에서 확인한 초기 비밀번호
 > 4. 첫 로그인 시 새 비밀번호로 변경합니다.
-
-> [!NOTE]
-> 이 실습에서 생성한 역할은 Maximum session duration을 변경하지 않았으므로 최대 세션 시간은 1시간입니다.  
-> 역할 설정에서 Maximum session duration을 늘리면 최대 12시간까지 연장할 수 있습니다.
-
-67. **lab-user로 로그인한 시크릿 창**에서 AWS Management Console 상단 오른쪽의 AWS CloudShell 아이콘을 클릭합니다.
+>
+> <img src="/images/week2/2-2-task5-step67-login.png" alt="lab-user 로그인" class="guide-img-sm" />
+> <img src="/images/week2/2-2-task5-step67-password-change.png" alt="비밀번호 변경" class="guide-img-sm" />
 
 > [!NOTE]
 > CloudShell은 AWS CLI가 사전 설치되어 있고 현재 로그인한 AWS IAM 사용자 자격증명이 자동으로 구성된 브라우저 기반 셸 환경입니다.  
@@ -357,6 +389,8 @@ ARN 형식 예시: `arn:aws:iam::123456789012:role/S3ReadOnlyRole`
 aws sts get-caller-identity
 ```
 
+<img src="/images/week2/2-2-task5-step68-caller-identity.png" alt="get-caller-identity 결과" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -367,11 +401,22 @@ aws sts get-caller-identity
 > }
 > ```
 
+> [!NOTE]
+> **get-caller-identity 출력 설명**:
+>
+> - **UserId**: AWS IAM 사용자의 고유 ID입니다. `AIDA`로 시작하면 IAM 사용자, `AROA`로 시작하면 역할을 맡은 상태입니다.
+> - **Account**: 12자리 AWS 계정 ID입니다.
+> - **Arn**: 현재 자격증명의 ARN입니다. 역할을 맡으면 `assumed-role/역할이름/세션이름` 형식으로 변경됩니다.
+>
+> `AccessKeyId`, `SecretAccessKey`, `SessionToken`은 AssumeRole을 호출할 때마다 새로 발급되지만, UserId의 역할 ID 부분(`AROA...`)은 역할을 삭제하지 않는 한 고정됩니다.
+
 69. 현재 사용자로 Amazon S3 버킷 목록 조회를 시도합니다:
 
 ```bash
 aws s3 ls
 ```
+
+<img src="/images/week2/2-2-task5-step69-s3-denied.png" alt="S3 AccessDenied" class="guide-img-md" />
 
 > [!OUTPUT]
 >
@@ -391,6 +436,8 @@ aws sts assume-role \
   --role-arn arn:aws:iam::123456789012:role/S3ReadOnlyRole \
   --role-session-name s3-readonly-session
 ```
+
+<img src="/images/week2/2-2-task5-step71-assume-role.png" alt="AssumeRole 실행 결과" class="guide-img-md" />
 
 > [!IMPORTANT]
 > `--role-arn` 값을 반드시 태스크 3에서 복사한 실제 역할 ARN으로 교체해야 합니다. 메모장에 저장한 ARN을 그대로 복사하여 붙여넣습니다.
@@ -465,6 +512,8 @@ aws sts assume-role \
 > ```
 >
 > 이 방법을 사용하면 복사/붙여넣기 오류를 방지할 수 있습니다. **단, 역할 ARN은 실제 값으로 교체해야 합니다**.
+>
+> <img src="/images/week2/2-2-task6-step75-jq-tip.png" alt="jq를 활용한 자동 설정" class="guide-img-md" />
 
 75. 메모장에 저장한 세 가지 자격증명 값을 확인합니다.
 76. 다음 명령어 3줄을 메모장에 복사한 후, 따옴표 안의 값을 실제 자격증명 값으로 교체합니다:
@@ -474,6 +523,34 @@ export AWS_ACCESS_KEY_ID="여기에_AccessKeyId_값_붙여넣기"
 export AWS_SECRET_ACCESS_KEY="여기에_SecretAccessKey_값_붙여넣기"
 export AWS_SESSION_TOKEN="여기에_SessionToken_값_붙여넣기"
 ```
+
+> [!TIP]
+> **수동 복사 없이 한 번에 설정하는 방법**: 아래 명령어를 실행하면 AssumeRole 결과에서 자격증명을 자동으로 추출하여 환경 변수로 설정합니다. 역할 ARN만 실제 값으로 교체합니다.
+>
+> ```bash
+> CREDS=$(aws sts assume-role \
+>   --role-arn arn:aws:iam::123456789012:role/S3ReadOnlyRole \
+>   --role-session-name s3-readonly-session \
+>   --query 'Credentials' --output json)
+> export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.AccessKeyId')
+> export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.SecretAccessKey')
+> export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.SessionToken')
+> ```
+>
+> <img src="/images/week2/2-2-task6-step76-creds-set.png" alt="자격증명 자동 설정 결과" class="guide-img-sm" />
+>
+> 설정 확인:
+>
+> ```bash
+> echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+> echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+> echo "AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:0:20}..."
+> aws sts get-caller-identity
+> ```
+>
+> <img src="/images/week2/2-2-task6-step76-verify.png" alt="환경변수 설정 및 역할 확인" class="guide-img-sm" />
+>
+> 출력에 `assumed-role/S3ReadOnlyRole`이 표시되면 성공입니다.
 
 > [!IMPORTANT]
 > 쉘 명령어의 따옴표(`"`)는 그대로 유지하고, `여기에_값_붙여넣기` 부분만 실제 자격증명 값으로 교체합니다.  
@@ -538,6 +615,8 @@ aws sts get-caller-identity
 aws s3 ls
 ```
 
+<img src="/images/week2/2-2-task7-step80-s3-ls-success.png" alt="S3 버킷 목록 조회 성공" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```
@@ -553,6 +632,8 @@ aws s3 ls
 ```bash
 aws s3 mb s3://test-bucket-assumerole-YOUR-INITIALS-12345
 ```
+
+<img src="/images/week2/2-2-task7-step81-s3-mb-denied.png" alt="S3 버킷 생성 AccessDenied" class="guide-img-md" />
 
 > [!WARNING]
 > `YOUR-INITIALS-12345` 부분을 본인의 이니셜(소문자)과 랜덤 숫자로 변경합니다 (예: `test-bucket-assumerole-jdoe-98765`).
@@ -616,6 +697,8 @@ unset AWS_SESSION_TOKEN
 aws sts get-caller-identity
 ```
 
+<img src="/images/week2/2-2-task8-step83-unset-identity.png" alt="원래 자격증명 복귀 확인" class="guide-img-md" />
+
 > [!OUTPUT]
 >
 > ```json
@@ -625,6 +708,23 @@ aws sts get-caller-identity
 >   "Arn": "arn:aws:iam::123456789012:user/lab-user"
 > }
 > ```
+
+84. Amazon S3 버킷 목록 조회를 시도하여 원래 권한으로 돌아왔는지 확인합니다:
+
+```bash
+aws s3 ls
+```
+
+<img src="/images/week2/2-2-task8-step84-s3-denied-again.png" alt="원래 권한으로 S3 AccessDenied" class="guide-img-md" />
+
+> [!OUTPUT]
+>
+> ```bash
+> An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
+> ```
+
+> [!NOTE]
+> 환경 변수를 제거하여 원래 lab-user 자격증명으로 돌아왔으므로, 다시 Amazon S3 접근이 거부됩니다.
 
 ✅ **태스크 완료**: 원래 AWS IAM 사용자 자격증명으로 복귀했습니다.
 
@@ -642,6 +742,7 @@ aws sts get-caller-identity
 
 > [!WARNING]
 > 다음 단계를 **반드시 수행**하여 불필요한 보안 위험을 방지합니다.
+> 리소스 정리는 **관리자 권한이 있는 원래 계정**(시크릿 창이 아닌 원래 브라우저 창)에서 진행합니다. lab-user 시크릿 창은 닫습니다.
 
 ### 단계 1: Tag Editor로 리소스 확인
 
@@ -658,6 +759,7 @@ aws sts get-caller-identity
    - **Tag key**: `Week`
    - **Tag value**: `2-2`
 6. [[Search resources]] 버튼을 클릭합니다.
+   <img src="/images/week2/2-2-cleanup-step6-tageditor.png" alt="Tag Editor 검색 결과" class="guide-img-md" />
 
 > [!OUTPUT]
 > 이 실습에서 생성한 AWS IAM 역할이 표시됩니다.
@@ -673,6 +775,7 @@ aws sts get-caller-identity
 8. 왼쪽 메뉴에서 **Roles**를 선택합니다.
 9. 역할 목록에서 `S3ReadOnlyRole`을 검색합니다.
 10. `S3ReadOnlyRole` 역할 왼쪽의 라디오 버튼을 선택합니다.
+    <img src="/images/week2/2-2-cleanup-step10-delete-role.png" alt="S3ReadOnlyRole 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 역할이 선택되면 라디오 버튼에 점이 표시되고, 상단의 [[Delete]] 버튼이 활성화됩니다.
@@ -684,11 +787,13 @@ aws sts get-caller-identity
 > 역할 이름을 정확히 입력해야 [[Delete]] 버튼이 활성화됩니다.
 
 13. [[Delete]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-cleanup-step13-role-deleted.png" alt="역할 삭제 확인" class="guide-img-md" />
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "Role S3ReadOnlyRole deleted successfully"라는 성공 메시지가 표시됩니다.
 
 14. 역할 목록에서 `S3ReadOnlyRole`이 더 이상 표시되지 않는지 확인합니다.
+    <img src="/images/week2/2-2-cleanup-step14-confirm-deleted.png" alt="역할 삭제 완료 확인" class="guide-img-md" />
 
 #### AWS IAM 사용자 인라인 정책 삭제
 
@@ -698,50 +803,71 @@ aws sts get-caller-identity
 18. **Permissions** 탭을 선택합니다.
 19. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`를 찾습니다.
 20. `AssumeS3ReadOnlyRolePolicy` 왼쪽의 체크박스를 선택합니다.
+    <img src="/images/week2/2-2-cleanup-step20-select-policy.png" alt="인라인 정책 선택" class="guide-img-md" />
 
 > [!NOTE]
 > 체크박스를 선택하면 체크 표시가 나타나고, 상단의 [[Remove]] 버튼이 활성화됩니다.
 
 21. [[Remove]] 버튼을 클릭합니다.
-22. 확인 창이 나타나면 [[Remove]] 버튼을 다시 클릭합니다.
+22. 확인 창이 나타나면 [[Remove policy]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-cleanup-step22-remove-policy.png" alt="Remove policy 확인" class="guide-img-sm" />
 
 > [!OUTPUT]
 > 화면 상단에 녹색 배너로 "Policy removed successfully"라는 성공 메시지가 표시됩니다.
 
 23. **Permissions policies** 섹션에서 `AssumeS3ReadOnlyRolePolicy`가 더 이상 표시되지 않는지 확인합니다.
+    <img src="/images/week2/2-2-cleanup-step23-policy-removed.png" alt="정책 삭제 성공 메시지" class="guide-img-md" />
+    <img src="/images/week2/2-2-cleanup-step23-confirm-removed.png" alt="정책 삭제 확인" class="guide-img-md" />
 
 ### 단계 3: AWS CloudFormation 스택 삭제
 
-24. AWS CloudFormation 콘솔로 이동합니다.
-25. 왼쪽 메뉴에서 **Stacks**를 선택합니다.
-26. `week2-2-iam-role-stack` 스택을 선택합니다.
-27. [[Delete]] 버튼을 클릭합니다.
-28. 확인 창에서 [[Delete]] 버튼을 클릭합니다.
+마지막으로 AWS CloudFormation 스택을 삭제하여 나머지 모든 리소스를 정리합니다.
+
+24. AWS Management Console에 로그인한 후 상단 검색창에 `CloudFormation`을 입력하고 선택합니다.
+25. 스택 목록에서 `week2-2-iam-role-stack` 스택을 검색합니다.
+26. `week2-2-iam-role-stack` 스택의 체크박스를 선택합니다.
 
 > [!NOTE]
-> 스택 삭제가 완료될 때까지 기다립니다.
-> AWS CloudFormation 스택을 삭제하면 태스크 0에서 생성한 AWS IAM 사용자(lab-user), Access Key, Amazon S3 버킷이 자동으로 삭제됩니다.
+> 스택이 선택되면 체크박스에 체크 표시가 나타나고, 상단의 [[Delete stack]] 버튼이 활성화됩니다.
 
-### 단계 4: 삭제 확인
+27. [[Delete stack]] 버튼을 클릭합니다.
+28. 확인 창에서 스택 이름 `week2-2-iam-role-stack`을 입력합니다.
+    <img src="/images/week2/2-2-cleanup-step28-delete-stack.png" alt="스택 삭제 확인" class="guide-img-md" />
 
-모든 리소스가 삭제되었는지 확인합니다.
-
-29. Tag Editor로 이동합니다.
-30. **Regions**에서 `All regions`를 선택합니다.
-31. **Resource types**에서 `All supported resource types`를 선택합니다.
-32. **Tags** 섹션에서 다음 태그를 입력합니다:
-
-- **Tag key**: `Week`
-- **Optional tag value**: `2-2`
-
-33. [[Search resources]] 버튼을 클릭합니다.
-34. 검색 결과가 비어있는지 확인합니다.
+29. [[Delete stack]] 버튼을 클릭하여 삭제를 확인합니다.
 
 > [!NOTE]
-> 리소스가 삭제되면 태그도 함께 제거되므로 Tag Editor에서 검색 결과가 비어있으면 정상적으로 삭제된 것입니다. AWS IAM 역할은 Tag Editor에서 검색되지 않을 수 있으므로, AWS CloudFormation 스택으로 생성하지 않은 AWS IAM 역할이 있다면 AWS IAM 콘솔에서 직접 삭제하는 것을 권장합니다.
+> 확인 후 스택 목록 페이지로 이동합니다.
 
-> [!SUCCESS]
-> 검색 결과가 비어있으면 모든 리소스가 정상적으로 삭제되었습니다.
+30. 스택 삭제가 완료될 때까지 기다립니다.
+
+> [!NOTE]
+> 스택 삭제에 1-2분이 소요됩니다. AWS CloudFormation 스택을 삭제하면 태스크 0에서 생성한 AWS IAM 사용자(lab-user), Amazon S3 버킷이 자동으로 삭제됩니다.
+
+31. 스택 목록 페이지로 돌아가서 `week2-2-iam-role-stack` 스택이 목록에서 사라졌는지 확인합니다.
+    <img src="/images/week2/2-2-cleanup-step31-stack-deleted.png" alt="스택 삭제 완료" class="guide-img-md" />
+
+> [!NOTE]
+> 스택이 완전히 삭제되면 스택 목록에서 사라집니다. 만약 "DELETE_FAILED"가 표시되면 **Events** 탭에서 오류 원인을 확인합니다.
+
+---
+
+### 단계 4: 최종 삭제 확인 (Tag Editor 활용)
+
+모든 리소스가 정상적으로 삭제되었는지 Tag Editor로 최종 확인합니다.
+
+32. AWS Management Console에서 `Resource Groups & Tag Editor`로 이동합니다.
+33. 왼쪽 메뉴에서 **Tag Editor**를 선택합니다.
+34. **Regions**에서 `All regions`를 선택합니다.
+35. **Resource types**에서 `All supported resource types`를 선택합니다.
+36. **Tags** 섹션에서 다음을 입력합니다:
+    - **Tag key**: `Week`
+    - **Tag value**: `2-2`
+37. [[Search resources]] 버튼을 클릭합니다.
+    <img src="/images/week2/2-2-cleanup-step37-tageditor-empty.png" alt="Tag Editor 검색 결과 비어있음" class="guide-img-md" />
+
+> [!NOTE]
+> 검색 결과에 리소스가 표시되지 않으면 모든 리소스가 성공적으로 삭제된 것입니다.
 
 ✅ **실습 종료**: 모든 리소스가 정리되었습니다.
 
@@ -752,11 +878,11 @@ AWS CloudFormation 스택을 생성하면 템플릿 파일이 `cf-templates-` �
 > [!NOTE]
 > 이 버킷은 다른 스택에서도 공유할 수 있으므로, 해당 리전에서 더 이상 AWS CloudFormation을 사용하지 않는 경우에만 삭제합니다.
 
-35. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
-36. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
-37. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
-38. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
-39. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
+38. Amazon S3 콘솔에서 `cf-templates-`로 시작하는 버킷을 찾습니다.
+39. 버킷을 선택하고 [[Empty]] 버튼을 클릭합니다.
+40. `permanently delete`를 입력하고 [[Empty]] 버튼을 클릭합니다.
+41. 버킷을 다시 선택하고 [[Delete]] 버튼을 클릭합니다.
+42. 버킷 이름을 입력하고 [[Delete bucket]] 버튼을 클릭합니다.
 
 ## 추가 학습 리소스
 
